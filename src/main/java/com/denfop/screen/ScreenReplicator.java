@@ -44,7 +44,7 @@ public class ScreenReplicator<T extends ContainerMenuReplicator> extends ScreenM
             } else {
                 String uuReq = ModUtils.getString(te.patternUu) + Localization.translate("iu.generic.text.bucketUnit");
                 String euReq = ModUtils.getString(te.patternEu) + Localization.translate("iu.generic.text.EF");
-                return te.pattern.getStack().getDisplayName().getString() + " UU: " + uuReq + " EF: " + euReq;
+                return com.denfop.utils.ModUtils.cleanComponentString(te.pattern.getStack().getDisplayName().getString()) + " UU: " + uuReq + " EF: " + euReq;
             }
         }));
         this.addComponent(new ScreenWidget(this, 136, 84, EnumTypeComponent.ENERGY,

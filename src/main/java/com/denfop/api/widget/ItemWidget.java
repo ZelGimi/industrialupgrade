@@ -22,7 +22,7 @@ public class ItemWidget extends ScreenWidget {
         ItemStack stack = this.itemSupplier.get();
         if (!ModUtils.isEmpty(stack)) {
             RenderSystem.enableBlend();
-            this.gui.drawItem(mouseX+this.x,mouseY+ this.y, stack);
+            this.gui.drawItem(this.x, this.y, stack);
             RenderSystem.disableBlend();
         }
     }

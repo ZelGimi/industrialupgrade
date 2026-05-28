@@ -31,14 +31,11 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -60,17 +57,18 @@ public class BlockEntitySqueezer extends BlockEntityInventory implements IUpdate
     public final FluidHandlerRecipe fluid_handler;
     public short progress;
     public Map<UUID, Double> data;
+    ItemStack prevInput = ItemStack.EMPTY;
     private MachineRecipe output;
+    private int prevAmount;
 
     public BlockEntitySqueezer(BlockPos pos, BlockState state) {
         super(BlockSqueezerEntity.squeezer, pos, state);
         this.inputSlotA = new InventoryRecipes(this, "squeezer", this) {
             @Override
             public boolean canPlaceItem(final int index, final ItemStack itemStack) {
-                if (index == 4) {
-                    return super.canPlaceItem(0, itemStack);
-                }
-                return false;
+
+                return super.canPlaceItem(0, itemStack);
+
             }
         };
         this.progress = 0;
@@ -106,14 +104,6 @@ public class BlockEntitySqueezer extends BlockEntityInventory implements IUpdate
             tooltip.add(Localization.translate("squeezer.info" + i));
         }
     }
-
-    @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction facing) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER)
-            return LazyOptional.empty();
-        return super.getCapability(cap, facing);
-    }
-
 
     @Override
     public void init() {
@@ -223,6 +213,7 @@ public class BlockEntitySqueezer extends BlockEntityInventory implements IUpdate
     @Override
     public void updateField(final String name, final CustomPacketBuffer is) {
         super.updateField(name, is);
+
         if (name.equals("slot")) {
             try {
                 inputSlotA.readFromNbt(((Inventory) (DecoderHandler.decode(is))).writeToNbt(new CompoundTag()));
@@ -239,6 +230,9 @@ public class BlockEntitySqueezer extends BlockEntityInventory implements IUpdate
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        }
+        if (name.equals("fluidtank_empty")) {
+            this.fluidTank1.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.EXECUTE);
         }
         if (name.equals("slot3")) {
             inputSlotA.set(0, ItemStack.EMPTY);
@@ -334,7 +328,6 @@ public class BlockEntitySqueezer extends BlockEntityInventory implements IUpdate
         return false;
     }
 
-
     public void updateEntityServer() {
         super.updateEntityServer();
 
@@ -343,6 +336,27 @@ public class BlockEntitySqueezer extends BlockEntityInventory implements IUpdate
         } else {
             if (this.fluid_handler.output() != null && this.inputSlotA.isEmpty()) {
                 this.fluid_handler.setOutput(null);
+            }
+        }
+        if (!prevInput.isEmpty() && this.inputSlotA.isEmpty()) {
+            prevInput = ItemStack.EMPTY;
+            new PacketUpdateFieldTile(this, "slot3", false);
+        }
+        if (prevInput.isEmpty() && !this.inputSlotA.get(0).isEmpty()) {
+            prevInput = this.inputSlotA.get(0);
+            new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
+        }
+
+        if (!prevInput.isEmpty() && !this.inputSlotA.isEmpty() && prevInput.getCount() != this.inputSlotA.get(0).getCount()) {
+            prevInput = this.inputSlotA.get(0);
+            new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
+        }
+        if (this.prevAmount != this.fluidTank1.getFluidAmount()) {
+            this.prevAmount = this.fluidTank1.getFluidAmount();
+            if (prevAmount != 0) {
+                new PacketUpdateFieldTile(this, "fluidtank", this.fluidTank1);
+            } else {
+                new PacketUpdateFieldTile(this, "fluidtank_empty", true);
             }
         }
     }

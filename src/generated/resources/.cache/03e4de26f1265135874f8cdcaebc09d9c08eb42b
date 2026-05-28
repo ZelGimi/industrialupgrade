@@ -1,4 +1,4 @@
-// 1.19.2	2025-09-09T12:49:08.3095145	Tags for minecraft:item
+// 1.19.2	2026-01-12T15:31:53.5441041	Tags for minecraft:item
 e9224d86a26271f8065aaf0d567e6b9ab0b9869b data/forge/tags/items/casings.json
 a952b784f0de64252fb913807ef217f1f8f6fc15 data/forge/tags/items/casings/adamantium.json
 01d2345006c87998c0ddbb70783db8c8e6993443 data/forge/tags/items/casings/alcled.json
@@ -490,6 +490,7 @@ e8fd439f1a9795dbe2c185cb43fcec570c5b9b5a data/forge/tags/items/ingots/vanadoalum
 ae903f390204278cac0ccaec97e0a76da341ea3e data/forge/tags/items/ingots/zeliber.json
 338e17cf26045b43215ace03005b4cb3761228b8 data/forge/tags/items/ingots/zinc.json
 89133332f6f23b884b5f4f1b8da8a64065248f87 data/forge/tags/items/ingots/zirconium.json
+7d661bd0b00c4e29c4e028fcb2b4a207d5fe92b5 data/forge/tags/items/logs/rubber.json
 6996ed10dcde55bb5c3e3e9cd619b2127e24bb7e data/forge/tags/items/machineblock.json
 d82e99fbd4db9106ffd0677e390ef2ef87ac434b data/forge/tags/items/machineblockadvanced.json
 d82e99fbd4db9106ffd0677e390ef2ef87ac434b data/forge/tags/items/machineblockadvancedcasing.json

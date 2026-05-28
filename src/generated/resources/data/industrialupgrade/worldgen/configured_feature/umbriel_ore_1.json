@@ -1,0 +1,20 @@
+{
+  "type": "industrialupgrade:space_generic_ore",
+  "config": {
+    "body_id": "umbriel",
+    "depth_bonus": 0.35,
+    "distribution_type": "deep",
+    "horizontal_radius": 8,
+    "max_y": 48,
+    "min_y": -56,
+    "ore_block_id": "industrialupgrade:blockspace4/umbriel_spinel_ore",
+    "path_length": 16,
+    "replaceable_block_ids": [
+      "industrialupgrade:spacestone1/umbriel_stone",
+      "industrialupgrade:spacecobblestone1/umbriel_cobblestone"
+    ],
+    "require_near_lava": true,
+    "size": 8,
+    "vertical_radius": 4
+  }
+}

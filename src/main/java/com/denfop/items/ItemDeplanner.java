@@ -1,7 +1,7 @@
 package com.denfop.items;
 
 import com.denfop.IUCore;
-import com.denfop.api.multiblock.MainMultiBlock;
+import com.denfop.api.multiblock.IMainMultiBlock;
 import com.denfop.blockentity.base.BlockEntityBase;
 import com.denfop.blockentity.mechanism.multiblocks.base.BlockEntityMultiBlockBase;
 import com.denfop.utils.Localization;
@@ -65,8 +65,8 @@ public class ItemDeplanner extends Item {
 
         BlockEntity tile = world.getBlockEntity(pos);
 
-        if (tile instanceof MainMultiBlock) {
-            MainMultiBlock mainMultiBlock = (MainMultiBlock) tile;
+        if (tile instanceof IMainMultiBlock) {
+            IMainMultiBlock mainMultiBlock = (IMainMultiBlock) tile;
             List<ItemStack> itemStackList = new ArrayList<>();
 
             if (mainMultiBlock.isFull() && !world.isClientSide) {

@@ -1,8 +1,8 @@
 package com.denfop.api.steam;
 
-import com.denfop.api.multiblock.MultiBlockElement;
+import com.denfop.api.multiblock.IMultiElement;
 
-public interface IRod extends MultiBlockElement {
+public interface IRod extends IMultiElement {
 
 
 }

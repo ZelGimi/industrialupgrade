@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -56,7 +58,7 @@ public class BlockEntityPrimalElectronicsAssembler extends BlockEntityElectricMa
     private int YELLOW_PERCENT = 100 - RED_PERCENT - GREEN_PERCENT;
 
     public BlockEntityPrimalElectronicsAssembler(BlockPos pos, BlockState state) {
-        super(0, 0, 1, BlockElectronicsAssemblerEntity.electronics_assembler, pos, state);
+        super(ModConfig.mechanismDouble("electronics_assembly_table_energy_storage", 0.0D), 0, 1, BlockElectronicsAssemblerEntity.electronics_assembler, pos, state);
         this.output = null;
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
                 (short) 300

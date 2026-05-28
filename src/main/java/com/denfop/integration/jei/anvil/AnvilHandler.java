@@ -1,6 +1,8 @@
 package com.denfop.integration.jei.anvil;
 
 
+import com.denfop.integration.jei.JeiIngredientHelper;
+import com.denfop.integration.jei.IJeiVariantRecipe;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import net.minecraft.world.item.ItemStack;
@@ -8,9 +10,11 @@ import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AnvilHandler {
+public class AnvilHandler implements IJeiVariantRecipe {
 
     private static final List<AnvilHandler> recipes = new ArrayList<>();
+    private List<List<ItemStack>> inputVariants = new java.util.ArrayList<>();
+
     private final ItemStack input;
     private final ItemStack output;
     private final BaseMachineRecipe container;
@@ -20,6 +24,7 @@ public class AnvilHandler {
         this.input = input;
         this.output = output;
         this.container = container;
+        JeiIngredientHelper.attachInputVariants(this, container);
     }
 
     public static List<AnvilHandler> getRecipes() {
@@ -69,4 +74,15 @@ public class AnvilHandler {
     }
 
 
+
+
+    @Override
+    public void setInputVariants(final List<List<ItemStack>> inputVariants) {
+        this.inputVariants = inputVariants == null ? new java.util.ArrayList<>() : inputVariants;
+    }
+
+    @Override
+    public List<ItemStack> getInputVariants(final int slot, final ItemStack fallback) {
+        return JeiIngredientHelper.getInputVariants(this.inputVariants, slot, fallback);
+    }
 }

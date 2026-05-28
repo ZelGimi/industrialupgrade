@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -74,15 +76,15 @@ public class BlockEntitySolidFluidMixer extends BlockEntityElectricMachine imple
     protected short progress;
 
     public BlockEntitySolidFluidMixer(BlockPos pos, BlockState state) {
-        super(200, 1, 1, BlockBaseMachine3Entity.solid_fluid_mixer, pos, state);
+        super(ModConfig.mechanismDouble("solid_fluid_mixer_energy_storage", 200.0D), 1, 1, BlockBaseMachine3Entity.solid_fluid_mixer, pos, state);
         Recipes.recipes.addInitRecipes(this);
 
         this.progress = 0;
-        this.defaultEnergyConsume = this.energyConsume = 1;
+        this.defaultEnergyConsume = this.energyConsume = ModConfig.mechanismInt("solid_fluid_mixer_energy_use", 1);
         this.defaultOperationLength = this.operationLength = 100;
         this.defaultTier = 1;
-        this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("solid_fluid_mixer_soil_pollution_amount", 0.1D)));
+        this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("solid_fluid_mixer_air_pollution_amount", 0.1D)));
         this.defaultEnergyStorage = 100;
         Fluids fluids = this.addComponent(new Fluids(this));
         this.fluidTank1 = fluids.addTankInsert("fluidTank1", 12 * 1000);
@@ -150,9 +152,9 @@ public class BlockEntitySolidFluidMixer extends BlockEntityElectricMachine imple
             tooltip.add(Localization.translate("press.lshift"));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            tooltip.add(Localization.translate("iu.machines_work_energy") + 200 + Localization.translate(
+            tooltip.add(Localization.translate("iu.machines_work_energy") + 1 + Localization.translate(
                     "iu.machines_work_energy_type_eu"));
-            tooltip.add(Localization.translate("iu.machines_work_length") + 1);
+            tooltip.add(Localization.translate("iu.machines_work_length") + 100);
         }
         super.addInformation(stack, tooltip);
 
@@ -421,7 +423,9 @@ public class BlockEntitySolidFluidMixer extends BlockEntityElectricMachine imple
                 EnumBlockEntityUpgrade.Transformer,
                 EnumBlockEntityUpgrade.EnergyStorage,
                 EnumBlockEntityUpgrade.ItemInput,
-                EnumBlockEntityUpgrade.FluidExtract
+                EnumBlockEntityUpgrade.FluidExtract,
+                EnumBlockEntityUpgrade.ItemExtract,
+                EnumBlockEntityUpgrade.FluidInput
         );
     }
 

@@ -16,7 +16,7 @@ public class IUDamageSource {
     static {
 
         current = new DamageSource(("current")).bypassArmor();
-        radiation = new DamageSource(("radiation")).bypassArmor().setIsFire();
+        radiation = new DamageSource(("radiation")).setIsFire();
         frostbite = new DamageSource(("frostbite")).bypassArmor();
         poison_gas = new DamageSource(("poison_gas")).bypassArmor();
         bee = new DamageSource(("bee")).bypassArmor();

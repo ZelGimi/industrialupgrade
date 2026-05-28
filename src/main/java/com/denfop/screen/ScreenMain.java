@@ -1,6 +1,8 @@
 package com.denfop.screen;
 
+import com.denfop.Constants;
 import com.denfop.api.container.CustomWorldContainer;
+import com.denfop.api.upgrades.BlockEntityUpgrade;
 import com.denfop.api.widget.EnumTypeComponent;
 import com.denfop.api.widget.ScreenWidget;
 import com.denfop.api.widget.WidgetDefault;
@@ -12,6 +14,10 @@ import com.denfop.inventory.Inventory;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,6 +89,8 @@ public abstract class ScreenMain<T extends ContainerMenuBase<? extends CustomWor
                 return EnumTypeComponent.BIO_DEFAULT;
             case SPACE:
                 return EnumTypeComponent.SPACE_DEFAULT;
+            case STORAGE:
+                return EnumTypeComponent.STORAGE_DEFAULT;
             default:
                 return EnumTypeComponent.DEFAULT;
         }
@@ -108,6 +116,8 @@ public abstract class ScreenMain<T extends ContainerMenuBase<? extends CustomWor
                 return EnumTypeStyle.BIO;
             case SPACE_DEFAULT:
                 return EnumTypeStyle.SPACE;
+            case STORAGE_DEFAULT:
+                return EnumTypeStyle.STORAGE;
             default:
                 return EnumTypeStyle.DEFAULT;
         }
@@ -156,7 +166,11 @@ public abstract class ScreenMain<T extends ContainerMenuBase<? extends CustomWor
     }
 
     protected void drawGuiContainerBackgroundLayer(PoseStack poseStack, final float partialTicks, final int mouseX, final int mouseY) {
-
+        if (this.container.base instanceof BlockEntityUpgrade){
+            bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/infobutton.png"));
+            this.drawTexturedModalRect(poseStack, this.guiLeft(), this.guiTop(), 0, 0, 10, 10);
+            bindTexture(this.getTexture());
+        }
     }
 
     public void drawTextInCanvasWithScissor(PoseStack poseStack, String text, int canvasX, int canvasY, int canvasWidth, int canvasHeight, int scale) {
@@ -186,7 +200,7 @@ public abstract class ScreenMain<T extends ContainerMenuBase<? extends CustomWor
     protected void drawBackgroundAndTitle(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
         blit(poseStack, this.getGuiLeft(), this.getGuiTop(), 0, 0, this.getXSize(), this.getYSize());
-        String name = this.container.base.getDisplayName().getString();
+        String name = com.denfop.utils.ModUtils.cleanComponentString(this.container.base.getDisplayName().getString());
         int textWidth = this.getStringWidth(name);
         float scale = 1.0f;
 
@@ -218,5 +232,21 @@ public abstract class ScreenMain<T extends ContainerMenuBase<? extends CustomWor
 
     public void updateTickInterface() {
 
+    }
+
+    public void updateTick() {
+    }
+
+    public void drawTooltip(PoseStack poseStack, int x, int y, ItemStack stack, List<String> strings) {
+        if (stack.isEmpty()) {
+            return;
+        }
+        List<Component> tooltipComponents = new ArrayList<>();
+        List<Component> components = stack.getTooltipLines(container.player, TooltipFlag.Default.NORMAL);
+        tooltipComponents.add(components.get(0));
+        strings.forEach(s -> tooltipComponents.add(Component.literal(s)));
+        if (components.size() > 1)
+            tooltipComponents.addAll(components.subList(1, components.size()));
+        renderComponentTooltip(poseStack, tooltipComponents, x, y);
     }
 }

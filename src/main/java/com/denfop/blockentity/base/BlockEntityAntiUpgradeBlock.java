@@ -1,5 +1,7 @@
 package com.denfop.blockentity.base;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -38,7 +40,7 @@ public class BlockEntityAntiUpgradeBlock extends BlockEntityElectricMachine impl
     public boolean need;
 
     public BlockEntityAntiUpgradeBlock(BlockPos pos, BlockState state) {
-        super(1000, 14, 4, BlockBaseMachine3Entity.antiupgradeblock, pos, state);
+        super(ModConfig.mechanismDouble("module_removal_station_energy_storage", 1000.0D), 14, 4, BlockBaseMachine3Entity.antiupgradeblock, pos, state);
         this.need = false;
         this.progress = 0;
         this.input = new InventoryAntiUpgradeBlock(this);
@@ -99,10 +101,21 @@ public class BlockEntityAntiUpgradeBlock extends BlockEntityElectricMachine impl
                     this.energy.useEnergy(5);
                     if (this.progress >= 100) {
                         final List<ItemStack> list = UpgradeSystem.system.getListStack(this.input.get(0));
+                        if (list.isEmpty()) {
+                            this.need = false;
+                            this.progress = 0;
+                            return;
+                        }
+                        if (this.index >= list.size()) {
+                            this.need = false;
+                            this.progress = 0;
+                            return;
+                        }
                         if (this.outputSlot.canAdd(list.get(this.index))) {
                             this.outputSlot.add(list.get(this.index));
+                            UpgradeSystem.system.removeUpdate(this.input.get(0), this.getWorld(), ((ItemUpgradeModule<?>) list.get(index).getItem()).getElement().getId());
+
                         }
-                        UpgradeSystem.system.removeUpdate(this.input.get(0), this.getWorld(), ((ItemUpgradeModule<?>) list.get(index).getItem()).getElement().getId());
                         this.need = false;
                         this.progress = 0;
 

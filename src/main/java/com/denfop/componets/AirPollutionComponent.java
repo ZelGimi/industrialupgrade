@@ -29,10 +29,8 @@ import java.util.List;
 
 public class AirPollutionComponent extends AbstractComponent {
 
-
     private final PollutionMechanism pollution;
     private double default_pollution;
-
     private double percent = 1;
 
     public AirPollutionComponent(final BlockEntityInventory parent, double pollution) {
@@ -44,11 +42,9 @@ public class AirPollutionComponent extends AbstractComponent {
     public static void spawnAirPollutionDirected(Level level, BlockPos pos, RandomSource random) {
         if (!(level instanceof ServerLevel server)) return;
 
-        Vec3 Vec3 = WindSystem.windSystem.getWindSide().getDirectionVector();
-        double dx = 0, dz = 0;
-        dx += Vec3.x;
-        dz += Vec3.z;
-
+        Vec3 direction = WindSystem.windSystem.getWindSide().getDirectionVector();
+        double dx = direction.x;
+        double dz = direction.z;
 
         double magnitude = Math.sqrt(dx * dx + dz * dz);
         if (magnitude != 0) {
@@ -60,11 +56,9 @@ public class AirPollutionComponent extends AbstractComponent {
         double y = pos.getY() + 1.2;
         double z = pos.getZ() + 0.5;
 
-
         if (random.nextFloat() < 0.5f) {
             server.sendParticles(ParticleTypes.CLOUD, x, y, z, 0,
                     0.05, 0.1, 0.05, 0.1);
-
 
             for (int i = 0; i < 2; i++) {
                 double ox = x + (random.nextDouble() - 0.5) * 0.4;
@@ -77,7 +71,6 @@ public class AirPollutionComponent extends AbstractComponent {
             }
         }
     }
-
 
     @Override
     public CompoundTag writeToNbt() {
@@ -172,11 +165,9 @@ public class AirPollutionComponent extends AbstractComponent {
     }
 
     public void onNetworkUpdate(CustomPacketBuffer is) throws IOException {
-
         this.pollution.pollution = is.readDouble();
         this.default_pollution = is.readDouble();
         this.percent = is.readDouble();
-
     }
 
     @Override
@@ -188,7 +179,6 @@ public class AirPollutionComponent extends AbstractComponent {
     @OnlyIn(Dist.CLIENT)
     public void updateEntityClient() {
         super.updateEntityClient();
-
     }
 
     @Override
@@ -205,31 +195,33 @@ public class AirPollutionComponent extends AbstractComponent {
     }
 
     public void onLoaded() {
-
-
         if (!this.parent.getLevel().isClientSide && this.parent.getLevel().dimension() == Level.OVERWORLD) {
-
             MinecraftForge.EVENT_BUS.post(new PollutionAirLoadEvent(this.parent.getLevel(), pollution));
-
-
         }
-
     }
 
     public double getDefault_pollution() {
         return default_pollution;
     }
 
+    public double getPercent() {
+        return percent;
+    }
+
+    public double getCurrentContribution() {
+        return this.pollution.pollution;
+    }
+
+    public boolean isEffectivelyActive() {
+        return this.parent != null && this.parent.getActive() && this.getCurrentContribution() > 0;
+    }
+
     @Override
     public void onUnloaded() {
         if (!this.parent.getLevel().isClientSide && this.parent.getLevel().dimension() == Level.OVERWORLD) {
-
             MinecraftForge.EVENT_BUS.post(new PollutionAirUnLoadEvent(this.parent.getLevel(), pollution));
-
-
         }
     }
-
 
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
@@ -238,8 +230,7 @@ public class AirPollutionComponent extends AbstractComponent {
             tooltip.add(Localization.translate("iu.pollution.air.info") + " " + String.format(
                     "%.2f",
                     default_pollution
-            ) + Localization.translate("iu" +
-                    ".pollution.air.info1"));
+            ) + Localization.translate("iu.pollution.air.info1"));
         }
     }
 
@@ -249,9 +240,7 @@ public class AirPollutionComponent extends AbstractComponent {
                 MinecraftForge.EVENT_BUS.post(new PollutionAirUnLoadEvent(this.parent.getLevel(), this.pollution));
                 this.pollution.pollution = pollution * percent;
                 MinecraftForge.EVENT_BUS.post(new PollutionAirLoadEvent(this.parent.getLevel(), this.pollution));
-
             }
         }
     }
-
 }

@@ -62,7 +62,12 @@ public class ItemFrame<T extends Enum<T> & ISubEnum> extends ItemMain<T> impleme
 
     @Override
     public int getMaxCustomDamage(final ItemStack var1) {
-        return 72000;
+        return switch (this.getElement().getId() % 3) {
+            case 0 -> 72000;
+            case 1 -> (int) (72000 * 1.5);
+            case 2 -> 72000 * 3;
+            default -> 72000;
+        };
     }
 
     @Override

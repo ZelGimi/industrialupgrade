@@ -3,7 +3,7 @@
   "cookingtime": 200,
   "experience": 0.6,
   "ingredient": {
-    "item": "industrialupgrade:blockspace2/mars_adamantium_ore"
+    "item": "industrialupgrade:blockspace/dione_lead_ore"
   },
-  "result": "industrialupgrade:itemingots/adamantite"
+  "result": "industrialupgrade:itemingots/lead_ingot"
 }

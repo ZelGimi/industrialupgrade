@@ -330,19 +330,32 @@ public class FakeSpaceSystemBase implements IFakeSpaceSystemBase {
 
     @Override
     public void copyData(final Map<IBody, Data> data, final UUID uniqueID) {
-
-        if (dataMap.containsKey(uniqueID)) {
-            final Map<IBody, Data> dataPlayer = dataMap.get(uniqueID);
-            for (Map.Entry<IBody, Data> dataEntry : data.entrySet()) {
-                Data data1 = dataPlayer.get(dataEntry.getKey());
-                if (data1.getPercent() < dataEntry.getValue().getPercent()) {
-                    data1.setInformation(dataEntry.getValue().getPercent());
-                }
-            }
-        } else {
-            dataMap.put(uniqueID, new HashMap<>(data));
+        if (data == null || data.isEmpty()) {
+            return;
         }
 
+        final Map<IBody, Data> dataPlayer = dataMap.computeIfAbsent(uniqueID, id -> new HashMap<>());
+
+        for (Map.Entry<IBody, Data> entry : data.entrySet()) {
+            final IBody body = entry.getKey();
+            final Data incoming = entry.getValue();
+
+            if (body == null || incoming == null) {
+                continue;
+            }
+
+            final Data existing = dataPlayer.get(body);
+
+            if (existing != null) {
+                if (existing.getPercent() < incoming.getPercent()) {
+                    existing.setInformation(incoming.getPercent());
+                }
+            } else {
+                final Data newData = new Data(uniqueID, body);
+                newData.setInformation(incoming.getPercent());
+                dataPlayer.put(body, newData);
+            }
+        }
     }
 
     private void processTimers(IFakeBody fakeBody) {

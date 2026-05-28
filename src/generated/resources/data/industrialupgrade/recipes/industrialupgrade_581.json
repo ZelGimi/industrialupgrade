@@ -22,8 +22,8 @@
   },
   "pattern": [
     "ABA",
-    "DCD",
-    "EEE"
+    "ECE",
+    " D "
   ],
   "result": {
     "item": "industrialupgrade:spawnermodules/spawner_module5"

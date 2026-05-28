@@ -9,6 +9,7 @@ import com.denfop.blocks.TileBlockCreator;
 import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.blocks.mechanism.BlockImpSolarEnergyEntity;
 import com.denfop.blocks.mechanism.BlockSteamTurbineEntity;
+import com.denfop.blocks.mechanism.BlockStorageSystemEntity;
 import com.denfop.items.resource.ItemRawMetals;
 import com.denfop.utils.ModUtils;
 import net.minecraft.world.item.Item;
@@ -581,7 +582,7 @@ public class BaseRecipeFour {
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.pollutionDevice), "AAA", "ABA",
                 " C ",
-                ('A'), "forge:plates/Iron", 'B', BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 2), 'C', "forge:gems/Americium"
+                ('A'), "forge:plates/Iron", 'B', BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 2), 'C', "forge:ingots/Uranium"
         );
 
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.ruby_axe), "AA", "AB ",
@@ -677,6 +678,14 @@ public class BaseRecipeFour {
                 "CCC",
                 ('A'), "planks", 'B', IUItem.latexPipette.getItem(), 'C', "terracotta"
         );
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 2, 21), "ABA", "D D", "BBB",
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 42), ('B'), "forge:casings/osmiridium",
+                'D', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 650)
+        );
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 2, 21), "CCC", "DAD", "BBB",
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 42), ('B'), "forge:casings/osmiridium",
+                'D', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 650), 'C', "forge:casings/adamantium"
+        );
         if (ModList.get().isLoaded("powerutils")) {
             RecipesPowerUtils.register();
         }
@@ -689,6 +698,212 @@ public class BaseRecipeFour {
         if (ModList.get().isLoaded("wateringcan")) {
             RecipeWateringCan.register();
         }
+        Recipes.recipe.addShapelessRecipe(ItemStackHelper.fromData(IUItem.rawMetals.getStack(36), 9), ItemStackHelper.fromData(IUItem.rawsBlock.getItem(30), 1));
+        Recipes.recipe.addShapelessRecipe(ItemStackHelper.fromData(IUItem.rawMetals.getStack(37), 9), ItemStackHelper.fromData(IUItem.rawsBlock.getItem(31), 1));
+        Recipes.recipe.addShapelessRecipe(ItemStackHelper.fromData(IUItem.rawMetals.getStack(38), 9), ItemStackHelper.fromData(IUItem.rawsBlock.getItem(32), 1));
+        Recipes.recipe.addShapelessRecipe(ItemStackHelper.fromData(IUItem.rawMetals.getStack(39), 9), ItemStackHelper.fromData(IUItem.rawsBlock.getItem(33), 1));
+
+
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 775), " A ", "ABA", " A ",
+                ('A'), "forge:plates/hafnium", ('B'), Items.REDSTONE
+        );
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 774), " A ", "ABA", " A ",
+                ('A'), "forge:plates/osmium", ('B'), Items.REDSTONE
+        );
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 776), "CAC", "ABA", "CAC",
+                ('A'), "forge:casings/niobiumtitanium", ('B'), IUItem.charged_quartz.getItem(), 'C', "forge:casings/invar"
+        );
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 777), "A A", "BDB", "ABA",
+                ('A'), "forge:casings/thallium", ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 776), 'D', "forge:plates/tantalum"
+        );
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 778), "A A", "BDB", "ABA",
+                ('A'), "forge:casings/electrum", ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 777), 'D', "forge:plates/barium"
+        );
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 779), "A A", "BDB", "ABA",
+                ('A'), "forge:casings/strontium", ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 778), 'D', "forge:plates/gadolinium"
+        );
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 780), "A A", "BDB", "ABA",
+                ('A'), "forge:casings/adamantium", ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 779), 'D', "forge:plates/redbrass"
+        );
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 781), "A A", "BDB", "ABA",
+                ('A'), "forge:casings/aluminiumlithium", ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 780), 'D', "forge:plates/hafniumboride"
+        );
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 782), "A A", "BDB", "ABA",
+                ('A'), "forge:casings/stellite", ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 781), 'D', "forge:plates/bloodstone"
+        );
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 783), "ACA", "BDB", "ABA",
+                ('A'), "forge:plates/hafniumcarbide", ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 782), 'D', "forge:plates/cobaltchrome",
+                'C', "forge:plates/orichalcum"
+        );
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 784), "ACA", "BDB", "ABA",
+                ('A'), "forge:plates/berylliumbronze", ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 783), 'D', "forge:plates/mithril",
+                'C', "forge:plates/superalloyhaynes"
+        );
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 785), "ACA", "BDB", "ABA",
+                ('A'), "forge:plates/inconel", ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 784), 'D', "forge:plates/alcled",
+                'C', "forge:plates/arsenic"
+        );
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 786), "ACA", "BDB", "ABA",
+                ('A'), "forge:plates/nimonic", ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 785), 'D', "forge:plates/superalloyrene",
+                'C', "forge:plates/vitalium"
+        );
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 787), "ACA", "DDD", "ABA",
+                ('A'), "forge:plates/permalloy", ('B'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 786), 'D', "forge:plates/draconid",
+                'C', "forge:plates/molybdenumsteel"
+        );
+        Recipes.recipe.addShapelessRecipe(ItemStackHelper.fromData(IUItem.fluidCell1000)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 774)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 776)
+        );
+        Recipes.recipe.addShapelessRecipe(ItemStackHelper.fromData(IUItem.fluidCell4000)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 774)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 777)
+        );
+        Recipes.recipe.addShapelessRecipe(ItemStackHelper.fromData(IUItem.fluidCell16000)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 774)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 778)
+        );
+        Recipes.recipe.addShapelessRecipe(ItemStackHelper.fromData(IUItem.fluidCell64000)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 774)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 779)
+        );
+        Recipes.recipe.addShapelessRecipe(ItemStackHelper.fromData(IUItem.fluidCell256000)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 774)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 780)
+        );
+        Recipes.recipe.addShapelessRecipe(ItemStackHelper.fromData(IUItem.fluidCell1024000)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 774)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 781)
+        );
+        Recipes.recipe.addShapelessRecipe(ItemStackHelper.fromData(IUItem.itemCell1000)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 775)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 776)
+        );
+        Recipes.recipe.addShapelessRecipe(ItemStackHelper.fromData(IUItem.itemCell4000)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 775)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 777)
+        );
+        Recipes.recipe.addShapelessRecipe(ItemStackHelper.fromData(IUItem.itemCell16000)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 775)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 778)
+        );
+        Recipes.recipe.addShapelessRecipe(ItemStackHelper.fromData(IUItem.itemCell64000)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 775)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 779)
+        );
+        Recipes.recipe.addShapelessRecipe(ItemStackHelper.fromData(IUItem.itemCell256000)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 775)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 780)
+        );
+        Recipes.recipe.addShapelessRecipe(ItemStackHelper.fromData(IUItem.itemCell1024000)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 775)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 781)
+        );
+        Recipes.recipe.addShapelessRecipe(ItemStackHelper.fromData(IUItem.itemCell4096000)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 775)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 782)
+        );
+        Recipes.recipe.addShapelessRecipe(ItemStackHelper.fromData(IUItem.itemCell16384000)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 775)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 783)
+        );
+        Recipes.recipe.addShapelessRecipe(ItemStackHelper.fromData(IUItem.itemCell65536000)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 775)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 784)
+        );
+        Recipes.recipe.addShapelessRecipe(ItemStackHelper.fromData(IUItem.itemCell262144000)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 775)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 785)
+        );
+        Recipes.recipe.addShapelessRecipe(ItemStackHelper.fromData(IUItem.itemCell1048576000)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 775)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 786)
+        );
+        Recipes.recipe.addShapelessRecipe(ItemStackHelper.fromData(IUItem.itemCell2097152000)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 775)
+                , ItemStackHelper.fromData(IUItem.crafting_elements, 1, 787)
+        );
+
+        Recipes.recipe.addRecipe(getBlockStack(BlockStorageSystemEntity.controller), "ABA", "BCB", "ADA",
+                ('A'), "forge:plates/hafnium", ('B'), ItemStackHelper.fromData(IUItem.charged_redstone), 'D', BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1),
+                'C', IUItem.machine
+        );
+        Recipes.recipe.addRecipe(getBlockStack(BlockStorageSystemEntity.storage_cells), "ABA", "ECE", "ADA",
+                ('A'), "forge:plates/hafnium", ('B'), ItemStackHelper.fromData(IUItem.charged_redstone), 'D', BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1),
+                'C', IUItem.machine, 'E', "forge:gears/gadolinium"
+        );
+        Recipes.recipe.addRecipe(getBlockStack(BlockStorageSystemEntity.monitor), "ABA", "ECE", "ADA",
+                ('A'), "forge:plates/hafnium", ('B'), ItemStackHelper.fromData(IUItem.charged_redstone), 'D', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 42),
+                'C', IUItem.machine, 'E', "forge:gears/gadolinium"
+        );
+
+        Recipes.recipe.addRecipe(getBlockStack(BlockStorageSystemEntity.fluid_monitor), "ABA", "ECE", "ADA",
+                ('A'), "forge:plates/hafnium", ('B'), ItemStackHelper.fromData(IUItem.charged_redstone), 'D', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 42),
+                'C', IUItem.machine, 'E', "forge:gears/niobiumtitanium"
+        );
+
+        Recipes.recipe.addRecipe(getBlockStack(BlockStorageSystemEntity.pattern_monitor), "ABA", "ECE", "ADA",
+                ('A'), "forge:plates/hafnium", ('B'), ItemStackHelper.fromData(IUItem.patternStack), 'D', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 42),
+                'C', IUItem.machine, 'E', "forge:gears/cobaltchrome"
+        );
+        Recipes.recipe.addRecipe(getBlockStack(BlockStorageSystemEntity.autocraft_monitor), "ABA", "ECE", "ADA",
+                ('A'), "forge:plates/hafnium", ('B'), ItemStackHelper.fromData(IUItem.plastic_plate), 'D', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 42),
+                'C', IUItem.machine, 'E', "forge:gears/alumel"
+        );
+
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.storagepipes, 8), "AAA", "BCB", "AAA",
+                ('A'), "wool", ('B'), "forge:casings/neodymium", 'C', ItemStackHelper.fromData(IUItem.charged_redstone)
+        );
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.patternStack, 2), " A ", "ABA", "AAA",
+                ('A'), "forge:casings/hafnium", ('B'), "forge:casings/iron"
+        );
+        Recipes.recipe.addRecipe(getBlockStack(BlockStorageSystemEntity.interface_workbench), "ABA", "BCB", "ADA",
+                ('A'), "forge:plates/hafnium", ('B'), ItemStackHelper.fromData(IUItem.charged_redstone), 'D', ItemStackHelper.fromData(IUItem.patternStack, 1),
+                'C', IUItem.machine
+        );
+        Recipes.recipe.addRecipe(getBlockStack(BlockStorageSystemEntity.interface_entity), "ADA", "BCB", "ADA",
+                ('A'), "forge:plates/hafnium", ('B'), ItemStackHelper.fromData(IUItem.charged_redstone), 'D', ItemStackHelper.fromData(IUItem.patternStack, 1),
+                'C', IUItem.machine
+        );
+
+        Recipes.recipe.addRecipe(getBlockStack(BlockStorageSystemEntity.importbus), "ABA", " D ", "A A",
+                ('A'), "forge:plates/hafnium", ('B'), ItemStackHelper.fromData(IUItem.charged_redstone), 'D', IUItem.pullingUpgrade
+        );
+        Recipes.recipe.addRecipe(getBlockStack(BlockStorageSystemEntity.fluid_importbus), "ABA", " D ", "A A",
+                ('A'), "forge:plates/hafnium", ('B'), ItemStackHelper.fromData(IUItem.charged_redstone), 'D', IUItem.fluidpullingUpgrade
+        );
+        Recipes.recipe.addRecipe(getBlockStack(BlockStorageSystemEntity.exportbus), "ABA", " D ", "A A",
+                ('A'), "forge:plates/hafnium", ('B'), ItemStackHelper.fromData(IUItem.charged_redstone), 'D', IUItem.ejectorUpgrade
+        );
+        Recipes.recipe.addRecipe(getBlockStack(BlockStorageSystemEntity.fluid_exportbus), "ABA", " D ", "A A",
+                ('A'), "forge:plates/hafnium", ('B'), ItemStackHelper.fromData(IUItem.charged_redstone), 'D', IUItem.fluidEjectorUpgrade
+        );
+        Recipes.recipe.addRecipe(getBlockStack(BlockStorageSystemEntity.processor), "A A", "BCB", "ADA",
+                ('A'), "forge:plates/hafnium", ('B'), ItemStackHelper.fromData(IUItem.charged_redstone), 'D', BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3),
+                'C', IUItem.advancedMachine
+        );
+        Recipes.recipe.addRecipe(getBlockStack(BlockStorageSystemEntity.adv_processor), "   ", "BCB", " D ",
+                ('B'), ItemStackHelper.fromData(IUItem.charged_redstone), 'D', BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5),
+                'C', getBlockStack(BlockStorageSystemEntity.processor)
+        );
+        Recipes.recipe.addRecipe(getBlockStack(BlockStorageSystemEntity.imp_processor), "   ", "BCB", " D ",
+                ('B'), ItemStackHelper.fromData(IUItem.charged_redstone), 'D', BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
+                'C', getBlockStack(BlockStorageSystemEntity.adv_processor)
+        );
+        Recipes.recipe.addRecipe(getBlockStack(BlockStorageSystemEntity.per_processor), "   ", "BCB", " D ",
+                ('B'), ItemStackHelper.fromData(IUItem.charged_redstone), 'D', BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
+                'C', getBlockStack(BlockStorageSystemEntity.imp_processor)
+        );
+
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 443), "AAA", "AAA", "AAA",
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 788)
+        );
+        Recipes.recipe.addRecipe(IUItem.coalDust, "AAA", "AAA", "AAA",
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 789)
+        );
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.planetary_translocator, 1), " A ", "BDB", "BCB",
+                ('A'), "forge:plates/bloodstone", ('B'), "forge:plates/stellite",'D', BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 8), 'C', "forge:plates/woods"
+        );
     }
 
 }

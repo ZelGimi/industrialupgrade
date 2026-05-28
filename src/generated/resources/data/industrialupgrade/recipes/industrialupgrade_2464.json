@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "tag": "forge:casings/stellite"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_781_element"
+    },
+    "D": {
+      "tag": "forge:plates/bloodstone"
+    }
+  },
+  "pattern": [
+    "A A",
+    "BDB",
+    "ABA"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_782_element"
+  }
+}

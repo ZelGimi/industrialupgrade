@@ -163,7 +163,7 @@ public class ScreenSolderingMechanism<T extends ContainerMenuSolderingMechanism>
                     pos = k + prevPointer1;
                 }
                 this.drawTexturedModalRect(poseStack, this.guiLeft + 10 + pos, this.guiTop + 66, 1 + k, y1, 1, 4);
-                data[pos] = i;
+                data[Math.abs(pos)] = i;
                 k++;
             }
 

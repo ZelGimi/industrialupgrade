@@ -2,7 +2,7 @@ package com.denfop.blockentity.mechanism.multiblocks.base;
 
 import com.denfop.IUCore;
 import com.denfop.api.blockentity.MultiBlockEntity;
-import com.denfop.api.multiblock.MainMultiBlock;
+import com.denfop.api.multiblock.IMainMultiBlock;
 import com.denfop.api.multiblock.MultiBlockStructure;
 import com.denfop.blockentity.base.BlockEntityInventory;
 import com.denfop.events.client.GlobalRenderManager;
@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-public abstract class BlockEntityMultiBlockBase extends BlockEntityInventory implements MainMultiBlock,
+public abstract class BlockEntityMultiBlockBase extends BlockEntityInventory implements IMainMultiBlock,
         IUpdatableTileEvent {
 
     public boolean full;
@@ -107,7 +107,7 @@ public abstract class BlockEntityMultiBlockBase extends BlockEntityInventory imp
             if (getMultiBlockStucture() != null) {
                 for (ItemStack stack1 : getMultiBlockStucture().itemStackList) {
                     if (!stack1.isEmpty()) {
-                        tooltip.add(ChatFormatting.GREEN + "" + stack1.getCount() + "x" + ChatFormatting.GRAY + stack1.getDisplayName().getString());
+                        tooltip.add(ChatFormatting.GREEN + "" + stack1.getCount() + "x" + ChatFormatting.GRAY + com.denfop.utils.ModUtils.cleanComponentString(stack1.getDisplayName().getString()));
                     }
                 }
             } else {
@@ -539,10 +539,9 @@ public abstract class BlockEntityMultiBlockBase extends BlockEntityInventory imp
                 if (!this.getWorld().isClientSide) {
                     IUCore.proxy.messagePlayer(
                             player,
-                            Localization.translate("iu.activate_multiblock") + " " + this
-                                    .getMultiBlockStucture()
-                                    .getActivateItem()
-                                    .getDisplayName().getString()
+                            Localization.translate("iu.activate_multiblock") + " " +  com.denfop.utils.ModUtils.cleanComponentString(this
+                                    .getMultiBlockStucture().getActivateItem()
+                                    .getDisplayName().getString())
                     );
                 }
             }
@@ -609,12 +608,12 @@ public abstract class BlockEntityMultiBlockBase extends BlockEntityInventory imp
     }
 
     @Override
-    public MainMultiBlock getMain() {
+    public IMainMultiBlock getMain() {
         return this;
     }
 
     @Override
-    public void setMainMultiElement(final MainMultiBlock main) {
+    public void setMainMultiElement(final IMainMultiBlock main) {
     }
 
 

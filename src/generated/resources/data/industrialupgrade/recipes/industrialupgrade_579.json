@@ -2,16 +2,19 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "A": {
-      "tag": "forge:doubleplate/nichrome"
+      "item": "industrialupgrade:quarrymodules/ef"
     },
     "B": {
-      "item": "industrialupgrade:quarrymodules/ef2"
+      "tag": "forge:doubleplate/tantalum"
+    },
+    "C": {
+      "tag": "forge:doubleplate/thallium"
     }
   },
   "pattern": [
-    "ABA",
-    "   ",
-    "   "
+    "CBC",
+    "BAB",
+    "CBC"
   ],
   "result": {
     "item": "industrialupgrade:spawnermodules/spawner_module3"

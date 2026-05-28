@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "tag": "forge:plates/hafnium"
+    },
+    "B": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "pattern": [
+    " A ",
+    "ABA",
+    " A "
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_775_element"
+  }
+}

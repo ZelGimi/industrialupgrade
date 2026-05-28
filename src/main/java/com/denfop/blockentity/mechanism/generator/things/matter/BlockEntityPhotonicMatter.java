@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.generator.things.matter;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blockentity.base.BlockEntityMultiMatter;
@@ -13,7 +15,7 @@ public class BlockEntityPhotonicMatter extends BlockEntityMultiMatter {
 
 
     public BlockEntityPhotonicMatter(BlockPos pos, BlockState state) {
-        super(600000F, 16, 512000000, BlocksPhotonicMachine.photonic_gen_matter, pos, state);
+        super(ModConfig.mechanismDouble("photonic_matter_fabricator_energy_storage", 600000.0D), ModConfig.mechanismInt("photonic_matter_fabricator_tank_capacity", 16), ModConfig.mechanismDouble("photonic_matter_fabricator_energy_storage", 512000000.0D), BlocksPhotonicMachine.photonic_gen_matter, pos, state);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.steam;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -52,7 +54,7 @@ public class BlockEntitySteamElectrolyzer extends BlockEntityElectricMachine {
     private int levelBlock;
 
     public BlockEntitySteamElectrolyzer(BlockPos pos, BlockState state) {
-        super(0, 1, 0, BlockBaseMachine3Entity.steam_electrolyzer, pos, state);
+        super(ModConfig.mechanismDouble("steam_electrolyzer_energy_storage", 0.0D), 1, 0, BlockBaseMachine3Entity.steam_electrolyzer, pos, state);
         this.fluids = this.addComponent(new Fluids(this));
         this.steam = this.addComponent(ComponentSteamEnergy.asBasicSink(this, 4000));
         this.ampere = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.AMPERE, this, 4000));
@@ -150,7 +152,7 @@ public class BlockEntitySteamElectrolyzer extends BlockEntityElectricMachine {
         boolean drain = false;
         boolean drain1 = false;
         if (this.fluid_handler.output() != null && this.fluid_handler.canOperate() && this.fluid_handler.canFillFluid() && this.steam.canUseEnergy(
-                4) && this.ampere.canUseEnergy(1)) {
+                4) && this.ampere.canUseEnergy(2)) {
             final BaseFluidMachineRecipe output = this.fluid_handler.output();
             final FluidStack inputFluidStack = output.input.getInputs().get(0);
             int size = this.getFluidTank(0).getFluidAmount() / inputFluidStack.getAmount();
@@ -188,7 +190,7 @@ public class BlockEntitySteamElectrolyzer extends BlockEntityElectricMachine {
                     initiate(0);
                 }
                 this.steam.useEnergy(4);
-                this.ampere.useEnergy(1);
+                this.ampere.useEnergy(2);
                 setActive(true);
 
             } else {

@@ -3,7 +3,6 @@ package com.denfop.recipe.universalrecipe;
 import com.denfop.api.space.EnumLevels;
 import com.denfop.api.space.EnumType;
 import com.denfop.register.Register;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -11,8 +10,6 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-
-import java.util.List;
 
 public class AsteroidRecipe implements Recipe<Container> {
 
@@ -37,7 +34,7 @@ public class AsteroidRecipe implements Recipe<Container> {
 
     public AsteroidRecipe(ResourceLocation id, String name, String systemName, String texturePath, EnumLevels level, String starName, Integer temperature, Double distance, EnumType type, Boolean colonies, Integer angle, Double time, Double size, Double rotation, Double maxLocation, Double minLocation, Integer amount) {
         this.name = name;
-        this.id=id;
+        this.id = id;
         this.systemName = systemName;
         this.texturePath = texturePath;
         this.level = level;
@@ -81,7 +78,6 @@ public class AsteroidRecipe implements Recipe<Container> {
     public ResourceLocation getId() {
         return id;
     }
-
 
 
     @Override

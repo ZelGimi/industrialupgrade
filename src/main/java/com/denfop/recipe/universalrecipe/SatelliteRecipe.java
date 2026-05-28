@@ -3,7 +3,6 @@ package com.denfop.recipe.universalrecipe;
 import com.denfop.api.space.EnumLevels;
 import com.denfop.api.space.EnumType;
 import com.denfop.register.Register;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -11,8 +10,6 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-
-import java.util.List;
 
 public class SatelliteRecipe implements Recipe<Container> {
     private final ResourceLocation id;
@@ -34,7 +31,7 @@ public class SatelliteRecipe implements Recipe<Container> {
 
     public SatelliteRecipe(ResourceLocation id, String name, String systemName, String texturePath, EnumLevels level, String planetName, Integer temperature, Boolean pressure, Double distance, EnumType type, Boolean oxygen, Boolean colonies, Integer angle, Double time, Double size, Double rotation) {
         this.name = name;
-        this.id=id;
+        this.id = id;
         this.systemName = systemName;
         this.texturePath = texturePath;
         this.level = level;
@@ -77,7 +74,6 @@ public class SatelliteRecipe implements Recipe<Container> {
     public ResourceLocation getId() {
         return id;
     }
-
 
 
     @Override

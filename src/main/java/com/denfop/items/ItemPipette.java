@@ -1,6 +1,8 @@
 package com.denfop.items;
 
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.utils.FluidHandlerFix;
 import com.denfop.utils.Localization;
 import net.minecraft.core.NonNullList;
@@ -23,7 +25,7 @@ import java.util.List;
 public class ItemPipette extends ItemFluidContainer {
 
     public ItemPipette() {
-        super(10000, 1);
+        super(10000, ModConfig.itemInt("pipette_capacity", 1));
 
     }
 

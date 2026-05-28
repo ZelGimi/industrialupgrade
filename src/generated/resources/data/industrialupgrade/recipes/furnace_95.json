@@ -3,7 +3,7 @@
   "cookingtime": 200,
   "experience": 0.6,
   "ingredient": {
-    "item": "industrialupgrade:blockspace2/makemake_bismuth"
+    "item": "industrialupgrade:baseore2/polonium"
   },
-  "result": "industrialupgrade:itemingots/bismuth"
+  "result": "industrialupgrade:itemingots/polonium"
 }

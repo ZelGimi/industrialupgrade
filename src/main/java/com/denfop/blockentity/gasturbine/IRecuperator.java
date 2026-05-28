@@ -1,9 +1,9 @@
 package com.denfop.blockentity.gasturbine;
 
-import com.denfop.api.multiblock.MultiBlockElement;
+import com.denfop.api.multiblock.IMultiElement;
 import com.denfop.inventory.Inventory;
 
-public interface IRecuperator extends MultiBlockElement {
+public interface IRecuperator extends IMultiElement {
 
     Inventory getExchanger();
 

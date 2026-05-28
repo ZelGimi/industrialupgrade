@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.multimechanism.simple;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blockentity.base.BlockEntityMultiMachine;
@@ -21,8 +23,8 @@ public class BlockEntityOreWashing extends BlockEntityMultiMachine {
                 EnumMultiMachine.OreWashing.usagePerTick,
                 EnumMultiMachine.OreWashing.lenghtOperation, BlockMoreMachine3Entity.orewashing, pos, state
         );
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.15));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("ore_washing_soil_pollution_amount", 0.1D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("ore_washing_air_pollution_amount", 0.15D)));
     }
 
     public MultiBlockEntity getTeBlock() {
@@ -38,6 +40,10 @@ public class BlockEntityOreWashing extends BlockEntityMultiMachine {
         return EnumMultiMachine.OreWashing;
     }
 
+    public int getSize(int size) {
+        return Math.min(size, this.tank.getFluidAmount() / 1000);
+    }
+
     public String getStartSoundFile() {
         return "Machines/ore_washing.ogg";
     }
@@ -46,14 +52,5 @@ public class BlockEntityOreWashing extends BlockEntityMultiMachine {
         return "Machines/InterruptOne.ogg";
     }
 
-
- /*   public String getStartSoundFile() {
-        return "Machines/MaceratorOp.ogg";
-    }
-
-    public String getInterruptSoundFile() {
-        return "Machines/InterruptOne.ogg";
-    }
-*/
 
 }

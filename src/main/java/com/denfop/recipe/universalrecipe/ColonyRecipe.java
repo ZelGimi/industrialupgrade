@@ -14,10 +14,10 @@ import java.util.List;
 
 public class ColonyRecipe implements Recipe<Container> {
 
-    private final ResourceLocation id;
     final String bodyName;
     final List<IInputItemStack> input;
     final int level;
+    private final ResourceLocation id;
 
     public ColonyRecipe(ResourceLocation id, String bodyName, List<IInputItemStack> input, int level) {
         this.id = id;
@@ -25,7 +25,6 @@ public class ColonyRecipe implements Recipe<Container> {
         this.input = input;
         this.level = level;
     }
-
 
 
     @Override
@@ -54,8 +53,6 @@ public class ColonyRecipe implements Recipe<Container> {
     public ResourceLocation getId() {
         return id;
     }
-
-
 
 
     @Override

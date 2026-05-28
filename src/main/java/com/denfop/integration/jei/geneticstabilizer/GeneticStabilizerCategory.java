@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.geneticstabilizer;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.api.widget.EnumTypeComponent;
 import com.denfop.api.widget.ScreenWidget;
@@ -102,7 +103,7 @@ public class GeneticStabilizerCategory extends ScreenMain implements IRecipeCate
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, GeneticStabilizerHandler recipes, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 60 - 5, 44).addItemStack(recipes.getInput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 60 - 5, 44).addItemStacks(JeiIngredientHelper.getInputVariants(recipes, 0, recipes.getInput()));
 
         builder.addSlot(RecipeIngredientRole.INPUT, 14, 21).setFluidRenderer(12000, true, 12, 47).addFluidStack(recipes.getInputFluid().getFluid(), recipes.getInputFluid().getAmount());
         builder.addSlot(RecipeIngredientRole.OUTPUT, 50 + 71, 21).setFluidRenderer(12000, true, 12, 47).addFluidStack(recipes.getOutputFluid().getFluid(), recipes.getOutputFluid().getAmount());

@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.macerator;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.api.recipe.InventoryMultiRecipes;
@@ -108,7 +109,7 @@ public class MaceratorCategory extends ScreenMain implements IRecipeCategory<Mac
         final List<ItemStack> inputs = Collections.singletonList(recipe.getInput());
         int i = 0;
         for (; i < inputs.size(); i++) {
-            layout.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
+            layout.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStacks(JeiIngredientHelper.getInputVariants(recipe, i, inputs.get(i)));
 
         }
         final SlotInvSlot outputSlot = container1.findClassSlot(InventoryOutput.class);

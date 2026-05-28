@@ -1,12 +1,12 @@
 package com.denfop.blockentity.smeltery;
 
-import com.denfop.api.multiblock.MultiBlockElement;
+import com.denfop.api.multiblock.IMultiElement;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.InventoryRecipes;
 import com.denfop.api.recipe.MachineRecipe;
 import com.denfop.componets.ComponentProgress;
 
-public interface IFurnace extends IUpdateTick, MultiBlockElement {
+public interface IFurnace extends IUpdateTick, IMultiElement {
 
     InventoryRecipes getInvSlot();
 

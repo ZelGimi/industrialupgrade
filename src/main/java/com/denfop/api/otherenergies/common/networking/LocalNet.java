@@ -84,7 +84,21 @@ public class LocalNet implements com.denfop.api.otherenergies.common.interfaces.
         }
     }
 
+    @Override
+    public List<Path> getPaths(Source par1) {
+        if (par1 == null) {
+            return Collections.emptyList();
+        }
 
+        SystemTick<Source, Path> paths = this.senderPath.get(par1);
+
+        if (paths == null) {
+            return Collections.emptyList();
+        }
+
+        List<Path> list = paths.getList();
+        return list != null ? list : Collections.emptyList();
+    }
     public List<Path> getPaths(final Acceptor par1) {
         final List<Path> paths = new ArrayList<>();
         List<SystemTick<Source, Path>> sources_list = this.getSources(par1);

@@ -58,9 +58,11 @@ public class BlockEntityAutoFuse extends BlockEntityInventory {
                                 }
         );
     }
+
     private BlockEntityInventory getParent() {
         return this;
     }
+
     @Override
     public void addInformation(ItemStack stack, List<String> tooltip) {
         super.addInformation(stack, tooltip);
@@ -179,7 +181,7 @@ public class BlockEntityAutoFuse extends BlockEntityInventory {
                     new PacketUpdateFieldTile(this, "timer", timer);
                 }
                 if (timer == 0) {
-                    this.rad_energy.addEnergy(300);
+                    this.rad_energy.addEnergy(900);
                     this.slotBomb.get(0).shrink(1);
                     timer = 60;
                 }

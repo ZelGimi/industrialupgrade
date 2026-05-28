@@ -1146,13 +1146,27 @@ public class ScreenResearchTableSpace<T extends ContainerMenuResearchTableSpace>
                 return;
             }
             if (hoverOpen && focusedPlanet != null) {
+                EnumLevels level1 = EnumLevels.NONE;
+
+                if (focusedPlanet instanceof IPlanet) {
+                    level1 = ((IPlanet) focusedPlanet).getLevels();
+                }
+                if (focusedPlanet instanceof ISatellite) {
+                    level1 = ((ISatellite) focusedPlanet).getLevels();
+                }
+                if (focusedPlanet instanceof IAsteroid) {
+                    level1 = ((IAsteroid) focusedPlanet).getLevels();
+                }
+                if (!(this.container.base.level != null && this.container.base.level != EnumLevels.NONE && this.container.base.level.ordinal() >= level1.ordinal()))
+                    return;
+
                 mode = 2;
                 int seconds = 0;
                 EnumLevels levels = EnumLevels.FIRST;
                 if (focusedPlanet instanceof IPlanet) {
-                    seconds = (int) ((Math.abs(focusedPlanet.getDistance() - SpaceInit.earth.getDistance()) / (SpaceInit.mars.getDistance() - SpaceInit.earth.getDistance())) * (12 * 60 * 0.8));
+                    seconds = (int) ((Math.abs(focusedPlanet.getDistance() - SpaceInit.earth.getDistance()) / (SpaceInit.mars.getDistance() - SpaceInit.earth.getDistance())) * (12 * 60 * 0.5));
                     levels = ((IPlanet) focusedPlanet).getLevels();
-                    seconds+=focusedPlanet.getSystem().getDistanceFromSolar()*60*60;
+                    seconds += focusedPlanet.getSystem().getDistanceFromSolar() * 60 * 60;
                 }
                 if (focusedPlanet instanceof ISatellite) {
                     ISatellite planet = (ISatellite) focusedPlanet;
@@ -1164,14 +1178,14 @@ public class ScreenResearchTableSpace<T extends ContainerMenuResearchTableSpace>
                     if (planet.getPlanet() == SpaceInit.earth) {
                         distanceSatellite = 1;
                     }
-                    seconds = (int) (Math.abs(distanceSatellite * 2.5 * 60 * 0.8 + distancePlanetToPlanet * (12 * 60 * 0.8)));
-                    seconds+=focusedPlanet.getSystem().getDistanceFromSolar()*60*60;
+                    seconds = (int) (Math.abs(distanceSatellite * 2.5 * 60 * 0.5 + distancePlanetToPlanet * (12 * 60 * 0.5)));
+                    seconds += focusedPlanet.getSystem().getDistanceFromSolar() * 60 * 60;
                 }
                 if (focusedPlanet instanceof IAsteroid) {
                     IAsteroid planet = (IAsteroid) focusedPlanet;
-                    seconds = (int) ((Math.abs(((planet.getMaxDistance() - planet.getMinDistance()) / 2 + planet.getMinDistance()) - SpaceInit.earth.getDistance()) / (SpaceInit.mars.getDistance() - SpaceInit.earth.getDistance())) * (12 * 60 * 0.8));
+                    seconds = (int) ((Math.abs(((planet.getMaxDistance() - planet.getMinDistance()) / 2 + planet.getMinDistance()) - SpaceInit.earth.getDistance()) / (SpaceInit.mars.getDistance() - SpaceInit.earth.getDistance())) * (12 * 60 * 0.5));
                     levels = planet.getLevels();
-                    seconds+=focusedPlanet.getSystem().getDistanceFromSolar()*60*60;
+                    seconds += focusedPlanet.getSystem().getDistanceFromSolar() * 60 * 60;
                 }
                 this.minimumLimit = findOptimalUpgradeDistribution(seconds * 2, levels.ordinal() + 1);
 

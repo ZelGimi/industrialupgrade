@@ -13,12 +13,6 @@
     "D": {
       "item": "industrialupgrade:energy_tools/nanoaxe"
     },
-    "E": {
-      "type": "forge:nbt",
-      "count": 1,
-      "item": "industrialupgrade:circuit/quantumcircuit",
-      "nbt": "{level:7}"
-    },
     "F": {
       "item": "industrialupgrade:crafting_elements/crafting_516_element"
     },
@@ -28,7 +22,7 @@
   },
   "pattern": [
     "ADB",
-    "EFE",
+    "CFC",
     "CHC"
   ],
   "result": {

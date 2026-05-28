@@ -214,7 +214,7 @@ public class ItemGraviTool extends TieredItem implements EnergyItem, UpgradeItem
             tooltip.add(Component.translatable("press.lshift"));
         } else {
             tooltip.add(Component.translatable("iu.changemode_key")
-                    .append(" " + KeyboardClient.changemode.getKey().getDisplayName().getString())
+                    .append(" " + com.denfop.utils.ModUtils.cleanComponentString(KeyboardClient.changemode.getKey().getDisplayName().getString()))
                     .append(Component.translatable("iu.changemode_rcm")));
         }
 
@@ -487,10 +487,8 @@ public class ItemGraviTool extends TieredItem implements EnergyItem, UpgradeItem
                         return false;
                     }
 
-                    int fortune = world.random.nextInt(100);
-                    if (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.WRENCH, stack)) {
-                        fortune = 100;
-                    }
+                    int fortune = 100;
+
 
                     for (ItemStack drop : wrenchable.getWrenchDrops(world, pos, state, te, player, fortune)) {
                         ModUtils.dropAsEntity(world, pos, drop);

@@ -2,18 +2,27 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "A": {
-      "item": "quantumgenerators:qg/nsp_gen"
+      "item": "industrialupgrade:machines/admin_solar_panel"
     },
     "B": {
-      "item": "industrialupgrade:itemcore/barcore"
+      "item": "industrialupgrade:itemcore/phocore"
+    },
+    "C": {
+      "item": "industrialupgrade:quantumitems3"
+    },
+    "D": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/spectralcircuit",
+      "nbt": "{level:9}"
     }
   },
   "pattern": [
-    " B ",
+    "CBC",
     "BAB",
-    " B "
+    "DBD"
   ],
   "result": {
-    "item": "quantumgenerators:qg/bsp_gen"
+    "item": "quantumgenerators:qg/phsp_gen"
   }
 }

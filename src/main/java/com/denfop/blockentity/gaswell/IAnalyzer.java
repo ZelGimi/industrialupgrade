@@ -1,7 +1,7 @@
 package com.denfop.blockentity.gaswell;
 
-import com.denfop.api.multiblock.MultiBlockElement;
+import com.denfop.api.multiblock.IMultiElement;
 
-public interface IAnalyzer extends MultiBlockElement {
+public interface IAnalyzer extends IMultiElement {
 
 }

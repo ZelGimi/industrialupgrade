@@ -1,0 +1,276 @@
+package com.denfop.render.streak;
+
+import com.denfop.items.armour.special.ColorPickerRenderUtil;
+import com.denfop.screen.ScreenIndustrialUpgrade;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.BufferUploader;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.math.Matrix4f;
+import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
+
+import static com.mojang.blaze3d.vertex.DefaultVertexFormat.POSITION_TEX_COLOR;
+import static com.mojang.blaze3d.vertex.VertexFormat.Mode.QUADS;
+import static net.minecraft.client.gui.GuiComponent.fill;
+
+public final class PlayerStreakPreviewRenderer {
+
+    private PlayerStreakPreviewRenderer() {
+    }
+
+    public static void renderPreview(PoseStack poseStack,
+                                     int x, int y, int width, int height,
+                                     Player player,
+                                     PlayerStreakInfo info,
+                                     float partialTicks,
+                                     int mouseX,
+                                     int mouseY) {
+
+        fill(poseStack, x + 1, y + 1, x + width - 1, y + height - 1, 0xFF0D1016);
+        drawPreviewBackground(poseStack, x, y, width, height);
+
+        int centerX = x + width / 2;
+        int entityY = y + height - 6;
+        int scale = Math.min(58, Math.max(40, height - 34));
+
+        float mouseOffsetX = (float) centerX - mouseX;
+        float mouseOffsetY = (float) (y + height / 2) - mouseY;
+
+        float yawFactor = (float) Math.atan(mouseOffsetX / 80.0F);
+        float pitchFactor = (float) Math.atan(mouseOffsetY / 100.0F);
+
+        float attachX = centerX - scale * 0.18F - yawFactor * 8.0F;
+        float attachY = entityY - scale * 1.06F + pitchFactor * 2.0F;
+
+        renderStraightRibbon(
+                poseStack,
+                x,
+                y,
+                width,
+                height,
+                attachX,
+                attachY,
+                scale,
+                info,
+                partialTicks
+        );
+
+        renderPlayerFront(
+                player,
+                centerX,
+                entityY,
+                scale,
+                yawFactor,
+                pitchFactor
+        );
+    }
+
+    public static int resolvePreviewRgb(PlayerStreakInfo info, float partialTicks) {
+        float time = getTime(partialTicks);
+        return StreakRenderHelper.resolvePackedRgb(info, time);
+    }
+
+    private static void drawPreviewBackground(PoseStack poseStack, int x, int y, int width, int height) {
+        ColorPickerRenderUtil.drawVerticalGradient(
+                poseStack,
+                x + 1,
+                y + 1,
+                width - 2,
+                height - 2,
+                0xFF111722,
+                0xFF0A0D12
+        );
+
+        int floorY = y + height - 22;
+        fill(poseStack, x + 10, floorY, x + width - 10, floorY + 1, 0x332BC8FF);
+
+        for (int i = 0; i < 5; i++) {
+            int lineY = y + 20 + i * 20;
+            fill(poseStack, x + 8, lineY, x + width - 8, lineY + 1, 0x10FFFFFF);
+        }
+    }
+
+    private static void renderPlayerFront(Player player,
+                                          int centerX,
+                                          int entityY,
+                                          int scale,
+                                          float yawFactor,
+                                          float pitchFactor) {
+
+
+        float renderMouseX = -yawFactor * 40.0F;
+        float renderMouseY = -pitchFactor * 25.0F;
+
+        InventoryScreen.renderEntityInInventory(
+                centerX,
+                entityY,
+                scale,
+                renderMouseX,
+                renderMouseY,
+                player
+        );
+    }
+
+    private static void renderStraightRibbon(PoseStack poseStack,
+                                             int x,
+                                             int y,
+                                             int width,
+                                             int height,
+                                             float attachX,
+                                             float attachY,
+                                             float scale,
+                                             PlayerStreakInfo info,
+                                             float partialTicks) {
+        float time = getTime(partialTicks);
+        float[] rgba = StreakRenderHelper.resolveColor(info, time, 1.0F);
+
+        int red = Mth.clamp(Math.round(rgba[0] * 255.0F), 0, 255);
+        int green = Mth.clamp(Math.round(rgba[1] * 255.0F), 0, 255);
+        int blue = Mth.clamp(Math.round(rgba[2] * 255.0F), 0, 255);
+
+        float startX = x + 10.0F;
+        float startY = attachY - scale * 0.22F;
+
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.disableCull();
+        RenderSystem.disableDepthTest();
+        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+        ScreenIndustrialUpgrade.bindTexture(StreakRenderHelper.TEXTURE);
+
+        drawStraightRibbonLayer(
+                poseStack,
+                x, y, width, height,
+                startX, startY,
+                attachX, attachY,
+                red, green, blue,
+                scale,
+                1.8F,
+                0.28F,
+                time
+        );
+
+        drawStraightRibbonLayer(
+                poseStack,
+                x, y, width, height,
+                startX, startY,
+                attachX, attachY,
+                red, green, blue,
+                scale,
+                1.0F,
+                0.90F,
+                time
+        );
+
+        RenderSystem.enableDepthTest();
+        RenderSystem.enableCull();
+        RenderSystem.disableBlend();
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+    }
+
+    private static void drawStraightRibbonLayer(PoseStack poseStack,
+                                                int previewX,
+                                                int previewY,
+                                                int previewWidth,
+                                                int previewHeight,
+                                                float startX,
+                                                float startY,
+                                                float endX,
+                                                float endY,
+                                                int red,
+                                                int green,
+                                                int blue,
+                                                float scale,
+                                                float thicknessMultiplier,
+                                                float alphaMultiplier,
+                                                float time) {
+        final int segments = 18;
+
+        float dxFull = endX - startX;
+        float dyFull = endY - startY;
+        float len = Mth.sqrt(dxFull * dxFull + dyFull * dyFull);
+        if (len < 0.0001F) {
+            return;
+        }
+
+        float nx = -dyFull / len;
+        float ny = dxFull / len;
+
+        BufferBuilder buffer = Tesselator.getInstance().getBuilder();
+        buffer.begin(QUADS, POSITION_TEX_COLOR);
+        Matrix4f matrix = poseStack.last().pose();
+
+        for (int i = 0; i < segments - 1; i++) {
+            float t0 = i / (float) (segments - 1);
+            float t1 = (i + 1) / (float) (segments - 1);
+
+            float x0 = Mth.lerp(t0, startX, endX);
+            float y0 = Mth.lerp(t0, startY, endY);
+
+            float x1 = Mth.lerp(t1, startX, endX);
+            float y1 = Mth.lerp(t1, startY, endY);
+
+            float thickness0 = Mth.lerp(t0, scale * 0.28F, scale * 0.08F) * thicknessMultiplier;
+            float thickness1 = Mth.lerp(t1, scale * 0.28F, scale * 0.08F) * thicknessMultiplier;
+
+            float alpha0 = (0.45F + (1.0F - t0) * 0.55F) * alphaMultiplier;
+            float alpha1 = (0.45F + (1.0F - t1) * 0.55F) * alphaMultiplier;
+
+            int a0 = Mth.clamp(Math.round(alpha0 * 255.0F), 0, 255);
+            int a1 = Mth.clamp(Math.round(alpha1 * 255.0F), 0, 255);
+
+            float l0x = x0 - nx * thickness0;
+            float l0y = y0 - ny * thickness0;
+            float r0x = x0 + nx * thickness0;
+            float r0y = y0 + ny * thickness0;
+
+            float l1x = x1 - nx * thickness1;
+            float l1y = y1 - ny * thickness1;
+            float r1x = x1 + nx * thickness1;
+            float r1y = y1 + ny * thickness1;
+
+            if (allOutside(previewX, previewY, previewWidth, previewHeight, l0x, l0y, r0x, r0y, l1x, l1y, r1x, r1y)) {
+                continue;
+            }
+
+            float u0 = t0 * 2.0F + time * 0.01F;
+            float u1 = t1 * 2.0F + time * 0.01F;
+
+            buffer.vertex(matrix, l0x, l0y, 0.0F).uv(u0, 1.0F).color(red, green, blue, a0).endVertex();
+            buffer.vertex(matrix, l1x, l1y, 0.0F).uv(u1, 1.0F).color(red, green, blue, a1).endVertex();
+            buffer.vertex(matrix, r1x, r1y, 0.0F).uv(u1, 0.0F).color(red, green, blue, a1).endVertex();
+            buffer.vertex(matrix, r0x, r0y, 0.0F).uv(u0, 0.0F).color(red, green, blue, a0).endVertex();
+        }
+
+        BufferUploader.drawWithShader(buffer.end());
+    }
+
+    private static boolean allOutside(int x, int y, int width, int height,
+                                      float ax, float ay,
+                                      float bx, float by,
+                                      float cx, float cy,
+                                      float dx, float dy) {
+        return outside(ax, ay, x, y, width, height)
+                && outside(bx, by, x, y, width, height)
+                && outside(cx, cy, x, y, width, height)
+                && outside(dx, dy, x, y, width, height);
+    }
+
+    private static boolean outside(float px, float py, int x, int y, int width, int height) {
+        return px < x + 1 || px > x + width - 1 || py < y + 1 || py > y + height - 1;
+    }
+
+    private static float getTime(float partialTicks) {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.level != null) {
+            return mc.level.getGameTime() + partialTicks;
+        }
+        return (Util.getMillis() % 100000L) / 50.0F;
+    }
+}

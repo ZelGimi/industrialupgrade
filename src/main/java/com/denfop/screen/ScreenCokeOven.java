@@ -97,7 +97,7 @@ public class ScreenCokeOven<T extends ContainerMenuCokeOven> extends ScreenMain<
                             ret.add(Localization.translate(fluid.getFluidType().getDescriptionId()) + ": " + fs.getAmount() + " " + Localization.translate(
                                     "iu.generic.text.mb"));
                         } else {
-                            ret.add("invalid fluid stack");
+                            ret.add(Localization.translate("iu.tooltip.fluid.invalid"));
                         }
                     } else {
                         ret.add(Localization.translate("iu.generic.text.empty"));
@@ -124,7 +124,7 @@ public class ScreenCokeOven<T extends ContainerMenuCokeOven> extends ScreenMain<
 
                     Fluid fluid = fs.getFluid();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
-                    TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+                    TextureAtlasSprite sprite = getSafeFluidSprite(fs);
                     int color = extensions.getTintColor();
                     bindBlockTexture();
                     double renderHeight = (double) fluidHeight * ModUtils.limit(
@@ -168,7 +168,7 @@ public class ScreenCokeOven<T extends ContainerMenuCokeOven> extends ScreenMain<
                                     "iu.generic.text.mb"));
 
                         } else {
-                            ret.add("invalid fluid stack");
+                            ret.add(Localization.translate("iu.tooltip.fluid.invalid"));
                         }
                     } else {
                         ret.add(Localization.translate("iu.generic.text.empty"));
@@ -195,7 +195,7 @@ public class ScreenCokeOven<T extends ContainerMenuCokeOven> extends ScreenMain<
 
                     Fluid fluid = fs.getFluid();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
-                    TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+                    TextureAtlasSprite sprite = getSafeFluidSprite(fs);
                     int color = extensions.getTintColor();
                     bindBlockTexture();
                     double renderHeight = (double) fluidHeight * ModUtils.limit(

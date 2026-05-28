@@ -1,9 +1,9 @@
 package com.denfop.blockentity.mechanism.steamturbine;
 
-import com.denfop.api.multiblock.MultiBlockElement;
+import com.denfop.api.multiblock.IMultiElement;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
-public interface ITank extends MultiBlockElement {
+public interface ITank extends IMultiElement {
 
     FluidTank getTank();
 

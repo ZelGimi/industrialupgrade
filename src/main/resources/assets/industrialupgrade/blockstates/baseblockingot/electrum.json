@@ -1,7 +1,7 @@
 {
 "variants": {
     "": {
-       "model": "industrialupgrade:block/baseblockingot/electrium"
+       "model": "industrialupgrade:block/baseblockingot/electrum"
     }
   }
 }

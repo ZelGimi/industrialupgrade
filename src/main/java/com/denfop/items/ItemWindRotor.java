@@ -102,8 +102,8 @@ public class ItemWindRotor extends ItemDamage implements WindRotor, IRotorUpgrad
     public void appendHoverText(@Nonnull ItemStack stack, @Nullable Level world, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flag) {
         int windStrength = 10;
         int windStrength1 = 20;
-        double KU = windStrength * this.getEfficiency(stack) * 25.0F;
-        double KU1 = windStrength1 * this.getEfficiency(stack) * 25.0F;
+        double KU = windStrength * this.getEfficiency(stack) * 25.0F * 0.9;
+        double KU1 = windStrength1 * this.getEfficiency(stack) * 25.0F * 0.9;
 
         tooltip.add(Component.literal(Localization.translate("iu.windgenerator") + windStrength + " m/s "
                 + Localization.translate("iu.windgenerator1") + ModUtils.getString(KU)));

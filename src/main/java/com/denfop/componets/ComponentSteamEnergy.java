@@ -21,8 +21,9 @@ import java.util.Set;
 
 public class ComponentSteamEnergy extends ComponentBaseEnergy {
 
-    FluidTank fluidTank;
     public static int speedGeneration = 1;
+    FluidTank fluidTank;
+
     public ComponentSteamEnergy(EnergyType type, BlockEntityInventory parent, double capacity) {
         this(type, parent, capacity, Collections.emptySet(), Collections.emptySet(), 1);
     }

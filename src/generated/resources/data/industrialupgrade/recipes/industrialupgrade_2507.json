@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "item": "industrialupgrade:crafting_elements/crafting_789_element"
+    }
+  },
+  "pattern": [
+    "AAA",
+    "AAA",
+    "AAA"
+  ],
+  "result": {
+    "item": "industrialupgrade:itemdust/coal_dust"
+  }
+}

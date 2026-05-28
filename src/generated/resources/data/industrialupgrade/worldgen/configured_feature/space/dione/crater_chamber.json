@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:space_chamber",
+  "config": {
+    "flooded": false,
+    "fluid": {
+      "Name": "industrialupgrade:fluid/fluidmethane",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "kind": "crater_linked_chamber",
+    "max_length": 12,
+    "max_radius": 8,
+    "max_vertical": 28,
+    "min_length": 8,
+    "min_radius": 4,
+    "open_to_surface": true,
+    "primary": {
+      "Name": "industrialupgrade:spacestone/dione_stone"
+    },
+    "secondary": {
+      "Name": "industrialupgrade:spacecobblestone/dione_cobblestone"
+    },
+    "tertiary": {
+      "Name": "industrialupgrade:spacecobblestone/dione_cobblestone"
+    }
+  }
+}

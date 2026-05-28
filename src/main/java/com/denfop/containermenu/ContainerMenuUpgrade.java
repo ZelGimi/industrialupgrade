@@ -2,7 +2,6 @@ package com.denfop.containermenu;
 
 
 import com.denfop.IUItem;
-import com.denfop.containermenu.slot.SlotVirtual;
 import com.denfop.items.ItemStackUpgradeModules;
 import com.denfop.items.UpgradeSlot;
 import com.denfop.items.UpgradeSlot1;

@@ -1,5 +1,7 @@
 package com.denfop.items;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUCore;
 import com.denfop.blocks.FluidName;
 import com.denfop.network.packet.PacketRadiationUpdateValue;
@@ -27,7 +29,7 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 public class ItemRadioprotector extends ItemFluidContainer implements IProperties {
 
     public ItemRadioprotector() {
-        super(1000, 1);
+        super(1000, ModConfig.itemInt("radioprotector_capacity", 1));
         IUCore.proxy.addProperties(this);
 
     }

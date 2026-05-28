@@ -1,6 +1,8 @@
 package com.denfop.blockentity.base;
 
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -82,7 +84,7 @@ public class BlockEntityAutoSpawner extends BlockEntityElectricMachine
     public int fireAspect;
 
     public BlockEntityAutoSpawner(BlockPos pos, BlockState state) {
-        super(150000, 14, 27, BlockBaseMachine3Entity.spawner, pos, state);
+        super(ModConfig.mechanismDouble("automatic_hunter_energy_storage", 150000.0D), 14, 27, BlockBaseMachine3Entity.spawner, pos, state);
         this.module_slot = new InventoryModules(this);
         this.module_upgrade = new InventoryUpgradeModule(this);
         this.progress = new int[module_slot.size()];
@@ -92,13 +94,13 @@ public class BlockEntityAutoSpawner extends BlockEntityElectricMachine
         this.tempcostenergy = 1500;
         this.costenergy = 1500;
         this.speed = 0;
-        this.chance = 0;
+        this.chance = ModConfig.mechanismInt("auto_spawner_chance", 0);
         this.spawn = 1;
         this.experience = 0;
         this.defaultconsume = this.costenergy;
         this.exp = this.addComponent(ComponentBaseEnergy.asBasicSource(EnergyType.EXPERIENCE, this, 15000, 14));
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("auto_spawner_soil_pollution_amount", 0.1D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("auto_spawner_air_pollution_amount", 0.1D)));
     }
 
     public MultiBlockEntity getTeBlock() {
@@ -112,7 +114,7 @@ public class BlockEntityAutoSpawner extends BlockEntityElectricMachine
 
     @Override
     public int getContainerSize() {
-        return 1;
+        return super.getContainerSize();
     }
 
     @Override
@@ -242,43 +244,45 @@ public class BlockEntityAutoSpawner extends BlockEntityElectricMachine
         if (!(entity instanceof WitherBoss) && !(entity instanceof EnderDragon)) {
             if (!this.level.isClientSide) {
                 int i = this.chance;
-                LootContext.Builder lootcontext$builder = this.lootContext[index];
-                if (table == null) {
-                    return;
-                }
-                if (lootcontext$builder == null) {
-                    lootcontext$builder = this.lootContext[index] = (new LootContext.Builder((ServerLevel) this.level))
-                            .withParameter(LootContextParams.THIS_ENTITY, entity).withParameter(LootContextParams.KILLER_ENTITY, this.player).withParameter(LootContextParams.LAST_DAMAGE_PLAYER, player)
-                            .withParameter(LootContextParams.DAMAGE_SOURCE, source).withParameter(LootContextParams.DIRECT_KILLER_ENTITY, entity).withLuck(i).withParameter(LootContextParams.ORIGIN, new Vec3(pos.getX(), pos.getY(), pos.getZ()));
-                }
-                final LootContext context = lootcontext$builder.create(LootContextParamSets.ENTITY);
+                try {
+                    LootContext.Builder lootcontext$builder = this.lootContext[index];
+                    if (table == null) {
+                        return;
+                    }
+                    if (lootcontext$builder == null) {
+                        lootcontext$builder = this.lootContext[index] = (new LootContext.Builder((ServerLevel) this.level))
+                                .withParameter(LootContextParams.THIS_ENTITY, entity).withParameter(LootContextParams.KILLER_ENTITY, this.player).withParameter(LootContextParams.LAST_DAMAGE_PLAYER, player)
+                                .withParameter(LootContextParams.DAMAGE_SOURCE, source).withParameter(LootContextParams.DIRECT_KILLER_ENTITY, entity).withLuck(i).withParameter(LootContextParams.ORIGIN, new Vec3(pos.getX(), pos.getY(), pos.getZ()));
+                    }
+                    final LootContext context = lootcontext$builder.create(LootContextParamSets.ENTITY);
 
-                List<ItemStack> list = Lists.newArrayList();
-                for (int j = 0; j < this.spawn; j++) {
-                    table.getRandomItems(context, list::add);
-                }
-                for (ItemStack item : list) {
+                    List<ItemStack> list = Lists.newArrayList();
+                    for (int j = 0; j < this.spawn; j++) {
+                        table.getRandomItems(context, list::add);
+                    }
+                    for (ItemStack item : list) {
 
 
-                    ItemStack smelt = ItemStack.EMPTY;
-                    if (this.fireAspect > 0) {
-                        MachineRecipe recipe = Recipes.recipes.getRecipeMachineMultiOutput(Recipes.recipes.getRecipe("furnace"), Recipes.recipes.getRecipeList("furnace"), false, Collections.singletonList(item));
-                        if (recipe != null) {
-                            smelt = recipe.getRecipe().output.items.get(0).copy();
-                            smelt.setCount(item.getCount());
+                        ItemStack smelt = ItemStack.EMPTY;
+                        if (this.fireAspect > 0) {
+                            MachineRecipe recipe = Recipes.recipes.getRecipeMachineMultiOutput(Recipes.recipes.getRecipe("furnace"), Recipes.recipes.getRecipeList("furnace"), false, Collections.singletonList(item));
+                            if (recipe != null) {
+                                smelt = recipe.getRecipe().output.items.get(0).copy();
+                                smelt.setCount(item.getCount());
+                            }
                         }
+                        if (smelt.isEmpty()) {
+                            this.outputSlot.add(item);
+
+
+                        } else {
+                            this.outputSlot.add(smelt);
+
+                        }
+
                     }
-                    if (smelt.isEmpty()) {
-                        this.outputSlot.add(item);
-
-
-                    } else {
-                        this.outputSlot.add(smelt);
-
-                    }
-
+                } catch (Exception e) {
                 }
-
             }
         }
     }

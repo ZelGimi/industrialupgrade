@@ -3,7 +3,7 @@
   "cookingtime": 200,
   "experience": 0.6,
   "ingredient": {
-    "item": "industrialupgrade:baseore2/molybdenum"
+    "item": "industrialupgrade:baseore/iridium"
   },
-  "result": "industrialupgrade:itemingots/molybdenum"
+  "result": "industrialupgrade:itemingots/iridium_ingot"
 }

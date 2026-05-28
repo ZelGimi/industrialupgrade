@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.dual;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -53,7 +55,7 @@ import static com.denfop.events.IUEventHandler.getUpgradeItem;
 public class BlockEntityUpgradeBlock extends BlockEntityDoubleElectricMachine implements IHasRecipe {
 
     public BlockEntityUpgradeBlock(BlockPos pos, BlockState state) {
-        super(1, 300, 1, EnumDoubleElectricMachine.UPGRADE, false, BlockUpgradeBlockEntity.upgrade_block, pos, state);
+        super(ModConfig.mechanismInt("update_energy_per_tick", 1), ModConfig.mechanismInt("update_operation_length", 300), 1, EnumDoubleElectricMachine.UPGRADE, false, BlockUpgradeBlockEntity.upgrade_block, pos, state);
         Recipes.recipes.addInitRecipes(this);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot) {
             @Override

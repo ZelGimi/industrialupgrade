@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -70,16 +72,16 @@ public class BlockEntityItemDividerFluids extends BlockEntityElectricMachine imp
     protected short progress;
 
     public BlockEntityItemDividerFluids(BlockPos pos, BlockState state) {
-        super(200, 1, 0, BlockBaseMachine3Entity.item_divider_to_fluid, pos, state);
+        super(ModConfig.mechanismDouble("item_to_fluid_divider_energy_storage", 200.0D), 1, 0, BlockBaseMachine3Entity.item_divider_to_fluid, pos, state);
         Recipes.recipes.addInitRecipes(this);
         this.progress = 0;
-        this.defaultEnergyConsume = this.energyConsume = 1;
+        this.defaultEnergyConsume = this.energyConsume = ModConfig.mechanismInt("item_divider_fluids_energy_use", 1);
         this.defaultOperationLength = this.operationLength = 100;
         this.defaultTier = 1;
         this.defaultEnergyStorage = 100;
 
-        this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("item_divider_fluids_soil_pollution_amount", 0.1D)));
+        this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("item_divider_fluids_air_pollution_amount", 0.1D)));
         this.inputSlotA = new InventoryRecipes(this, "item_divider_fluid", this);
         Fluids fluids = this.addComponent(new Fluids(this));
         this.fluidTank1 = fluids.addTank("fluidTank1", 12 * 1000, Inventory.TypeItemSlot.OUTPUT);
@@ -121,9 +123,9 @@ public class BlockEntityItemDividerFluids extends BlockEntityElectricMachine imp
             tooltip.add(Localization.translate("press.lshift"));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            tooltip.add(Localization.translate("iu.machines_work_energy") + 200 + Localization.translate(
+            tooltip.add(Localization.translate("iu.machines_work_energy") + 1 + Localization.translate(
                     "iu.machines_work_energy_type_eu"));
-            tooltip.add(Localization.translate("iu.machines_work_length") + 1);
+            tooltip.add(Localization.translate("iu.machines_work_length") + 100);
         }
         super.addInformation(stack, tooltip);
 
@@ -176,12 +178,12 @@ public class BlockEntityItemDividerFluids extends BlockEntityElectricMachine imp
         );
         addRecipe(
                 new ItemStack(Items.QUARTZ),
-                new FluidStack(FluidName.fluidquartz.getInstance().get(), 144),
+                new FluidStack(FluidName.fluidquartz.getInstance().get(), 90),
                 new FluidStack(FluidName.fluidoxygen.getInstance().get(), 10)
         );
         addRecipe(
                 new ItemStack(Blocks.GLASS, 4),
-                new FluidStack(FluidName.fluidquartz.getInstance().get(), 144),
+                new FluidStack(FluidName.fluidquartz.getInstance().get(), 90),
                 new FluidStack(FluidName.fluidoxygen.getInstance().get(), 10)
         );
         addRecipe(

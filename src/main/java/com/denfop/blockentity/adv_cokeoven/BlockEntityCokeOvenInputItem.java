@@ -26,7 +26,7 @@ public class BlockEntityCokeOvenInputItem extends BlockEntityMultiBlockElement i
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
 
-        tooltip.add(Localization.translate("iu.blastfurnace.info5") + new ItemStack(IUItem.ForgeHammer.getItem()).getDisplayName().getString());
+        tooltip.add(Localization.translate("iu.blastfurnace.info5") + com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(IUItem.ForgeHammer.getItem()).getDisplayName().getString()));
 
     }
 

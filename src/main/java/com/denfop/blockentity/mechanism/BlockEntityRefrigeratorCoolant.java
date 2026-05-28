@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -42,7 +44,7 @@ public class BlockEntityRefrigeratorCoolant extends BlockEntityElectricMachine i
     public final InventoryTank fluidSlot;
 
     public BlockEntityRefrigeratorCoolant(BlockPos pos, BlockState state) {
-        super(400, 14, 1, BlockBaseMachine3Entity.refrigerator_coolant, pos, state);
+        super(ModConfig.mechanismDouble("cooling_rod_refrigerator_energy_storage", 400.0D), 14, 1, BlockBaseMachine3Entity.refrigerator_coolant, pos, state);
         this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.fluids = this.addComponent(new Fluids(this));
         this.tank = fluids.addTankInsert("input", 10000, Fluids.fluidPredicate(
@@ -50,8 +52,8 @@ public class BlockEntityRefrigeratorCoolant extends BlockEntityElectricMachine i
                 FluidName.fluidhydrogen.getInstance().get(),
                 FluidName.fluidnitrogen.getInstance().get()
         ));
-        this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("cooling_rod_refrigerator_soil_pollution_amount", 0.1D)));
+        this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("cooling_rod_refrigerator_air_pollution_amount", 0.1D)));
         this.slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean canPlaceItem(final int index, final ItemStack stack) {

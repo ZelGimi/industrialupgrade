@@ -1,0 +1,27 @@
+{
+  "feature": "industrialupgrade:mimas_cavity",
+  "placement": [
+    {
+      "type": "minecraft:rarity_filter",
+      "chance": 9
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:height_range",
+      "height": {
+        "type": "minecraft:uniform",
+        "max_inclusive": {
+          "absolute": 72
+        },
+        "min_inclusive": {
+          "absolute": -56
+        }
+      }
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

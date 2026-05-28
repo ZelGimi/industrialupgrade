@@ -55,7 +55,7 @@ public class ScreenGeneticTransposer<T extends ContainerMenuGeneticTransposer> e
 
     private static List<ItemStack> getCompatibleUpgrades(BlockEntityUpgrade block) {
         List<ItemStack> ret = new ArrayList<>();
-        Set<EnumBlockEntityUpgrade> properties = block.getUpgradableProperties();
+        Set<EnumBlockEntityUpgrade> properties = block.getAllPossibleUpgradableProperties();
 
         for (final ItemStack stack : BlockEntityUpgradeManager.getUpgrades()) {
             UpgradeItem item = (UpgradeItem) stack.getItem();
@@ -79,7 +79,7 @@ public class ScreenGeneticTransposer<T extends ContainerMenuGeneticTransposer> e
             text.add(Localization.translate(Constants.ABBREVIATION + ".generic.text.upgrade"));
 
             for (final ItemStack stack : getCompatibleUpgrades(this.container.base)) {
-                text.add(stack.getDisplayName().getString());
+                text.add(com.denfop.utils.ModUtils.cleanComponentString(stack.getDisplayName().getString()));
             }
 
             this.drawTooltip(mouseX, mouseY, text);

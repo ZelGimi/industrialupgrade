@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "A": {
-      "item": "industrialupgrade:basemachine/alloy_smelter"
+      "item": "industrialupgrade:blockresource/machine"
     },
     "B": {
       "item": "industrialupgrade:crafting_elements/crafting_235_element"

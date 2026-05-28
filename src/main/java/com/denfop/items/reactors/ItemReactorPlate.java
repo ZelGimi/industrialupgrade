@@ -1,5 +1,7 @@
 package com.denfop.items.reactors;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUCore;
 import com.denfop.api.reactors.EnumTypeComponent;
 import com.denfop.api.reactors.IAdvReactor;
@@ -23,7 +25,7 @@ public class ItemReactorPlate extends ItemDamage implements IReactorItem {
     private final double percent;
 
     public ItemReactorPlate(int level, double percent) {
-        super(new Item.Properties().tab(IUCore.ReactorsTab).stacksTo(1), 0);
+        super(new Item.Properties().tab(IUCore.ReactorsTab).stacksTo(1), ModConfig.itemInt("regular_plate_durability", 0));
         this.level = level;
         this.percent = percent;
     }

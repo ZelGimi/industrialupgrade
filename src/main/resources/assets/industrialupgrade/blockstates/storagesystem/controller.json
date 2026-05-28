@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,type=controller": {
+      "model": "industrialupgrade:block/storagesystem/controller"
+    },
+    "facing=south,type=controller": {
+      "model": "industrialupgrade:block/storagesystem/controller",
+      "y": 180
+    },
+    "facing=west,type=controller": {
+      "model": "industrialupgrade:block/storagesystem/controller",
+      "y": 270
+    },
+    "facing=east,type=controller": {
+      "model": "industrialupgrade:block/storagesystem/controller",
+      "y": 90
+    },
+    "facing=north,type=controller_active": {
+      "model": "industrialupgrade:block/storagesystem/controller"
+    },
+    "facing=south,type=controller_active": {
+      "model": "industrialupgrade:block/storagesystem/controller",
+      "y": 180
+    },
+    "facing=west,type=controller_active": {
+      "model": "industrialupgrade:block/storagesystem/controller",
+      "y": 270
+    },
+    "facing=east,type=controller_active": {
+      "model": "industrialupgrade:block/storagesystem/controller",
+      "y": 90
+    },
+    "facing=down,type=controller": {
+      "model": "industrialupgrade:block/storagesystem/controller",
+      "x": 90
+    },
+    "facing=up,type=controller_active": {
+      "model": "industrialupgrade:block/storagesystem/controller",
+      "x": 270
+    },
+    "facing=up,type=controller": {
+      "model": "industrialupgrade:block/storagesystem/controller",
+      "x": 270
+    },
+    "facing=down,type=controller_active": {
+      "model": "industrialupgrade:block/storagesystem/controller",
+      "x": 90
+    }
+  }
+}

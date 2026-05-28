@@ -1,5 +1,7 @@
 package com.denfop.blockentity.tank;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blockentity.base.BlockEntityLiquedTank;
@@ -11,7 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class BlockEntityTank extends BlockEntityLiquedTank {
 
     public BlockEntityTank(BlockPos pos, BlockState state) {
-        super(40, BlockTankEntity.tank_iu, pos, state);
+        super(ModConfig.mechanismInt("liquid_tank_tank_capacity", 40), BlockTankEntity.tank_iu, pos, state);
     }
 
 

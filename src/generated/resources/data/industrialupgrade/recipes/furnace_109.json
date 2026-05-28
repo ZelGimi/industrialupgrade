@@ -1,9 +1,9 @@
 {
   "type": "minecraft:smelting",
   "cookingtime": 200,
-  "experience": 5.0,
+  "experience": 0.6,
   "ingredient": {
-    "item": "industrialupgrade:blockspace2/io_emerald_ore"
+    "item": "industrialupgrade:blockspace/enceladus_magnesium_ore"
   },
-  "result": "minecraft:emerald"
+  "result": "industrialupgrade:itemingots/magnesium_ingot"
 }

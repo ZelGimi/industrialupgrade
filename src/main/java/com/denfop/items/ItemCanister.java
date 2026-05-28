@@ -1,5 +1,7 @@
 package com.denfop.items;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.blocks.FluidName;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.CreativeModeTab;
@@ -9,7 +11,7 @@ import net.minecraft.world.level.material.Fluid;
 public class ItemCanister extends ItemFluidContainer {
 
     public ItemCanister() {
-        super(1000, 1);
+        super(1000, ModConfig.itemInt("canister_capacity", 1));
     }
 
 

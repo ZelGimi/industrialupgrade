@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "A": {
-      "item": "industrialupgrade:basemachine1/adv_alloy_smelter"
+      "item": "industrialupgrade:blockresource/advanced_machine"
     },
     "B": {
       "item": "industrialupgrade:crafting_elements/crafting_618_element"

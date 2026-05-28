@@ -10,7 +10,7 @@ import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockVolcanoChest;
 import com.denfop.containermenu.ContainerMenuBase;
 import com.denfop.containermenu.ContainerMenuVolcanoChest;
-import com.denfop.datagen.IULootTableProvider;
+import com.denfop.datagen.IULootTables;
 import com.denfop.inventory.Inventory;
 import com.denfop.screen.ScreenIndustrialUpgrade;
 import com.denfop.screen.ScreenVolcanoChest;
@@ -47,7 +47,7 @@ public class BlockEntityVolcanoChest extends BlockEntityInventory {
         lootcontext$builder = (new LootContext.Builder((ServerLevel) this.level)).withParameter(LootContextParams.ORIGIN, new Vec3(pos.getX(), pos.getY(), pos.getZ()));
         final LootContext context = lootcontext$builder.create(LootContextParamSets.CHEST);
         if (IUCore.VOLCANO_TABLE == null) {
-            IUCore.VOLCANO_TABLE = level.getServer().getLootTables().get(IULootTableProvider.VOLCANO_LOOT_TABLE);
+            IUCore.VOLCANO_TABLE = level.getServer().getLootTables().get(IULootTables.VOLCANO);
         }
         for (int i = 0; i < 8; i++)
             IUCore.VOLCANO_TABLE.getRandomItems(context, stacks::add);

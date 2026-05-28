@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -38,7 +40,7 @@ public class BlockEntityMagnetGenerator extends BlockEntityElectricMachine {
     public int timer;
 
     public BlockEntityMagnetGenerator(BlockPos pos, BlockState state) {
-        super(0, 14, 1, BlockBaseMachine1Entity.magnet_generator, pos, state);
+        super(ModConfig.mechanismDouble("magnetic_generator_energy_storage", 0.0D), 14, 1, BlockBaseMachine1Entity.magnet_generator, pos, state);
         this.timer = 86400;
         this.energy = this.addComponent(Energy.asBasicSource(
                 this,

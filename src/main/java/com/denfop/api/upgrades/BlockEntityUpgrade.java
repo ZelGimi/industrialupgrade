@@ -6,4 +6,5 @@ public interface BlockEntityUpgrade {
 
     Set<EnumBlockEntityUpgrade> getUpgradableProperties();
 
+    Set<EnumBlockEntityUpgrade> getAllPossibleUpgradableProperties();
 }

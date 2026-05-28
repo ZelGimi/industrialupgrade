@@ -1,13 +1,13 @@
 package com.denfop.api.steam;
 
-import com.denfop.api.multiblock.MainMultiBlock;
+import com.denfop.api.multiblock.IMainMultiBlock;
 import com.denfop.blockentity.mechanism.steamturbine.IRod;
 import com.denfop.blockentity.mechanism.steamturbine.ISocket;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import java.util.List;
 
-public interface ISteam extends MainMultiBlock {
+public interface ISteam extends IMainMultiBlock {
 
 
     ISocket getEnergy();

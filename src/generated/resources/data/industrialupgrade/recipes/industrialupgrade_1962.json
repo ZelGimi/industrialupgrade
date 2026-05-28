@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "A": {
-      "item": "industrialupgrade:quantumitems3"
+      "item": "industrialupgrade:quantumitems6"
     },
     "B": {
       "item": "industrialupgrade:itemcore/quacore"
@@ -15,9 +15,9 @@
     }
   },
   "pattern": [
-    "ADA",
-    "CBC",
-    "ADA"
+    "DBD",
+    "ACA",
+    "   "
   ],
   "result": {
     "item": "industrialupgrade:water_rotors_upgrade/water_rotorupgrade1"

@@ -1,9 +1,9 @@
 {
   "type": "minecraft:smelting",
   "cookingtime": 200,
-  "experience": 0.1,
+  "experience": 0.6,
   "ingredient": {
-    "item": "industrialupgrade:crafting_elements/crafting_290_element"
+    "item": "industrialupgrade:blockspace/asteroid_cadmium_ore"
   },
-  "result": "industrialupgrade:crafting_elements/crafting_271_element"
+  "result": "industrialupgrade:itemingots/cadmium"
 }

@@ -1,5 +1,7 @@
 package com.denfop.blockentity.base;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.recipe.InventoryRecipes;
@@ -43,7 +45,7 @@ public abstract class BlockEntityBasePlasticPlateCreator extends BlockEntityElec
     public MachineRecipe output;
 
     public BlockEntityBasePlasticPlateCreator(int energyPerTick, int length, int aDefaultTier, MultiBlockEntity block, BlockPos pos, BlockState state) {
-        super(energyPerTick * length, 1, 12, Fluids.fluidPredicate(FluidName.fluidoxygen.getInstance().get()), block, pos, state);
+        super(energyPerTick * length, 1, ModConfig.mechanismInt("base_plastic_plate_creator_tank_capacity", 12), Fluids.fluidPredicate(FluidName.fluidoxygen.getInstance().get()), block, pos, state);
         this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.outputSlot1 = new InventoryOutput(this, 1);
         this.fluidSlot = new InventoryFluidByList(this, 1, FluidName.fluidoxygen.getInstance().get());
@@ -77,7 +79,7 @@ public abstract class BlockEntityBasePlasticPlateCreator extends BlockEntityElec
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getEnergyConsume() + Localization.translate(
                     "iu.machines_work_energy_type_eu"));
-            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getOperationsPerTick());
+            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getDefaultOperationLength());
         }
         super.addInformation(stack, tooltip);
 

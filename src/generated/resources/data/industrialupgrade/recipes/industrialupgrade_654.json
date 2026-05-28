@@ -4,17 +4,8 @@
     "A": {
       "item": "industrialupgrade:energy_tools/spectralpickaxe"
     },
-    "B": {
-      "item": "industrialupgrade:quantumitems3"
-    },
     "C": {
       "item": "industrialupgrade:energy_tools/spectralshovel"
-    },
-    "D": {
-      "type": "forge:nbt",
-      "count": 1,
-      "item": "industrialupgrade:circuit/spectralcircuit",
-      "nbt": "{level:9}"
     },
     "E": {
       "item": "industrialupgrade:spectral_box"
@@ -25,8 +16,8 @@
   },
   "pattern": [
     "EHE",
-    "ABC",
-    " D "
+    "AEC",
+    "   "
   ],
   "result": {
     "item": "industrialupgrade:energy_tools/spectraldrill"

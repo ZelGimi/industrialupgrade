@@ -1008,9 +1008,9 @@ public class BasicRecipeThree {
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 155), 'F', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 402), 'G',
                 BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 4), "ADA", "CBC", "ADA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 4), "DBD", "ACA", "   ",
 
-                ('A'), ItemStackHelper.fromData(IUItem.advQuantumtool), ('B'), ItemStackHelper.fromData(
+                ('A'), ItemStackHelper.fromData(IUItem.quantumtool), ('B'), ItemStackHelper.fromData(
                         IUItem.core,
                         1,
                         4
@@ -1018,24 +1018,22 @@ public class BasicRecipeThree {
                 ('C'), ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 3), ('D'),
                 IUItem.compressIridiumplate
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 5), "ADA", "CBC", "ADA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 5), "DBD", "ACA", "   ",
 
-                ('A'), ItemStackHelper.fromData(IUItem.adv_spectral_box), ('B'), ItemStackHelper.fromData(
+                ('A'), ItemStackHelper.fromData(IUItem.spectral_box), ('B'), ItemStackHelper.fromData(
                         IUItem.core,
                         1,
-                        6
+                        5
                 ),
                 ('C'), ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 4), ('D'),
                 IUItem.doublecompressIridiumplate
         );
         Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 6),
-                "ADA",
-                "CBC",
-                "ADA",
+                "ADA", "CBC", "ADA",
 
                 ('A'),
-                ItemStackHelper.fromData(IUItem.advnanobox),
+                ItemStackHelper.fromData(IUItem.nanoBox),
                 ('B'),
                 ItemStackHelper.fromData(IUItem.module_schedule),
                 ('C'),
@@ -1044,9 +1042,9 @@ public class BasicRecipeThree {
                         'D'),
                 "forge:casings/Duralumin"
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 7), "ADA", "CBC", "ADA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 7), "DBD", "ACA", "   ",
 
-                ('A'), ItemStackHelper.fromData(IUItem.advQuantumtool), ('B'), ItemStackHelper.fromData(
+                ('A'), ItemStackHelper.fromData(IUItem.quantumtool), ('B'), ItemStackHelper.fromData(
                         IUItem.core,
                         1,
                         4
@@ -1054,12 +1052,12 @@ public class BasicRecipeThree {
                 ('C'), ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 6), ('D'),
                 IUItem.compressIridiumplate
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 8), "ADA", "CBC", "ADA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 8), "DBD", "ACA", "   ",
 
-                ('A'), ItemStackHelper.fromData(IUItem.adv_spectral_box), ('B'), ItemStackHelper.fromData(
+                ('A'), ItemStackHelper.fromData(IUItem.spectral_box), ('B'), ItemStackHelper.fromData(
                         IUItem.core,
                         1,
-                        6
+                        5
                 ),
                 ('C'), ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 7), ('D'),
                 IUItem.doublecompressIridiumplate
@@ -1071,7 +1069,7 @@ public class BasicRecipeThree {
                 "ADA",
 
                 ('A'),
-                ItemStackHelper.fromData(IUItem.adv_spectral_box),
+                ItemStackHelper.fromData(IUItem.spectral_box),
                 ('B'),
                 ItemStackHelper.fromData(IUItem.module_schedule),
                 ('C'),
@@ -1087,7 +1085,7 @@ public class BasicRecipeThree {
                 "DED",
 
                 ('A'),
-                ItemStackHelper.fromData(IUItem.advnanobox),
+                ItemStackHelper.fromData(IUItem.nanoBox),
                 ('B'),
                 ItemStackHelper.fromData(IUItem.module_schedule),
                 ('C'),
@@ -1098,29 +1096,29 @@ public class BasicRecipeThree {
                 ('E'),
                 ItemStackHelper.fromData(IUItem.core, 1, 3)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 11), "ADA", "CBC", "ADA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 11), "DBD", "ACA", "   ",
 
                 ('A'), ItemStackHelper.fromData(IUItem.advQuantumtool), ('B'), ItemStackHelper.fromData(
                         IUItem.core,
                         1,
-                        4
+                        3
                 ),
                 ('C'), ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 10), ('D'),
                 IUItem.compressIridiumplate
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 12), "ADA", "CBC", "ADA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 12), "DBD", "ACA", "   ",
 
                 ('A'), ItemStackHelper.fromData(IUItem.adv_spectral_box), ('B'), ItemStackHelper.fromData(
                         IUItem.core,
                         1,
-                        6
+                        4
                 ),
                 ('C'), ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 11), ('D'),
                 IUItem.doublecompressIridiumplate
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 13), "ADA", "CBC", "DED",
 
-                ('A'), ItemStackHelper.fromData(IUItem.advnanobox),
+                ('A'), ItemStackHelper.fromData(IUItem.nanoBox),
 
                 ('B'), ItemStackHelper.fromData(IUItem.module_schedule),
 
@@ -1129,24 +1127,24 @@ public class BasicRecipeThree {
                 ('D'),
                 "forge:doubleplate/Redbrass",
 
-                ('E'), ItemStackHelper.fromData(IUItem.core, 1, 4)
+                ('E'), ItemStackHelper.fromData(IUItem.core, 1, 3)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 14), "ADA", "CBC", "ADA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 14), "DBD", "ACA", "   ",
 
                 ('A'), ItemStackHelper.fromData(IUItem.advQuantumtool), ('B'), ItemStackHelper.fromData(
                         IUItem.core,
                         1,
-                        5
+                        4
                 ),
                 ('C'), ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 13), ('D'),
                 IUItem.compressIridiumplate
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 15), "ADA", "CBC", "ADA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 15), "DBD", "ACA", "   ",
 
                 ('A'), ItemStackHelper.fromData(IUItem.adv_spectral_box), ('B'), ItemStackHelper.fromData(
                         IUItem.core,
                         1,
-                        6
+                        5
                 ),
                 ('C'), ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 14), ('D'),
                 IUItem.doublecompressIridiumplate
@@ -1430,12 +1428,12 @@ public class BasicRecipeThree {
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 0), "A A", "CBC", "A A",
 
-                ('A'), ItemStackHelper.fromData(IUItem.advnanobox),
+                ('A'), ItemStackHelper.fromData(IUItem.nanoBox),
                 ('B'), ItemStackHelper.fromData(IUItem.module_schedule), ('C'), "forge:casings/Nichrome"
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 1), "ADA", "CBC", "ADA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 1), "DBD", "ACA", "   ",
 
-                ('A'), ItemStackHelper.fromData(IUItem.advQuantumtool), ('B'), ItemStackHelper.fromData(
+                ('A'), ItemStackHelper.fromData(IUItem.quantumtool), ('B'), ItemStackHelper.fromData(
                         IUItem.core,
                         1,
                         3
@@ -1443,19 +1441,19 @@ public class BasicRecipeThree {
                 ('C'), ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 0), ('D'),
                 "forge:casings/Redbrass"
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 2), "ADA", "CBC", "ADA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 2), "DBD", "ACA", "   ",
 
-                ('A'), ItemStackHelper.fromData(IUItem.adv_spectral_box), ('B'), ItemStackHelper.fromData(
+                ('A'), ItemStackHelper.fromData(IUItem.spectral_box), ('B'), ItemStackHelper.fromData(
                         IUItem.core,
                         1,
-                        5
+                        4
                 ),
                 ('C'), ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 1), ('D'),
                 "forge:casings/Muntsa"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.water_rotors_upgrade, 1, 3), "A A", "CBC", "A A",
 
-                ('A'), ItemStackHelper.fromData(IUItem.advnanobox),
+                ('A'), ItemStackHelper.fromData(IUItem.nanoBox),
                 ('B'), ItemStackHelper.fromData(IUItem.module_schedule), ('C'), IUItem.iridiumPlate
         );
 
@@ -1474,7 +1472,7 @@ public class BasicRecipeThree {
         );
         Recipes.recipe.addRecipe(getBlockStack(BlockStrongAnvilEntity.block_strong_anvil), "CCC", "ADA", "   ",
 
-                'A', "forge:plates/Silver", 'C', "forge:storage_blocks/Iridium", 'D', getBlockStack(BlockAnvilEntity.block_anvil)
+                'A', "forge:plates/Silver", 'C', "forge:plates/Iridium", 'D', getBlockStack(BlockAnvilEntity.block_anvil)
         );
         Recipes.recipe.addRecipe(getBlockStack(BlockMiniSmelteryEntity.mini_smeltery),
                 "ACA",
@@ -2046,7 +2044,7 @@ public class BasicRecipeThree {
         );
         Recipes.recipe.addRecipe(getBlockStack(BlockApiaryEntity.apiary), "AAA", "B B", "AAA",
                 'A', "slabs", 'B'
-                , IUItem.rubWood.getItem(0)
+                , "forge:logs/rubber"
         );
 
         Recipes.recipe.addRecipe(getBlockStack(BlockGasTurbineEntity.gas_turbine_casing), " B ", "BAB", " B ",
@@ -2079,13 +2077,13 @@ public class BasicRecipeThree {
                 'B', "wool", 'A'
                 , Items.STICK
         );
-        Recipes.recipe.addRecipe(IUItem.agricultural_analyzer, "BBB", "CAC", "   ",
+        Recipes.recipe.addRecipe(IUItem.agricultural_analyzer, "BBB", "CAC", "AAA",
                 'B', "forge:plates/Iron", 'A'
-                , BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1), 'C', IUItem.crops
+                , ItemStackHelper.fromData(IUItem.suBattery, 1), 'C', IUItem.crops
         );
-        Recipes.recipe.addRecipe(IUItem.bee_analyzer, "BBB", "CAC", "   ",
+        Recipes.recipe.addRecipe(IUItem.bee_analyzer, "BBB", "CAC", "AAA",
                 'B', "forge:plates/Iron", 'A'
-                , BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1), 'C', IUItem.jarBees
+                , ItemStackHelper.fromData(IUItem.suBattery, 1), 'C', IUItem.jarBees
         );
         Recipes.recipe.addRecipe(getBlockStack(BlockGasTurbineEntity.gas_turbine_controller), "EAE", "CBC", " D ",
                 'A', BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 8), 'B'
@@ -2500,7 +2498,7 @@ public class BasicRecipeThree {
 
                 ('C'), Items.REDSTONE
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.item_pipes, 6, 29), "BBB", "CAC", "BBB",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.item_pipes, 6, 28), "BBB", "CAC", "BBB",
 
                 ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 122),
 
@@ -2508,7 +2506,7 @@ public class BasicRecipeThree {
 
                 ('C'), ItemStackHelper.fromData(Items.LAPIS_LAZULI)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.item_pipes, 6, 28), "BBB", " A ", "BBB",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.item_pipes, 6, 29), "BBB", " A ", "BBB",
 
                 ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 122),
 
@@ -2528,6 +2526,7 @@ public class BasicRecipeThree {
 
                 ('B'), "planks"
         );
+
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.item_pipes, 6, 19), "BBB", "CAC", "BBB",
 
                 ('A'), "forge:plates/Cobalt",
@@ -2544,13 +2543,13 @@ public class BasicRecipeThree {
 
                 ('C'), Items.REDSTONE
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.item_pipes, 6, 22), "BBB", " A ", "BBB",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.item_pipes, 6, 23), "BBB", " A ", "BBB",
 
                 ('A'), "forge:plates/Nichrome",
 
                 ('B'), "forge:plates/Cobalt"
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.item_pipes, 6, 23), "BBB", "CAC", "BBB",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.item_pipes, 6, 22), "BBB", "CAC", "BBB",
 
                 ('A'), "forge:plates/Nichrome",
 
@@ -2566,13 +2565,13 @@ public class BasicRecipeThree {
 
                 ('C'), Items.REDSTONE
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.item_pipes, 6, 25), "BBB", " A ", "BBB",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.item_pipes, 6, 26), "BBB", " A ", "BBB",
 
                 ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 122),
 
                 ('B'), "forge:plates/CobaltChrome"
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.item_pipes, 6, 26), "BBB", "CAC", "BBB",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.item_pipes, 6, 25), "BBB", "CAC", "BBB",
 
                 ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 122),
 

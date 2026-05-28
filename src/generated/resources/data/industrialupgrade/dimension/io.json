@@ -1,0 +1,11 @@
+{
+  "type": "industrialupgrade:io_type",
+  "generator": {
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "industrialupgrade:io_biome"
+    },
+    "settings": "industrialupgrade:io_noise"
+  }
+}

@@ -14,13 +14,19 @@
       "item": "industrialupgrade:machines/admin_solar_panel"
     },
     "E": {
-      "item": "industrialupgrade:excitednucleus/admcore"
+      "item": "industrialupgrade:excitednucleus/phocore"
+    },
+    "H": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/spectralcircuit",
+      "nbt": "{level:9}"
     }
   },
   "pattern": [
     "ABA",
     "CDC",
-    "DED"
+    "HEH"
   ],
   "result": {
     "item": "industrialupgrade:machines/photonic_solar_panel"

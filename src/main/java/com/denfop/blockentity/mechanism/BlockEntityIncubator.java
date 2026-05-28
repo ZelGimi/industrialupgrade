@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -69,11 +71,11 @@ public class BlockEntityIncubator extends BlockEntityElectricMachine implements
     protected short progress;
 
     public BlockEntityIncubator(BlockPos pos, BlockState state) {
-        super(200, 1, 1, BlockBaseMachine3Entity.incubator, pos, state);
+        super(ModConfig.mechanismDouble("incubator_energy_storage", 200.0D), 1, 1, BlockBaseMachine3Entity.incubator, pos, state);
         Recipes.recipes.addInitRecipes(this);
 
         this.progress = 0;
-        this.defaultEnergyConsume = this.energyConsume = 1;
+        this.defaultEnergyConsume = this.energyConsume = ModConfig.mechanismInt("incubator_energy_use", 1);
         this.defaultOperationLength = this.operationLength = 200;
         this.defaultTier = 1;
         this.defaultEnergyStorage = 100;
@@ -91,8 +93,8 @@ public class BlockEntityIncubator extends BlockEntityElectricMachine implements
         this.fluidSlot2 = new InventoryFluidByList(this, 1, this.fluid_handler.getOutputFluids(0));
         this.fluidSlot2.setTypeFluidSlot(InventoryFluid.TypeFluidSlot.OUTPUT);
         this.upgradeSlot = new InventoryUpgrade(this, 4);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.25));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("incubator_soil_pollution_amount", 0.1D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("incubator_air_pollution_amount", 0.25D)));
 
     }
 
@@ -118,9 +120,9 @@ public class BlockEntityIncubator extends BlockEntityElectricMachine implements
             tooltip.add(Localization.translate("press.lshift"));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            tooltip.add(Localization.translate("iu.machines_work_energy") + 200 + Localization.translate(
+            tooltip.add(Localization.translate("iu.machines_work_energy") + 1 + Localization.translate(
                     "iu.machines_work_energy_type_eu"));
-            tooltip.add(Localization.translate("iu.machines_work_length") + 1);
+            tooltip.add(Localization.translate("iu.machines_work_length") + 100);
         }
         super.addInformation(stack, tooltip);
 

@@ -15,7 +15,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import static com.denfop.api.widget.ScreenWidget.bindBlockTexture;
-import static com.denfop.api.widget.ScreenWidget.getBlockTextureMap;
+import static com.denfop.api.widget.TankWidget.getSafeFluidSprite;
 
 
 public class WidgetDefault<T> {
@@ -77,7 +77,7 @@ public class WidgetDefault<T> {
                     int fluidHeight = 16;
                     Fluid fluid = fs.getFluid();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
-                    TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+                    TextureAtlasSprite sprite = getSafeFluidSprite(fs);
                     int color = extensions.getTintColor();
                     bindBlockTexture();
                     screenWidget.getGui().drawSprite(poseStack,
@@ -103,7 +103,7 @@ public class WidgetDefault<T> {
                     int fluidHeight = 16;
                     Fluid fluid = fs.getFluid();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
-                    TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+                    TextureAtlasSprite sprite = getSafeFluidSprite(fs);
                     int color = extensions.getTintColor();
                     bindBlockTexture();
                     screenWidget.getGui().drawSprite(poseStack,
@@ -339,7 +339,7 @@ public class WidgetDefault<T> {
         } else if (this.component instanceof FluidTank) {
             FluidTank component = (FluidTank) this.component;
             String text1;
-            text1 = component.getFluid().getDisplayName().getString();
+            text1 = com.denfop.utils.ModUtils.cleanComponentString(component.getFluid().getDisplayName().getString());
             if (component.getFluid().getFluid() == Fluids.EMPTY)
                 text1 = "";
             text = "Fluid " + text1 + ": " +

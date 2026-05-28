@@ -38,6 +38,8 @@
     "industrialupgrade:deposits2/deposits_fergusonite",
     "industrialupgrade:deposits2/deposits_appatite",
     "industrialupgrade:deposits2/deposits_crystal",
-    "industrialupgrade:deposits2/deposits_coal"
+    "industrialupgrade:deposits2/deposits_coal",
+    "industrialupgrade:soot/soot",
+    "industrialupgrade:radiation_dust/radiation_dust"
   ]
 }

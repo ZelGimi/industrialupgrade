@@ -1,9 +1,9 @@
 package com.denfop.blockentity.reactors.heat;
 
-import com.denfop.api.multiblock.MultiBlockElement;
+import com.denfop.api.multiblock.IMultiElement;
 import com.denfop.componets.Energy;
 
-public interface ISocket extends MultiBlockElement {
+public interface ISocket extends IMultiElement {
 
     Energy getEnergy();
 

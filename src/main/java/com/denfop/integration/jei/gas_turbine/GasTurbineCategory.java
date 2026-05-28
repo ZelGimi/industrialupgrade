@@ -46,7 +46,7 @@ public class GasTurbineCategory extends ScreenMain implements IRecipeCategory<Ga
     @Nonnull
     @Override
     public String getTitles() {
-        return JEICompat.getBlockStack(BlockGasTurbineEntity.gas_turbine_controller).getDisplayName().getString();
+        return com.denfop.utils.ModUtils.cleanComponentString(JEICompat.getBlockStack(BlockGasTurbineEntity.gas_turbine_controller).getDisplayName().getString());
     }
 
     @Override

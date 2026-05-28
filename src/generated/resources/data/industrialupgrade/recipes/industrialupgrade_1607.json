@@ -8,10 +8,7 @@
       "item": "industrialupgrade:wiring/copper"
     },
     "C": {
-      "type": "forge:nbt",
-      "count": 1,
-      "item": "industrialupgrade:crafting_elements/crafting_272_element",
-      "nbt": "{level:2}"
+      "item": "industrialupgrade:charged_quartz"
     },
     "D": {
       "tag": "forge:casings/iron"

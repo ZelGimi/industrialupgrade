@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -45,7 +47,7 @@ public class BlockEntityBatteryFactory extends BlockEntityElectricMachine implem
     public MachineRecipe output;
 
     public BlockEntityBatteryFactory(BlockPos pos, BlockState state) {
-        super(400, 1, 1, BlockBaseMachine3Entity.battery_factory, pos, state);
+        super(ModConfig.mechanismDouble("battery_factory_energy_storage", 400.0D), 1, 1, BlockBaseMachine3Entity.battery_factory, pos, state);
         Recipes.recipes.addInitRecipes(this);
         this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
@@ -59,8 +61,8 @@ public class BlockEntityBatteryFactory extends BlockEntityElectricMachine implem
         this.componentProcess.setInvSlotRecipes(this.inputSlotA);
 
         this.componentUpgrades = this.addComponent(new ComponentUpgrade(this, TypeUpgrade.INSTANT, TypeUpgrade.STACK));
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("battery_factory_soil_pollution_amount", 0.1D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("battery_factory_air_pollution_amount", 0.1D)));
     }
 
     public static void addRecipe(int container, int fill1, int output) {
@@ -112,7 +114,7 @@ public class BlockEntityBatteryFactory extends BlockEntityElectricMachine implem
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getEnergyConsume() + Localization.translate(
                     "iu.machines_work_energy_type_eu"));
-            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getOperationsPerTick());
+            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getDefaultOperationLength());
         }
         super.addInformation(stack, tooltip);
 

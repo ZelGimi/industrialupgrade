@@ -220,6 +220,7 @@ public class ColonyNet implements IColonyNet {
         deleteList.clear();
     }
 
+
     @Override
     public List<IColony> getColonies() {
         return this.colonyList;

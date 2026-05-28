@@ -2,7 +2,6 @@ package com.denfop.containermenu;
 
 import com.denfop.blockentity.base.BlockEntitySimulatorReactor;
 import com.denfop.containermenu.slot.SlotInvSlot;
-import com.denfop.containermenu.slot.SlotVirtual;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 

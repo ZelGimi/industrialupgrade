@@ -7,8 +7,11 @@ import com.denfop.api.brewage.EnumWaterVariety;
 import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import com.denfop.utils.Timer;
+import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -20,25 +23,49 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class ItemBooze extends Item implements IProperties {
+
     public int[] baseDuration = new int[]{300, 900, 1200, 1600, 2000, 2400};
     public float[] baseIntensity = new float[]{0.4F, 0.75F, 1.0F, 1.5F, 2.0F};
     private String nameItem;
 
     public ItemBooze() {
-        super(new Properties().tab(IUCore.EnergyTab).stacksTo(1).setNoRepair());
+        super(new Properties().stacksTo(1).setNoRepair().tab(IUCore.ItemTab));
         IUCore.proxy.addProperties(this);
+    }
+
+
+    @Override
+    public void fillItemCategory(@Nonnull CreativeModeTab tab, @Nonnull NonNullList<ItemStack> items) {
+        if (allowedIn(tab)) {
+            items.add(new ItemStack(this));
+
+            for (EnumWaterVariety waterVariety : EnumWaterVariety.values()) {
+                for (EnumTimeVariety timeVariety : EnumTimeVariety.values()) {
+                    for (EnumBeerVariety beerVariety : EnumBeerVariety.values()) {
+                        ItemStack stack = new ItemStack(this);
+                        CompoundTag nbt = stack.getOrCreateTag();
+
+                        nbt.putBoolean("beer", true);
+                        nbt.putByte("waterVariety", (byte) waterVariety.ordinal());
+                        nbt.putByte("timeVariety", (byte) timeVariety.ordinal());
+                        nbt.putByte("beerVariety", (byte) beerVariety.ordinal());
+                        nbt.putByte("amount", (byte) 5);
+
+                        items.add(stack);
+                    }
+                }
+            }
+        }
     }
 
     protected String getOrCreateDescriptionId() {
@@ -77,7 +104,9 @@ public class ItemBooze extends Item implements IProperties {
             EnumTimeVariety timeVariety = EnumTimeVariety.values()[nbtTagCompound.getByte("timeVariety")];
             EnumBeerVariety beerVariety = EnumBeerVariety.values()[nbtTagCompound.getByte("beerVariety")];
 
-            if (timeVariety == EnumTimeVariety.BLACK_STUFF || waterVariety == EnumWaterVariety.BLACK_STUFF || beerVariety == EnumBeerVariety.BLACKSTUFF) {
+            if (timeVariety == EnumTimeVariety.BLACK_STUFF
+                    || waterVariety == EnumWaterVariety.BLACK_STUFF
+                    || beerVariety == EnumBeerVariety.BLACKSTUFF) {
                 return this.drinkBlackStuff(living);
             }
 
@@ -174,6 +203,285 @@ public class ItemBooze extends Item implements IProperties {
         return new ItemStack(this);
     }
 
+    private String getWaterTranslationKey(EnumWaterVariety variety) {
+        switch (variety) {
+            case WATERY:
+                return "iu.beer.water.watery";
+            case LITE:
+                return "iu.beer.water.lite";
+            case WITHOUT_NAME:
+                return "iu.beer.water.without_name";
+            case STRONG:
+                return "iu.beer.water.strong";
+            case THICK:
+                return "iu.beer.water.thick";
+            case STODGE:
+                return "iu.beer.water.stodge";
+            case BLACK_STUFF:
+            default:
+                return "iu.beer.water.black_stuff";
+        }
+    }
+
+    private String getTimeTranslationKey(EnumTimeVariety variety) {
+        switch (variety) {
+            case BREW:
+                return "iu.beer.time.brew";
+            case YOUNGSTER:
+                return "iu.beer.time.youngster";
+            case BEER:
+                return "iu.beer.time.beer";
+            case ALE:
+                return "iu.beer.time.ale";
+            case DRAGONBLOOD:
+                return "iu.beer.time.dragonblood";
+            case BLACK_STUFF:
+            default:
+                return "iu.beer.time.black_stuff";
+        }
+    }
+
+    private String getBeerTranslationKey(EnumBeerVariety variety) {
+        switch (variety) {
+            case SOUP:
+                return "iu.beer.variety.soup";
+            case WHITE:
+                return "iu.beer.variety.white";
+            case PREFIXLESS:
+                return "iu.beer.variety.prefixless";
+            case DARK:
+                return "iu.beer.variety.dark";
+            case BLACK:
+                return "iu.beer.variety.black";
+            case BLACKSTUFF:
+            default:
+                return "iu.beer.variety.blackstuff";
+        }
+    }
+
+    private Component getLocalizedWater(EnumWaterVariety variety) {
+        return Component.translatable(getWaterTranslationKey(variety));
+    }
+
+    private Component getLocalizedTime(EnumTimeVariety variety) {
+        return Component.translatable(getTimeTranslationKey(variety));
+    }
+
+    private Component getLocalizedBeer(EnumBeerVariety variety) {
+        return Component.translatable(getBeerTranslationKey(variety));
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Nullable
+    private LivingEntity getTooltipViewer() {
+        Minecraft mc = Minecraft.getInstance();
+        return mc.player;
+    }
+
+    private int getCurrentDrinkStage(@Nullable LivingEntity living) {
+        if (living == null) {
+            return -1;
+        }
+        MobEffectInstance slow = living.getEffect(MobEffects.DIG_SLOWDOWN);
+        return slow == null ? -1 : slow.getAmplifier();
+    }
+
+    private MobEffectInstance predictAmplifiedEffect(@Nullable LivingEntity living, MobEffect effect, int max, float intensity, int duration) {
+        MobEffectInstance eff = living == null ? null : living.getEffect(effect);
+
+        if (eff == null) {
+            return new MobEffectInstance(effect, duration, 0);
+        } else {
+            int currentDuration = eff.getDuration();
+            int extraDuration = duration;
+            int maxNewDuration = (int) ((duration * (1.0F + intensity * 2.0F) - currentDuration) / 2);
+
+            if (maxNewDuration < 0) {
+                maxNewDuration = 0;
+            }
+
+            if (maxNewDuration < extraDuration) {
+                extraDuration = maxNewDuration;
+            }
+
+            currentDuration += extraDuration;
+            int newAmp = eff.getAmplifier();
+            if (newAmp < max) {
+                newAmp++;
+            }
+
+            return new MobEffectInstance(effect, currentDuration, newAmp);
+        }
+    }
+
+    private String toRoman(int level) {
+        switch (level) {
+            case 1:
+                return "I";
+            case 2:
+                return "II";
+            case 3:
+                return "III";
+            case 4:
+                return "IV";
+            case 5:
+                return "V";
+            case 6:
+                return "VI";
+            case 7:
+                return "VII";
+            case 8:
+                return "VIII";
+            case 9:
+                return "IX";
+            case 10:
+                return "X";
+            default:
+                return String.valueOf(level);
+        }
+    }
+
+    private String formatAmplifier(int amplifier) {
+        return toRoman(amplifier + 1);
+    }
+
+    private String formatTicks(int ticks) {
+        int totalSeconds = Math.max(1, ticks / 20);
+        int minutes = totalSeconds / 60;
+        int seconds = totalSeconds % 60;
+
+        if (minutes > 0) {
+            return minutes + "m " + seconds + "s";
+        }
+        return seconds + "s";
+    }
+
+    private void addPredictedEffectLine(List<Component> tooltip, MobEffectInstance instance) {
+        tooltip.add(Component.translatable(
+                "iu.beer.effects.line",
+                instance.getEffect().getDisplayName(),
+                Component.literal(formatAmplifier(instance.getAmplifier())),
+                Component.literal(formatTicks(instance.getDuration()))
+        ).withStyle(ChatFormatting.GRAY));
+    }
+
+    private void addBlackStuffPreview(List<Component> tooltip) {
+        tooltip.add(Component.translatable("iu.beer.effects.blackstuff.header").withStyle(ChatFormatting.DARK_RED));
+        tooltip.add(Component.translatable("iu.beer.effects.chance_none", "1/6").withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable(
+                "iu.beer.effects.chance_line",
+                "1/6",
+                MobEffects.CONFUSION.getDisplayName(),
+                Component.literal("I"),
+                Component.literal(formatTicks(1200))
+        ).withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable(
+                "iu.beer.effects.chance_line",
+                "1/6",
+                MobEffects.BLINDNESS.getDisplayName(),
+                Component.literal("I"),
+                Component.literal(formatTicks(2400))
+        ).withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable(
+                "iu.beer.effects.chance_line",
+                "1/6",
+                MobEffects.POISON.getDisplayName(),
+                Component.literal("I"),
+                Component.literal(formatTicks(2400))
+        ).withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable(
+                "iu.beer.effects.chance_line",
+                "1/6",
+                MobEffects.POISON.getDisplayName(),
+                Component.literal("III"),
+                Component.literal(formatTicks(200))
+        ).withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable(
+                "iu.beer.effects.chance_line_instant_random",
+                "1/6",
+                MobEffects.HARM.getDisplayName(),
+                Component.literal("I"),
+                Component.literal("IV")
+        ).withStyle(ChatFormatting.GRAY));
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private void addEffectPreviewTooltip(ItemStack stack, List<Component> tooltip) {
+        CompoundTag nbtTagCompound = stack.getTag();
+        if (nbtTagCompound == null || !nbtTagCompound.contains("beer")) {
+            return;
+        }
+
+        EnumWaterVariety waterVariety = EnumWaterVariety.values()[nbtTagCompound.getByte("waterVariety")];
+        EnumTimeVariety timeVariety = EnumTimeVariety.values()[nbtTagCompound.getByte("timeVariety")];
+        EnumBeerVariety beerVariety = EnumBeerVariety.values()[nbtTagCompound.getByte("beerVariety")];
+
+        tooltip.add(Component.literal(""));
+        tooltip.add(Component.translatable("iu.beer.effects.info").withStyle(ChatFormatting.AQUA));
+
+        if (timeVariety == EnumTimeVariety.BLACK_STUFF
+                || waterVariety == EnumWaterVariety.BLACK_STUFF
+                || beerVariety == EnumBeerVariety.BLACKSTUFF) {
+            addBlackStuffPreview(tooltip);
+            return;
+        }
+
+        LivingEntity viewer = getTooltipViewer();
+        int currentStage = getCurrentDrinkStage(viewer);
+
+        if (currentStage < 0) {
+            tooltip.add(Component.translatable("iu.beer.effects.stage.none").withStyle(ChatFormatting.DARK_GRAY));
+        } else {
+            tooltip.add(Component.translatable("iu.beer.effects.stage", currentStage + 1).withStyle(ChatFormatting.DARK_GRAY));
+        }
+
+        int duration = this.baseDuration[waterVariety.ordinal()];
+        float intensity = this.baseIntensity[timeVariety.ordinal()];
+        int max = (int) (intensity * beerVariety.ordinal() * 0.5F);
+
+        addPredictedEffectLine(tooltip, predictAmplifiedEffect(viewer, MobEffects.DIG_SLOWDOWN, max, intensity, duration));
+
+        if (currentStage > -1) {
+            addPredictedEffectLine(tooltip, predictAmplifiedEffect(viewer, MobEffects.DAMAGE_BOOST, max, intensity, duration));
+            if (currentStage > 0) {
+                addPredictedEffectLine(tooltip, predictAmplifiedEffect(viewer, MobEffects.MOVEMENT_SLOWDOWN, max / 2, intensity, duration));
+                if (currentStage > 1) {
+                    addPredictedEffectLine(tooltip, predictAmplifiedEffect(viewer, MobEffects.DAMAGE_RESISTANCE, max - 1, intensity, duration));
+                    if (currentStage > 2) {
+                        addPredictedEffectLine(tooltip, predictAmplifiedEffect(viewer, MobEffects.CONFUSION, 0, intensity, duration));
+                        if (currentStage > 3) {
+                            tooltip.add(Component.translatable(
+                                    "iu.beer.effects.line_instant_random",
+                                    MobEffects.HARM.getDisplayName(),
+                                    Component.literal("I"),
+                                    Component.literal("III")
+                            ).withStyle(ChatFormatting.GRAY));
+                        }
+                    }
+                }
+            }
+        } else {
+            tooltip.add(Component.translatable("iu.beer.effects.next_stage_hint").withStyle(ChatFormatting.DARK_GRAY));
+        }
+    }
+
+    private void addRepeatedDrinkDescription(List<Component> tooltip, EnumWaterVariety waterVariety, EnumTimeVariety timeVariety, EnumBeerVariety beerVariety) {
+        if (timeVariety == EnumTimeVariety.BLACK_STUFF
+                || waterVariety == EnumWaterVariety.BLACK_STUFF
+                || beerVariety == EnumBeerVariety.BLACKSTUFF) {
+            return;
+        }
+
+        tooltip.add(Component.literal(""));
+        tooltip.add(Component.translatable("iu.beer.repeat.info").withStyle(ChatFormatting.GOLD));
+        tooltip.add(Component.translatable("iu.beer.repeat.base", MobEffects.DIG_SLOWDOWN.getDisplayName()).withStyle(ChatFormatting.DARK_GRAY));
+        tooltip.add(Component.translatable("iu.beer.repeat.2", MobEffects.DAMAGE_BOOST.getDisplayName()).withStyle(ChatFormatting.DARK_GRAY));
+        tooltip.add(Component.translatable("iu.beer.repeat.3", MobEffects.MOVEMENT_SLOWDOWN.getDisplayName()).withStyle(ChatFormatting.DARK_GRAY));
+        tooltip.add(Component.translatable("iu.beer.repeat.4", MobEffects.DAMAGE_RESISTANCE.getDisplayName()).withStyle(ChatFormatting.DARK_GRAY));
+        tooltip.add(Component.translatable("iu.beer.repeat.5", MobEffects.CONFUSION.getDisplayName()).withStyle(ChatFormatting.DARK_GRAY));
+        tooltip.add(Component.translatable("iu.beer.repeat.6", MobEffects.HARM.getDisplayName()).withStyle(ChatFormatting.DARK_GRAY));
+        tooltip.add(Component.translatable("iu.beer.repeat.extra").withStyle(ChatFormatting.GRAY));
+    }
 
     @Override
     public void appendHoverText(
@@ -184,6 +492,7 @@ public class ItemBooze extends Item implements IProperties {
     ) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         CompoundTag nbtTagCompound = stack.getTag();
+
         if (nbtTagCompound != null && nbtTagCompound.contains("beer")) {
             EnumWaterVariety waterVariety = EnumWaterVariety.values()[nbtTagCompound.getByte("waterVariety")];
             EnumTimeVariety timeVariety = EnumTimeVariety.values()[nbtTagCompound.getByte("timeVariety")];
@@ -195,7 +504,15 @@ public class ItemBooze extends Item implements IProperties {
             tooltip.add(Component.literal(Localization.translate("iu.beer.recipe2") + " " + beerVariety.getRatioOfComponents().get(0).getA()));
             tooltip.add(Component.literal(Localization.translate("iu.beer.recipe3") + " " + waterVariety.getAmount().get(0)));
             tooltip.add(Component.literal(Localization.translate("iu.beer.recipe4") + " " + new Timer((int) (timeVariety.getTime() * 60 * 60)).getDisplay()));
-            tooltip.add(Component.literal(Localization.translate("iu.beer.recipe5") + " " + waterVariety.name() + " " + beerVariety.name() + " " + timeVariety.name()));
+            tooltip.add(Component.translatable(
+                    "iu.beer.recipe5_format",
+                    getLocalizedWater(waterVariety),
+                    getLocalizedBeer(beerVariety),
+                    getLocalizedTime(timeVariety)
+            ));
+
+            addEffectPreviewTooltip(stack, tooltip);
+            addRepeatedDrinkDescription(tooltip, waterVariety, timeVariety, beerVariety);
         }
     }
 
@@ -214,7 +531,12 @@ public class ItemBooze extends Item implements IProperties {
             EnumTimeVariety timeVariety = EnumTimeVariety.values()[nbtTagCompound.getByte("timeVariety")];
             EnumBeerVariety beerVariety = EnumBeerVariety.values()[nbtTagCompound.getByte("beerVariety")];
 
-            return Component.literal(waterVariety.name() + " " + beerVariety.name() + " " + timeVariety.name());
+            return Component.translatable(
+                    "iu.beer.display_name",
+                    getLocalizedWater(waterVariety),
+                    getLocalizedBeer(beerVariety),
+                    getLocalizedTime(timeVariety)
+            );
         }
     }
 
@@ -223,12 +545,10 @@ public class ItemBooze extends Item implements IProperties {
         return ModUtils.nbt(stack).contains("beer") ? UseAnim.DRINK : UseAnim.NONE;
     }
 
-
     @Override
     public String[] properties() {
         return new String[]{"time_variety"};
     }
-
 
     @OnlyIn(Dist.CLIENT)
     @Override

@@ -13,14 +13,17 @@
       "item": "industrialupgrade:circuit/quantumcircuit",
       "nbt": "{level:8}"
     },
+    "D": {
+      "item": "industrialupgrade:battery/itembatlamacrystal"
+    },
     "E": {
       "item": "industrialupgrade:armour/imp_lappack"
     }
   },
   "pattern": [
-    "ABA",
-    "CEC",
-    "ABA"
+    "ACA",
+    "BEB",
+    "ADA"
   ],
   "result": {
     "item": "industrialupgrade:armour/per_lappack"

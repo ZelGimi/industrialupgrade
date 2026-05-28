@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.rocketassembler;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.recipe.InventoryRecipes;
@@ -115,7 +116,7 @@ public class RocketAssemblerCategory extends ScreenMain implements IRecipeCatego
         final List<ItemStack> inputs = recipe.getInput();
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT, list.get(i).getJeiX(), list.get(i).getJeiY()).addItemStack(inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT, list.get(i).getJeiX(), list.get(i).getJeiY()).addItemStacks(JeiIngredientHelper.getInputVariants(recipe, i, inputs.get(i)));
 
 
         }

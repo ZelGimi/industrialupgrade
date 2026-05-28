@@ -1,8 +1,6 @@
 package com.denfop.recipe.universalrecipe;
 
-import com.denfop.recipe.IInputItemStack;
 import com.denfop.register.Register;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -56,9 +54,6 @@ public class QuantumQuarryRecipe implements Recipe<Container> {
     }
 
 
-
-
-
     @Override
     public RecipeSerializer<?> getSerializer() {
         return Register.RECIPE_SERIALIZER_QUANTUM_QUARRY.get();
@@ -70,7 +65,7 @@ public class QuantumQuarryRecipe implements Recipe<Container> {
     }
 
     public String getRecipeType() {
-        return   recipeType;
+        return recipeType;
     }
 
     public String getTypeOperation() {

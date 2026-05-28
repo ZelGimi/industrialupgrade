@@ -1,6 +1,7 @@
 package com.denfop.items.creative;
 
 
+import com.denfop.IUCore;
 import com.denfop.api.space.IBody;
 import com.denfop.api.space.SpaceNet;
 import com.denfop.api.space.fakebody.Data;
@@ -28,7 +29,7 @@ public class ItemCreativeTomeResearchSpace extends Item {
     private String nameItem;
 
     public ItemCreativeTomeResearchSpace() {
-        super(new Properties().stacksTo(1));
+        super(new Properties().stacksTo(1).tab(IUCore.ItemTab));
     }
 
     @OnlyIn(Dist.CLIENT)

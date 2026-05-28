@@ -1,9 +1,9 @@
 package com.denfop.blockentity.reactors.water;
 
-import com.denfop.api.multiblock.MultiBlockElement;
+import com.denfop.api.multiblock.IMultiElement;
 import com.denfop.componets.Fluids;
 
-public interface IInput extends MultiBlockElement {
+public interface IInput extends IMultiElement {
 
     void addFluids(Fluids fluids);
 

@@ -3,7 +3,7 @@
   "cookingtime": 200,
   "experience": 0.6,
   "ingredient": {
-    "item": "industrialupgrade:blockspace3/phobos_zirconium_ore"
+    "item": "industrialupgrade:classicore/tin"
   },
-  "result": "industrialupgrade:itemingots/zirconium"
+  "result": "industrialupgrade:itemingots/tin_ingot"
 }

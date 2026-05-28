@@ -23,28 +23,13 @@
       "model": "industrialupgrade:block/basemachine/umv",
       "x": 270
     },
-    "facing=north,type=umv_invalid": {
-      "model": "industrialupgrade:block/basemachine/umv_active"
-    },
-    "facing=south,type=umv_invalid": {
-      "model": "industrialupgrade:block/basemachine/umv_active",
-      "y": 180
-    },
-    "facing=west,type=umv_invalid": {
-      "model": "industrialupgrade:block/basemachine/umv_active",
-      "y": 270
-    },
-    "facing=east,type=umv_invalid": {
-      "model": "industrialupgrade:block/basemachine/umv_active",
-      "y": 90
-    },
-    "facing=down,type=umv_invalid": {
+    "facing=down,type=umv_active": {
       "model": "industrialupgrade:block/basemachine/umv_active",
       "x": 90
     },
-    "facing=up,type=umv_invalid": {
+    "facing=west,type=umv_active": {
       "model": "industrialupgrade:block/basemachine/umv_active",
-      "x": 270
+      "y": 270
     },
     "facing=north,type=umv_active": {
       "model": "industrialupgrade:block/basemachine/umv_active"
@@ -53,17 +38,9 @@
       "model": "industrialupgrade:block/basemachine/umv_active",
       "y": 180
     },
-    "facing=west,type=umv_active": {
-      "model": "industrialupgrade:block/basemachine/umv_active",
-      "y": 270
-    },
     "facing=east,type=umv_active": {
       "model": "industrialupgrade:block/basemachine/umv_active",
       "y": 90
-    },
-    "facing=down,type=umv_active": {
-      "model": "industrialupgrade:block/basemachine/umv_active",
-      "x": 90
     },
     "facing=up,type=umv_active": {
       "model": "industrialupgrade:block/basemachine/umv_active",

@@ -7,12 +7,6 @@
       "item": "minecraft:diamond_chestplate",
       "nbt": "{Damage:0}"
     },
-    "B": {
-      "type": "forge:nbt",
-      "count": 1,
-      "item": "industrialupgrade:circuit/nanocircuit",
-      "nbt": "{level:5}"
-    },
     "C": {
       "item": "industrialupgrade:battery/energy_crystal"
     },
@@ -25,8 +19,8 @@
   },
   "pattern": [
     "DCD",
-    "BAB",
-    "EDE"
+    "DAD",
+    "E E"
   ],
   "result": {
     "item": "industrialupgrade:armour/nano_chestplate"

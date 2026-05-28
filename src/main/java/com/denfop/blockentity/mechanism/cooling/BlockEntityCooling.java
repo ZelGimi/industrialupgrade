@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.cooling;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -45,12 +47,12 @@ public class BlockEntityCooling extends BlockEntityElectricMachine implements IU
     private int coef;
 
     public BlockEntityCooling(BlockPos pos, BlockState state) {
-        super(10000D, 14, 1, BlockBaseMachine3Entity.cooling, pos, state);
+        super(ModConfig.mechanismDouble("refrigerator_energy_storage", 10000.0D), 14, 1, BlockBaseMachine3Entity.cooling, pos, state);
         this.cold = this.addComponent(CoolComponent.asBasicSource(this, 4, tier));
         this.max = 4;
         this.componentClientEffectRender = new ComponentClientEffectRender(this, EffectType.REFRIGERATOR);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.05));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("refrigerator_soil_pollution_amount", 0.05D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("refrigerator_air_pollution_amount", 0.05D)));
     }
 
     @Override

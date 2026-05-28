@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:space_advanced_cave",
+  "config": {
+    "flooded": false,
+    "fluid": {
+      "Name": "industrialupgrade:fluid/fluidhydrogen",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "kind": "branched_caves",
+    "max_length": 28,
+    "max_radius": 4,
+    "max_vertical": 18,
+    "min_length": 16,
+    "min_radius": 2,
+    "open_to_surface": false,
+    "primary": {
+      "Name": "industrialupgrade:spacestone1/moon_stone"
+    },
+    "secondary": {
+      "Name": "industrialupgrade:spacecobblestone1/moon_cobblestone"
+    },
+    "tertiary": {
+      "Name": "industrialupgrade:spacecobblestone1/moon_cobblestone"
+    }
+  }
+}

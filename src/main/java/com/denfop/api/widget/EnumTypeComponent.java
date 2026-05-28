@@ -21,6 +21,7 @@ public enum EnumTypeComponent {
     SPACE_DEFAULT(1, 1, 238, 0, 18, 18, EnumTypeRender.WIDTH, 0, 0, false, false, false, false, true),
     SPACE_FLUID(1, 20, 238, 0, 18, 18, EnumTypeRender.WIDTH, 0, 0, true, false, false, false, true),
     SPACE_MULTI_PROCESS(48, 16, 66, 16, 16, 24, EnumTypeRender.WIDTH, 0, 0, true, false, false, false, true),
+    STORAGE_DEFAULT(225, 219, 238, 0, 18, 18, EnumTypeRender.WIDTH, 0, 0, false, true, false, false, false),
 
 
     MULTI_PROCESS(102, 54, 23, 50, 16, 24, EnumTypeRender.WIDTH, 0, 0, true),

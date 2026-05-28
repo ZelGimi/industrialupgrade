@@ -61,9 +61,9 @@ public class DepositsMolotCategory extends ScreenMain implements IRecipeCategory
         int x = 25;
         VeinType vein = recipe.getVeinType();
         this.drawSplitString(stack, Localization.translate("deposists.jei2") + " " + (vein.getHeavyOre() != null ?
-                        new ItemStack(vein.getHeavyOre().getBlock(), 1).getDisplayName().getString() :
-                        new ItemStack(vein.getOres().get(0).getBlock().getBlock(), 1
-                        ).getDisplayName().getString()), 5, 3,
+                        com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(vein.getHeavyOre().getBlock(), 1).getDisplayName().getString()) :
+                        com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(vein.getOres().get(0).getBlock().getBlock(), 1
+                        ).getDisplayName().getString())), 5, 3,
                 200 - 5, 4210752
         );
 

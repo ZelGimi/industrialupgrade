@@ -2,30 +2,24 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "A": {
-      "item": "industrialupgrade:crafting_elements/crafting_274_element"
+      "item": "industrialupgrade:circuit/nanocircuit_part1"
     },
     "B": {
-      "type": "forge:nbt",
-      "count": 1,
-      "item": "industrialupgrade:crafting_elements/crafting_273_element",
-      "nbt": "{level:3}"
+      "item": "industrialupgrade:transformer_iu/mv"
     },
     "C": {
-      "item": "powerutils:module_ic"
+      "item": "industrialupgrade:circuit/quantumcircuit_part2"
     },
     "D": {
-      "item": "industrialupgrade:blockresource/machine"
-    },
-    "E": {
-      "item": "powerutils:module_qe"
+      "item": "industrialupgrade:itemcore/hybcore"
     }
   },
   "pattern": [
     "ABA",
-    "CDE",
+    "CDC",
     "ABA"
   ],
   "result": {
-    "item": "powerutils:converter/power_utilities_qe"
+    "item": "powerutils:module_fe"
   }
 }

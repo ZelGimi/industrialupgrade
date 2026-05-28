@@ -1,5 +1,6 @@
 package com.denfop.blockentity.mechanism;
 
+import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -19,10 +20,12 @@ import com.denfop.api.space.research.event.ResearchTableLoadEvent;
 import com.denfop.api.space.research.event.ResearchTableReLoadEvent;
 import com.denfop.blockentity.base.BlockEntityInventory;
 import com.denfop.blocks.BlockTileEntity;
+import com.denfop.blocks.ISubEnum;
 import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.containermenu.ContainerMenuBase;
 import com.denfop.containermenu.ContainerMenuResearchTableSpace;
 import com.denfop.inventory.Inventory;
+import com.denfop.inventory.Inventory.TypeItemSlot;
 import com.denfop.items.space.ItemResearchLens;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
@@ -50,68 +53,59 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class BlockEntityResearchTableSpace extends BlockEntityInventory implements IResearchTable {
-
-    private static final List<AABB> aabbs = Collections.singletonList(new AABB(0, 0.0D, 0, 2, 2.0D,
-            1.5
-    ));
-    private static final List<AABB> aabbs_east = Collections.singletonList(new AABB(0, 0.0D, -1, 1, 2.0D,
-            1
-    ));
-    private static final List<AABB> aabbs_south = Collections.singletonList(new AABB(0, 0.0D, 0, 2, 2.0D,
-            1
-    ));
-    private static final List<AABB> aabbs_west = Collections.singletonList(new AABB(0, 0.0D, 0, 1, 2.0D,
-            2
-    ));
-    private static final List<AABB> aabbs_north = Collections.singletonList(new AABB(-1, 0.0D, 0, 1, 2.0D,
-            1
-    ));
+    private static final List<AABB> aabbs = Collections.singletonList(new AABB(0.0, 0.0, 0.0, 2.0, 2.0, 1.5));
+    private static final List<AABB> aabbs_east = Collections.singletonList(new AABB(0.0, 0.0, -1.0, 1.0, 2.0, 1.0));
+    private static final List<AABB> aabbs_south = Collections.singletonList(new AABB(0.0, 0.0, 0.0, 2.0, 2.0, 1.0));
+    private static final List<AABB> aabbs_west = Collections.singletonList(new AABB(0.0, 0.0, 0.0, 1.0, 2.0, 2.0));
+    private static final List<AABB> aabbs_north = Collections.singletonList(new AABB(-1.0, 0.0, 0.0, 1.0, 2.0, 1.0));
     public final Inventory slotLens;
     public Map<IBody, SpaceOperation> map;
     public List<SpaceOperation> fakeBodySpaceOperationMap;
-    public EnumLevels level = EnumLevels.NONE;
+    public EnumLevels level;
     public int timer;
-    public Map<IBody, Data> dataMap = new HashMap<>();
+    public Map<IBody, Data> dataMap;
     public Map<IBody, SpaceOperation> operationMap;
     public IBody body;
     public IFakeBody fakeBody;
     public IColony colony;
-    boolean added = false;
-    private UUID player = new UUID(WorldBaseGen.random.nextLong(), WorldBaseGen.random.nextLong());
+    boolean added;
+    private UUID player;
     private InfoSends sends;
 
     public BlockEntityResearchTableSpace(BlockPos pos, BlockState state) {
         super(BlockBaseMachine3Entity.research_table_space, pos, state);
+        this.level = EnumLevels.NONE;
+        this.dataMap = new HashMap<>();
+        this.added = false;
+        this.player = new UUID(WorldBaseGen.random.nextLong(), WorldBaseGen.random.nextLong());
         this.map = new HashMap<>();
         this.player = new UUID(WorldBaseGen.random.nextLong(), WorldBaseGen.random.nextLong());
         this.fakeBodySpaceOperationMap = new LinkedList<>();
-        this.slotLens = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
-            @Override
-            public boolean canPlaceItem(final int index, final ItemStack stack) {
+        this.slotLens = new Inventory(this, TypeItemSlot.INPUT, 1) {
+            public boolean canPlaceItem(int index, ItemStack stack) {
                 return stack.getItem() instanceof ItemResearchLens;
             }
 
-            @Override
             public void update() {
                 super.update();
                 if (this.get(0).isEmpty()) {
-                    level = EnumLevels.NONE;
+                    BlockEntityResearchTableSpace.this.level = EnumLevels.NONE;
                 } else {
-                    level = EnumLevels.values()[((ItemResearchLens<?>) this.get(0).getItem()).getElement().getId()];
+                    BlockEntityResearchTableSpace.this.level = EnumLevels.values()[((ISubEnum) ((ItemResearchLens) this.get(0).getItem()).getElement()).getId()];
                 }
+
             }
 
-            @Override
-            public ItemStack set(final int index, final ItemStack content) {
+            public ItemStack set(int index, ItemStack content) {
                 super.set(index, content);
-                update();
+                this.update();
                 return content;
             }
         };
     }
 
     public InfoSends getSends() {
-        return sends;
+        return this.sends;
     }
 
     public MultiBlockEntity getTeBlock() {
@@ -119,261 +113,258 @@ public class BlockEntityResearchTableSpace extends BlockEntityInventory implemen
     }
 
     public BlockTileEntity getBlock() {
-        return IUItem.basemachine2.getBlock(getTeBlock());
+        return IUItem.basemachine2.getBlock(this.getTeBlock());
     }
 
-    @Override
     public void onLoaded() {
         super.onLoaded();
-        if (!added) {
+        if (!this.added) {
             MinecraftForge.EVENT_BUS.post(new ResearchTableLoadEvent(this.getWorld(), this));
-            added = true;
+            this.added = true;
         }
+
         if (!this.getWorld().isClientSide) {
             this.getSpaceBody();
-            dataMap.clear();
-            dataMap = SpaceNet.instance.getFakeSpaceSystem().getDataFromUUID(this.player);
+            this.dataMap.clear();
+            this.dataMap = SpaceNet.instance.getFakeSpaceSystem().getDataFromUUID(this.player);
+
             for (IBody body : SpaceNet.instance.getBodyMap().values()) {
-                if (!dataMap.containsKey(body)) {
-                    dataMap.put(body, new Data(player, body));
+                if (!this.dataMap.containsKey(body)) {
+                    this.dataMap.put(body, new Data(this.player, body));
                 }
             }
         }
+
         this.slotLens.update();
     }
 
-
-    @Override
     public void onUnloaded() {
         super.onUnloaded();
-        if (added) {
+        if (this.added) {
             MinecraftForge.EVENT_BUS.post(new ResearchTableLoadEvent(this.getWorld(), this));
-            added = false;
+            this.added = false;
         }
+
     }
 
-    @Override
-    public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
+    public void readContainerPacket(CustomPacketBuffer customPacketBuffer) {
         super.readContainerPacket(customPacketBuffer);
-        dataMap.clear();
+        this.dataMap.clear();
+        this.player = customPacketBuffer.readUUID();
         try {
             CompoundTag nbt = (CompoundTag) DecoderHandler.decode(customPacketBuffer);
             ListTag tagList = nbt.getList("list", 10);
-            for (ListIterator<Tag> it = tagList.listIterator(); it.hasNext(); ) {
-                Tag nbtbase = it.next();
+
+            for (Tag nbtbase : tagList) {
                 CompoundTag tagCompound = (CompoundTag) nbtbase;
                 Data data = new Data(tagCompound);
-                dataMap.put(data.getBody(), data);
+                this.dataMap.put(data.getBody(), data);
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (IOException var9) {
+            throw new RuntimeException(var9);
         }
+
         boolean hasColony = customPacketBuffer.readBoolean();
         if (hasColony) {
             this.colony = new Colony(customPacketBuffer);
             this.sends = new InfoSends(customPacketBuffer);
         } else {
-            colony = null;
-            sends = null;
+            this.colony = null;
+            this.sends = null;
         }
+
         int sizeSpaceBodyInformation = customPacketBuffer.readInt();
-        Map<IBody, SpaceOperation> information = getSpaceBody();
+        Map<IBody, SpaceOperation> information = this.getSpaceBody();
         information.clear();
-        for (int i = 0; i < sizeSpaceBodyInformation; i++) {
+
+        for (int i = 0; i < sizeSpaceBodyInformation; ++i) {
             IBody body1 = SpaceNet.instance.getBodyFromName(customPacketBuffer.readString());
             boolean auto = customPacketBuffer.readBoolean();
             EnumOperation operation = EnumOperation.getID(customPacketBuffer.readInt());
             information.put(body1, new SpaceOperation(body1, operation, auto));
         }
+
     }
 
-    @Override
     public CustomPacketBuffer writeContainerPacket() {
         CustomPacketBuffer customPacketBuffer = super.writeContainerPacket();
         ListTag tagList = new ListTag();
-        for (Map.Entry<IBody, Data> entry : dataMap.entrySet()) {
-            final CompoundTag nbt = entry.getValue().writeNBT();
+        customPacketBuffer.writeUUID(this.player);
+        for (Map.Entry<IBody, Data> iBodyDataEntry : this.dataMap.entrySet()) {
+            Map.Entry<IBody, Data> entry = iBodyDataEntry;
+            CompoundTag nbt = (entry.getValue()).writeNBT();
             tagList.add(nbt);
         }
+
         CompoundTag nbtTagCompound = new CompoundTag();
         nbtTagCompound.put("list", tagList);
+
         try {
             EncoderHandler.encode(customPacketBuffer, nbtTagCompound);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (IOException var8) {
+            throw new RuntimeException(var8);
         }
-        customPacketBuffer.writeBoolean(colony != null);
-        if (colony != null) {
-            customPacketBuffer.writeBytes(colony.writePacket());
-            List<Sends> sends =
-                    SpaceNet.instance.getColonieNet().getSendsFromUUID(this.player).stream().filter(sends1 -> sends1.getBody() == colony.getBody()).collect(
-                            Collectors.toList());
+
+        customPacketBuffer.writeBoolean(this.colony != null);
+        if (this.colony != null) {
+            customPacketBuffer.writeBytes(this.colony.writePacket());
+            List<Sends> sends = SpaceNet.instance.getColonieNet().getSendsFromUUID(this.player).stream().filter((sends1) -> sends1.getBody() == this.colony.getBody()).toList();
             InfoSends infoSends = new InfoSends();
+
             for (Sends send : sends) {
                 infoSends.addTimer(send.getTimerToPlanet());
             }
+
             customPacketBuffer.writeBytes(infoSends.writeBuffer());
         }
 
-        customPacketBuffer.writeInt(getSpaceBody().keySet().size());
-        for (Map.Entry<IBody, SpaceOperation> entry : getSpaceBody().entrySet()) {
-            customPacketBuffer.writeString(entry.getKey().getName());
-            customPacketBuffer.writeBoolean(entry.getValue().getAuto());
-            customPacketBuffer.writeInt(entry.getValue().getOperation().ordinal());
+        customPacketBuffer.writeInt(this.getSpaceBody().keySet().size());
+
+        for (Map.Entry<IBody, SpaceOperation> iBodySpaceOperationEntry : this.getSpaceBody().entrySet()) {
+            customPacketBuffer.writeString(iBodySpaceOperationEntry.getKey().getName());
+            customPacketBuffer.writeBoolean(iBodySpaceOperationEntry.getValue().getAuto());
+            customPacketBuffer.writeInt(iBodySpaceOperationEntry.getValue().getOperation().ordinal());
         }
+
         return customPacketBuffer;
     }
 
-    @Override
     @OnlyIn(Dist.CLIENT)
     public ScreenIndustrialUpgrade<ContainerMenuBase<? extends CustomWorldContainer>> getGui(Player var1, ContainerMenuBase<? extends CustomWorldContainer> menu) {
-
         return new ScreenResearchTableSpace((ContainerMenuResearchTableSpace) menu);
     }
 
-    @Override
-    public ContainerMenuResearchTableSpace getGuiContainer(final Player var1) {
+    public ContainerMenuResearchTableSpace getGuiContainer(Player var1) {
         return new ContainerMenuResearchTableSpace(this, var1);
     }
 
-
-    @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (this.getWorld().getGameTime() % 80 == 0)
+        if (this.getWorld().getGameTime() % 80L == 0L) {
             MinecraftForge.EVENT_BUS.post(new ResearchTableReLoadEvent(this.getWorld(), this));
-        if (timer > 0) {
-            timer--;
         }
-        if (timer == 0) {
-            if (body != null || fakeBody != null) {
-                new PacketUpdateFakeBody(this, null);
-            }
-            body = null;
-            fakeBody = null;
-        }
-        if (this.getWorld().getGameTime() % 20 == 0) {
-            boolean find = false;
-            if (body != null) {
-                if (colony != null) {
-                    if (!colony.matched(body)) {
-                        List<IColony> list = SpaceNet.instance.getColonieNet().getMap().get(
-                                this.player
-                        );
-                        if (list == null || list.isEmpty()) {
-                            colony = null;
-                        } else {
-                            list = list.stream().filter(colony -> colony.matched(body)).collect(Collectors.toList());
-                            if (list.isEmpty()) {
-                                colony = null;
-                                sends = null;
-                            } else {
-                                colony = list.get(0);
 
+        if (this.timer > 0) {
+            --this.timer;
+        }
+
+        if (this.timer == 0) {
+            if (this.body != null || this.fakeBody != null) {
+                new PacketUpdateFakeBody(this, (IFakeBody) null);
+            }
+
+            this.body = null;
+            this.fakeBody = null;
+        }
+
+        if (this.getWorld().getGameTime() % 20L == 0L) {
+            boolean find = false;
+            if (this.body != null) {
+                List<IColony> list;
+                Iterator<IColony> var3;
+                if (this.colony != null) {
+                    if (!this.colony.matched(this.body)) {
+                        list = SpaceNet.instance.getColonieNet().getMap().get(this.player);
+                        if (list != null && !list.isEmpty()) {
+                            list = list.stream().filter((colony) -> colony.matched(this.body)).collect(Collectors.toList());
+                            if (list.isEmpty()) {
+                                this.colony = null;
+                                this.sends = null;
+                            } else {
+                                this.colony = list.get(0);
                             }
+                        } else {
+                            this.colony = null;
                         }
                     } else {
-                        List<Sends> sends =
-                                SpaceNet.instance.getColonieNet().getSendsFromUUID(this.player).stream().filter(sends1 -> sends1.getBody() == colony.getBody()).collect(
-                                        Collectors.toList());
+                        List<Sends> list1 = SpaceNet.instance.getColonieNet().getSendsFromUUID(this.player).stream().filter((sends1) -> sends1.getBody() == this.colony.getBody()).collect(Collectors.toList());
                         this.sends = new InfoSends();
-                        for (Sends send : sends) {
+
+                        for (Sends send : list1) {
                             this.sends.addTimer(send.getTimerToPlanet());
                         }
                     }
                 } else {
-                    List<IColony> list = SpaceNet.instance.getColonieNet().getMap().get(
-                            this.player
-                    );
+                    list = SpaceNet.instance.getColonieNet().getMap().get(this.player);
                     if (list != null && !list.isEmpty()) {
-                        list = list.stream().filter(colony -> colony.matched(body)).collect(Collectors.toList());
+                        list = list.stream().filter((colony) -> colony.matched(this.body)).collect(Collectors.toList());
                         if (!list.isEmpty()) {
-                            colony = list.get(0);
+                            this.colony = list.get(0);
                         }
                     }
                 }
-                final List<IFakeBody> list = SpaceNet.instance
-                        .getFakeSpaceSystem()
-                        .getBodyMap()
-                        .computeIfAbsent(player, k -> new LinkedList<>());
-                for (IFakeBody fakeBody : list) {
-                    if (fakeBody.matched(body)) {
+
+                List<IFakeBody> list2 = SpaceNet.instance.getFakeSpaceSystem().getBodyMap().computeIfAbsent(this.player, (k) -> new LinkedList());
+
+                for (IFakeBody fakeBody : list2) {
+                    if (fakeBody.matched(this.body)) {
                         this.fakeBody = fakeBody;
                         new PacketUpdateFakeBody(this, this.fakeBody);
                         find = true;
                         break;
                     }
                 }
+
                 if (!find) {
                     this.fakeBody = null;
-                    new PacketUpdateFakeBody(this, null);
+                    new PacketUpdateFakeBody(this, (IFakeBody) null);
                 }
             } else {
-                colony = null;
+                this.colony = null;
             }
         }
+
     }
 
-    @Override
-    public void onPlaced(final ItemStack stack, final LivingEntity placer, final Direction facing) {
+    public void onPlaced(ItemStack stack, LivingEntity placer, Direction facing) {
         super.onPlaced(stack, placer, facing);
         if (placer instanceof Player) {
-            this.player = placer.getUUID();
+            if (IUCore.network.getClient() == null)
+                this.player = placer.getUUID();
+            else
+                this.player = ((Player) placer).getGameProfile().getId();
         }
+
     }
 
     public List<AABB> getAabbs(boolean forCollision) {
-        switch (this.getFacing()) {
-            case EAST:
-                return aabbs_east;
-            case SOUTH:
-                return aabbs_south;
-            case WEST:
-                return aabbs_west;
-            case NORTH:
-                return aabbs_north;
-            default:
-                return aabbs;
-        }
-
+        return switch (this.getFacing()) {
+            case EAST -> aabbs_east;
+            case SOUTH -> aabbs_south;
+            case WEST -> aabbs_west;
+            case NORTH -> aabbs_north;
+            default -> aabbs;
+        };
     }
 
-
-    @Override
-    public void readFromNBT(final CompoundTag nbtTagCompound) {
+    public void readFromNBT(CompoundTag nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
         this.player = nbtTagCompound.getUUID("player");
     }
 
-    @Override
-    public CompoundTag writeToNBT(final CompoundTag nbt) {
+    public CompoundTag writeToNBT(CompoundTag nbt) {
         CompoundTag nbtTagCompound = super.writeToNBT(nbt);
-        nbtTagCompound.putUUID("player", player);
+        nbtTagCompound.putUUID("player", this.player);
         return nbtTagCompound;
     }
 
-    @Override
     public Map<IBody, SpaceOperation> getSpaceBody() {
-        if (operationMap == null) {
-            operationMap = SpaceNet.instance.getFakeSpaceSystem().getSpaceTable(this.player);
+        if (this.operationMap == null) {
+            this.operationMap = SpaceNet.instance.getFakeSpaceSystem().getSpaceTable(this.player);
         }
-        return operationMap;
+
+        return this.operationMap;
     }
 
-    @Override
     public UUID getPlayer() {
         return this.player;
     }
 
-
-    @Override
     public EnumLevels getLevelTable() {
         return this.level;
     }
 
-    @Override
-    public void setLevel(final EnumLevels level) {
+    public void setLevel(EnumLevels level) {
         this.level = level;
     }
-
 }

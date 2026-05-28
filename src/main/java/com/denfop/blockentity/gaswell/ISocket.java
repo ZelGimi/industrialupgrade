@@ -1,9 +1,9 @@
 package com.denfop.blockentity.gaswell;
 
-import com.denfop.api.multiblock.MultiBlockElement;
+import com.denfop.api.multiblock.IMultiElement;
 import com.denfop.componets.Energy;
 
-public interface ISocket extends MultiBlockElement {
+public interface ISocket extends IMultiElement {
 
     Energy getEnergy();
 

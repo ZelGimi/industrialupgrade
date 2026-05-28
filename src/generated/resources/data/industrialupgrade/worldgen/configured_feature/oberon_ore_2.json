@@ -1,0 +1,20 @@
+{
+  "type": "industrialupgrade:space_generic_ore",
+  "config": {
+    "body_id": "oberon",
+    "depth_bonus": 0.35,
+    "distribution_type": "deep",
+    "horizontal_radius": 9,
+    "max_y": 48,
+    "min_y": -56,
+    "ore_block_id": "industrialupgrade:blockspace3/oberon_gadolinium",
+    "path_length": 18,
+    "replaceable_block_ids": [
+      "industrialupgrade:spacestone1/oberon_stone",
+      "industrialupgrade:spacecobblestone1/oberon_cobblestone"
+    ],
+    "require_near_lava": true,
+    "size": 9,
+    "vertical_radius": 4
+  }
+}

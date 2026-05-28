@@ -2,19 +2,25 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "A": {
-      "item": "industrialupgrade:itemcore/admcore"
+      "item": "industrialupgrade:itemcore/sincore"
     },
     "B": {
-      "item": "industrialupgrade:quarrymodules/ef3"
+      "item": "industrialupgrade:quantumitems4"
     },
     "C": {
-      "item": "industrialupgrade:quantumitems4"
+      "item": "industrialupgrade:quarrymodules/ef3"
+    },
+    "E": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/spectralcircuit",
+      "nbt": "{level:10}"
     }
   },
   "pattern": [
-    "ABA",
-    "BCB",
-    "ABA"
+    "A A",
+    "BEB",
+    "ACA"
   ],
   "result": {
     "item": "industrialupgrade:quarrymodules/ef4"

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "tag": "forge:casings/strontium"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_778_element"
+    },
+    "D": {
+      "tag": "forge:plates/gadolinium"
+    }
+  },
+  "pattern": [
+    "A A",
+    "BDB",
+    "ABA"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_779_element"
+  }
+}

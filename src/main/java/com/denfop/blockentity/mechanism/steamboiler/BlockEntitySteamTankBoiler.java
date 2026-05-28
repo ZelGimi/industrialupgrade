@@ -2,7 +2,7 @@ package com.denfop.blockentity.mechanism.steamboiler;
 
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
-import com.denfop.api.multiblock.MainMultiBlock;
+import com.denfop.api.multiblock.IMainMultiBlock;
 import com.denfop.blockentity.mechanism.multiblocks.base.BlockEntityMultiBlockElement;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockSteamBoilerEntity;
@@ -137,7 +137,7 @@ public class BlockEntitySteamTankBoiler extends BlockEntityMultiBlockElement imp
     }
 
     @Override
-    public void setMainMultiElement(final MainMultiBlock main) {
+    public void setMainMultiElement(final IMainMultiBlock main) {
         super.setMainMultiElement(main);
         if (main == null && steam != null) {
             steam.onUnloaded();

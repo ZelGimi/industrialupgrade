@@ -1,0 +1,11 @@
+{
+  "type": "industrialupgrade:earth_type",
+  "generator": {
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "industrialupgrade:earth_biome"
+    },
+    "settings": "industrialupgrade:earth_noise"
+  }
+}

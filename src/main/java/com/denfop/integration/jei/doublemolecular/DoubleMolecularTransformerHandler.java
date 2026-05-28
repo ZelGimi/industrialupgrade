@@ -1,6 +1,8 @@
 package com.denfop.integration.jei.doublemolecular;
 
 
+import com.denfop.integration.jei.JeiIngredientHelper;
+import com.denfop.integration.jei.IJeiVariantRecipe;
 import com.denfop.Constants;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
@@ -11,9 +13,11 @@ import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DoubleMolecularTransformerHandler {
+public class DoubleMolecularTransformerHandler implements IJeiVariantRecipe {
 
     private static final List<DoubleMolecularTransformerHandler> recipes = new ArrayList<>();
+    private List<List<ItemStack>> inputVariants = new java.util.ArrayList<>();
+
     public final String inputText;
     public final String inputText1;
     public final String outputText;
@@ -29,15 +33,15 @@ public class DoubleMolecularTransformerHandler {
         String inputText = null;
         String inputText1 = null;
         if (!this.input.isEmpty() && !this.input1.isEmpty()) {
-            inputText = input.getDisplayName().getString();
-            inputText1 = input1.getDisplayName().getString();
+            inputText = com.denfop.utils.ModUtils.cleanComponentString(input.getDisplayName().getString());
+            inputText1 = com.denfop.utils.ModUtils.cleanComponentString(input1.getDisplayName().getString());
         }
 
         this.inputText = Localization.translate("gui.MolecularTransformer.input") + ": " + inputText;
         this.inputText1 = Localization.translate("gui.MolecularTransformer.input") + ": " + inputText1;
 
         this.outputText =
-                Localization.translate("gui.MolecularTransformer.output") + ": " + output.getDisplayName().getString();
+                Localization.translate("gui.MolecularTransformer.output") + ": " + com.denfop.utils.ModUtils.cleanComponentString(output.getDisplayName().getString());
         this.totalEU = String.format("%s %s %s", Localization.translate("gui.MolecularTransformer.energyPerOperation") + ":",
                 ModUtils.getString(energy),
                 Localization.translate(Constants.ABBREVIATION + ".generic.text.EF")
@@ -79,12 +83,12 @@ public class DoubleMolecularTransformerHandler {
 
     public static void initRecipes() {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("doublemolecular")) {
-            addRecipe(
+            JeiIngredientHelper.attachInputVariants(addRecipe(
                     container.input.getInputs().get(0).getInputs().get(0),
                     container.input.getInputs().get(1).getInputs().get(0),
                     container.getOutput().items.get(0),
                     container.getOutput().metadata.getDouble("energy")
-            );
+            ), container);
 
 
         }
@@ -111,4 +115,15 @@ public class DoubleMolecularTransformerHandler {
         return true;
     }
 
+
+
+    @Override
+    public void setInputVariants(final List<List<ItemStack>> inputVariants) {
+        this.inputVariants = inputVariants == null ? new java.util.ArrayList<>() : inputVariants;
+    }
+
+    @Override
+    public List<ItemStack> getInputVariants(final int slot, final ItemStack fallback) {
+        return JeiIngredientHelper.getInputVariants(this.inputVariants, slot, fallback);
+    }
 }

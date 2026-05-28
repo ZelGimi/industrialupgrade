@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "tag": "forge:casings/thallium"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_776_element"
+    },
+    "D": {
+      "tag": "forge:plates/tantalum"
+    }
+  },
+  "pattern": [
+    "A A",
+    "BDB",
+    "ABA"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_777_element"
+  }
+}

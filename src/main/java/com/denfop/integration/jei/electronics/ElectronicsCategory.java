@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.electronics;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.recipe.InventoryRecipes;
@@ -105,11 +106,10 @@ public class ElectronicsCategory extends ScreenMain implements IRecipeCategory<E
         final List<ItemStack> inputs = recipes.getInputs();
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStacks(JeiIngredientHelper.getInputVariants(recipes, i, inputs.get(i)));
 
 
         }
-        builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStacks(recipes.getContainer().input.getAllStackInputs());
 
         final SlotInvSlot outputSlot = container1.findClassSlot(InventoryOutput.class);
         builder.addSlot(RecipeIngredientRole.OUTPUT, outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipes.getOutput());

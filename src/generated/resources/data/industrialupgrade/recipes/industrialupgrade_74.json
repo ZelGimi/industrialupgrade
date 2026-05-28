@@ -5,10 +5,7 @@
       "item": "industrialupgrade:compresscarbon"
     },
     "B": {
-      "type": "forge:nbt",
-      "count": 1,
-      "item": "industrialupgrade:circuit/quantumcircuit",
-      "nbt": "{level:7}"
+      "tag": "forge:plates/adamantium"
     },
     "C": {
       "type": "forge:nbt",

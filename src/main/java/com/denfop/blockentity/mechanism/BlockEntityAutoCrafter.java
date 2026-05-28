@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -62,7 +64,7 @@ public class BlockEntityAutoCrafter extends BlockEntityElectricMachine implement
     private boolean canRecipe = false;
 
     public BlockEntityAutoCrafter(BlockPos pos, BlockState state) {
-        super(1000, 4, 1, BlockBaseMachine3Entity.autocrafter, pos, state);
+        super(ModConfig.mechanismDouble("automatic_crafting_table_energy_storage", 1000.0D), 4, 1, BlockBaseMachine3Entity.autocrafter, pos, state);
         this.slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 18) {
             @Override
             public ItemStack set(final int index, final ItemStack content) {
@@ -71,9 +73,9 @@ public class BlockEntityAutoCrafter extends BlockEntityElectricMachine implement
                 return content;
             }
         };
-        this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.addComponent(new AirPollutionComponent(this, 0.1));
-        this.defaultEnergyConsume = this.energyConsume = 1;
+        this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("auto_crafter_soil_pollution_amount", 0.1D)));
+        this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("auto_crafter_air_pollution_amount", 0.1D)));
+        this.defaultEnergyConsume = this.energyConsume = ModConfig.mechanismInt("auto_crafter_energy_use", 1);
         this.defaultOperationLength = operationsPerTick = 100;
         this.defaultTier = 4;
         this.defaultEnergyStorage = 2 * 100;
@@ -92,7 +94,7 @@ public class BlockEntityAutoCrafter extends BlockEntityElectricMachine implement
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("iu.machines_work_energy") + this.energyConsume + Localization.translate(
                     "iu.machines_work_energy_type_eu"));
-            tooltip.add(Localization.translate("iu.machines_work_length") + this.operationsPerTick);
+            tooltip.add(Localization.translate("iu.machines_work_length") + this.defaultOperationLength);
         }
         super.addInformation(stack, tooltip);
 

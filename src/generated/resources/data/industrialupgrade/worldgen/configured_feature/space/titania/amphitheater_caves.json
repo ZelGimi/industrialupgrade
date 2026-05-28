@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:space_advanced_cave",
+  "config": {
+    "flooded": false,
+    "fluid": {
+      "Name": "industrialupgrade:fluid/fluidchlorum",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "kind": "amphitheater_caves",
+    "max_length": 18,
+    "max_radius": 9,
+    "max_vertical": 18,
+    "min_length": 12,
+    "min_radius": 5,
+    "open_to_surface": false,
+    "primary": {
+      "Name": "industrialupgrade:spacestone1/titania_stone"
+    },
+    "secondary": {
+      "Name": "industrialupgrade:spacecobblestone1/titania_cobblestone"
+    },
+    "tertiary": {
+      "Name": "industrialupgrade:blockspace4/titania_polonium_ore"
+    }
+  }
+}

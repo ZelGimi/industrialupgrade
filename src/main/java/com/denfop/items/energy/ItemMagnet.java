@@ -12,10 +12,7 @@ import com.denfop.items.IItemStackInventory;
 import com.denfop.mixin.invoker.LevelInvoker;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.IUpdatableItemStackEvent;
-import com.denfop.utils.ElectricItem;
-import com.denfop.utils.KeyboardIU;
-import com.denfop.utils.Localization;
-import com.denfop.utils.ModUtils;
+import com.denfop.utils.*;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.ChatFormatting;
@@ -270,7 +267,8 @@ public class ItemMagnet extends BaseEnergyItem implements IItemStackInventory, I
         }
         if (KeyboardIU.isKeyDown(InputConstants.KEY_LSHIFT)) {
             p_41423_.add(Component.literal(Localization.translate("iu.changemode_key") + Localization.translate(
-                    "iu.changemode_rcm1")));
+                    "iu.changemode_rcm1") + " + " + com.denfop.utils.ModUtils.cleanComponentString(KeyboardClient.changemode.getKey().getDisplayName().getString())));
+
         }
         super.appendHoverText(p_41421_, p_41422_, p_41423_, p_41424_);
     }

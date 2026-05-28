@@ -4,195 +4,450 @@ import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.widget.ButtonListSliderWidget;
 import com.denfop.api.widget.SliderWidget;
-import com.denfop.containermenu.ContainerMenuBase;
 import com.denfop.network.packet.PacketColorPicker;
 import com.denfop.render.streak.PlayerStreakInfo;
+import com.denfop.render.streak.PlayerStreakPreviewRenderer;
 import com.denfop.render.streak.RGB;
 import com.denfop.screen.ScreenMain;
 import com.denfop.utils.Localization;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.math.Matrix4f;
-import net.minecraft.client.gui.components.Checkbox;
-import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
-
-import static com.mojang.blaze3d.vertex.DefaultVertexFormat.POSITION_TEX_COLOR;
-import static com.mojang.blaze3d.vertex.VertexFormat.Mode.QUADS;
+import java.awt.*;
+import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
-public class WidgetColorPicker<T extends ContainerMenuBase<?>> extends ScreenMain<ContainerMenuStreak> implements ButtonListSliderWidget.WidgetResponder, SliderWidget.FormatHelper {
+public class WidgetColorPicker<T extends ContainerMenuStreak> extends ScreenMain<ContainerMenuStreak>
+        implements ButtonListSliderWidget.WidgetResponder, SliderWidget.FormatHelper {
 
-    private final ResourceLocation background = new ResourceLocation(Constants.TEXTURES, "textures/gui/Color.png".toLowerCase());
-    boolean isRgb = false;
+    private static final ResourceLocation BACKGROUND =
+            new ResourceLocation(Constants.TEXTURES, "textures/gui/Color.png".toLowerCase());
+
+    private static final int SCREEN_WIDTH = 392;
+    private static final int SCREEN_HEIGHT = 330;
+
+    private static final int LEFT_PANEL_W = 160;
+    private static final int RIGHT_PANEL_W = 194;
+    private static final int PANEL_H = 298;
+
+    private static final int OUTER_MARGIN = 14;
+    private static final int INNER_GAP = 10;
+
+    private static final List<Integer> PRESET_COLORS = List.of(
+            0xFFFFFF, 0xE4E4E4, 0xB9B9B9, 0x7C7C7C, 0x3A3A3A, 0x000000,
+            0xFF4D4D, 0xFF7F50, 0xFFA500, 0xFFD966, 0xFFFF00, 0xC6E377,
+            0x6CC04A, 0x00C853, 0x00E5FF, 0x4FC3F7, 0x2196F3, 0x3F51B5,
+            0x673AB7, 0x9C27B0, 0xE91E63, 0xFF4081, 0x8D6E63, 0xBCAAA4,
+            0xD32F2F, 0xF57C00, 0xFBC02D, 0x388E3C, 0x00796B, 0x1976D2,
+            0x512DA8, 0xC2185B, 0x795548, 0x607D8B, 0xAEEA00, 0x64FFDA
+    );
+
     private PlayerStreakInfo colorPicker;
-    private Checkbox rgb;
+
+    private int originalRgb;
+    private boolean originalRainbow;
+
+    private int currentRgb;
+    private float hue;
+    private float saturation;
+    private float value;
+    private boolean rainbowMode;
+
+    private HsvColorPaletteWidget paletteWidget;
+    private HueSliderWidget hueWidget;
+    private PresetColorScrollWidget presetWidget;
+    private EditBox hexBox;
+    private Button rainbowButton;
+    private Button applyButton;
+    private Button resetButton;
+    private Button backButton;
+
+    private boolean updatingHex;
 
     public WidgetColorPicker(ContainerMenuStreak container, final ItemStack itemStack1) {
         super(container);
         this.componentList.clear();
+        this.title = Component.empty();
+        this.imageWidth = SCREEN_WIDTH;
+        this.imageHeight = SCREEN_HEIGHT;
+    }
 
+    private static int rgbToInt(int r, int g, int b) {
+        return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
+    }
+
+    private static String formatHex(int rgb) {
+        return String.format("#%06X", rgb & 0xFFFFFF);
     }
 
     @Override
     protected void init() {
+        this.clearWidgets();
+        this.imageWidth = SCREEN_WIDTH;
+        this.imageHeight = SCREEN_HEIGHT;
         super.init();
+
         this.colorPicker = IUCore.mapStreakInfo.get(this.container.player.getName().getString());
         if (this.colorPicker == null) {
-            this.colorPicker = new PlayerStreakInfo(new RGB((short) 0, (short) 0, (short) 0), false);
-            IUCore.mapStreakInfo.put(this.container.player.getName().getString(), colorPicker);
-            new PacketColorPicker(colorPicker, this.container.player.getName().getString());
-
+            this.colorPicker = new PlayerStreakInfo(new RGB((short) 0, (short) 255, (short) 255), false);
+            IUCore.mapStreakInfo.put(this.container.player.getName().getString(), this.colorPicker);
+            new PacketColorPicker(this.colorPicker, this.container.player.getName().getString());
         }
-        this.renderables.add(new SliderWidget(this, 0, (this.width - this.imageWidth) / 2 + 10, (this.height - this.imageHeight) / 2 + 80,
-                Localization.translate("iu.red"),
-                0, 255, colorPicker.getRgb().getRed(), this
-        ));
 
-        this.renderables.add(new SliderWidget(this, 1, (this.width - this.imageWidth) / 2 + 10, (this.height - this.imageHeight) / 2 + 110,
-                Localization.translate("iu.green"),
-                0, 255, colorPicker.getRgb().getGreen(), this
-        ));
-        this.renderables.add(new SliderWidget(this, 2, (this.width - this.imageWidth) / 2 + 10, (this.height - this.imageHeight) / 2 + 140,
-                Localization.translate("iu.blue"),
-                0, 255, colorPicker.getRgb().getBlue(), this
-        ));
-        rgb = new Checkbox(
-                (this.width - this.imageWidth) / 2 + 10,
-                (this.height - this.imageHeight) / 2 + 155, 20, 20,
-                Component.translatable("iu.rgb"),
-                colorPicker.isRainbow()
+        this.originalRgb = rgbToInt(
+                this.colorPicker.getRgb().getRed(),
+                this.colorPicker.getRgb().getGreen(),
+                this.colorPicker.getRgb().getBlue()
         );
-        this.isRgb = colorPicker.isRainbow();
-        this.renderables.add(rgb);
+        this.originalRainbow = this.colorPicker.isRainbow();
+
+        this.currentRgb = this.originalRgb;
+        this.rainbowMode = this.originalRainbow;
+        loadHsvFromCurrentRgb();
+
+        final int leftX = (this.width - this.imageWidth) / 2 + OUTER_MARGIN;
+        final int rightX = leftX + LEFT_PANEL_W + INNER_GAP;
+        final int panelY = (this.height - this.imageHeight) / 2 + 16;
+
+        final int paletteX = leftX + 14;
+        final int paletteY = panelY + 72;
+        final int paletteSize = 104;
+        final int hueX = paletteX + paletteSize + 8;
+        final int hueW = 12;
+
+        this.hexBox = new EditBox(this.font, leftX + 14, panelY + 34, 88, 18, Component.translatable("iu.color_picker.hex"));
+        this.hexBox.setMaxLength(7);
+        this.hexBox.setValue(formatHex(this.currentRgb));
+        this.hexBox.setFilter(value -> value.matches("#?[0-9a-fA-F]{0,6}"));
+        this.hexBox.setResponder(this::onHexEdited);
+        this.addRenderableWidget(this.hexBox);
+
+        this.rainbowButton = this.addRenderableWidget(
+                new Button(
+                        leftX + 108,
+                        panelY + 34,
+                        50,
+                        18,
+                        Component.empty(),
+                        button -> {
+                            this.rainbowMode = !this.rainbowMode;
+                            updateRainbowButtonText();
+                            pushColorToLiveState();
+                        },
+                        Button.NO_TOOLTIP
+                )
+        );
+        updateRainbowButtonText();
+
+        this.paletteWidget = this.addRenderableWidget(new HsvColorPaletteWidget(
+                paletteX,
+                paletteY,
+                paletteSize,
+                paletteSize,
+                this.hue,
+                this.saturation,
+                this.value,
+                (sat, val) -> {
+                    this.saturation = sat;
+                    this.value = val;
+                    updateRgbFromHsv(true);
+                }
+        ));
+
+        this.hueWidget = this.addRenderableWidget(new HueSliderWidget(
+                hueX,
+                paletteY,
+                hueW,
+                paletteSize,
+                this.hue,
+                newHue -> {
+                    this.hue = newHue;
+                    this.paletteWidget.setHue(this.hue);
+                    updateRgbFromHsv(true);
+                }
+        ));
+
+        this.presetWidget = this.addRenderableWidget(new PresetColorScrollWidget(
+                rightX + 14,
+                panelY + 220,
+                166,
+                44,
+                PRESET_COLORS,
+                this.currentRgb,
+                color -> {
+                    this.rainbowMode = false;
+                    updateRainbowButtonText();
+                    setColorFromRgb(color, true);
+                }
+        ));
+
+        this.applyButton = this.addRenderableWidget(
+                new Button(
+                        rightX + 14,
+                        panelY + 268,
+                        52,
+                        20,
+                        Component.translatable("iu.color_picker.apply"),
+                        button -> {
+                            pushColorToLiveState();
+                            this.onClose();
+                        },
+                        Button.NO_TOOLTIP
+                )
+        );
+
+        this.resetButton = this.addRenderableWidget(
+                new Button(
+                        rightX + 72,
+                        panelY + 268,
+                        52,
+                        20,
+                        Component.translatable("iu.color_picker.reset"),
+                        button -> {
+                            this.rainbowMode = this.originalRainbow;
+                            updateRainbowButtonText();
+                            setColorFromRgb(this.originalRgb, false);
+                            pushColorToLiveState();
+                        },
+                        Button.NO_TOOLTIP
+                )
+        );
+
+        this.backButton = this.addRenderableWidget(
+                new Button(
+                        rightX + 128,
+                        panelY + 268,
+                        52,
+                        20,
+                        Component.translatable("iu.color_picker.back"),
+                        button -> this.onClose(),
+                        Button.NO_TOOLTIP
+                )
+        );
+
+        syncWidgetsFromState();
     }
 
-    protected void drawForegroundLayer(PoseStack poseStack, int par1, int par2) {
-        super.drawForegroundLayer(poseStack, par1, par2);
-    }
-
-    @Override
-    public void setEntryValue(final int id, final boolean value) {
-
-
-    }
-
-    @Override
-    public void setEntryValue(final int id, final float value) {
-        switch (id) {
-            case 0:
-                this.colorPicker.getRgb().setRed((short) value);
-                break;
-            case 1:
-                this.colorPicker.getRgb().setGreen((short) value);
-                break;
-            case 2:
-                this.colorPicker.getRgb().setBlue((short) value);
-                break;
-
+    private void updateRainbowButtonText() {
+        if (this.rainbowButton != null) {
+            this.rainbowButton.setMessage(this.rainbowMode
+                    ? Component.translatable("iu.color_picker.rainbow")
+                    : Component.translatable("iu.color_picker.static"));
         }
-        new PacketColorPicker(colorPicker, this.container.player.getName().getString());
+    }
+
+    private void onHexEdited(String value) {
+        if (this.updatingHex) {
+            return;
+        }
+
+        String raw = value.startsWith("#") ? value.substring(1) : value;
+        if (raw.length() != 6) {
+            return;
+        }
+
+        try {
+            int rgb = Integer.parseInt(raw, 16) & 0xFFFFFF;
+            this.rainbowMode = false;
+            updateRainbowButtonText();
+            setColorFromRgb(rgb, true);
+        } catch (NumberFormatException ignored) {
+        }
+    }
+
+    private void setColorFromRgb(int rgb, boolean sendPacket) {
+        this.currentRgb = rgb & 0xFFFFFF;
+        loadHsvFromCurrentRgb();
+        syncWidgetsFromState();
+        if (sendPacket) {
+            pushColorToLiveState();
+        }
+    }
+
+    private void updateRgbFromHsv(boolean sendPacket) {
+        this.currentRgb = Mth.hsvToRgb(this.hue, this.saturation, this.value) & 0xFFFFFF;
+        syncWidgetsFromState();
+        if (sendPacket) {
+            pushColorToLiveState();
+        }
+    }
+
+    private void loadHsvFromCurrentRgb() {
+        int r = (this.currentRgb >> 16) & 0xFF;
+        int g = (this.currentRgb >> 8) & 0xFF;
+        int b = this.currentRgb & 0xFF;
+
+        float[] hsv = Color.RGBtoHSB(r, g, b, null);
+        this.hue = hsv[0];
+        this.saturation = hsv[1];
+        this.value = hsv[2];
+    }
+
+    private void syncWidgetsFromState() {
+        if (this.paletteWidget != null) {
+            this.paletteWidget.setHue(this.hue);
+            this.paletteWidget.setSaturationValue(this.saturation, this.value);
+        }
+
+        if (this.hueWidget != null) {
+            this.hueWidget.setHue(this.hue);
+        }
+
+        if (this.presetWidget != null) {
+            this.presetWidget.setSelectedColor(this.currentRgb);
+        }
+
+        if (this.hexBox != null) {
+            this.updatingHex = true;
+            this.hexBox.setValue(formatHex(this.currentRgb));
+            this.updatingHex = false;
+        }
+    }
+
+    private void pushColorToLiveState() {
+        String playerName = this.container.player.getName().getString();
+
+        PlayerStreakInfo liveInfo = IUCore.mapStreakInfo.get(playerName);
+        if (liveInfo == null) {
+            liveInfo = new PlayerStreakInfo(new RGB((short) 0, (short) 255, (short) 255), false);
+            IUCore.mapStreakInfo.put(playerName, liveInfo);
+        }
+
+        liveInfo.getRgb().setRed((short) ((this.currentRgb >> 16) & 0xFF));
+        liveInfo.getRgb().setGreen((short) ((this.currentRgb >> 8) & 0xFF));
+        liveInfo.getRgb().setBlue((short) (this.currentRgb & 0xFF));
+        liveInfo.setRainbow(this.rainbowMode);
+
+        this.colorPicker = liveInfo;
+
+        new PacketColorPicker(liveInfo, playerName);
     }
 
     @Override
-    public void setEntryValue(final int id, @Nonnull final String value) {
-
-    }
-
-    public void drawTexturedModalRect1(PoseStack poseStack, int x, int y, int textureX, int textureY, int width, int height) {
-        double[] name = new double[3];
-        for (int i = 0; i < 3; i++) {
-
-            if (this.renderables.get(i) instanceof SliderWidget) {
-                SliderWidget slider = (SliderWidget) this.renderables.get(i);
-                name[i] = slider.getSliderValue();
-
-            }
-        }
-        Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder bufferbuilder = tessellator.getBuilder();
-        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
-        poseStack.pushPose();
-        Matrix4f matrix = poseStack.last().pose();
-        bufferbuilder.begin(QUADS, POSITION_TEX_COLOR);
-
-        bufferbuilder.vertex(matrix, x, y + height, 0).uv(
-                (float) (textureX) * 0.00390625F,
-                (float) (textureY + height) * 0.00390625F
-        ).color((float) name[0] / 255, (float) name[1] / 255, (float) name[2] / 255, 1).endVertex();
-        bufferbuilder.vertex(matrix, x + width, y + height, 0).uv(
-                (float) (textureX + width) * 0.00390625F,
-                (float) (textureY + height) * 0.00390625F
-        ).color((float) name[0] / 255, (float) name[1] / 255, (float) name[2] / 255, 1).endVertex();
-        bufferbuilder.vertex(matrix, x + width, y, 0).uv(
-                (float) (textureX + width) * 0.00390625F,
-                (float) (textureY) * 0.00390625F
-        ).color((float) name[0] / 255, (float) name[1] / 255, (float) name[2] / 255, 1).endVertex();
-        bufferbuilder.vertex(matrix, x, y, 0).uv(
-                (float) (textureX) * 0.00390625F,
-                (float) (textureY) * 0.00390625F
-        ).color((float) name[0] / 255, (float) name[1] / 255, (float) name[2] / 255, 1).endVertex();
-        tessellator.end();
-        poseStack.popPose();
-
-    }
-
-    protected void drawGuiContainerBackgroundLayer(PoseStack poseStack, final float partialTicks, final int mouseX, final int mouseY) {
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-
-        int xOffset = guiLeft;
-        int yOffset = guiTop;
-        bindTexture(this.background);
-
-        this.drawTexturedModalRect1(poseStack, xOffset, yOffset, 15, 1, 180, 60);
-        if (isRgb != rgb.selected()) {
-            isRgb = rgb.selected();
-            colorPicker.setRainbow(isRgb);
-            new PacketColorPicker(colorPicker, this.container.player.getName().getString());
-        }
-
+    public void updateTickInterface() {
+        super.updateTickInterface();
     }
 
     @Override
-    protected void mouseClicked(int i, int j, int k) {
-        super.mouseClicked(i, j, k);
-        int xMin = (this.width - this.imageWidth) / 2;
-        int yMin = (this.height - this.imageHeight) / 2;
-        int x = i - xMin;
-        int y = j - yMin;
+    public void updateTick() {
+        super.updateTick();
+        if (this.hexBox != null) {
+            this.hexBox.tick();
+        }
+    }
 
+    @Override
+    protected void drawBackgroundAndTitle(PoseStack guiGraphics, float partialTicks, int mouseX, int mouseY) {
+        RenderSystem.disableDepthTest();
+    }
+
+    @Override
+    protected void drawGuiContainerBackgroundLayer(PoseStack guiGraphics, final float partialTicks, final int mouseX, final int mouseY) {
+        final int leftX = this.guiLeft + OUTER_MARGIN;
+        final int rightX = leftX + LEFT_PANEL_W + INNER_GAP;
+        final int panelY = this.guiTop + 16;
+
+        fill(guiGraphics, 0, 0, this.width, this.height, 0xC0101016);
+
+        ColorPickerRenderUtil.drawPanel(guiGraphics, this.guiLeft, this.guiTop, this.imageWidth, this.imageHeight, 0xF51A1C22, 0xFF343A46);
+        ColorPickerRenderUtil.drawPanel(guiGraphics, leftX, panelY, LEFT_PANEL_W, PANEL_H, 0xF71B2029, 0xFF353B47);
+        ColorPickerRenderUtil.drawPanel(guiGraphics, rightX, panelY, RIGHT_PANEL_W, PANEL_H, 0xF71B2029, 0xFF353B47);
+
+        drawString(guiGraphics, Localization.translate("iu.color_picker.title"), leftX + 14, panelY + 10, 0xF2F6FF);
+        drawString(guiGraphics, Localization.translate("iu.color_picker.hex"), leftX + 14, panelY + 24, 0xAEB8CC);
+        drawString(guiGraphics, Localization.translate("iu.color_picker.preview"), rightX + 14, panelY + 10, 0xF2F6FF);
+
+        final int previewX = rightX + 14;
+        final int previewY = panelY + 24;
+        final int previewW = 166;
+        final int previewH = 140;
+
+        ColorPickerRenderUtil.drawInsetPanel(guiGraphics, previewX, previewY, previewW, previewH, 0xFF10141B, 0xFF2B3240);
+        PlayerStreakPreviewRenderer.renderPreview(
+                guiGraphics,
+                previewX,
+                previewY,
+                previewW,
+                previewH,
+                this.container.player,
+                this.colorPicker,
+                partialTicks,
+                mouseX,
+                mouseY
+        );
+
+        final int liveColor = PlayerStreakPreviewRenderer.resolvePreviewRgb(this.colorPicker, partialTicks);
+
+        drawString(guiGraphics, Localization.translate("iu.color_picker.current"), rightX + 14, panelY + 172, 0xAEB8CC);
+        drawString(guiGraphics, Localization.translate("iu.color_picker.original"), rightX + 110, panelY + 172, 0xAEB8CC);
+
+        drawColorSwatch(guiGraphics, rightX + 14, panelY + 184, 64, 18, liveColor);
+        drawColorSwatch(guiGraphics, rightX + 110, panelY + 184, 64, 18, this.originalRgb);
+
+        drawString(guiGraphics, Localization.translate("iu.color_picker.presets"), rightX + 14, panelY + 208, 0xAEB8CC);
+
+        int r = (this.currentRgb >> 16) & 0xFF;
+        int g = (this.currentRgb >> 8) & 0xFF;
+        int b = this.currentRgb & 0xFF;
+
+        drawString(guiGraphics, Localization.translate("iu.color_picker.red_value", r), leftX + 14, panelY + 188, 0xFF8A8A);
+        drawString(guiGraphics, Localization.translate("iu.color_picker.green_value", g), leftX + 58, panelY + 188, 0x8DFF9B);
+        drawString(guiGraphics, Localization.translate("iu.color_picker.blue_value", b), leftX + 104, panelY + 188, 0x8EC5FF);
+
+        drawString(
+                guiGraphics,
+                this.rainbowMode
+                        ? Localization.translate("iu.color_picker.mode_rainbow")
+                        : Localization.translate("iu.color_picker.mode_static"),
+                leftX + 14,
+                panelY + 208,
+                this.rainbowMode ? 0x8DEBFF : 0xAEB8CC
+        );
+
+        font.drawWordWrap(
+                Component.translatable("iu.color_picker.tip_palette_preview"),
+                leftX + 14,
+                panelY + 226,
+                LEFT_PANEL_W - 28,
+                0x7F8AA3
+        );
+    }
+
+    private void drawColorSwatch(PoseStack guiGraphics, int x, int y, int w, int h, int rgb) {
+        ColorPickerRenderUtil.drawInsetPanel(guiGraphics, x, y, w, h, 0xFF12161D, 0xFF313949);
+        ColorPickerRenderUtil.drawCheckerboard(guiGraphics, x + 1, y + 1, w - 2, h - 2);
+        fill(guiGraphics, x + 1, y + 1, x + w - 1, y + h - 1, 0xFF000000 | (rgb & 0xFFFFFF));
     }
 
     @Nonnull
     @Override
     public String getText(final int id, @Nonnull final String name, final float value) {
-        switch (id) {
-            case 0:
-                return Localization.translate("iu.red") + (int) value;
-            case 1:
-                return Localization.translate("iu.green") + (int) value;
-            case 2:
-                return Localization.translate("iu.blue") + (int) value;
-
-        }
         return "";
     }
 
-    protected void drawBackgroundAndTitle(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
-        this.bindTexture();
-
+    @Override
+    public void setEntryValue(final int id, final boolean value) {
     }
 
+    @Override
+    public void setEntryValue(final int id, final float value) {
+    }
+
+    @Override
+    public void setEntryValue(final int id, @Nonnull final String value) {
+    }
+
+    @Override
     protected ResourceLocation getTexture() {
-        return background;
+        return BACKGROUND;
     }
-
 }

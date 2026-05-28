@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.steam;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -50,7 +52,7 @@ public class BlockEntitySteamConverter extends BlockEntityElectricMachine implem
     public boolean work = true;
 
     public BlockEntitySteamConverter(BlockPos pos, BlockState state) {
-        super(0, 0, 1, BlockBaseMachine3Entity.steam_converter, pos, state);
+        super(ModConfig.mechanismDouble("steam_converter_energy_storage", 0.0D), 0, 1, BlockBaseMachine3Entity.steam_converter, pos, state);
 
 
         this.fluids = this.addComponent(new Fluids(this));
@@ -86,24 +88,11 @@ public class BlockEntitySteamConverter extends BlockEntityElectricMachine implem
     @Override
     public void onNeighborChange(final BlockState neighbor, final BlockPos neighborPos) {
         super.onNeighborChange(neighbor, neighborPos);
-        if (work) {
-            if (this.pos.below().distSqr(neighborPos) == 0) {
-                FluidState blockState = level.getFluidState(this.pos.below());
-                if (blockState.getType() != net.minecraft.world.level.material.Fluids.EMPTY) {
-                    this.work = blockState.getType().isSame(Fluids.LAVA);
-                } else {
-                    work = false;
-                }
-            }
+        FluidState blockState = level.getFluidState(this.pos.below());
+        if (!blockState.isEmpty()) {
+            this.work = blockState.getType().isSame(Fluids.LAVA);
         } else {
-            if (this.pos.below().distSqr(neighborPos) == 0) {
-                FluidState blockState = level.getFluidState(this.pos.below());
-                if (blockState.getType() != net.minecraft.world.level.material.Fluids.EMPTY) {
-                    this.work = blockState.getType().isSame(Fluids.LAVA);
-                } else {
-                    work = false;
-                }
-            }
+            work = false;
         }
     }
 
@@ -186,16 +175,16 @@ public class BlockEntitySteamConverter extends BlockEntityElectricMachine implem
     public void updateEntityServer() {
         super.updateEntityServer();
         if (this.work) {
-            for (int i = 0; i < ComponentSteamEnergy.speedGeneration;i++)
-            if (this.getWorld().getGameTime() % 1 == 0) {
-                if (!this.fluidTank.getFluid().isEmpty() && this.fluidTank.getFluid().getAmount() >= 2 && this.steam.getEnergy() + 2 <= this.steam.getCapacity()) {
-                    this.steam.addEnergy(2);
-                    this.fluidTank.drain(2, IFluidHandler.FluidAction.EXECUTE);
-                    this.setActive(true);
-                } else {
-                    setActive(false);
+            for (int i = 0; i < ComponentSteamEnergy.speedGeneration; i++)
+                if (this.getWorld().getGameTime() % 1 == 0) {
+                    if (!this.fluidTank.getFluid().isEmpty() && this.fluidTank.getFluid().getAmount() >= 2 && this.steam.getEnergy() + 2 <= this.steam.getCapacity()) {
+                        this.steam.addEnergy(2);
+                        this.fluidTank.drain(2, IFluidHandler.FluidAction.EXECUTE);
+                        this.setActive(true);
+                    } else {
+                        setActive(false);
+                    }
                 }
-            }
         } else {
             setActive(false);
         }

@@ -33,27 +33,6 @@ public class BaseFluidMachineRecipe {
         this.output = output;
     }
 
-    public boolean matches(List<FluidStack> stacks) {
-        for (int i = 0; i < stacks.size(); i++) {
-            if (this.input.getInputs().get(i).getFluid().equals(stacks.get(i).getFluid())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public RecipeOutput getOutput() {
-        return this.output;
-    }
-
-    public List<FluidStack> getOutput_fluid() {
-        return output_fluid;
-    }
-
-    public IInputFluid getInput() {
-        return input;
-    }
-
     public static BaseFluidMachineRecipe readNBT(CompoundTag tag) {
         IInputFluid input = InputFluid.readNBT(tag.getCompound("Input"));
 
@@ -80,6 +59,27 @@ public class BaseFluidMachineRecipe {
         RecipeOutput output = new RecipeOutput(metadata, items);
 
         return new BaseFluidMachineRecipe(input, output, fluids);
+    }
+
+    public boolean matches(List<FluidStack> stacks) {
+        for (int i = 0; i < stacks.size(); i++) {
+            if (this.input.getInputs().get(i).getFluid().equals(stacks.get(i).getFluid())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public RecipeOutput getOutput() {
+        return this.output;
+    }
+
+    public List<FluidStack> getOutput_fluid() {
+        return output_fluid;
+    }
+
+    public IInputFluid getInput() {
+        return input;
     }
 
     public CompoundTag writeNBT() {

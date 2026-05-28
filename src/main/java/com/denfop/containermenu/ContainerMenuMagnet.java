@@ -2,7 +2,6 @@ package com.denfop.containermenu;
 
 import com.denfop.blockentity.mechanism.BlockEntityMagnet;
 import com.denfop.containermenu.slot.SlotInvSlot;
-import com.denfop.containermenu.slot.SlotVirtual;
 import net.minecraft.world.entity.player.Player;
 
 public class ContainerMenuMagnet extends ContainerMenuFullInv<BlockEntityMagnet> {

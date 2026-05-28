@@ -142,4 +142,6 @@ public interface IRecipes {
 
 
     List<String> getMap_recipe_managers();
+
+    void addFluidItemRemoveRecipe(String recipeType, ItemStack itemStack, boolean removeAll);
 }

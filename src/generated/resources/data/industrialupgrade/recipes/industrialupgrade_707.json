@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "A": {
-      "item": "industrialupgrade:itemcore/procore"
+      "item": "industrialupgrade:itemcore/quacore"
     },
     "B": {
       "item": "industrialupgrade:rotorupgrade_schemes"
@@ -15,7 +15,7 @@
     }
   },
   "pattern": [
-    "ADA",
+    " D ",
     "CBC",
     "ADA"
   ],

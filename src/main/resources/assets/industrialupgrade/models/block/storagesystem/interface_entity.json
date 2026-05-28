@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/interface_entity",
+    "down" : "industrialupgrade:blocks/interface_entity",
+    "up" : "industrialupgrade:blocks/interface_entity",
+    "north" : "industrialupgrade:blocks/interface_entity",
+    "east" : "industrialupgrade:blocks/interface_entity",
+    "south" : "industrialupgrade:blocks/interface_entity",
+    "west" : "industrialupgrade:blocks/interface_entity"
+  }
+}

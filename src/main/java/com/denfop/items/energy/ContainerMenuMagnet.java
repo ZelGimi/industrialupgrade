@@ -1,7 +1,7 @@
 package com.denfop.items.energy;
 
 import com.denfop.containermenu.ContainerMenuHandHeldInventory;
-import com.denfop.containermenu.slot.SlotVirtual;
+import com.denfop.containermenu.SlotVirtual;
 import com.denfop.containermenu.slot.VirtualSlotItem;
 import com.denfop.network.packet.PacketItemStackUpdate;
 import com.denfop.utils.ModUtils;

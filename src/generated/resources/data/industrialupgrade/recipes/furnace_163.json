@@ -3,7 +3,7 @@
   "cookingtime": 200,
   "experience": 0.6,
   "ingredient": {
-    "item": "industrialupgrade:alloydust/vitalium"
+    "item": "industrialupgrade:blockspace/ceres_copper_ore"
   },
-  "result": "industrialupgrade:alloyingot/vitalium"
+  "result": "minecraft:copper_ingot"
 }

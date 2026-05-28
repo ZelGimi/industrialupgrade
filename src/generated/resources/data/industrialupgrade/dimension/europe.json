@@ -1,0 +1,11 @@
+{
+  "type": "industrialupgrade:europe_type",
+  "generator": {
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "industrialupgrade:europe_biome"
+    },
+    "settings": "industrialupgrade:europe_noise"
+  }
+}

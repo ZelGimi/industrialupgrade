@@ -64,8 +64,8 @@ public class JeiInform<C extends IRecipeCategory, H> {
             Constructor<?> constructor = categoryClass.getConstructor(IGuiHelper.class, JeiInform.class);
 
             category = (C) constructor.newInstance(screenHelper, this);
-            category.getTitle().getString().substring(0, 2);
-            registration.addRecipeCategories(category);
+            Object constructor1 = JeiInterface.class.getConstructors()[0].newInstance(category);
+            registration.addRecipeCategories((mezz.jei.api.recipe.category.IRecipeCategory<?>) constructor1);
         } catch (Exception e) {
             e.printStackTrace();
         }

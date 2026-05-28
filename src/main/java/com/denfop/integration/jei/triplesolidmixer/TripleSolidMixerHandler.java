@@ -1,6 +1,8 @@
 package com.denfop.integration.jei.triplesolidmixer;
 
 
+import com.denfop.integration.jei.JeiIngredientHelper;
+import com.denfop.integration.jei.IJeiVariantRecipe;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import net.minecraft.world.item.ItemStack;
@@ -9,9 +11,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TripleSolidMixerHandler {
+public class TripleSolidMixerHandler implements IJeiVariantRecipe {
 
     private static final List<TripleSolidMixerHandler> recipes = new ArrayList<>();
+    private List<List<ItemStack>> inputVariants = new java.util.ArrayList<>();
+
     private final ItemStack input, input1, input2, output, output1;
     private final BaseMachineRecipe container;
 
@@ -26,6 +30,7 @@ public class TripleSolidMixerHandler {
         this.output = output;
         this.output1 = output1;
         this.container = container;
+        JeiIngredientHelper.attachInputVariants(this, container);
     }
 
     public static List<TripleSolidMixerHandler> getRecipes() {
@@ -106,4 +111,15 @@ public class TripleSolidMixerHandler {
         return true;
     }
 
+
+
+    @Override
+    public void setInputVariants(final List<List<ItemStack>> inputVariants) {
+        this.inputVariants = inputVariants == null ? new java.util.ArrayList<>() : inputVariants;
+    }
+
+    @Override
+    public List<ItemStack> getInputVariants(final int slot, final ItemStack fallback) {
+        return JeiIngredientHelper.getInputVariants(this.inputVariants, slot, fallback);
+    }
 }

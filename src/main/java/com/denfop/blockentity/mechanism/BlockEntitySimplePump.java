@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blocks.BlockTileEntity;
@@ -17,8 +19,8 @@ public class BlockEntitySimplePump extends BlockEntityPump {
 
     public BlockEntitySimplePump(BlockPos pos, BlockState state) {
         super(10, 20, BlockBaseMachine3Entity.pump_iu, pos, state);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.075));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.25));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("simple_pump_soil_pollution_amount", 0.075D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("simple_pump_air_pollution_amount", 0.25D)));
     }
 
     @Override

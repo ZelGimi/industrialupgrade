@@ -6,7 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 import java.util.Objects;
@@ -22,7 +22,7 @@ public class QuarryItem {
         try {
             oreDict = list.get(0);
         } catch (Exception e) {
-            oreDict = new TagKey<>(Registry.ITEM_REGISTRY, new ResourceLocation("", "unknown"));
+            oreDict = TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation("", "unknown"));
         }
     }
 
@@ -32,8 +32,14 @@ public class QuarryItem {
     }
 
     public QuarryItem(String oreDict) {
-        this.oreDict = new TagKey<>(Registry.ITEM_REGISTRY, new ResourceLocation(oreDict));
-        this.stack = new Ingredient.TagValue(this.oreDict).getItems().stream().toList().get(0);
+
+        this.oreDict = TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(oreDict));
+        this.stack = ForgeRegistries.ITEMS.tags()
+                .getTag(this.oreDict)
+                .stream()
+                .findFirst()
+                .map(ItemStack::new)
+                .orElse(ItemStack.EMPTY);
 
     }
 

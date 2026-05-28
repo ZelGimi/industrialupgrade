@@ -149,32 +149,32 @@ public class BlockEntityUniversalCable extends BlockEntityMultiCable implements 
     @Override
     public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
         ItemStack stack = player.getItemInHand(hand);
-        if (stack.getItem() == IUItem.qcable.getItem(0) && !quantum) {
+        if (!this.getLevel().isClientSide() && stack.getItem() == IUItem.qcable.getItem(0) && !quantum) {
             stack.shrink(1);
             this.enumTypeOperation = EnumTypeOperation.QUANTUM;
             return true;
         }
-        if (stack.getItem() == IUItem.scable.getItem(0) && !solarium) {
+        if (!this.getLevel().isClientSide() && stack.getItem() == IUItem.scable.getItem(0) && !solarium) {
             stack.shrink(1);
             this.enumTypeOperation = EnumTypeOperation.SOLARIUM;
             return true;
         }
-        if (stack.getItem() == IUItem.radcable_item.getItem(0) && !radiation) {
+        if (!this.getLevel().isClientSide() && stack.getItem() == IUItem.radcable_item.getItem(0) && !radiation) {
             stack.shrink(1);
             this.enumTypeOperation = EnumTypeOperation.RADIATION;
             return true;
         }
-        if (stack.getItem() == IUItem.expcable.getItem(0) && !experience) {
+        if (!this.getLevel().isClientSide() && stack.getItem() == IUItem.expcable.getItem(0) && !experience) {
             stack.shrink(1);
             this.enumTypeOperation = EnumTypeOperation.EXPERIENCE;
             return true;
         }
-        if (stack.getItem() == IUItem.coolpipes.getItem(4) && !cold) {
+        if (!this.getLevel().isClientSide() && stack.getItem() == IUItem.coolpipes.getItem(4) && !cold) {
             stack.shrink(1);
             this.enumTypeOperation = EnumTypeOperation.COLD;
             return true;
         }
-        if (stack.getItem() == IUItem.pipes.getItem(4) && !heat) {
+        if (!this.getLevel().isClientSide() && stack.getItem() == IUItem.pipes.getItem(4) && !heat) {
             stack.shrink(1);
             this.enumTypeOperation = EnumTypeOperation.HEAT;
             return true;
@@ -417,7 +417,12 @@ public class BlockEntityUniversalCable extends BlockEntityMultiCable implements 
                     break;
                 case RADIATION:
                     this.radiation = true;
-
+                    MinecraftForge.EVENT_BUS.post(new EnergyEvent(
+                            this.getWorld(),
+                            EnumTypeEvent.LOAD,
+                            EnergyType.RADIATION,
+                            this
+                    ));
                     break;
             }
             enumTypeOperation = null;

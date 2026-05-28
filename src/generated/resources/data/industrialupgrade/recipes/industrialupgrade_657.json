@@ -2,10 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "A": {
-      "type": "forge:nbt",
-      "count": 1,
-      "item": "industrialupgrade:crafting_elements/crafting_272_element",
-      "nbt": "{level:1}"
+      "item": "minecraft:chest"
     },
     "B": {
       "item": "minecraft:leather"

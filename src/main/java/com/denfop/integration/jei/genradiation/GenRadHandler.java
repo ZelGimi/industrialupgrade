@@ -52,7 +52,7 @@ public class GenRadHandler {
 
     public static void initRecipes() {
 
-        addRecipe(150, ItemStackHelper.fromData(IUItem.crafting_elements, 1, 443));
+        addRecipe(350, ItemStackHelper.fromData(IUItem.crafting_elements, 1, 443));
 
 
     }

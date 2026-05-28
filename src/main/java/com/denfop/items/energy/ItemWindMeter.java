@@ -1,5 +1,7 @@
 package com.denfop.items.energy;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUCore;
 import com.denfop.api.windsystem.WindSystem;
 import com.denfop.items.BaseEnergyItem;
@@ -20,13 +22,13 @@ import java.util.List;
 
 public class ItemWindMeter extends BaseEnergyItem {
     public ItemWindMeter() {
-        super(5000, 500, 1);
+        super(ModConfig.itemDouble("wind_meter_energy_capacity", 5000.0D), ModConfig.itemDouble("wind_meter_transfer_limit", 500.0D), 1);
     }
 
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        pTooltipComponents.add(Component.literal(Localization.translate("iu.wind_meter.info")));
+        pTooltipComponents.add(Component.literal(Localization.translate("iu.wind_meter.info1")));
     }
 
     @Override

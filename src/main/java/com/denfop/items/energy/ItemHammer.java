@@ -1,5 +1,7 @@
 package com.denfop.items.energy;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.utils.Localization;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
@@ -12,7 +14,7 @@ import java.util.List;
 
 public class ItemHammer extends ItemToolIU {
     public ItemHammer() {
-        super(2, 1, BlockTags.MINEABLE_WITH_PICKAXE);
+        super(ModConfig.itemDouble("hammer_durability", 2.0D), -3.0F, BlockTags.MINEABLE_WITH_PICKAXE);
     }
 
     @Override

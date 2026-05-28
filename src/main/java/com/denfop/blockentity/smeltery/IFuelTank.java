@@ -1,9 +1,9 @@
 package com.denfop.blockentity.smeltery;
 
-import com.denfop.api.multiblock.MultiBlockElement;
+import com.denfop.api.multiblock.IMultiElement;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
-public interface IFuelTank extends MultiBlockElement {
+public interface IFuelTank extends IMultiElement {
 
     FluidTank getFuelTank();
 

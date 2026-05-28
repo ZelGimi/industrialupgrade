@@ -1,7 +1,7 @@
 package com.denfop.items;
 
 import com.denfop.IUCore;
-import com.denfop.api.multiblock.MainMultiBlock;
+import com.denfop.api.multiblock.IMainMultiBlock;
 import com.denfop.blockentity.mechanism.multiblocks.base.BlockEntityMultiBlockBase;
 import com.denfop.blockentity.mechanism.multiblocks.base.BlockEntityMultiBlockElement;
 import com.denfop.blocks.blockitem.ItemBlockTileEntity;
@@ -74,8 +74,8 @@ public class ItemPlaner extends Item {
         Direction side = context.getClickedFace();
 
         BlockEntity tile = world.getBlockEntity(pos);
-        if (tile instanceof MainMultiBlock) {
-            MainMultiBlock mainMultiBlock = (MainMultiBlock) tile;
+        if (tile instanceof IMainMultiBlock) {
+            IMainMultiBlock mainMultiBlock = (IMainMultiBlock) tile;
             if (!mainMultiBlock.isFull()) {
                 for (Map.Entry<BlockPos, ItemStack> entry : mainMultiBlock.getMultiBlockStucture().ItemStackMap.entrySet()) {
                     BlockPos pos1;
@@ -106,7 +106,6 @@ public class ItemPlaner extends Item {
                                 if (tileEntity == null && canPlace(world.getBlockState(pos2))) {
                                     BlockPlaceContext placeContext = new BlockPlaceContext(context.getLevel(), context.getPlayer(), context.getHand(), stack1, new BlockHitResult(context.getClickLocation(), context.getClickedFace(), pos2, false));
                                     if (item1.place(placeContext) == InteractionResult.CONSUME) {
-                                        stack1.shrink(1);
                                         BlockEntityMultiBlockElement tileEntity2 = (BlockEntityMultiBlockElement) world.getBlockEntity(pos2);
                                         Direction facing = ((BlockEntityMultiBlockBase) mainMultiBlock).getFacing();
                                         rotation = adjustRotation(facing, rotation);

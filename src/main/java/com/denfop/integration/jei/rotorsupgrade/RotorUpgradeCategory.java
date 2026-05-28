@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.rotorsupgrade;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.blockentity.mechanism.BlockEntityRodManufacturer;
@@ -66,8 +67,8 @@ public class RotorUpgradeCategory extends ScreenMain implements IRecipeCategory<
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, RotorUpgradeHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 51 + 23, 37).addItemStack(recipe.getInputs()[1]);
-        builder.addSlot(RecipeIngredientRole.INPUT, 29 + 23, 37).addItemStack(recipe.getInputs()[0]);
+        builder.addSlot(RecipeIngredientRole.INPUT, 51 + 23, 37).addItemStacks(JeiIngredientHelper.getInputVariants(recipe, 1, recipe.getInputs()[1]));
+        builder.addSlot(RecipeIngredientRole.INPUT, 29 + 23, 37).addItemStacks(JeiIngredientHelper.getInputVariants(recipe, 0, recipe.getInputs()[0]));
     }
 
 

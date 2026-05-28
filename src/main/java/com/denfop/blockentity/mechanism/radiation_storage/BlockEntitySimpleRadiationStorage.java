@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.radiation_storage;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blocks.BlockTileEntity;
@@ -11,7 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class BlockEntitySimpleRadiationStorage extends BlockEntityRadiationStorage {
 
     public BlockEntitySimpleRadiationStorage(BlockPos pos, BlockState state) {
-        super(4000000, EnumTypeStyle.DEFAULT, BlockBaseMachine3Entity.radiation_storage, pos, state);
+        super(ModConfig.mechanismDouble("background_radiation_is_low_energy_storage", 4000000.0D), EnumTypeStyle.DEFAULT, BlockBaseMachine3Entity.radiation_storage, pos, state);
     }
 
     public MultiBlockEntity getTeBlock() {

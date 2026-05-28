@@ -1,6 +1,8 @@
 package com.denfop.integration.jei.worldcollector.aer;
 
 
+import com.denfop.integration.jei.JeiIngredientHelper;
+import com.denfop.integration.jei.IJeiVariantRecipe;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import net.minecraft.world.item.ItemStack;
@@ -8,9 +10,11 @@ import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AerHandler {
+public class AerHandler implements IJeiVariantRecipe {
 
     private static final List<AerHandler> recipes = new ArrayList<>();
+    private List<List<ItemStack>> inputVariants = new java.util.ArrayList<>();
+
     private final ItemStack input, output;
     private final double need;
 
@@ -59,10 +63,10 @@ public class AerHandler {
     public static void initRecipes() {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("aercollector")) {
 
-            addRecipe(container.input.getInputs().get(0).getInputs().get(0),
+            JeiIngredientHelper.attachInputVariants(addRecipe(container.input.getInputs().get(0).getInputs().get(0),
 
                     container.getOutput().items.get(0), container.getOutput().metadata.getDouble("need")
-            );
+            ), container);
 
         }
     }
@@ -84,4 +88,15 @@ public class AerHandler {
         return true;
     }
 
+
+
+    @Override
+    public void setInputVariants(final List<List<ItemStack>> inputVariants) {
+        this.inputVariants = inputVariants == null ? new java.util.ArrayList<>() : inputVariants;
+    }
+
+    @Override
+    public List<ItemStack> getInputVariants(final int slot, final ItemStack fallback) {
+        return JeiIngredientHelper.getInputVariants(this.inputVariants, slot, fallback);
+    }
 }

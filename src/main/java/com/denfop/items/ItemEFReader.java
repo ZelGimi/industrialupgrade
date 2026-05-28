@@ -7,6 +7,7 @@ import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.IUpdatableItemStackEvent;
 import com.denfop.screen.ScreenEFReader;
 import com.denfop.utils.ModUtils;
+import com.denfop.utils.Localization;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -95,7 +96,7 @@ public class ItemEFReader extends Item implements IItemStackInventory, IUpdatabl
 
                 return InteractionResult.SUCCESS;
             } else {
-                IUCore.proxy.messagePlayer(player, "This block isn`t energyTile");
+                IUCore.proxy.messagePlayer(player, Localization.translate("iu.message.energy_tile.invalid"));
                 return InteractionResult.PASS;
             }
         }

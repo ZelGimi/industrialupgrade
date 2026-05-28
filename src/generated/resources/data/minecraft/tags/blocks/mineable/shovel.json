@@ -7,6 +7,8 @@
     "industrialupgrade:baseore1/calcium",
     "industrialupgrade:apatite/humus",
     "industrialupgrade:blockresource/peat",
-    "industrialupgrade:blockresource/untreated_peat"
+    "industrialupgrade:blockresource/untreated_peat",
+    "industrialupgrade:soot/soot",
+    "industrialupgrade:radiation_dust/radiation_dust"
   ]
 }

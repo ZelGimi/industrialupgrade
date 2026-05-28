@@ -1,5 +1,6 @@
 package com.denfop.datagen.furnace;
 
+import com.denfop.datagen.itemtag.ItemTagProvider;
 import com.denfop.recipes.FurnaceRecipes;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
@@ -11,6 +12,7 @@ import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -34,9 +36,32 @@ public class FurnaceProvider extends net.minecraft.data.recipes.RecipeProvider {
     protected void buildCraftingRecipes(Consumer<FinishedRecipe> consumer) {
         FurnaceRecipes.recipe();
         furnaceRecipeList = new ArrayList<>(furnaceRecipeList);
-        for (FurnaceRecipe furnaceRecipe : furnaceRecipeList)
+        for (FurnaceRecipe furnaceRecipe : furnaceRecipeList) {
 
             SimpleCookingRecipeBuilder.smelting(Ingredient.of(furnaceRecipe.getInput()), furnaceRecipe.getOutput().getItem(), furnaceRecipe.getXp(), 200).unlockedBy("any", new InventoryChangeTrigger.TriggerInstance(EntityPredicate.Composite.ANY, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, new ItemPredicate[]{ItemPredicate.Builder.item().of(Blocks.COBBLESTONE).build()})).save(consumer, "industrialupgrade:" + "furnace_" + ID++);
-
+            if (ItemTagProvider.containsInAnyTag(
+                    furnaceRecipe.getInput(),
+                    Tags.Items.RAW_MATERIALS,
+                    Tags.Items.ORES,
+                    Tags.Items.DUSTS
+            )) {
+                SimpleCookingRecipeBuilder.blasting(
+                                Ingredient.of(furnaceRecipe.getInput()),
+                                furnaceRecipe.getOutput().getItem(),
+                                furnaceRecipe.getXp(),
+                                100
+                        )
+                        .unlockedBy("any", new InventoryChangeTrigger.TriggerInstance(
+                                EntityPredicate.Composite.ANY,
+                                MinMaxBounds.Ints.ANY,
+                                MinMaxBounds.Ints.ANY,
+                                MinMaxBounds.Ints.ANY,
+                                new ItemPredicate[]{
+                                        ItemPredicate.Builder.item().of(Blocks.COBBLESTONE).build()
+                                }
+                        ))
+                        .save(consumer, "industrialupgrade:" + "blasting_" + ID++);
+            }
+        }
     }
 }

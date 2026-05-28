@@ -15,7 +15,22 @@
       "model": "industrialupgrade:block/gas_reactor/gas_imp_recirculation_pump",
       "y": 90
     },
-    "facing=down,type=imp_gas_recirculation_pump": {
+    "facing=north,type=imp_gas_recirculation_pump_active": {
+      "model": "industrialupgrade:block/gas_reactor/gas_imp_recirculation_pump"
+    },
+    "facing=south,type=imp_gas_recirculation_pump_active": {
+      "model": "industrialupgrade:block/gas_reactor/gas_imp_recirculation_pump",
+      "y": 180
+    },
+    "facing=west,type=imp_gas_recirculation_pump_active": {
+      "model": "industrialupgrade:block/gas_reactor/gas_imp_recirculation_pump",
+      "y": 270
+    },
+    "facing=east,type=imp_gas_recirculation_pump_active": {
+      "model": "industrialupgrade:block/gas_reactor/gas_imp_recirculation_pump",
+      "y": 90
+    },
+    "facing=down,type=imp_gas_recirculation_pump_active": {
       "model": "industrialupgrade:block/gas_reactor/gas_imp_recirculation_pump",
       "x": 90
     },
@@ -23,26 +38,11 @@
       "model": "industrialupgrade:block/gas_reactor/gas_imp_recirculation_pump",
       "x": 270
     },
-    "facing=north,type=imp_gas_recirculation_pump_invalid": {
-      "model": "industrialupgrade:block/gas_reactor/gas_imp_recirculation_pump"
-    },
-    "facing=south,type=imp_gas_recirculation_pump_invalid": {
-      "model": "industrialupgrade:block/gas_reactor/gas_imp_recirculation_pump",
-      "y": 180
-    },
-    "facing=west,type=imp_gas_recirculation_pump_invalid": {
-      "model": "industrialupgrade:block/gas_reactor/gas_imp_recirculation_pump",
-      "y": 270
-    },
-    "facing=east,type=imp_gas_recirculation_pump_invalid": {
-      "model": "industrialupgrade:block/gas_reactor/gas_imp_recirculation_pump",
-      "y": 90
-    },
-    "facing=down,type=imp_gas_recirculation_pump_invalid": {
+    "facing=down,type=imp_gas_recirculation_pump": {
       "model": "industrialupgrade:block/gas_reactor/gas_imp_recirculation_pump",
       "x": 90
     },
-    "facing=up,type=imp_gas_recirculation_pump_invalid": {
+    "facing=up,type=imp_gas_recirculation_pump_active": {
       "model": "industrialupgrade:block/gas_reactor/gas_imp_recirculation_pump",
       "x": 270
     }

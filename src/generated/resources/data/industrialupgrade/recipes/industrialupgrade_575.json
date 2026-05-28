@@ -5,13 +5,16 @@
       "item": "industrialupgrade:quarrymodules/for1"
     },
     "B": {
-      "tag": "forge:doubleplate/nichrome"
+      "tag": "forge:doubleplate/tantalum"
+    },
+    "C": {
+      "tag": "forge:doubleplate/thallium"
     }
   },
   "pattern": [
-    "ABA",
-    "   ",
-    "   "
+    "CBC",
+    "BAB",
+    "CBC"
   ],
   "result": {
     "item": "industrialupgrade:spawnermodules/spawner_module"

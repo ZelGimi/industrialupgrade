@@ -1,9 +1,9 @@
 package com.denfop.blockentity.reactors.heat;
 
-import com.denfop.api.multiblock.MultiBlockElement;
+import com.denfop.api.multiblock.IMultiElement;
 import com.denfop.inventory.Inventory;
 
-public interface ICirculationPump extends MultiBlockElement {
+public interface ICirculationPump extends IMultiElement {
 
     int getEnergy();
 

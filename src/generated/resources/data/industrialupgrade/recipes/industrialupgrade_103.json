@@ -10,12 +10,6 @@
     "C": {
       "item": "industrialupgrade:module_schedule"
     },
-    "E": {
-      "type": "forge:nbt",
-      "count": 1,
-      "item": "industrialupgrade:circuit/spectralcircuit",
-      "nbt": "{level:9}"
-    },
     "F": {
       "tag": "forge:doubleplate/alcled"
     }
@@ -23,7 +17,7 @@
   "pattern": [
     "AAA",
     "BCB",
-    "EFE"
+    " F "
   ],
   "result": {
     "item": "industrialupgrade:additionmodule/charger"

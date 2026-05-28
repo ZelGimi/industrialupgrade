@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:space_advanced_cave",
+  "config": {
+    "flooded": false,
+    "fluid": {
+      "Name": "industrialupgrade:fluid/fluidnitrogenhydride",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "kind": "dome_caves",
+    "max_length": 16,
+    "max_radius": 8,
+    "max_vertical": 20,
+    "min_length": 10,
+    "min_radius": 5,
+    "open_to_surface": false,
+    "primary": {
+      "Name": "industrialupgrade:spacestone1/rhea_stone"
+    },
+    "secondary": {
+      "Name": "industrialupgrade:spacecobblestone1/rhea_cobblestone"
+    },
+    "tertiary": {
+      "Name": "industrialupgrade:blockspace4/rhea_chromium"
+    }
+  }
+}

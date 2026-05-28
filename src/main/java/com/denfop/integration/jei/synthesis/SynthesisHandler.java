@@ -1,6 +1,8 @@
 package com.denfop.integration.jei.synthesis;
 
 
+import com.denfop.integration.jei.JeiIngredientHelper;
+import com.denfop.integration.jei.IJeiVariantRecipe;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import net.minecraft.world.item.ItemStack;
@@ -8,9 +10,11 @@ import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SynthesisHandler {
+public class SynthesisHandler implements IJeiVariantRecipe {
 
     private static final List<SynthesisHandler> recipes = new ArrayList<>();
+    private List<List<ItemStack>> inputVariants = new java.util.ArrayList<>();
+
     private final int percent;
     private final ItemStack input, input1, output;
     private final BaseMachineRecipe container;
@@ -21,6 +25,7 @@ public class SynthesisHandler {
         this.output = output;
         this.percent = percent;
         this.container = container;
+        JeiIngredientHelper.attachInputVariants(this, container);
     }
 
     public static List<SynthesisHandler> getRecipes() {
@@ -89,4 +94,15 @@ public class SynthesisHandler {
         return true;
     }
 
+
+
+    @Override
+    public void setInputVariants(final List<List<ItemStack>> inputVariants) {
+        this.inputVariants = inputVariants == null ? new java.util.ArrayList<>() : inputVariants;
+    }
+
+    @Override
+    public List<ItemStack> getInputVariants(final int slot, final ItemStack fallback) {
+        return JeiIngredientHelper.getInputVariants(this.inputVariants, slot, fallback);
+    }
 }

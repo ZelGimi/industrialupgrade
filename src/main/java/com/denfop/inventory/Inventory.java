@@ -54,10 +54,12 @@ public class Inventory extends AbstractList<ItemStack> implements ITypeSlot, Con
     public void setTypeItemSlot(final TypeItemSlot typeItemSlot) {
         this.typeItemSlot = typeItemSlot;
     }
+
     @Override
     public int getMaxStackSize() {
-        return this.stackSizeLimit;
+        return this.getStackSizeLimit();
     }
+
     public void readFromNbt(CompoundTag nbt) {
         this.clear();
         ContainerHelper.loadAllItems(nbt, this.contents);

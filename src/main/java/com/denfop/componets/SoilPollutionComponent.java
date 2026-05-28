@@ -199,6 +199,14 @@ public class SoilPollutionComponent extends AbstractComponent {
         }
     }
 
+    public double getPercent() {
+        return percent;
+    }
+
+    public double getCurrentContribution() {
+        return this.pollution.pollution;
+    }
+
     @Override
     public boolean isServer() {
         return true;

@@ -1,7 +1,7 @@
 package com.denfop.blockentity.reactors.graphite;
 
-import com.denfop.api.multiblock.MultiBlockElement;
+import com.denfop.api.multiblock.IMultiElement;
 
-public interface IReactor extends MultiBlockElement {
+public interface IReactor extends IMultiElement {
 
 }

@@ -50,6 +50,9 @@ public class WorldBaseGen {
     );
     public static final RegistryObject<Feature<NoneFeatureConfiguration>> VEIN_GENERATOR = FEATURES.register("vein",
             () -> new AlgorithmVein(NoneFeatureConfiguration.CODEC));
+
+    public static final RegistryObject<Feature<NoneFeatureConfiguration>> GLOBAL_ORES_GENERATOR = FEATURES.register("global_ores",
+            () -> new GlobalOreFeature());
     public static final RegistryObject<Feature<NoneFeatureConfiguration>> GEN_GAS_GENERATOR = FEATURES.register("gen_gas",
             () -> new WorldGenGas(NoneFeatureConfiguration.CODEC));
     public static final RegistryObject<Feature<NoneFeatureConfiguration>> GEN_HIVE_GENERATOR = FEATURES.register("gen_hive",
@@ -71,6 +74,19 @@ public class WorldBaseGen {
                     )
             )
     );
+    public static final RegistryObject<PlacedFeature> GLOBAL_ORES_PLACED = PLACED_FEATURES.register(
+            "global_ores",
+            () -> new PlacedFeature(
+                    VEIN.getHolder().orElseThrow(),
+                    List.of(
+                            InSquarePlacement.spread(),
+                            PlacementUtils.HEIGHTMAP,
+                            BiomeFilter.biome()
+                    )
+            )
+    );
+    public static final RegistryObject<ConfiguredFeature<?, ?>> GLOBAL_ORES = CONFIGURED_FEATURES.register("global_ores",
+            () -> new ConfiguredFeature<>(GLOBAL_ORES_GENERATOR.get(), NoneFeatureConfiguration.INSTANCE));
     public static final RegistryObject<ConfiguredFeature<?, ?>> GEN_GAS = CONFIGURED_FEATURES.register("gen_gas",
             () -> new ConfiguredFeature<>(GEN_GAS_GENERATOR.get(), NoneFeatureConfiguration.INSTANCE));
     public static final RegistryObject<PlacedFeature> GEN_GAS_PLACER = PLACED_FEATURES.register(
@@ -445,7 +461,7 @@ public class WorldBaseGen {
                 GeneratorVolcano generatorVolcano = WorldGenVolcano.generatorVolcanoList.get(0);
                 try {
                     generatorVolcano.setWorld(event.level);
-                }catch (Exception e){
+                } catch (Exception e) {
                     WorldGenVolcano.generatorVolcanoList.remove(0);
                     return;
                 }

@@ -1,6 +1,8 @@
 package com.denfop.integration.jei.gearing;
 
 
+import com.denfop.integration.jei.JeiIngredientHelper;
+import com.denfop.integration.jei.IJeiVariantRecipe;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import net.minecraft.world.item.ItemStack;
@@ -8,9 +10,11 @@ import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GearingHandler {
+public class GearingHandler implements IJeiVariantRecipe {
 
     private static final List<GearingHandler> recipes = new ArrayList<>();
+    private List<List<ItemStack>> inputVariants = new java.util.ArrayList<>();
+
     private final ItemStack input, output;
 
     public GearingHandler(ItemStack input, ItemStack output) {
@@ -50,10 +54,10 @@ public class GearingHandler {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("gearing")) {
 
 
-            addRecipe(
+            JeiIngredientHelper.attachInputVariants(addRecipe(
                     container.input.getInputs().get(0).getInputs().get(0),
                     container.getOutput().items.get(0)
-            );
+            ), container);
 
 
         }
@@ -72,4 +76,15 @@ public class GearingHandler {
         return is.getItem() == input.getItem();
     }
 
+
+
+    @Override
+    public void setInputVariants(final List<List<ItemStack>> inputVariants) {
+        this.inputVariants = inputVariants == null ? new java.util.ArrayList<>() : inputVariants;
+    }
+
+    @Override
+    public List<ItemStack> getInputVariants(final int slot, final ItemStack fallback) {
+        return JeiIngredientHelper.getInputVariants(this.inputVariants, slot, fallback);
+    }
 }

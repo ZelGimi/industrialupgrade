@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "tag": "forge:plates/hafnium"
+    },
+    "B": {
+      "item": "industrialupgrade:charged_redstone"
+    },
+    "C": {
+      "item": "industrialupgrade:blockresource/machine"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_42_element"
+    },
+    "E": {
+      "tag": "forge:gears/niobiumtitanium"
+    }
+  },
+  "pattern": [
+    "ABA",
+    "ECE",
+    "ADA"
+  ],
+  "result": {
+    "item": "industrialupgrade:storagesystem/fluid_monitor"
+  }
+}

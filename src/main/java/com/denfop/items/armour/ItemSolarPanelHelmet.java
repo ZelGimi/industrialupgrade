@@ -222,9 +222,9 @@ public class ItemSolarPanelHelmet extends ItemArmorEnergy implements EnergyItem,
             if (!player.getLevel().isClientSide()) {
                 nbtData.putBoolean("Nightvision", Nightvision);
                 if (Nightvision) {
-                    IUCore.proxy.messagePlayer(player, "Nightvision enabled.");
+                    IUCore.proxy.messagePlayer(player, Localization.translate("iu.message.nightvision.enabled"));
                 } else {
-                    IUCore.proxy.messagePlayer(player, "Nightvision disabled.");
+                    IUCore.proxy.messagePlayer(player, Localization.translate("iu.message.nightvision.disabled"));
                 }
             }
         }
@@ -405,7 +405,7 @@ public class ItemSolarPanelHelmet extends ItemArmorEnergy implements EnergyItem,
         final int damageLimit = (int) ((energyPerDamage > 0)
                 ? (25.0 * ElectricItem.manager.getCharge(armor) / energyPerDamage)
                 : 0.0);
-        return new ISpecialArmor.ArmorProperties(0, absorptionRatio, damageLimit);
+        return new ISpecialArmor.ArmorProperties(0, absorptionRatio, damageLimit, this);
     }
 
     public int getArmorDisplay(final Player player, @Nonnull final ItemStack armor, final int slot) {
@@ -486,7 +486,7 @@ public class ItemSolarPanelHelmet extends ItemArmorEnergy implements EnergyItem,
         boolean without = this.solarType == 2 || this.solarType == 3;
         boolean auto = this.solarType > 3;
         if (with || without || auto) {
-            info.add(Component.literal(Localization.translate("iu.special_armor_nightvision") + KeyboardClient.armormode.getKey().getDisplayName().getString()));
+            info.add(Component.literal(Localization.translate("iu.special_armor_nightvision") + com.denfop.utils.ModUtils.cleanComponentString(KeyboardClient.armormode.getKey().getDisplayName().getString())));
             if (with) {
                 info.add(Component.literal(Localization.translate("iu.special_armor_nightvision_1")));
             }

@@ -89,7 +89,7 @@ public class EntityNuclearBombPrimed extends Entity {
 
         if (!this.getLevel().isClientSide) {
             if (this.getLevel().dimension() == Level.OVERWORLD) {
-                int radiationValue = 5000;
+                int radiationValue = 15000;
                 new PacketUpdateRadiationValue(this.getLevel().getChunk(explosionPos).getPos(), radiationValue);
                 spreadRadiation(explosionPos, radiationValue);
                 affectNearbyPlayers(explosionPos, 30.0D);

@@ -21,7 +21,8 @@ public class ClientTickHandler {
         LocalPlayer player = mc.player;
 
         if (player == null || mc.level == null) return;
-
+        if (mc.level.dimension() != Level.OVERWORLD)
+            return;
         if (shouldDisplayRadiationInfo(player)) {
             guiGraphics.pushPose();
             double radiationLevel = player.getPersistentData().getDouble("radiation");

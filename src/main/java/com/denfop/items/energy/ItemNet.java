@@ -1,10 +1,12 @@
 package com.denfop.items.energy;
 
+
+import com.denfop.config.ModConfig;
 import net.minecraft.tags.BlockTags;
 
 public class ItemNet extends ItemToolIU {
     public ItemNet() {
-        super(0, 0, BlockTags.MINEABLE_WITH_AXE);
+        super(ModConfig.itemDouble("net_durability", 0.0D), -3.0F, BlockTags.BEEHIVES);
     }
 
     protected String getOrCreateDescriptionId() {

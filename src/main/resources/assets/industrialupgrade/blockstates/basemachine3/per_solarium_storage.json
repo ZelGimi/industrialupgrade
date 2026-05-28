@@ -15,7 +15,26 @@
       "model": "industrialupgrade:block/basemachine/per_solarium_storage",
       "y": 90
     },
+    "facing=north,type=per_solarium_storage_active": {
+      "model": "industrialupgrade:block/basemachine/per_solarium_storage"
+    },
+    "facing=south,type=per_solarium_storage_active": {
+      "model": "industrialupgrade:block/basemachine/per_solarium_storage",
+      "y": 180
+    },
+    "facing=west,type=per_solarium_storage_active": {
+      "model": "industrialupgrade:block/basemachine/per_solarium_storage",
+      "y": 270
+    },
+    "facing=east,type=per_solarium_storage_active": {
+      "model": "industrialupgrade:block/basemachine/per_solarium_storage",
+      "y": 90
+    },
     "facing=down,type=per_solarium_storage": {
+      "model": "industrialupgrade:block/basemachine/per_solarium_storage",
+      "x": 90
+    },
+    "facing=down,type=per_solarium_storage_active": {
       "model": "industrialupgrade:block/basemachine/per_solarium_storage",
       "x": 90
     },
@@ -23,26 +42,7 @@
       "model": "industrialupgrade:block/basemachine/per_solarium_storage",
       "x": 270
     },
-    "facing=north,type=per_solarium_storage_invalid": {
-      "model": "industrialupgrade:block/basemachine/per_solarium_storage"
-    },
-    "facing=south,type=per_solarium_storage_invalid": {
-      "model": "industrialupgrade:block/basemachine/per_solarium_storage",
-      "y": 180
-    },
-    "facing=west,type=per_solarium_storage_invalid": {
-      "model": "industrialupgrade:block/basemachine/per_solarium_storage",
-      "y": 270
-    },
-    "facing=east,type=per_solarium_storage_invalid": {
-      "model": "industrialupgrade:block/basemachine/per_solarium_storage",
-      "y": 90
-    },
-    "facing=down,type=per_solarium_storage_invalid": {
-      "model": "industrialupgrade:block/basemachine/per_solarium_storage",
-      "x": 90
-    },
-    "facing=up,type=per_solarium_storage_invalid": {
+    "facing=up,type=per_solarium_storage_active": {
       "model": "industrialupgrade:block/basemachine/per_solarium_storage",
       "x": 270
     }

@@ -8,19 +8,25 @@
       "item": "industrialupgrade:excitednucleus/sincore"
     },
     "C": {
-      "item": "industrialupgrade:quantumitems2"
+      "item": "industrialupgrade:quantumitems4"
     },
     "D": {
       "item": "industrialupgrade:machines/proton_solar_panel"
     },
     "E": {
-      "item": "industrialupgrade:excitednucleus/procore"
+      "item": "industrialupgrade:excitednucleus/sincore"
+    },
+    "H": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/quantumcircuit",
+      "nbt": "{level:7}"
     }
   },
   "pattern": [
     "ABA",
     "CDC",
-    "DED"
+    "HEH"
   ],
   "result": {
     "item": "industrialupgrade:machines/singular_solar_panel"

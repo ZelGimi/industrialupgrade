@@ -7,7 +7,7 @@ import com.simplyquarries.SimplyQuarries;
 public class RecipeSimplyQuarries {
     public static void register() {
 
-         Recipes.recipe.addRecipe(ItemStackHelper.fromData(SimplyQuarries.quarry, 1), new Object[]{
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(SimplyQuarries.quarry, 1), new Object[]{
                 " D ", "ABE", " C ",
 
                 Character.valueOf('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 158),
@@ -73,7 +73,6 @@ public class RecipeSimplyQuarries {
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 623),
 
                 Character.valueOf('E'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 52)});
-
 
 
     }

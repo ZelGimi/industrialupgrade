@@ -31,6 +31,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
@@ -45,6 +46,8 @@ public class BlockEntityDryer extends BlockEntityInventory implements BlockEntit
     public short progress;
 
     public Map<UUID, Double> data;
+    ItemStack prevInput = ItemStack.EMPTY;
+    private int prevAmount;
 
     public BlockEntityDryer(BlockPos pos, BlockState state) {
         super(BlockDryerEntity.dryer, pos, state);
@@ -110,13 +113,11 @@ public class BlockEntityDryer extends BlockEntityInventory implements BlockEntit
 
     }
 
-
     public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
         nbttagcompound.putShort("progress", this.progress);
         return nbttagcompound;
     }
-
 
     public void onLoaded() {
         super.onLoaded();
@@ -174,7 +175,6 @@ public class BlockEntityDryer extends BlockEntityInventory implements BlockEntit
             return true;
         }
     }
-
 
     @Override
     public void readPacket(final CustomPacketBuffer customPacketBuffer) {
@@ -236,6 +236,26 @@ public class BlockEntityDryer extends BlockEntityInventory implements BlockEntit
             }
         }
 
+        if (prevInput.isEmpty() && !this.outputSlot.get(0).isEmpty()) {
+            prevInput = this.outputSlot.get(0);
+            new PacketUpdateFieldTile(this, "slot", this.outputSlot);
+        }
+        if (!prevInput.isEmpty() && this.outputSlot.isEmpty()) {
+            prevInput = ItemStack.EMPTY;
+            new PacketUpdateFieldTile(this, "slot3", false);
+        }
+        if (!prevInput.isEmpty() && !this.outputSlot.isEmpty() && prevInput.getCount() != this.outputSlot.get(0).getCount()) {
+            prevInput = this.outputSlot.get(0);
+            new PacketUpdateFieldTile(this, "slot", this.outputSlot);
+        }
+        if (this.prevAmount != this.fluidTank1.getFluidAmount()) {
+            this.prevAmount = this.fluidTank1.getFluidAmount();
+            if (prevAmount != 0) {
+                new PacketUpdateFieldTile(this, "fluidtank", this.fluidTank1);
+            } else {
+                new PacketUpdateFieldTile(this, "fluidtank_empty", true);
+            }
+        }
     }
 
     @Override
@@ -260,6 +280,9 @@ public class BlockEntityDryer extends BlockEntityInventory implements BlockEntit
         }
         if (name.equals("slot3")) {
             outputSlot.set(0, ItemStack.EMPTY);
+        }
+        if (name.equals("fluidtank_empty")) {
+            this.fluidTank1.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.EXECUTE);
         }
     }
 

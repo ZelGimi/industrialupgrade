@@ -35,22 +35,23 @@ public abstract class ItemStackInventory implements CustomWorldContainer, IUpdat
         this.inventory = new ItemStack[inventorySize];
         Arrays.fill(this.inventory, ItemStack.EMPTY);
         this.player = player;
-        if (!player.getLevel().isClientSide()) {
-            CompoundTag nbt = ModUtils.nbt(containerStack);
-            if (!nbt.contains("uid", 3)) {
-                nbt.putInt("uid", IUCore.random.nextInt());
-            }
+        if (player != null)
+            if (!player.getLevel().isClientSide()) {
+                CompoundTag nbt = ModUtils.nbt(containerStack);
+                if (!nbt.contains("uid", 3)) {
+                    nbt.putInt("uid", IUCore.random.nextInt());
+                }
 
-            ListTag contentList = nbt.getList("Items", 10);
+                ListTag contentList = nbt.getList("Items", 10);
 
-            for (int i = 0; i < contentList.size(); ++i) {
-                CompoundTag slotNbt = contentList.getCompound(i);
-                int slot = slotNbt.getByte("Slot");
-                if (slot >= 0 && slot < this.inventory.length) {
-                    this.inventory[slot] = ItemStack.of(slotNbt);
+                for (int i = 0; i < contentList.size(); ++i) {
+                    CompoundTag slotNbt = contentList.getCompound(i);
+                    int slot = slotNbt.getByte("Slot");
+                    if (slot >= 0 && slot < this.inventory.length) {
+                        this.inventory[slot] = ItemStack.of(slotNbt);
+                    }
                 }
             }
-        }
 
     }
 

@@ -24,7 +24,6 @@ import static com.denfop.world.WorldBaseGen.*;
 public class PacketUpdateVeinData implements IPacket {
 
 
-
     public PacketUpdateVeinData() {
 
     }
@@ -62,8 +61,6 @@ public class PacketUpdateVeinData implements IPacket {
     }
 
 
-
-
     @Override
     public byte getId() {
         return 75;
@@ -84,7 +81,7 @@ public class PacketUpdateVeinData implements IPacket {
                     dataColors.put(block.defaultBlockState(), id);
                 }
             }
-            size = (int)  customPacketBuffer.readInt();
+            size = (int) customPacketBuffer.readInt();
             for (int i = 0; i < size; i++) {
                 ResourceLocation resourceLocation = (ResourceLocation) DecoderHandler.decode(customPacketBuffer);
                 Block block = (Block) DecoderHandler.decode(customPacketBuffer);

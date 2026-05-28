@@ -17,13 +17,13 @@
       "nbt": "{level:8}"
     },
     "E": {
-      "item": "industrialupgrade:itemcore/procore"
+      "item": "industrialupgrade:itemcore/specore"
     }
   },
   "pattern": [
-    "ECE",
+    "E E",
     "BAB",
-    "DCD"
+    "CDC"
   ],
   "result": {
     "item": "industrialupgrade:spawnermodules/spawner_module8"

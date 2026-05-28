@@ -5,7 +5,7 @@
       "tag": "forge:plates/silver"
     },
     "C": {
-      "tag": "forge:storage_blocks/iridium"
+      "tag": "forge:plates/iridium"
     },
     "D": {
       "item": "industrialupgrade:block_anvil/block_anvil"

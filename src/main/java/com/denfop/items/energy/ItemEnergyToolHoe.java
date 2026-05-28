@@ -1,5 +1,7 @@
 package com.denfop.items.energy;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.utils.ElectricItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,7 +22,7 @@ import net.minecraftforge.common.ToolActions;
 
 public class ItemEnergyToolHoe extends ItemEnergyTool {
     public ItemEnergyToolHoe() {
-        super(50);
+        super(ModConfig.itemInt("energy_tool_hoe_energy_use", 50));
         this.maxCharge = 10000;
         this.transferLimit = 100;
         this.tier = 1;

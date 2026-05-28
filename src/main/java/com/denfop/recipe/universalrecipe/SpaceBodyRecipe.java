@@ -2,7 +2,6 @@ package com.denfop.recipe.universalrecipe;
 
 import com.denfop.recipe.IInputItemStack;
 import com.denfop.register.Register;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -14,16 +13,16 @@ import net.minecraft.world.level.Level;
 import java.util.List;
 
 public class SpaceBodyRecipe implements Recipe<Container> {
-    private final ResourceLocation id;
-
     public final String bodyName;
     public final Integer percent;
     public final Integer chance;
     public final String roverType;
     public final String operationType;
     public final List<IInputItemStack> input;
+    private final ResourceLocation id;
+
     public SpaceBodyRecipe(ResourceLocation id, String bodyName, Integer percent, Integer chance, String roverType, String operationType, List<IInputItemStack> input) {
-        this.id=id;
+        this.id = id;
         this.bodyName = bodyName;
         this.percent = percent;
         this.chance = chance;
@@ -58,8 +57,6 @@ public class SpaceBodyRecipe implements Recipe<Container> {
     public ResourceLocation getId() {
         return id;
     }
-
-
 
 
     @Override

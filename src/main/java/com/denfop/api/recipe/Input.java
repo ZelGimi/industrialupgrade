@@ -65,6 +65,7 @@ public class Input implements IInput {
 
         return new Input(fluid, inputList.toArray(new IInputItemStack[0]));
     }
+
     public CompoundTag writeNBT() {
         CompoundTag tag = new CompoundTag();
 
@@ -85,6 +86,7 @@ public class Input implements IInput {
         tag.putBoolean("HasFluid", hasfluid);
         return tag;
     }
+
     @Override
     public List<IInputItemStack> getInputs() {
         return this.list;

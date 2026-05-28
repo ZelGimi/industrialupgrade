@@ -53,7 +53,7 @@ public class GenBioCategory extends ScreenMain implements IRecipeCategory<GenBio
     @Nonnull
     @Override
     public String getTitles() {
-        return JEICompat.getBlockStack(BlockBaseMachine3Entity.gen_bio).getDisplayName().getString();
+        return com.denfop.utils.ModUtils.cleanComponentString(JEICompat.getBlockStack(BlockBaseMachine3Entity.gen_bio).getDisplayName().getString());
     }
 
 

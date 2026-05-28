@@ -85,6 +85,42 @@ public class NetworkManager {
         this.registerPacket(new PacketUpdateRecipe());
         this.registerPacket(new PacketFixerRecipe());
 
+        this.registerPacket(new PacketUpdatePollutionValue());
+        this.registerPacket(new PacketUpdatePollution());
+        this.registerPacket(new PacketPollution());
+        this.registerPacket(new PacketPollutionAnalyzerRequest());
+        this.registerPacket(new PacketPollutionAnalyzerSnapshot());
+
+        this.registerPacket(new PacketGasSensorScanRequest());
+        this.registerPacket(new PacketGasSensorScanProgress());
+        this.registerPacket(new PacketGasSensorScanResult());
+
+        this.registerPacket(new PacketCreateNetwork());
+        this.registerPacket(new PacketUpdateStorageCell());
+        this.registerPacket(new PackerUpdateClientRemoveStack());
+        this.registerPacket(new PacketRemoveStack());
+        this.registerPacket(new PackerUpdateClientAddStack());
+        this.registerPacket(new PacketAddStack());
+        this.registerPacket(new PacketRemoveShiftStack());
+        this.registerPacket(new PacketCanAddCraft());
+        this.registerPacket(new PacketCanAddCraftClient());
+        this.registerPacket(new PacketAddAutoCraft());
+        this.registerPacket(new PacketUpdateMonitor());
+        this.registerPacket(new PacketUpdateMonitorInterface());
+        this.registerPacket(new PacketUpdateStorageForCraft());
+        this.registerPacket(new PacketSetFluid());
+        this.registerPacket(new PacketChangeSameStack());
+        this.registerPacket(new PacketUpdatePreCraft());
+        this.registerPacket(new PacketUpdateNetworkSystem());
+
+        this.registerPacket(new PacketActivateAbility());
+        this.registerPacket(new PacketSyncAbilityCooldowns());
+
+        this.registerPacket(new PacketOpenPlanetaryTranslocatorScreen());
+        this.registerPacket(new PacketPlanetaryTeleportRequest());
+        this.registerPacket(new PacketPlanetaryReturnRequest());
+        this.registerPacket(new PacketSpaceTeleportStateSync());
+        this.registerPacket(new PacketSpaceTeleportFx());
 
         channel.registerMessage(0, CustomPacketBuffer.class,
                 (customPacketBuffer, buf) -> {

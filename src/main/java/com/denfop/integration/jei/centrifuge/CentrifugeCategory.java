@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.centrifuge;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.api.recipe.InventoryMultiRecipes;
@@ -125,7 +126,7 @@ public class CentrifugeCategory extends ScreenMain implements IRecipeCategory<Ce
         final List<ItemStack> inputs = Collections.singletonList(recipes.getInput());
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStacks(JeiIngredientHelper.getInputVariants(recipes, i, inputs.get(i)));
         }
 
         final List<SlotInvSlot> outputSlots = container1.findClassSlots(InventoryOutput.class);
@@ -133,7 +134,6 @@ public class CentrifugeCategory extends ScreenMain implements IRecipeCategory<Ce
         for (i = 0; i < outputs.size(); i++) {
             builder.addSlot(RecipeIngredientRole.OUTPUT, outputSlots.get(i).getJeiX(), outputSlots.get(i).getJeiY()).addItemStack(outputs.get(i));
         }
-        builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStacks(recipes.getContainer().input.getAllStackInputs());
 
     }
 

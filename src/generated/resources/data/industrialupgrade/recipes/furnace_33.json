@@ -3,7 +3,7 @@
   "cookingtime": 200,
   "experience": 0.6,
   "ingredient": {
-    "item": "industrialupgrade:baseore/vanadium"
+    "item": "industrialupgrade:baseore/aluminium"
   },
-  "result": "industrialupgrade:itemingots/vanadium_ingot"
+  "result": "industrialupgrade:itemingots/aluminium_ingot"
 }

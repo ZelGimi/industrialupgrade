@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "A": {
-      "item": "industrialupgrade:crafting_elements/crafting_11_element"
+      "item": "industrialupgrade:crafting_elements/crafting_278_element"
     },
     "B": {
       "tag": "minecraft:wool"

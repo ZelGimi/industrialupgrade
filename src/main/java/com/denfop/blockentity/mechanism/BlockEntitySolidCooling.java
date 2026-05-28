@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -49,7 +51,7 @@ public class BlockEntitySolidCooling extends BlockEntityElectricMachine implemen
     public boolean work;
 
     public BlockEntitySolidCooling(BlockPos pos, BlockState state) {
-        super(0, 0, 1, BlockBaseMachine3Entity.solid_cooling, pos, state);
+        super(ModConfig.mechanismDouble("solid_refrigerator_energy_storage", 0.0D), 0, 1, BlockBaseMachine3Entity.solid_cooling, pos, state);
         this.cold = this.addComponent(CoolComponent.asBasicSource(this, 4, 14));
         this.max = 4;
         this.componentClientEffectRender = new ComponentClientEffectRender(this, EffectType.REFRIGERATOR);

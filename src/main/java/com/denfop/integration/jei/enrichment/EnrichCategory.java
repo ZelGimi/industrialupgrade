@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.enrichment;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.blockentity.mechanism.BlockEntityEnchanterBooks;
@@ -84,10 +85,9 @@ public class EnrichCategory extends ScreenMain implements IRecipeCategory<Enrich
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, EnrichHandler recipes, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 13, 33).addItemStack(recipes.getInput());
-        builder.addSlot(RecipeIngredientRole.INPUT, 35, 33).addItemStack(recipes.getInput1());
+        builder.addSlot(RecipeIngredientRole.INPUT, 13, 33).addItemStacks(JeiIngredientHelper.getInputVariants(recipes, 0, recipes.getInput()));
+        builder.addSlot(RecipeIngredientRole.INPUT, 35, 33).addItemStacks(JeiIngredientHelper.getInputVariants(recipes, 1, recipes.getInput1()));
         builder.addSlot(RecipeIngredientRole.OUTPUT, 99, 33).addItemStack(recipes.getOutput());
-        builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStacks(recipes.getContainer().input.getAllStackInputs());
 
     }
 

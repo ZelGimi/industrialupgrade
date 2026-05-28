@@ -2,18 +2,27 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "A": {
-      "item": "quantumgenerators:qg/phsp_gen"
+      "item": "industrialupgrade:crafting_elements/crafting_631_element"
     },
     "B": {
-      "item": "industrialupgrade:itemcore/neucore"
+      "item": "simplyquarries:simplyquarries/per_simply_quarry"
+    },
+    "C": {
+      "item": "industrialupgrade:crafting_elements/crafting_622_element"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_623_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_52_element"
     }
   },
   "pattern": [
-    " B ",
-    "BAB",
-    " B "
+    "D D",
+    "ABE",
+    "DCD"
   ],
   "result": {
-    "item": "quantumgenerators:qg/nsp_gen"
+    "item": "simplyquarries:simplyquarries/pho_simply_quarry"
   }
 }

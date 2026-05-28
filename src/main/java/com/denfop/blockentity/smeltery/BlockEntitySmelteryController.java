@@ -1,5 +1,7 @@
 package com.denfop.blockentity.smeltery;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -63,8 +65,8 @@ public class BlockEntitySmelteryController extends BlockEntityMultiBlockBase imp
             this.fluidManager[i] = new FluidHandlerRecipe("smeltery");
         }
         Recipes.recipes.addInitRecipes(this);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.4));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.25));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("smeltery_controller_soil_pollution_amount", 0.4D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("smeltery_controller_air_pollution_amount", 0.25D)));
     }
 
     public FluidTank getFirstTank() {
@@ -162,6 +164,31 @@ public class BlockEntitySmelteryController extends BlockEntityMultiBlockBase imp
                         }
                     }
                 }
+            }
+        } else if (var2 == -4) {
+            List<FluidTank> fluidTanks = new ArrayList<>();
+            for (ITank tank : listTank) {
+                fluidTanks.add(tank.getTank());
+            }
+            final List<FluidTank> fluidTanks1 = fluidTanks.stream()
+                    .sorted((tank1, tank2) -> {
+                        FluidStack fluid1 = tank1.getFluid();
+                        FluidStack fluid2 = tank2.getFluid();
+
+                        boolean hasFluid1 = !fluid1.isEmpty() && fluid1.getAmount() > 0;
+                        boolean hasFluid2 = !fluid2.isEmpty() && fluid2.getAmount() > 0;
+                        if (hasFluid1 && !hasFluid2) {
+                            return -1;
+                        } else if (!hasFluid1 && hasFluid2) {
+                            return 1;
+                        }
+
+
+                        return 0;
+                    })
+                    .collect(Collectors.toList());
+            if (!fluidTanks1.get(list.get(0)).getFluid().isEmpty()) {
+                fluidTanks1.get(list.get(0)).drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.EXECUTE);
             }
         } else if (var2 == -3) {
             List<FluidTank> fluidTanks = new ArrayList<>();
@@ -669,160 +696,160 @@ public class BlockEntitySmelteryController extends BlockEntityMultiBlockBase imp
     @Override
     public void init() {
         mapRecipes.put(Arrays.asList(
-                new FluidStack(FluidName.fluidiron.getInstance().get(), 144 * 3),
-                new FluidStack(FluidName.fluidcarbon.getInstance().get(), 144 * 2)
+                new FluidStack(FluidName.fluidiron.getInstance().get(), 90 * 3),
+                new FluidStack(FluidName.fluidcarbon.getInstance().get(), 90 * 2)
         ), new FluidStack(
                 FluidName.fluidsteel.getInstance().get(),
-                144
+                90
         ));
         mapRecipes.put(Arrays.asList(
-                new FluidStack(FluidName.fluidquartz.getInstance().get(), 144 * 2),
-                new FluidStack(FluidName.fluidiron.getInstance().get(), 144 * 1),
-                new FluidStack(FluidName.fluidmagnesium.getInstance().get(), 144 * 1)
+                new FluidStack(FluidName.fluidquartz.getInstance().get(), 90 * 2),
+                new FluidStack(FluidName.fluidiron.getInstance().get(), 90 * 1),
+                new FluidStack(FluidName.fluidmagnesium.getInstance().get(), 90 * 1)
         ), new FluidStack(
                 FluidName.fluidobsidian.getInstance().get(),
-                144
+                90
         ));
         mapRecipes.put(Arrays.asList(
-                new FluidStack(FluidName.fluidtitanium.getInstance().get(), 144 * 2),
-                new FluidStack(FluidName.fluidsteel.getInstance().get(), 144 * 2)
+                new FluidStack(FluidName.fluidtitanium.getInstance().get(), 90 * 2),
+                new FluidStack(FluidName.fluidsteel.getInstance().get(), 90 * 2)
         ), new FluidStack(
                 FluidName.fluidtitaniumsteel.getInstance().get(),
-                144
+                90
         ));
 
         mapRecipes1.put(
                 new FluidStack(
                         FluidName.fluidelectrum.getInstance().get(),
-                        144
+                        90
                 ),
                 Arrays.asList(
-                        new FluidStack(FluidName.fluidgold.getInstance().get(), 72),
-                        new FluidStack(FluidName.fluidsilver.getInstance().get(), 72)
+                        new FluidStack(FluidName.fluidgold.getInstance().get(), 45),
+                        new FluidStack(FluidName.fluidsilver.getInstance().get(), 45)
                 )
         );
 
         mapRecipes.put(Arrays.asList(
-                new FluidStack(FluidName.fluidgold.getInstance().get(), 144 * 1),
-                new FluidStack(FluidName.fluidsilver.getInstance().get(), 144 * 2)
+                new FluidStack(FluidName.fluidgold.getInstance().get(), 90 * 1),
+                new FluidStack(FluidName.fluidsilver.getInstance().get(), 90 * 2)
         ), new FluidStack(
                 FluidName.fluidelectrum.getInstance().get(),
-                144
+                180
         ));
         mapRecipes1.put(
                 new FluidStack(
                         FluidName.fluidinvar.getInstance().get(),
-                        144
+                        90
                 ),
                 Arrays.asList(
-                        new FluidStack(FluidName.fluidiron.getInstance().get(), 144 / 3),
-                        new FluidStack(FluidName.fluidnickel.getInstance().get(), 72)
+                        new FluidStack(FluidName.fluidiron.getInstance().get(), 2 * 90 / 3),
+                        new FluidStack(FluidName.fluidnickel.getInstance().get(), 45)
                 )
         );
 
         mapRecipes.put(Arrays.asList(
-                new FluidStack(FluidName.fluidiron.getInstance().get(), 144 * 1),
-                new FluidStack(FluidName.fluidnickel.getInstance().get(), 144 * 1)
+                new FluidStack(FluidName.fluidiron.getInstance().get(), 90 * 2),
+                new FluidStack(FluidName.fluidnickel.getInstance().get(), 90 * 1)
         ), new FluidStack(
                 FluidName.fluidinvar.getInstance().get(),
-                144
+                270
         ));
         mapRecipes1.put(new FluidStack(
                 FluidName.fluidbronze.getInstance().get(),
-                144
+                90
         ), Arrays.asList(
-                new FluidStack(FluidName.fluidcopper.getInstance().get(), 3 * 144 / 4),
-                new FluidStack(FluidName.fluidtin.getInstance().get(), 144 / 4)
+                new FluidStack(FluidName.fluidcopper.getInstance().get(), 3 * 90 / 4),
+                new FluidStack(FluidName.fluidtin.getInstance().get(), 90 / 4)
         ));
         mapRecipes.put(Arrays.asList(
-                new FluidStack(FluidName.fluidcopper.getInstance().get(), 144 * 3),
-                new FluidStack(FluidName.fluidtin.getInstance().get(), 144 * 1)
+                new FluidStack(FluidName.fluidcopper.getInstance().get(), 90 * 3),
+                new FluidStack(FluidName.fluidtin.getInstance().get(), 90 * 1)
         ), new FluidStack(
                 FluidName.fluidbronze.getInstance().get(),
-                144
+                360
         ));
         mapRecipes1.put(
                 new FluidStack(
                         FluidName.fluidwolframite.getInstance().get(),
-                        144
+                        90
                 ),
                 Arrays.asList(
-                        new FluidStack(FluidName.fluidtungsten.getInstance().get(), 144 * 1),
-                        new FluidStack(FluidName.fluidnickel.getInstance().get(), 144 * 1)
+                        new FluidStack(FluidName.fluidtungsten.getInstance().get(), 90 * 1),
+                        new FluidStack(FluidName.fluidnickel.getInstance().get(), 90 * 1)
                 )
         );
         mapRecipes.put(Arrays.asList(
-                new FluidStack(FluidName.fluidtungsten.getInstance().get(), 144 * 1),
-                new FluidStack(FluidName.fluidnickel.getInstance().get(), 144 * 1)
+                new FluidStack(FluidName.fluidtungsten.getInstance().get(), 90 * 1),
+                new FluidStack(FluidName.fluidnickel.getInstance().get(), 90 * 1)
         ), new FluidStack(
                 FluidName.fluidwolframite.getInstance().get(),
-                144
+                90
         ));
         mapRecipes.put(Arrays.asList(
-                new FluidStack(FluidName.fluidmagnesium.getInstance().get(), 144 * 2),
-                new FluidStack(FluidName.fluidaluminium.getInstance().get(), 144 * 2)
+                new FluidStack(FluidName.fluidmagnesium.getInstance().get(), 90 * 2),
+                new FluidStack(FluidName.fluidaluminium.getInstance().get(), 90 * 2)
         ), new FluidStack(
                 FluidName.fluidduralumin.getInstance().get(),
-                144
+                90
         ));
         mapRecipes1.put(
                 new FluidStack(
                         FluidName.fluidnichrome.getInstance().get(),
-                        144
+                        90
                 ),
                 Arrays.asList(
-                        new FluidStack(FluidName.fluidchromium.getInstance().get(), 144 * 1),
-                        new FluidStack(FluidName.fluidnickel.getInstance().get(), 144 * 1)
+                        new FluidStack(FluidName.fluidchromium.getInstance().get(), 90 * 1),
+                        new FluidStack(FluidName.fluidnickel.getInstance().get(), 90 * 1)
                 )
         );
         mapRecipes.put(Arrays.asList(
-                new FluidStack(FluidName.fluidchromium.getInstance().get(), 144 * 2),
-                new FluidStack(FluidName.fluidnickel.getInstance().get(), 144 * 1)
+                new FluidStack(FluidName.fluidchromium.getInstance().get(), 90 * 2),
+                new FluidStack(FluidName.fluidnickel.getInstance().get(), 90 * 1)
         ), new FluidStack(
                 FluidName.fluidnichrome.getInstance().get(),
-                144
+                90
         ));
         mapRecipes.put(Arrays.asList(
-                new FluidStack(FluidName.fluidwolframite.getInstance().get(), 144 * 1),
-                new FluidStack(FluidName.fluidquartz.getInstance().get(), 144 * 1)
+                new FluidStack(FluidName.fluidwolframite.getInstance().get(), 90 * 1),
+                new FluidStack(FluidName.fluidquartz.getInstance().get(), 90 * 1)
         ), new FluidStack(
                 FluidName.fluidtemperedglass.getInstance().get(),
-                144
+                90
         ));
 
         mapRecipes1.put(
                 new FluidStack(
                         FluidName.fluidarsenicum_gallium.getInstance().get(),
-                        144
+                        90
                 ),
                 Arrays.asList(
-                        new FluidStack(FluidName.fluidarsenicum.getInstance().get(), 144 * 2),
-                        new FluidStack(FluidName.fluidgallium.getInstance().get(), 144 * 1)
+                        new FluidStack(FluidName.fluidarsenicum.getInstance().get(), 90 * 2),
+                        new FluidStack(FluidName.fluidgallium.getInstance().get(), 90 * 1)
                 )
         );
 
         mapRecipes.put(Arrays.asList(
-                new FluidStack(FluidName.fluidarsenicum.getInstance().get(), 144 * 3),
-                new FluidStack(FluidName.fluidgallium.getInstance().get(), 144 * 2)
+                new FluidStack(FluidName.fluidarsenicum.getInstance().get(), 90 * 3),
+                new FluidStack(FluidName.fluidgallium.getInstance().get(), 90 * 2)
         ), new FluidStack(
                 FluidName.fluidarsenicum_gallium.getInstance().get(),
-                144
+                90
         ));
 
         mapRecipes.put(Arrays.asList(
-                new FluidStack(FluidName.fluidaluminium.getInstance().get(), 144 * 2),
-                new FluidStack(FluidName.fluidbronze.getInstance().get(), 144 * 1)
+                new FluidStack(FluidName.fluidaluminium.getInstance().get(), 90 * 2),
+                new FluidStack(FluidName.fluidbronze.getInstance().get(), 90 * 1)
         ), new FluidStack(
                 FluidName.fluidaluminiumbronze.getInstance().get(),
-                144
+                90
         ));
 
         mapRecipes.put(Arrays.asList(
-                new FluidStack(FluidName.fluidiron.getInstance().get(), 144 * 2),
-                new FluidStack(FluidName.fluidmanganese.getInstance().get(), 144 * 2)
+                new FluidStack(FluidName.fluidiron.getInstance().get(), 90 * 2),
+                new FluidStack(FluidName.fluidmanganese.getInstance().get(), 90 * 2)
         ), new FluidStack(
                 FluidName.fluidferromanganese.getInstance().get(),
-                144
+                90
         ));
     }
 

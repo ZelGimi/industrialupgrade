@@ -15,6 +15,8 @@ import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
 
+import static com.denfop.api.widget.TankWidget.getSafeFluidSprite;
+
 public class ScreenGeothermalExchanger<T extends ContainerMenuGeothermalExchanger> extends ScreenMain<ContainerMenuGeothermalExchanger> {
 
     public ScreenGeothermalExchanger(ContainerMenuGeothermalExchanger guiContainer) {
@@ -34,7 +36,7 @@ public class ScreenGeothermalExchanger<T extends ContainerMenuGeothermalExchange
                     int fluidHeight = 45;
                     Fluid fluid = fs.getFluid();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
-                    TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+                    TextureAtlasSprite sprite = getSafeFluidSprite(fs);
                     int color = extensions.getTintColor();
                     bindBlockTexture();
                     this.gui.drawSprite(poseStack,

@@ -1,5 +1,7 @@
 package com.denfop.blockentity.reactors.gas.socket;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blockentity.reactors.gas.ISocket;
@@ -11,7 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class BlockEntitySimpleSocket extends BlockEntityMainSocket implements ISocket {
 
     public BlockEntitySimpleSocket(BlockPos pos, BlockState state) {
-        super(10000, BlockGasReactorEntity.gas_socket, pos, state);
+        super(ModConfig.mechanismInt("gas_cooling_reactor_socket_capacity", 10000), BlockGasReactorEntity.gas_socket, pos, state);
     }
 
     @Override

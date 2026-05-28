@@ -663,6 +663,23 @@
     "industrialupgrade:creative_blocks/creative_solarium_storage",
     "industrialupgrade:creative_blocks/creative_quantum_storage",
     "industrialupgrade:creative_blocks/creative_radiation_storage",
-    "industrialupgrade:creative_blocks/creative_tank_storage"
+    "industrialupgrade:creative_blocks/creative_tank_storage",
+    "industrialupgrade:storagesystem/storage_cells",
+    "industrialupgrade:storagesystem/controller",
+    "industrialupgrade:storagesystem/interface_workbench",
+    "industrialupgrade:storagesystem/interface_entity",
+    "industrialupgrade:storagesystem/importbus",
+    "industrialupgrade:storagesystem/exportbus",
+    "industrialupgrade:storagesystem/fluid_importbus",
+    "industrialupgrade:storagesystem/fluid_exportbus",
+    "industrialupgrade:storagesystem/processor",
+    "industrialupgrade:storagesystem/adv_processor",
+    "industrialupgrade:storagesystem/imp_processor",
+    "industrialupgrade:storagesystem/per_processor",
+    "industrialupgrade:storagesystem/monitor",
+    "industrialupgrade:storagesystem/pattern_monitor",
+    "industrialupgrade:storagesystem/fluid_monitor",
+    "industrialupgrade:storagesystem/precraft",
+    "industrialupgrade:storagesystem/autocraft_monitor"
   ]
 }

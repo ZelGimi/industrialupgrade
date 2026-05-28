@@ -1,5 +1,7 @@
 package com.denfop.items.energy;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUCore;
 import com.denfop.items.energy.instruments.EnumTypeInstruments;
 import com.denfop.utils.ExperienceUtils;
@@ -25,12 +27,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.common.ToolActions;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,24 +43,26 @@ import java.util.List;
 import java.util.Set;
 
 public class ItemSteelHammer extends ItemToolIU {
+
     private final Set<BlockState> mineableBlocks;
     private final List<TagKey<Block>> item_tools;
     private final Set<Material> materials;
 
     public ItemSteelHammer() {
-        super(2, 8, BlockTags.MINEABLE_WITH_PICKAXE, new Properties().tab(IUCore.EnergyTab).stacksTo(1).setNoRepair().durability(IUTiers.IRON.getUses()), IUTiers.IRON);
+        super(ModConfig.itemDouble("hammer_durability", 2.0D), -3.0F, BlockTags.MINEABLE_WITH_PICKAXE, new Properties().tab(IUCore.EnergyTab).stacksTo(1).setNoRepair().durability(IUTiers.IRON.getUses()), IUTiers.IRON);
         this.materials = EnumTypeInstruments.DRILL.getMaterials();
         this.mineableBlocks = EnumTypeInstruments.DRILL.getMineableBlocks();
         this.item_tools = EnumTypeInstruments.DRILL.getListItems();
     }
 
     @Override
-    public boolean canPerformAction(ItemStack stack, net.minecraftforge.common.ToolAction toolAction) {
-        return ToolActions.DEFAULT_SHOVEL_ACTIONS.contains(toolAction) || ToolActions.DEFAULT_PICKAXE_ACTIONS.contains(toolAction);
+    public boolean canPerformAction(ItemStack stack, ToolAction toolAction) {
+        return ToolActions.DEFAULT_SHOVEL_ACTIONS.contains(toolAction)
+                || ToolActions.DEFAULT_PICKAXE_ACTIONS.contains(toolAction);
     }
 
     @Override
-    public boolean isEnchantable(ItemStack p_41456_) {
+    public boolean isEnchantable(ItemStack stack) {
         return true;
     }
 
@@ -71,24 +77,26 @@ public class ItemSteelHammer extends ItemToolIU {
         pTooltipComponents.add(Component.literal(Localization.translate("iu.hammer.info")));
     }
 
+    @Override
     public boolean onBlockStartBreak(@Nonnull ItemStack stack, @Nonnull BlockPos pos, @Nonnull Player player) {
         Level world = player.level;
+
+        if (world.isClientSide) {
+            return false;
+        }
+
         BlockState state = world.getBlockState(pos);
-        Block block = state.getBlock();
-        BlockHitResult mop = RetraceDiggingUtils.retrace(player);
-
         if (state.isAir()) {
-            return super.onBlockStartBreak(stack, pos, player);
+            return false;
         }
 
-        byte aoe = 0;
-        if (player.isShiftKeyDown()) {
-            if (mop.getType() != HitResult.Type.MISS) {
-                return breakBlock(world, block, mop, aoe, player, pos, stack);
-            }
+        BlockHitResult mop = RetraceDiggingUtils.retrace(player);
+        if (mop == null || mop.getType() == HitResult.Type.MISS) {
+            return false;
         }
 
-        return breakBlock(world, block, mop, (byte) (1 + aoe), player, pos, stack);
+        byte aoe = player.isShiftKeyDown() ? (byte) 0 : (byte) 1;
+        return breakBlock(world, state.getBlock(), mop, aoe, player, pos, stack);
     }
 
     @Override
@@ -99,33 +107,41 @@ public class ItemSteelHammer extends ItemToolIU {
         if (materials.contains(state.getMaterial())) {
             return true;
         }
-        for (TagKey<Block> blockTagKey : this.item_tools)
-            if (state.is(blockTagKey))
+        for (TagKey<Block> blockTagKey : this.item_tools) {
+            if (state.is(blockTagKey)) {
                 return true;
+            }
+        }
         return false;
     }
 
-    public boolean isCorrectToolForDrops(BlockState p_150816_) {
-        for (TagKey<Block> blockTagKey : this.item_tools)
-            if (p_150816_.is(blockTagKey))
+    public boolean isCorrectToolForDrops(BlockState state) {
+        for (TagKey<Block> blockTagKey : this.item_tools) {
+            if (state.is(blockTagKey)) {
                 return true;
-        return super.isCorrectToolForDrops(p_150816_);
+            }
+        }
+        return super.isCorrectToolForDrops(state);
     }
 
     private int getExperience(
             BlockState state,
             Level world,
-            BlockPos pos_block,
+            BlockPos posBlock,
             int fortune,
             ItemStack stack,
-            final Block localBlock
+            Block localBlock
     ) {
-        int col = localBlock.getExpDrop(state, world, world.random, pos_block, fortune, 0);
-        return col;
+        return localBlock.getExpDrop(state, world, world.random, posBlock, fortune, 0);
     }
 
     public boolean breakBlock(
-            Level level, Block block, BlockHitResult mop, byte modeItem, Player player, BlockPos pos,
+            Level level,
+            Block block,
+            BlockHitResult mop,
+            byte modeItem,
+            Player player,
+            BlockPos pos,
             ItemStack stack
     ) {
         byte xRange = modeItem;
@@ -156,25 +172,33 @@ public class ItemSteelHammer extends ItemToolIU {
         fortune = Math.min(3, fortune);
 
         int yOffset = yRange > 0 ? yRange - 1 : 0;
-        stack.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+        boolean breakBlocks = false;
 
         if (!player.getAbilities().instabuild) {
             for (int xPos = x - xRange; xPos <= x + xRange; xPos++) {
                 for (int yPos = y - yRange + yOffset; yPos <= y + yRange + yOffset; yPos++) {
                     for (int zPos = z - zRange; zPos <= z + zRange; zPos++) {
-                        if (stack.getDamageValue() > 0) {
+
+
+                        if (stack.getDamageValue() < stack.getMaxDamage()) {
                             BlockPos blockPos = new BlockPos(xPos, yPos, zPos);
                             BlockState state = level.getBlockState(blockPos);
                             Block localBlock = state.getBlock();
 
-                            if (localBlock != Blocks.AIR && isCorrectToolForDrops(stack, state)
-                                    && state.getDestroySpeed(level, blockPos) >= 0.0F
-                            ) {
+                            if (localBlock != Blocks.AIR
+                                    && isCorrectToolForDrops(stack, state)
+                                    && state.getDestroySpeed(level, blockPos) >= 0.0F) {
+
                                 if (state.getDestroySpeed(level, blockPos) > 0.0F) {
-                                    mineBlock(stack, level, state, blockPos, player);
+                                    boolean mined = mineBlock(stack, level, state, blockPos, player);
+                                    breakBlocks |= mined;
                                 }
+
                                 if (!silkTouch) {
-                                    ExperienceUtils.addPlayerXP(player, getExperience(state, level, blockPos, fortune, stack, localBlock));
+                                    ExperienceUtils.addPlayerXP(
+                                            player,
+                                            getExperience(state, level, blockPos, fortune, stack, localBlock)
+                                    );
                                 }
                             }
                         } else {
@@ -184,33 +208,42 @@ public class ItemSteelHammer extends ItemToolIU {
                 }
             }
         } else {
-            if (stack.getDamageValue() > 0) {
-                BlockState state = level.getBlockState(pos);
-                Block localBlock = state.getBlock();
-                if ((localBlock != Blocks.AIR && isCorrectToolForDrops(stack, state)
-                        && state.getDestroySpeed(level, pos) >= 0.0F)
-                        || (block == Blocks.INFESTED_STONE)) {
-                    if (state.getDestroySpeed(level, pos) >= 0.0F) {
-                        mineBlock(stack, level, state, pos, player);
-                    }
-                    if (!silkTouch) {
-                        ExperienceUtils.addPlayerXP(player, getExperience(state, level, pos, fortune, stack, localBlock));
-                    }
-                } else {
-                    if (state.getDestroySpeed(level, pos) >= 0.0F) {
-                        return mineBlock(stack, level, state, pos, player);
-                    }
+            BlockState state = level.getBlockState(pos);
+            Block localBlock = state.getBlock();
+
+            if ((localBlock != Blocks.AIR && isCorrectToolForDrops(stack, state)
+                    && state.getDestroySpeed(level, pos) >= 0.0F)
+                    || (block == Blocks.INFESTED_STONE)) {
+
+                if (state.getDestroySpeed(level, pos) >= 0.0F) {
+                    breakBlocks = breakBlocks || mineBlock(stack, level, state, pos, player);
+                }
+
+                if (!silkTouch) {
+                    ExperienceUtils.addPlayerXP(player, getExperience(state, level, pos, fortune, stack, localBlock));
+                }
+            } else {
+                if (state.getDestroySpeed(level, pos) >= 0.0F) {
+                    return mineBlock(stack, level, state, pos, player);
                 }
             }
         }
+
+        if (breakBlocks) {
+            stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+        }
+
         return true;
     }
 
     @Override
     public float getDestroySpeed(ItemStack stack, BlockState state) {
-        return mineableBlocks.contains(state) ? this.speed : 1.0F;
+        return state.is(BlockTags.MINEABLE_WITH_PICKAXE) || state.is(BlockTags.MINEABLE_WITH_SHOVEL)
+                ? this.speed
+                : 1.0F;
     }
 
+    @Override
     public boolean mineBlock(ItemStack stack, Level world, BlockState state, BlockPos pos, LivingEntity entity) {
         if (!(entity instanceof Player player)) {
             return false;
@@ -233,7 +266,10 @@ public class ItemSteelHammer extends ItemToolIU {
                 return false;
             }
 
-            if (world.destroyBlock(pos, true, entity)) {
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            if (block.onDestroyedByPlayer(state, world, pos, serverPlayer, true, world.getFluidState(pos))) {
+                block.destroy(world, pos, state);
+                block.playerDestroy(world, serverPlayer, pos, state, blockEntity, stack);
 
                 List<ItemEntity> items = world.getEntitiesOfClass(
                         ItemEntity.class,
@@ -244,27 +280,21 @@ public class ItemSteelHammer extends ItemToolIU {
 
                 if (ModUtils.getOre(block)) {
                     for (ItemEntity item : items) {
-                        if (!world.isClientSide) {
-                            item.setPos(player.getX(), player.getY(), player.getZ());
-                            item.setPickUpDelay(0);
-                        }
+                        item.setPos(player.getX(), player.getY(), player.getZ());
+                        item.setPickUpDelay(0);
                     }
-                } else {
-                    if (ModUtils.nbt(stack).getBoolean("black")) {
-                        for (ItemEntity item : items) {
-                            if (!world.isClientSide) {
-                                item.discard();
-                            }
-                        }
+                } else if (ModUtils.nbt(stack).getBoolean("black")) {
+                    for (ItemEntity item : items) {
+                        item.discard();
                     }
                 }
             }
-
         } else {
-            if (world.destroyBlock(pos, true, player)) {
-                block.playerDestroy(world, player, pos, state, null, stack);
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            if (block.onDestroyedByPlayer(state, world, pos, player, true, world.getFluidState(pos))) {
+                block.destroy(world, pos, state);
+                block.playerDestroy(world, player, pos, state, blockEntity, stack);
             }
-
         }
 
         return true;

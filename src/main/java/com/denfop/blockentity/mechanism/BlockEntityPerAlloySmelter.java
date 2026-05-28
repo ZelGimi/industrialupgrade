@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -61,7 +63,7 @@ public class BlockEntityPerAlloySmelter extends BlockEntityElectricMachine imple
     public MachineRecipe output;
 
     public BlockEntityPerAlloySmelter(BlockPos pos, BlockState state) {
-        super(300, 1, 1, BlockBaseMachine3Entity.per_alloy_smelter, pos, state);
+        super(ModConfig.mechanismDouble("perfect_alloy_smelter_energy_storage", 300.0D), 1, 1, BlockBaseMachine3Entity.per_alloy_smelter, pos, state);
         this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.inputSlotA = new InventoryRecipes(this, "peralloysmelter", this);
         this.dischargeSlot = new InventoryDischarge(this, Inventory.TypeItemSlot.INPUT, 1, false);
@@ -100,8 +102,8 @@ public class BlockEntityPerAlloySmelter extends BlockEntityElectricMachine imple
                 return EnumTypeSlot.RECIPE_SCHEDULE;
             }
         };
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.025));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("perfect_alloy_smelter_soil_pollution_amount", 0.025D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("perfect_alloy_smelter_air_pollution_amount", 0.1D)));
     }
 
     public static void addAlloysmelter(
@@ -137,7 +139,7 @@ public class BlockEntityPerAlloySmelter extends BlockEntityElectricMachine imple
             tooltip.add(Localization.translate("iu.heatmachine.info"));
             tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getEnergyConsume() + Localization.translate(
                     "iu.machines_work_energy_type_eu"));
-            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getOperationsPerTick());
+            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getDefaultOperationLength());
 
         }
 

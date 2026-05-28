@@ -77,6 +77,7 @@ public class BlockEntityApiary extends BlockEntityInventory implements IApiaryTi
     static final int percentWorkersBee = 45;
     static final int percentBuildersBee = 15;
     public static BeeAI beeAI = BeeAI.beeAI;
+    public static boolean hasDamagePlayer = true;
     public final InventoryOutput invSlotProduct;
     public final Inventory frameSlot;
     public final InventoryOutput invSlotFood;
@@ -112,6 +113,7 @@ public class BlockEntityApiary extends BlockEntityInventory implements IApiaryTi
     public short maxJelly = 200;
     public short maxDefaultFood = 1000;
     public short maxDefaultJelly = 200;
+    public double coef;
     double[] massiveNeeds = new double[5];
     List<com.denfop.blockentity.bee.Bee> apairyBeeList = new LinkedList<>();
     Bee queen;
@@ -145,7 +147,6 @@ public class BlockEntityApiary extends BlockEntityInventory implements IApiaryTi
     private byte tickDrainFood = 0;
     private byte tickDrainJelly = 0;
     private Map<BlockEntityApiary, Double> bees_nearby;
-    private double coef;
     private ItemStack stack;
     private int weatherGenome = 0;
     private double pestGenome = 1;
@@ -165,7 +166,6 @@ public class BlockEntityApiary extends BlockEntityInventory implements IApiaryTi
     private LevelPollution airPollution = LevelPollution.LOW;
     private LevelPollution soilPollution = LevelPollution.LOW;
     private EnumLevelRadiation radiationPollution = EnumLevelRadiation.LOW;
-    public static boolean hasDamagePlayer = true;
 
     public BlockEntityApiary(BlockPos pos, BlockState state) {
         super(BlockApiaryEntity.apiary, pos, state);
@@ -391,6 +391,7 @@ public class BlockEntityApiary extends BlockEntityInventory implements IApiaryTi
     @Override
     public void readContainerPacket(final CustomPacketBuffer customPacketBuffer) {
         super.readContainerPacket(customPacketBuffer);
+        this.coef = customPacketBuffer.readDouble();
         long packedData = customPacketBuffer.readLong();
 
         this.task = (int) (packedData & 0x7F);
@@ -408,8 +409,10 @@ public class BlockEntityApiary extends BlockEntityInventory implements IApiaryTi
         this.royalJelly = customPacketBuffer.readDouble();
         this.deathTask = customPacketBuffer.readByte();
         this.illTask = customPacketBuffer.readByte();
-        this.queen = BeeNetwork.instance.getBee(customPacketBuffer.readInt()).copy();
-        if (customPacketBuffer.readBoolean()) {
+        int id = customPacketBuffer.readInt();
+
+        if (id != 0 && customPacketBuffer.readBoolean()) {
+            this.queen = BeeNetwork.instance.getBee(id).copy();
             int size = customPacketBuffer.readInt();
             for (int i = 0; i < size; i++) {
                 double chance = customPacketBuffer.readDouble();
@@ -423,12 +426,15 @@ public class BlockEntityApiary extends BlockEntityInventory implements IApiaryTi
             } catch (IOException e) {
 
             }
+        } else {
+            queen = null;
         }
     }
 
     @Override
     public CustomPacketBuffer writeContainerPacket() {
         CustomPacketBuffer buffer = super.writeContainerPacket();
+        buffer.writeDouble(this.coef);
         long packedData = ((long) this.task & 0x7F) |
                 ((long) this.workers & 0x7F) << 7 |
                 ((long) this.builders & 0x7F) << 14 |
@@ -448,19 +454,21 @@ public class BlockEntityApiary extends BlockEntityInventory implements IApiaryTi
         if (queen != null) {
             buffer.writeInt(queen.getId());
         } else {
-            buffer.writeInt(0);
+            buffer.writeInt(1);
         }
         buffer.writeBoolean(queen != null);
-        buffer.writeInt(queen.getProduct().size());
-        for (int i = 0; i < queen.getProduct().size(); i++) {
-            Product product = queen.getProduct().get(i);
-            buffer.writeDouble(product.getChance());
-            buffer.writeInt(product.getCrop().getId());
-        }
-        try {
-            EncoderHandler.encode(buffer, this.stack);
-        } catch (IOException e) {
+        if (queen != null) {
+            buffer.writeInt(queen.getProduct().size());
+            for (int i = 0; i < queen.getProduct().size(); i++) {
+                Product product = queen.getProduct().get(i);
+                buffer.writeDouble(product.getChance());
+                buffer.writeInt(product.getCrop().getId());
+            }
+            try {
+                EncoderHandler.encode(buffer, this.stack);
+            } catch (IOException e) {
 
+            }
         }
         return buffer;
     }
@@ -732,10 +740,7 @@ public class BlockEntityApiary extends BlockEntityInventory implements IApiaryTi
             death = 0;
             this.birthBeeList.clear();
         }
-        if (this.queen != null) {
-            return super.onActivated(player, hand, side, hitX);
-        }
-        return false;
+        return super.onActivated(player, hand, side, hitX);
     }
 
     @Override
@@ -874,7 +879,7 @@ public class BlockEntityApiary extends BlockEntityInventory implements IApiaryTi
 
     @Override
     public CustomPacketBuffer writePacket() {
-        CustomPacketBuffer customPacketBuffer = super.writeUpdatePacket();
+        CustomPacketBuffer customPacketBuffer = super.writePacket();
         customPacketBuffer.writeBoolean(queen != null);
         if (queen != null)
             customPacketBuffer.writeInt(queen.getId());
@@ -1106,6 +1111,9 @@ public class BlockEntityApiary extends BlockEntityInventory implements IApiaryTi
             if (massiveNeeds[4] < 0.3) {
                 problemList.add(EnumProblem.JELLY);
             }
+            new PacketUpdateFieldTile(this, "problem", problemList.stream()
+                    .map(EnumProblem::ordinal)
+                    .toList());
             List<com.denfop.blockentity.bee.Bee> iterator = new ArrayList<>(apairyBeeList);
             ChunkLevel airPollution = PollutionManager.pollutionManager.getChunkLevelAir(chunkPos);
             int totalBees = (apairyBeeList.size() - birthBeeList.size());
@@ -1130,7 +1138,13 @@ public class BlockEntityApiary extends BlockEntityInventory implements IApiaryTi
                     if (bee.getType() == EnumTypeLife.LARVA) {
                         bee.removeJelly();
                     }
-
+                    double totalLifetimeTicks = bee.getMaxLife() * populationGenome;
+                    double lifetimeSeconds = Math.max(totalLifetimeTicks / 20.0D, 1.0D);
+                    double totalMortalityChance = queen.getMaxMortalityRate() * this.mortalityGenome;
+                    double perSecondMortalityChance = totalMortalityChance / lifetimeSeconds;
+                    double ageProgress = Math.min(1.0D, bee.getTick() / totalLifetimeTicks);
+                    double ageFactor = ageProgress < 0.75D ? 0.0D : (ageProgress - 0.75D) / 0.25D;
+                    double finalMortalityChance = perSecondMortalityChance * ageFactor;
                     if (bee.isIll() && royalJelly >= 0.5) {
                         if (WorldBaseGen.random.nextInt(100) == 0) {
                             royalJelly -= 0.5;
@@ -1138,14 +1152,14 @@ public class BlockEntityApiary extends BlockEntityInventory implements IApiaryTi
                             illBeeList.remove(bee);
                         } else {
                             royalJelly -= 0.05;
-                            if (WorldBaseGen.random.nextDouble() < 0.25 && WorldBaseGen.random.nextDouble() < queen.getMaxMortalityRate() * this.mortalityGenome) {
+                            if (finalMortalityChance > 0.0D && WorldBaseGen.random.nextDouble() < finalMortalityChance) {
                                 bee.setDead(true);
                                 death(bee);
                                 continue;
                             }
                         }
                     } else {
-                        if (WorldBaseGen.random.nextDouble() < 0.1 && WorldBaseGen.random.nextDouble() <= queen.getMaxMortalityRate() * this.mortalityGenome) {
+                        if (finalMortalityChance > 0.0D && WorldBaseGen.random.nextDouble() < finalMortalityChance) {
                             bee.setDead(true);
                             death(bee);
                             continue;
@@ -1235,6 +1249,8 @@ public class BlockEntityApiary extends BlockEntityInventory implements IApiaryTi
             this.attacks = attackBeeList.size();
             this.doctors = doctorBeeList.size();
             this.ill = illBeeList.size();
+            this.birth = 0;
+            this.death = 0;
         }
 
         if (!this.foodCellSlot.isEmpty() && tickDrainFood == 20) {
@@ -1732,6 +1748,21 @@ public class BlockEntityApiary extends BlockEntityInventory implements IApiaryTi
         }
     }
 
+    @Override
+    public void updateField(String name, CustomPacketBuffer is) {
+        super.updateField(name, is);
+        if (name.trim().equals("problem")) {
+            try {
+                List<Integer> list = (List<Integer>) DecoderHandler.decode(is);
+                this.problemList = list.stream()
+                        .map(integer -> EnumProblem.values()[integer])
+                        .toList();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
     private void harvest() {
         passedCrops.clear();
         crops.clear();
@@ -1806,18 +1837,18 @@ public class BlockEntityApiary extends BlockEntityInventory implements IApiaryTi
                 }
             }
         }
-
-        for (int i = 0; i < level.random.nextInt(Math.max(1, passedCrops.size() / 4)) + 1; i++) {
-            SmallBee smallBee = IUItem.entity_bee.get().create(level);
-            smallBee.setCrops(passedCrops);
-            smallBee.setBee(queen);
-            smallBee.setCustomHive(pos);
-            smallBee.moveTo(pos.getX(), pos.getY(), pos.getZ(), 0.0F, 0.0F);
-            if (smallBee != null) {
-                level.addFreshEntity(smallBee);
+        if (passedCrops.size() > 0)
+            for (int i = 0; i < level.random.nextInt(Math.max(1, passedCrops.size() / 4)) + 1; i++) {
+                SmallBee smallBee = IUItem.entity_bee.get().create(level);
+                smallBee.setCrops(passedCrops);
+                smallBee.setBee(queen);
+                smallBee.setCustomHive(pos);
+                smallBee.moveTo(pos.getX(), pos.getY(), pos.getZ(), 0.0F, 0.0F);
+                if (smallBee != null) {
+                    level.addFreshEntity(smallBee);
+                }
             }
-        }
-        if (harvest >= 3 / coef) {
+        if (harvest >= 1 / coef) {
             if (addFood) {
                 this.tickDrainFood++;
             }

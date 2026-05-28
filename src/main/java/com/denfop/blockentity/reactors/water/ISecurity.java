@@ -1,10 +1,10 @@
 package com.denfop.blockentity.reactors.water;
 
-import com.denfop.api.multiblock.MultiBlockElement;
+import com.denfop.api.multiblock.IMultiElement;
 import com.denfop.api.reactors.EnumTypeSecurity;
 import com.denfop.utils.Timer;
 
-public interface ISecurity extends MultiBlockElement {
+public interface ISecurity extends IMultiElement {
 
     void setActive(String s);
 

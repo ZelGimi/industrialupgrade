@@ -266,10 +266,28 @@ public class GuideQuest {
             }
         }
 
-        guiIU.drawString(poseStack, quest.getLocalizedName(),
-                mouseX + x + offsetX1 + 5 + width / 2 - guiIU.getStringWidth(quest.getLocalizedName()) / 2,
-                mouseY + y + offsetY1 + 5, 0
-        );
+        String name = quest.getLocalizedName();
+        int textWidth = guiIU.getStringWidth(name);
+        float scale = 1.0f;
+
+
+        if (textWidth > 120) {
+            scale = 120f / textWidth;
+        }
+
+        PoseStack pose = poseStack;
+        pose.pushPose();
+        pose.scale(scale, scale, 1.0f);
+
+
+        int centerX = mouseX + x + offsetX1 + 5 + width / 2;
+        int textX = (int) ((centerX / scale) - (textWidth / 2.0f));
+        int textY = (int) ((mouseY + y + offsetY1 + 5) / scale);
+
+
+        guiIU.drawString(poseStack, ChatFormatting.WHITE + name, textX, textY, 0);
+        pose.scale(1 / scale, 1 / scale, 1);
+        pose.popPose();
         guiIU.drawString(poseStack, ChatFormatting.GREEN +
                         Localization.translate("iu.quest.task." + quest.typeQuest.name().toLowerCase()),
                 mouseX + x + offsetX1 + 5 + width / 2 - guiIU.getStringWidth("iu.quest.task." + quest.typeQuest.name().toLowerCase()) / 2,

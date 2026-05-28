@@ -77,7 +77,10 @@ public class ComponentVisibleArea extends AbstractComponent {
     @Override
     public boolean onSneakingActivated(Player player, InteractionHand hand) {
         this.visible = !visible;
-        return super.onSneakingActivated(player, hand);
+        if (player instanceof ServerPlayer serverPlayer) {
+            onContainerUpdate(serverPlayer);
+        }
+        return true;
     }
 
     @Override
@@ -92,7 +95,7 @@ public class ComponentVisibleArea extends AbstractComponent {
     private Function<RenderLevelStageEvent, Void> createFunction(ComponentVisibleArea componentVisibleArea) {
         Function<RenderLevelStageEvent, Void> function = event -> {
             PoseStack poseStack = event.getPoseStack();
-            if (!visible)
+            if (!componentVisibleArea.visible)
                 return null;
             poseStack.pushPose();
             RenderSystem.setShader(GameRenderer::getPositionTexShader);

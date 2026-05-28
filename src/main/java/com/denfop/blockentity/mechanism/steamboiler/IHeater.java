@@ -1,8 +1,8 @@
 package com.denfop.blockentity.mechanism.steamboiler;
 
-import com.denfop.api.multiblock.MultiBlockElement;
+import com.denfop.api.multiblock.IMultiElement;
 
-public interface IHeater extends MultiBlockElement {
+public interface IHeater extends IMultiElement {
 
     boolean isWork();
 

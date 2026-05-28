@@ -1,6 +1,7 @@
 package com.denfop.containermenu.slot;
 
 import com.denfop.api.menu.VirtualSlot;
+import com.denfop.api.storage.autocrafting.SameStack;
 import com.denfop.blockentity.base.BlockEntityInventory;
 import com.denfop.inventory.Inventory;
 import com.denfop.utils.FluidHandlerFix;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SlotInfo extends Inventory implements VirtualSlot {
 
@@ -20,6 +22,8 @@ public class SlotInfo extends Inventory implements VirtualSlot {
     List<FluidStack> fluidStackList;
     private List<ItemStack> listBlack;
     private List<ItemStack> listWhite;
+    private List<FluidStack> listFluidBlack;
+    private List<FluidStack> listFluidWhite;
     private boolean fluid;
 
     public SlotInfo(BlockEntityInventory multiCable, int size, boolean fluid) {
@@ -56,11 +60,6 @@ public class SlotInfo extends Inventory implements VirtualSlot {
     }
 
     @Override
-    public boolean canPlaceVirtualItem(int index, ItemStack stack) {
-        return this.canPlaceItem(index,stack);
-    }
-
-    @Override
     public CompoundTag writeToNbt(CompoundTag nbt) {
         nbt = super.writeToNbt(nbt);
         nbt.putBoolean("fluid", isFluid());
@@ -71,9 +70,34 @@ public class SlotInfo extends Inventory implements VirtualSlot {
         return fluidStackList;
     }
 
+    public List<FluidStack> getListFluidBlack() {
+        return listFluidBlack == null ? Collections.emptyList() : listFluidBlack;
+    }
+
+    public List<FluidStack> getListFluidWhite() {
+        return listFluidWhite == null ? Collections.emptyList() : listFluidWhite;
+    }
+
     @Override
     public void setFluidList(final List<FluidStack> fluidStackList) {
         this.fluidStackList = fluidStackList;
+        listFluidBlack = this.getFluidStackList().subList(0, 9).stream().filter(fluidStack -> !fluidStack.isEmpty()).collect(Collectors.toList());
+        listFluidWhite =
+                this.getFluidStackList()
+                        .subList(9, this.fluidStackList.size())
+                        .stream()
+                        .filter(fluidStack -> !fluidStack.isEmpty())
+                        .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean canPlaceVirtualItem(int index, ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public void setFluid(int index, SameStack stack) {
+
     }
 
     public boolean isFluid() {

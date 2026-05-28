@@ -1,5 +1,7 @@
 package com.denfop.blockentity.base;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.InventoryOutput;
@@ -39,7 +41,7 @@ public class BlockEntityBasePlasticCreator extends BlockEntityElectricLiquidTank
     public MachineRecipe output;
 
     public BlockEntityBasePlasticCreator(int energyPerTick, int length, int aDefaultTier, MultiBlockEntity block, BlockPos pos, BlockState state) {
-        super(energyPerTick * length, aDefaultTier, 12, Fluids.fluidPredicate(net.minecraft.world.level.material.Fluids.WATER), block, pos, state);
+        super(energyPerTick * length, aDefaultTier, ModConfig.mechanismInt("base_plastic_creator_tank_capacity", 12), Fluids.fluidPredicate(net.minecraft.world.level.material.Fluids.WATER), block, pos, state);
         this.outputSlot1 = new InventoryOutput(this, 1);
         this.fluidSlot = new InventoryFluidByList(this, 1, net.minecraft.world.level.material.Fluids.WATER);
         this.upgradeSlot = new InventoryUpgrade(this, 4);
@@ -68,7 +70,7 @@ public class BlockEntityBasePlasticCreator extends BlockEntityElectricLiquidTank
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getEnergyConsume() + Localization.translate(
                     "iu.machines_work_energy_type_eu"));
-            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getOperationsPerTick());
+            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getDefaultOperationLength());
         }
         super.addInformation(stack, tooltip);
 

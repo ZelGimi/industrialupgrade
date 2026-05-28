@@ -12,6 +12,7 @@ public interface IInput {
     List<IInputItemStack> getInputs();
 
     CompoundTag writeNBT();
+
     boolean hasFluids();
 
     FluidStack getFluid();

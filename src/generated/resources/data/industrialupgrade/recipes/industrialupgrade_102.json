@@ -2,25 +2,19 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "A": {
-      "item": "industrialupgrade:itemcore/procore"
+      "item": "industrialupgrade:itemcore/quacore"
     },
     "B": {
-      "type": "forge:nbt",
-      "count": 1,
-      "item": "industrialupgrade:circuit/spectralcircuit",
-      "nbt": "{level:9}"
+      "item": "industrialupgrade:module_schedule"
     },
     "C": {
       "item": "industrialupgrade:quantumitems7"
-    },
-    "D": {
-      "item": "industrialupgrade:quantumitems4"
     }
   },
   "pattern": [
-    "ABA",
-    "BCB",
-    "DDD"
+    "ACA",
+    " B ",
+    "   "
   ],
   "result": {
     "item": "industrialupgrade:additionmodule/tier_de"

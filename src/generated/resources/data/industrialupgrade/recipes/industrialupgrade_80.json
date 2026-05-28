@@ -8,16 +8,13 @@
       "item": "industrialupgrade:quantumitems3"
     },
     "C": {
-      "type": "forge:nbt",
-      "count": 1,
-      "item": "industrialupgrade:circuit/quantumcircuit",
-      "nbt": "{level:7}"
+      "tag": "c:plates/adamantium"
     },
     "D": {
       "item": "industrialupgrade:energy_tools/nano_bow"
     },
     "E": {
-      "tag": "forge:doubleplate/alcled"
+      "tag": "c:doubleplate/alcled"
     }
   },
   "pattern": [

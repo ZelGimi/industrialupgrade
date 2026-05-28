@@ -1,5 +1,7 @@
 package com.denfop.items.reactors;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.reactors.EnumTypeComponent;
@@ -24,7 +26,7 @@ public class ItemComponentVent extends ItemDamage implements IReactorItem {
     private final int autoRepair;
 
     public ItemComponentVent(int level, int autoRepair) {
-        super(new Item.Properties().tab(IUCore.ReactorsTab).stacksTo(1), 1);
+        super(new Item.Properties().tab(IUCore.ReactorsTab).stacksTo(1), ModConfig.itemInt("restores_nearby_durability_by_durability", 1));
         this.level = level;
         this.autoRepair = autoRepair;
     }

@@ -1,9 +1,9 @@
 package com.denfop.api.reactors;
 
-import com.denfop.api.multiblock.MainMultiBlock;
+import com.denfop.api.multiblock.IMainMultiBlock;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
-public interface IFluidReactor extends IAdvReactor, MainMultiBlock {
+public interface IFluidReactor extends IAdvReactor, IMainMultiBlock {
 
     FluidTank getInputTank();
 

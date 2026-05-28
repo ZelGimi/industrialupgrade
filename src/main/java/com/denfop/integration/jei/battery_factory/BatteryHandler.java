@@ -1,6 +1,8 @@
 package com.denfop.integration.jei.battery_factory;
 
 
+import com.denfop.integration.jei.JeiIngredientHelper;
+import com.denfop.integration.jei.IJeiVariantRecipe;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import net.minecraft.world.item.ItemStack;
@@ -9,9 +11,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class BatteryHandler {
+public class BatteryHandler implements IJeiVariantRecipe {
 
     private static final List<BatteryHandler> recipes = new ArrayList<>();
+    private List<List<ItemStack>> inputVariants = new java.util.ArrayList<>();
+
     private final ItemStack input, input1, input2, input3, input4, input5, input6, input7, input8, output;
 
     public BatteryHandler(
@@ -65,7 +69,7 @@ public class BatteryHandler {
 
     public static void initRecipes() {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("battery_factory")) {
-            addRecipe(
+            JeiIngredientHelper.attachInputVariants(addRecipe(
                     container.input.getInputs().get(0).getInputs().get(0),
                     container.input.getInputs().get(1).getInputs().get(0),
                     container.input.getInputs().get(2).getInputs().get(0),
@@ -76,7 +80,7 @@ public class BatteryHandler {
                     container.input.getInputs().get(7).getInputs().get(0),
                     container.input.getInputs().get(8).getInputs().get(0),
                     container.getOutput().items.get(0)
-            );
+            ), container);
 
 
         }
@@ -140,4 +144,15 @@ public class BatteryHandler {
         return true;
     }
 
+
+
+    @Override
+    public void setInputVariants(final List<List<ItemStack>> inputVariants) {
+        this.inputVariants = inputVariants == null ? new java.util.ArrayList<>() : inputVariants;
+    }
+
+    @Override
+    public List<ItemStack> getInputVariants(final int slot, final ItemStack fallback) {
+        return JeiIngredientHelper.getInputVariants(this.inputVariants, slot, fallback);
+    }
 }

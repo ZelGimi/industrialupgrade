@@ -3,7 +3,7 @@ package com.denfop.blockentity.reactors.heat.controller;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
 import com.denfop.api.energy.networking.EnergyNetGlobal;
-import com.denfop.api.multiblock.MultiBlockElement;
+import com.denfop.api.multiblock.IMultiElement;
 import com.denfop.api.multiblock.MultiBlockStructure;
 import com.denfop.api.otherenergies.common.EnergyType;
 import com.denfop.api.pollution.radiation.RadiationSystem;
@@ -780,7 +780,7 @@ public class BlockEntityMainController extends BlockEntityMultiBlockBase impleme
         );
 
         level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-        for (Map.Entry<BlockPos, Class<? extends MultiBlockElement>> entry : this.getMultiBlockStucture().blockPosMap.entrySet()) {
+        for (Map.Entry<BlockPos, Class<? extends IMultiElement>> entry : this.getMultiBlockStucture().blockPosMap.entrySet()) {
             if (level.random.nextInt(2) == 0) {
                 continue;
             }

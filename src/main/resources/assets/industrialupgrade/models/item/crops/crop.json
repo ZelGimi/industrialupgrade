@@ -1,5 +1,5 @@
 {
-  "parent": "industrialupgrade:item/item/default",
+  "parent": "industrialupgrade:item/default",
   "overrides": [
    {
       "model": "industrialupgrade:item/crops/crops",
@@ -501,6 +501,6 @@
     }
   ],
   "textures": {
-    "layer0": "industrialupgrade:item/item/crop_seed"
+    "layer0": "industrialupgrade:items/item/crop_seed"
   }
 }

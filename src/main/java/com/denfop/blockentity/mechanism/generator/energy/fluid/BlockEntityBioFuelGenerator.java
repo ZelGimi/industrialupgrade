@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.generator.energy.fluid;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -60,14 +62,14 @@ public class BlockEntityBioFuelGenerator extends BlockEntityLiquidTankInventory 
     private boolean sound = true;
 
     public BlockEntityBioFuelGenerator(BlockPos pos, BlockState state) {
-        super(12, BlockBaseMachine3Entity.gen_bio, pos, state);
+        super(ModConfig.mechanismInt("biogenerator_tank_capacity", 12), BlockBaseMachine3Entity.gen_bio, pos, state);
         this.coef = 1;
         this.fluidSlot = new InventoryFluidByList(this, 1, FluidName.fluidbiomass.getInstance().get());
         this.outputSlot = new InventoryOutput(this, 1);
         this.energy = this.addComponent(Energy.asBasicSource(this, (double) 25000 * coef, 1));
         ((Fluids.InternalFluidTank) this.getFluidTank()).setAcceptedFluids(Fluids.fluidPredicate(FluidName.fluidbiomass.getInstance().get()));
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.3));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("bio_fuel_generator_soil_pollution_amount", 0.1D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("bio_fuel_generator_air_pollution_amount", 0.3D)));
     }
 
     @Override

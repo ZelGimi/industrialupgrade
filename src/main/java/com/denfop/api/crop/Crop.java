@@ -4,10 +4,10 @@ import com.denfop.api.pollution.component.LevelPollution;
 import com.denfop.api.pollution.radiation.EnumLevelRadiation;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.network.packet.INetworkObject;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 
 import java.util.List;
@@ -125,7 +125,7 @@ public interface Crop extends INetworkObject {
 
     int getDefaultLightLevel();
 
-    boolean canGrowInBiome(Biome biomeName, Level level);
+    boolean canGrowInBiome(Holder<Biome> biomeName);
 
     boolean canGrowInBiome(ResourceKey<Biome> biomeName);
 

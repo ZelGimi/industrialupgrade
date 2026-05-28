@@ -6,13 +6,10 @@
     },
     "B": {
       "tag": "forge:plates/iron"
-    },
-    "C": {
-      "tag": "forge:platedense/iron"
     }
   },
   "pattern": [
-    "CBC",
+    "BBB",
     "BAB",
     " A "
   ],

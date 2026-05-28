@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -61,7 +63,7 @@ public class BlockEntityPrimalSolderingMechanism extends BlockEntityElectricMach
     private int YELLOW_PERCENT = 100 - RED_PERCENT - GREEN_PERCENT;
 
     public BlockEntityPrimalSolderingMechanism(BlockPos pos, BlockState state) {
-        super(0, 0, 1, BlockSolderingMechanismEntity.primal_soldering_mechanism, pos, state);
+        super(ModConfig.mechanismDouble("soldering_table_energy_storage", 0.0D), 0, 1, BlockSolderingMechanismEntity.primal_soldering_mechanism, pos, state);
         this.output = null;
         solderingIronSlot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override

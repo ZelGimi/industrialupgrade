@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.fluidintegrator;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.api.widget.EnumTypeComponent;
 import com.denfop.api.widget.ScreenWidget;
@@ -105,9 +106,8 @@ public class FluidIntegratorCategory extends ScreenMain implements IRecipeCatego
     public void setRecipe(IRecipeLayoutBuilder builder, FluidIntegratorHandler recipe, IFocusGroup focuses) {
         builder.addSlot(RecipeIngredientRole.INPUT, 14, 21).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipe.getInputFluid().getFluid(), recipe.getInputFluid().getAmount());
         builder.addSlot(RecipeIngredientRole.OUTPUT, 50 + 71, 21).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipe.getOutputFluid().getFluid(), recipe.getOutputFluid().getAmount());
-        builder.addSlot(RecipeIngredientRole.INPUT, 60 - 20, 44 - 0).addItemStack(recipe.getInput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 60 - 20, 44 - 0).addItemStacks(JeiIngredientHelper.getInputVariants(recipe, 0, recipe.getInput()));
         builder.addSlot(RecipeIngredientRole.OUTPUT, 115 - 25, 44 - 0).addItemStack(recipe.getOutput());
-        builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStacks(recipe.getContainer().input.getAllStackInputs());
 
     }
 

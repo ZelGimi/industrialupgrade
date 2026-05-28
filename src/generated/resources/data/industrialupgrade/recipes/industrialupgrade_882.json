@@ -5,7 +5,7 @@
       "item": "industrialupgrade:crafting_elements/crafting_620_element"
     },
     "B": {
-      "item": "industrialupgrade:itemcore/admcore"
+      "item": "industrialupgrade:itemcore/sincore"
     },
     "C": {
       "tag": "forge:doubleplate/muntsa"

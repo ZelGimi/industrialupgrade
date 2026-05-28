@@ -15,34 +15,34 @@
       "model": "industrialupgrade:block/smeltery/smeltery_casing",
       "y": 90
     },
+    "facing=north,type=smeltery_casing_active": {
+      "model": "industrialupgrade:block/smeltery/smeltery_casing"
+    },
+    "facing=south,type=smeltery_casing_active": {
+      "model": "industrialupgrade:block/smeltery/smeltery_casing",
+      "y": 180
+    },
+    "facing=west,type=smeltery_casing_active": {
+      "model": "industrialupgrade:block/smeltery/smeltery_casing",
+      "y": 270
+    },
+    "facing=east,type=smeltery_casing_active": {
+      "model": "industrialupgrade:block/smeltery/smeltery_casing",
+      "y": 90
+    },
     "facing=down,type=smeltery_casing": {
       "model": "industrialupgrade:block/smeltery/smeltery_casing",
       "x": 90
     },
-    "facing=up,type=smeltery_casing": {
-      "model": "industrialupgrade:block/smeltery/smeltery_casing",
-      "x": 270
-    },
-    "facing=north,type=smeltery_casing_invalid": {
-      "model": "industrialupgrade:block/smeltery/smeltery_casing"
-    },
-    "facing=south,type=smeltery_casing_invalid": {
-      "model": "industrialupgrade:block/smeltery/smeltery_casing",
-      "y": 180
-    },
-    "facing=west,type=smeltery_casing_invalid": {
-      "model": "industrialupgrade:block/smeltery/smeltery_casing",
-      "y": 270
-    },
-    "facing=east,type=smeltery_casing_invalid": {
-      "model": "industrialupgrade:block/smeltery/smeltery_casing",
-      "y": 90
-    },
-    "facing=down,type=smeltery_casing_invalid": {
+    "facing=down,type=smeltery_casing_active": {
       "model": "industrialupgrade:block/smeltery/smeltery_casing",
       "x": 90
     },
-    "facing=up,type=smeltery_casing_invalid": {
+    "facing=up,type=smeltery_casing_active": {
+      "model": "industrialupgrade:block/smeltery/smeltery_casing",
+      "x": 270
+    },
+    "facing=up,type=smeltery_casing": {
       "model": "industrialupgrade:block/smeltery/smeltery_casing",
       "x": 270
     }

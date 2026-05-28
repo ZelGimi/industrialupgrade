@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -68,11 +70,11 @@ public class BlockEntitySolidFluidIntegrator extends BlockEntityElectricMachine 
     protected short progress;
 
     public BlockEntitySolidFluidIntegrator(BlockPos pos, BlockState state) {
-        super(200, 1, 1, BlockBaseMachine3Entity.solid_fluid_integrator, pos, state);
+        super(ModConfig.mechanismDouble("solid_fluid_integrator_energy_storage", 200.0D), 1, 1, BlockBaseMachine3Entity.solid_fluid_integrator, pos, state);
         Recipes.recipes.addInitRecipes(this);
 
         this.progress = 0;
-        this.defaultEnergyConsume = this.energyConsume = 1;
+        this.defaultEnergyConsume = this.energyConsume = ModConfig.mechanismInt("solid_fluid_integrator_energy_use", 1);
         this.defaultOperationLength = this.operationLength = 100;
         this.defaultTier = 1;
         this.defaultEnergyStorage = 100;
@@ -92,8 +94,8 @@ public class BlockEntitySolidFluidIntegrator extends BlockEntityElectricMachine 
         this.fluidSlot2 = new InventoryFluidByList(this, 1, this.fluid_handler.getOutputFluids(0));
         this.fluidSlot2.setTypeFluidSlot(InventoryFluid.TypeFluidSlot.OUTPUT);
         this.upgradeSlot = new InventoryUpgrade(this, 4);
-        this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("solid_fluid_integrator_soil_pollution_amount", 0.1D)));
+        this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("solid_fluid_integrator_air_pollution_amount", 0.1D)));
 
     }
 
@@ -111,9 +113,9 @@ public class BlockEntitySolidFluidIntegrator extends BlockEntityElectricMachine 
             tooltip.add(Localization.translate("press.lshift"));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            tooltip.add(Localization.translate("iu.machines_work_energy") + 200 + Localization.translate(
+            tooltip.add(Localization.translate("iu.machines_work_energy") + 1 + Localization.translate(
                     "iu.machines_work_energy_type_eu"));
-            tooltip.add(Localization.translate("iu.machines_work_length") + 1);
+            tooltip.add(Localization.translate("iu.machines_work_length") + 100);
         }
         super.addInformation(stack, tooltip);
 
@@ -138,10 +140,10 @@ public class BlockEntitySolidFluidIntegrator extends BlockEntityElectricMachine 
                 100
         ), new ItemStack(IUItem.iudust.getStack(61), 1), new FluidStack(FluidName.fluidnitrogen.getInstance().get(), 10));
 
-        addRecipe(new FluidStack(FluidName.fluidmonochlorobenzene.getInstance().get(), 200), new FluidStack(
+        addRecipe(new FluidStack(
                 FluidName.fluidnitrogenhydride.getInstance().get(),
                 400
-        ), new ItemStack(IUItem.iudust.getStack(61), 1), new FluidStack(FluidName.fluidaniline.getInstance().get(), 200));
+        ), new FluidStack(FluidName.fluidmonochlorobenzene.getInstance().get(), 200), new ItemStack(IUItem.iudust.getStack(61), 1), new FluidStack(FluidName.fluidaniline.getInstance().get(), 200));
 
         addRecipe(new FluidStack(FluidName.fluidmotoroil.getInstance().get(), 500), new FluidStack(
                 FluidName.fluidcoolant.getInstance().get(),

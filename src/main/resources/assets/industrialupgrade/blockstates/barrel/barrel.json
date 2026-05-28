@@ -15,6 +15,21 @@
       "model": "industrialupgrade:block/barrel/barrel",
       "y": 90
     },
+    "facing=north,type=barrel_active": {
+      "model": "industrialupgrade:block/barrel/barrel"
+    },
+    "facing=south,type=barrel_active": {
+      "model": "industrialupgrade:block/barrel/barrel",
+      "y": 180
+    },
+    "facing=west,type=barrel_active": {
+      "model": "industrialupgrade:block/barrel/barrel",
+      "y": 270
+    },
+    "facing=east,type=barrel_active": {
+      "model": "industrialupgrade:block/barrel/barrel",
+      "y": 90
+    },
     "facing=down,type=barrel": {
       "model": "industrialupgrade:block/barrel/barrel",
       "x": 90
@@ -23,26 +38,11 @@
       "model": "industrialupgrade:block/barrel/barrel",
       "x": 270
     },
-    "facing=north,type=barrel_invalid": {
-      "model": "industrialupgrade:block/barrel/barrel"
-    },
-    "facing=south,type=barrel_invalid": {
-      "model": "industrialupgrade:block/barrel/barrel",
-      "y": 180
-    },
-    "facing=west,type=barrel_invalid": {
-      "model": "industrialupgrade:block/barrel/barrel",
-      "y": 270
-    },
-    "facing=east,type=barrel_invalid": {
-      "model": "industrialupgrade:block/barrel/barrel",
-      "y": 90
-    },
-    "facing=down,type=barrel_invalid": {
+    "facing=down,type=barrel_active": {
       "model": "industrialupgrade:block/barrel/barrel",
       "x": 90
     },
-    "facing=up,type=barrel_invalid": {
+    "facing=up,type=barrel_active": {
       "model": "industrialupgrade:block/barrel/barrel",
       "x": 270
     }

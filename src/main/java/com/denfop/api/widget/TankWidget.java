@@ -17,8 +17,10 @@ import com.denfop.utils.ModUtils;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
@@ -50,7 +52,20 @@ public class TankWidget extends ScreenWidget {
     }
 
 
+    public static TextureAtlasSprite getSafeFluidSprite(FluidStack stack) {
+        FluidStack copy = stack.copy();
+        IClientFluidTypeExtensions ext = IClientFluidTypeExtensions.of(copy.getFluid());
 
+        ResourceLocation rl = ext.getStillTexture(copy);
+        if (rl == null) {
+            rl = ext.getStillTexture();
+        }
+        if (rl == null) {
+            rl = MissingTextureAtlasSprite.getLocation();
+        }
+
+        return getBlockTextureMap().getSprite(rl);
+    }
 
 
     @Override
@@ -100,7 +115,7 @@ public class TankWidget extends ScreenWidget {
             Fluid fluid = fs.getFluid();
 
             IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
-            TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+            TextureAtlasSprite sprite = getSafeFluidSprite(fs);
             int color = extensions.getTintColor();
             double renderHeight = (double) fluidHeight * ModUtils.limit(
                     (double) fs.getAmount() / (double) this.tank.getCapacity(),
@@ -151,7 +166,7 @@ public class TankWidget extends ScreenWidget {
             if (fluid != null) {
                 ret.add(Localization.translate(fs.getFluid().getFluidType().getDescriptionId()) + ": " + fs.getAmount() + " " + Localization.translate("iu.generic.text.mb"));
             } else {
-                ret.add("invalid fluid stack");
+                ret.add(Localization.translate("iu.tooltip.fluid.invalid"));
             }
         } else {
             ret.add(Localization.translate("iu.generic.text.empty"));
@@ -159,7 +174,6 @@ public class TankWidget extends ScreenWidget {
 
         return ret;
     }
-
 
 
 }

@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.steam;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -58,7 +60,7 @@ public class BlockEntitySteamHandlerHeavyOre extends BlockEntityElectricMachine
 
     public BlockEntitySteamHandlerHeavyOre(
             BlockPos pos, BlockState state) {
-        super(0, 1, 1, BlockBaseMachine3Entity.steam_handler_ore, pos, state);
+        super(ModConfig.mechanismDouble("steam_ore_separator_energy_storage", 0.0D), 1, 1, BlockBaseMachine3Entity.steam_handler_ore, pos, state);
         this.enumTypeSlot = EnumTypeStyle.DEFAULT;
         this.outputSlot = new InventoryOutput(this, 3 + 2 * enumTypeSlot.ordinal());
         this.inputSlotA = new InventoryRecipes(this, "handlerho", this);
@@ -198,6 +200,10 @@ public class BlockEntitySteamHandlerHeavyOre extends BlockEntityElectricMachine
                 work = false;
             }
 
+        }
+        if (!this.getWorld().isClientSide) {
+            inputSlotA.load();
+            this.getOutput();
         }
     }
 

@@ -1,8 +1,8 @@
 package com.denfop.blockentity.mechanism.multiblocks.base;
 
 import com.denfop.api.blockentity.MultiBlockEntity;
-import com.denfop.api.multiblock.MainMultiBlock;
-import com.denfop.api.multiblock.MultiBlockElement;
+import com.denfop.api.multiblock.IMainMultiBlock;
+import com.denfop.api.multiblock.IMultiElement;
 import com.denfop.blockentity.base.BlockEntityInventory;
 import com.denfop.componets.AbstractComponent;
 import net.minecraft.core.BlockPos;
@@ -14,9 +14,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-public class BlockEntityMultiBlockElement extends BlockEntityInventory implements MultiBlockElement {
+public class BlockEntityMultiBlockElement extends BlockEntityInventory implements IMultiElement {
 
-    MainMultiBlock mainMultiBlock;
+    IMainMultiBlock mainMultiBlock;
 
 
     public BlockEntityMultiBlockElement(MultiBlockEntity tileBlock, BlockPos pos, BlockState state) {
@@ -29,12 +29,12 @@ public class BlockEntityMultiBlockElement extends BlockEntityInventory implement
 
 
     @Override
-    public MainMultiBlock getMain() {
+    public IMainMultiBlock getMain() {
         return mainMultiBlock;
     }
 
     @Override
-    public void setMainMultiElement(final MainMultiBlock main) {
+    public void setMainMultiElement(final IMainMultiBlock main) {
         mainMultiBlock = main;
     }
 

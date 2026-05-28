@@ -23,7 +23,7 @@
   "pattern": [
     "DCD",
     "BAB",
-    "ECE"
+    "EBE"
   ],
   "result": {
     "item": "industrialupgrade:battery/itembatchargecrystal"

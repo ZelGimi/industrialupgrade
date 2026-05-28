@@ -47,7 +47,7 @@ public class ChargedRedstoneCategory extends ScreenMain implements IRecipeCatego
     @Nonnull
     @Override
     public String getTitles() {
-        return ItemStackHelper.fromData(IUItem.charged_redstone).getDisplayName().getString();
+        return com.denfop.utils.ModUtils.cleanComponentString(ItemStackHelper.fromData(IUItem.charged_redstone).getDisplayName().getString());
     }
 
 

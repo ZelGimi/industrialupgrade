@@ -11,7 +11,9 @@ import com.denfop.blockentity.mechanism.dual.BlockEntityUpgradeBlock;
 import com.denfop.blockentity.mechanism.dual.heat.BlockEntityAlloySmelter;
 import com.denfop.blockentity.mechanism.dual.heat.BlockEntityWeldingMachine;
 import com.denfop.containermenu.slot.SlotInvSlot;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
 
 public class ContainerMenuDoubleElectricMachine extends ContainerMenuBaseDoubleElectricMachine {
 
@@ -132,6 +134,24 @@ public class ContainerMenuDoubleElectricMachine extends ContainerMenuBaseDoubleE
             ));
         }
     }
+    @Override
+    protected void addPlayerInventorySlots(Inventory inventory, int width, int height) {
+        if (this.base instanceof BlockEntityEnrichment || this.base instanceof BlockEntityPainting){
+            int n4 = (width - 162) / 2;
 
+            int n3;
+            for (n3 = 0; n3 < 3; ++n3) {
+                for (int i = 0; i < 9; ++i) {
+                    this.addSlot(new Slot(inventory, i + n3 * 9 + 9, n4+ i * 18, height  +1+ -82 + n3 * 18));
+                }
+            }
+
+            for (n3 = 0; n3 < 9; ++n3) {
+                this.addSlot(new Slot(inventory, n3, n4 + n3 * 18, height + -24));
+            }
+        }else {
+            super.addPlayerInventorySlots(inventory, width, height);
+        }
+    }
 
 }

@@ -1,6 +1,8 @@
 package com.denfop.blockentity.mechanism.multimechanism.triple;
 
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blockentity.base.BlockEntityMultiMachine;
@@ -23,8 +25,8 @@ public class BlockEntityTripleExtractor extends BlockEntityMultiMachine {
                 EnumMultiMachine.TRIPLE_EXTRACTOR.usagePerTick,
                 EnumMultiMachine.TRIPLE_EXTRACTOR.lenghtOperation, BlockMoreMachineEntity.triple_extractor, pos, state
         );
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.075));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("advanced_extractor_soil_pollution_amount", 0.05D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("advanced_extractor_air_pollution_amount", 0.075D)));
     }
 
     public MultiBlockEntity getTeBlock() {

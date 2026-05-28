@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:space_tunnel_system",
+  "config": {
+    "flooded": false,
+    "fluid": {
+      "Name": "industrialupgrade:fluid/fluidpahoehoe_lava",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "kind": "stone_tunnels",
+    "max_length": 18,
+    "max_radius": 4,
+    "max_vertical": 18,
+    "min_length": 10,
+    "min_radius": 2,
+    "open_to_surface": false,
+    "primary": {
+      "Name": "industrialupgrade:spacestone/mercury_stone"
+    },
+    "secondary": {
+      "Name": "industrialupgrade:spacecobblestone/mercury_cobblestone"
+    },
+    "tertiary": {
+      "Name": "industrialupgrade:spacecobblestone/mercury_cobblestone"
+    }
+  }
+}

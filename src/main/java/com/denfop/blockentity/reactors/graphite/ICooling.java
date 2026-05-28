@@ -1,8 +1,8 @@
 package com.denfop.blockentity.reactors.graphite;
 
-import com.denfop.api.multiblock.MultiBlockElement;
+import com.denfop.api.multiblock.IMultiElement;
 
-public interface ICooling extends MultiBlockElement {
+public interface ICooling extends IMultiElement {
 
     double work(double heat);
 

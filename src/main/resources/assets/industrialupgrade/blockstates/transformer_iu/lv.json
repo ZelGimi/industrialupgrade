@@ -23,26 +23,26 @@
       "model": "industrialupgrade:block/basemachine/lv_transformer",
       "x": 270
     },
-    "facing=north,type=lv_invalid": {
+    "facing=north,type=lv_active": {
       "model": "industrialupgrade:block/basemachine/lv_transformer"
     },
-    "facing=south,type=lv_invalid": {
+    "facing=south,type=lv_active": {
       "model": "industrialupgrade:block/basemachine/lv_transformer",
       "y": 180
     },
-    "facing=west,type=lv_invalid": {
+    "facing=west,type=lv_active": {
       "model": "industrialupgrade:block/basemachine/lv_transformer",
       "y": 270
     },
-    "facing=east,type=lv_invalid": {
+    "facing=east,type=lv_active": {
       "model": "industrialupgrade:block/basemachine/lv_transformer",
       "y": 90
     },
-    "facing=down,type=lv_invalid": {
+    "facing=down,type=lv_active": {
       "model": "industrialupgrade:block/basemachine/lv_transformer",
       "x": 90
     },
-    "facing=up,type=lv_invalid": {
+    "facing=up,type=lv_active": {
       "model": "industrialupgrade:block/basemachine/lv_transformer",
       "x": 270
     }

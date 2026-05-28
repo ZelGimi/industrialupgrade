@@ -79,7 +79,7 @@ public class ScreenWirelessControllerGraphiteReactors<T extends ContainerMenuWir
                     final BlockEntityGraphiteController tileMultiBlockBase = this.container.base.graphiteControllers.get(
                             i);
                     BlockPos pos = tileMultiBlockBase.getPos();
-                    new TooltipWidget(this, 8 + i * 18, 25, 18, 18).withTooltip(stack.getDisplayName().getString() + "\n" + "x" +
+                    new TooltipWidget(this, 8 + i * 18, 25, 18, 18).withTooltip(com.denfop.utils.ModUtils.cleanComponentString(stack.getDisplayName().getString()) + "\n" + "x" +
                             ": " + pos.getX() + " y: " + pos.getY() + " z: " + pos.getZ()).drawForeground(poseStack, par1, par2);
                 }
             }

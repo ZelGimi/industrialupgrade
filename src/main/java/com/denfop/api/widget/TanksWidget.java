@@ -12,6 +12,8 @@ import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
 
+import static com.denfop.api.widget.TankWidget.getSafeFluidSprite;
+
 public class TanksWidget extends ScreenWidget {
 
 
@@ -37,7 +39,6 @@ public class TanksWidget extends ScreenWidget {
     public static TanksWidget createNormal(ScreenIndustrialUpgrade<?> gui, int x, int y, List<Fluids.InternalFluidTank> tank) {
         return new TanksWidget(gui, x, y, 20, 55, tank);
     }
-
 
 
     public void drawBackground(PoseStack poseStack, int mouseX, int mouseY) {
@@ -73,7 +74,7 @@ public class TanksWidget extends ScreenWidget {
 
             Fluid fluid = fs.getFluid();
             IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
-            TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+            TextureAtlasSprite sprite = getSafeFluidSprite(fs);
             int color = extensions.getTintColor();
             double renderHeight = (double) fluidHeight * ModUtils.limit(
                     (double) amount / (double) capacity,
@@ -126,7 +127,7 @@ public class TanksWidget extends ScreenWidget {
             if (fluid != null) {
                 ret.add(Localization.translate(fs.getFluid().getFluidType().getDescriptionId()) + ": " + amount + " " + Localization.translate("iu.generic.text.mb"));
             } else {
-                ret.add("invalid fluid stack");
+                ret.add(Localization.translate("iu.tooltip.fluid.invalid"));
             }
         } else {
             ret.add(Localization.translate("iu.generic.text.empty"));

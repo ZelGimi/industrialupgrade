@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "tag": "forge:casings/adamantium"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_779_element"
+    },
+    "D": {
+      "tag": "forge:plates/redbrass"
+    }
+  },
+  "pattern": [
+    "A A",
+    "BDB",
+    "ABA"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_780_element"
+  }
+}

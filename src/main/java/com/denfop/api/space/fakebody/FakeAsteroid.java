@@ -38,8 +38,8 @@ public class FakeAsteroid implements IFakeAsteroid {
         this.rovers = rovers;
         this.spaceOperation = spaceOperation;
         this.data = data;
-        int seconds = (int) ((Math.abs(((planet.getMaxDistance() - planet.getMinDistance()) / 2 + planet.getMinDistance()) - SpaceInit.earth.getDistance()) / (SpaceInit.mars.getDistance() - SpaceInit.earth.getDistance())) * (12 * 60 * 0.8));
-        seconds += (int) (planet.getSystem().getDistanceFromSolar() * 60 * 60 * 2);
+        int seconds = (int) ((Math.abs(((planet.getMaxDistance() - planet.getMinDistance()) / 2 + planet.getMinDistance()) - SpaceInit.earth.getDistance()) / (SpaceInit.mars.getDistance() - SpaceInit.earth.getDistance())) * (12 * 60 * 0.5));
+        seconds += (int) (planet.getSystem().getDistanceFromSolar() * 60 * 60);
         if (SpaceUpgradeSystem.system.hasModules(
                 EnumTypeUpgrade.ENGINE,
                 rovers.getItemStack()

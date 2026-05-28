@@ -31,7 +31,7 @@ public class BlockEntityOtherPart extends BlockEntityMultiBlockElement implement
                 IUItem.blastfurnace.getItem(0)
         ).getDescriptionId()));
         tooltip.add(Localization.translate("iu.blastfurnace.info4"));
-        tooltip.add(Localization.translate("iu.blastfurnace.info5") + new ItemStack(IUItem.ForgeHammer.getItem()).getDisplayName().getString());
+        tooltip.add(Localization.translate("iu.blastfurnace.info5") + com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(IUItem.ForgeHammer.getItem()).getDisplayName().getString()));
         tooltip.add(Localization.translate("iu.blastfurnace.info6"));
     }
 

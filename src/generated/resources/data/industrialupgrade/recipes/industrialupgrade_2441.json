@@ -2,27 +2,27 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "A": {
-      "item": "industrialupgrade:machines/admin_solar_panel"
+      "item": "industrialupgrade:crafting_elements/crafting_254_element"
     },
     "B": {
-      "item": "industrialupgrade:itemcore/phocore"
+      "item": "simplyquarries:simplyquarries/imp_simply_quarry"
     },
     "C": {
-      "item": "industrialupgrade:quantumitems3"
+      "item": "industrialupgrade:crafting_elements/crafting_120_element"
     },
     "D": {
-      "type": "forge:nbt",
-      "count": 1,
-      "item": "industrialupgrade:circuit/spectralcircuit",
-      "nbt": "{level:9}"
+      "item": "industrialupgrade:crafting_elements/crafting_140_element"
+    },
+    "E": {
+      "item": "industrialupgrade:crafting_elements/crafting_51_element"
     }
   },
   "pattern": [
-    "CBC",
-    "BAB",
-    "DBD"
+    "D D",
+    "ABE",
+    "DCD"
   ],
   "result": {
-    "item": "quantumgenerators:qg/phsp_gen"
+    "item": "simplyquarries:simplyquarries/per_simply_quarry"
   }
 }

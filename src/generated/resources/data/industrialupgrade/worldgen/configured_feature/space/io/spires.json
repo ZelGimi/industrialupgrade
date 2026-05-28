@@ -1,0 +1,26 @@
+{
+  "type": "industrialupgrade:space_rock_formation",
+  "config": {
+    "branches": 1,
+    "fluid": {
+      "Name": "industrialupgrade:fluid/fluidpahoehoe_lava",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "kind": "mountain_spire",
+    "max_height": 22,
+    "max_radius": 5,
+    "min_height": 8,
+    "min_radius": 2,
+    "primary": {
+      "Name": "industrialupgrade:spacestone/io_stone"
+    },
+    "secondary": {
+      "Name": "industrialupgrade:spacecobblestone/io_cobblestone"
+    },
+    "tertiary": {
+      "Name": "industrialupgrade:blockspace2/io_emerald_ore"
+    }
+  }
+}

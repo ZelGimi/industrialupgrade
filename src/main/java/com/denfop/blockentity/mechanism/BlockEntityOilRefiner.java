@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -72,15 +74,15 @@ public class BlockEntityOilRefiner extends BlockEntityElectricMachine implements
     private int levelMech;
 
     public BlockEntityOilRefiner(BlockPos pos, BlockState state) {
-        super(24000, 14, 2, BlockRefinerEntity.refiner, pos, state);
+        super(ModConfig.mechanismDouble("oil_refinery_energy_storage", 24000.0D), 14, 2, BlockRefinerEntity.refiner, pos, state);
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank1 = fluids.addTank("fluidTank1", 12 * 1000, Inventory.TypeItemSlot.INPUT);
         this.needUpdate = false;
 
         this.fluidTank2 = fluids.addTank("fluidTank2", 12 * 1000, Inventory.TypeItemSlot.OUTPUT);
 
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.075));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.25));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("oil_refiner_soil_pollution_amount", 0.075D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("oil_refiner_air_pollution_amount", 0.25D)));
         this.fluidTank3 = fluids.addTank("fluidTank3", 12 * 1000, Inventory.TypeItemSlot.OUTPUT);
         this.fluid_handler = new FluidHandlerRecipe("oil_refiner", fluids);
         this.fluidTank1.setAcceptedFluids(Fluids.fluidPredicate(this.fluid_handler.getFluids(0)));
@@ -105,7 +107,7 @@ public class BlockEntityOilRefiner extends BlockEntityElectricMachine implements
     @Override
     public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        levelMech = nbttagcompound.getInt("levelMech");
+        levelMech = Math.max(0, Math.min(10, nbttagcompound.contains("levelMech") ? nbttagcompound.getInt("levelMech") : nbttagcompound.getInt("level")));
     }
 
     public List<ItemStack> getWrenchDrops(Player player, int fortune) {
@@ -126,6 +128,7 @@ public class BlockEntityOilRefiner extends BlockEntityElectricMachine implements
             } else {
                 stack.shrink(1);
                 this.levelMech++;
+                this.setChanged();
                 return true;
             }
         } else {
@@ -283,12 +286,14 @@ public class BlockEntityOilRefiner extends BlockEntityElectricMachine implements
 
     @Override
     public void setLevelMech(final int levelMech) {
-        this.levelMech = levelMech;
+        this.levelMech = Math.max(0, Math.min(10, levelMech));
+        this.setChanged();
     }
 
     @Override
     public void removeLevel(final int level) {
-        this.levelMech -= level;
+        this.levelMech = Math.max(0, this.levelMech - level);
+        this.setChanged();
     }
 
 

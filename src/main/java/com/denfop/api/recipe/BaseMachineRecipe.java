@@ -19,18 +19,6 @@ public class BaseMachineRecipe {
         this.output = output;
     }
 
-    public boolean matches(List<ItemStack> stacks) {
-        for (int i = 0; i < stacks.size(); i++) {
-            if (this.input.getInputs().get(i).matches(stacks.get(i))) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public RecipeOutput getOutput() {
-        return this.output;
-    }
     public static BaseMachineRecipe readNBT(CompoundTag tag) {
         Input input = Input.readNBT(tag.getCompound("Input"));
         List<ItemStack> items = new ArrayList<>();
@@ -46,6 +34,19 @@ public class BaseMachineRecipe {
 
         RecipeOutput output = new RecipeOutput(metadata, items);
         return new BaseMachineRecipe(input, output);
+    }
+
+    public boolean matches(List<ItemStack> stacks) {
+        for (int i = 0; i < stacks.size(); i++) {
+            if (this.input.getInputs().get(i).matches(stacks.get(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public RecipeOutput getOutput() {
+        return this.output;
     }
 
     public CompoundTag writeNBT() {

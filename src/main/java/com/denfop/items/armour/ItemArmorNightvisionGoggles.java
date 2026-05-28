@@ -6,6 +6,7 @@ import com.denfop.api.item.energy.EnergyItem;
 import com.denfop.utils.ElectricItem;
 import com.denfop.utils.ElectricItemManager;
 import com.denfop.utils.KeyboardClient;
+import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -73,7 +74,7 @@ public class ItemArmorNightvisionGoggles extends ItemArmorUtility implements Ene
     @Override
     public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
         super.appendHoverText(p_41421_, p_41422_, p_41423_, p_41424_);
-        p_41423_.add(Component.literal("Nightvision Key: " + KeyboardClient.armormode.getKey().getDisplayName().getString()));
+        p_41423_.add(Component.translatable("iu.tooltip.nightvision_key").append(KeyboardClient.armormode.getKey().getDisplayName()));
     }
 
 
@@ -117,9 +118,9 @@ public class ItemArmorNightvisionGoggles extends ItemArmorUtility implements Ene
             if (!player.getLevel().isClientSide()) {
                 nbtData.putBoolean("active", active);
                 if (active) {
-                    IUCore.proxy.messagePlayer(player, "Nightvision enabled.");
+                    IUCore.proxy.messagePlayer(player, Localization.translate("iu.message.nightvision.enabled"));
                 } else {
-                    IUCore.proxy.messagePlayer(player, "Nightvision disabled.");
+                    IUCore.proxy.messagePlayer(player, Localization.translate("iu.message.nightvision.disabled"));
                 }
             }
         }

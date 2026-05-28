@@ -18,6 +18,10 @@ public class Path {
         this.targetDirection = facing;
     }
 
+    public Sink getTarget() {
+        return target;
+    }
+
     public void tick(int tick, double adding) {
         if (this.target.isSink()) {
             if (this.target.getTick() != tick) {

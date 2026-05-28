@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.multimechanism.quad;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blockentity.base.BlockEntityMultiMachine;
@@ -22,8 +24,8 @@ public class BlockEntityQuadOreWashing extends BlockEntityMultiMachine {
                 EnumMultiMachine.QUAD_OreWashing.lenghtOperation,
                 BlockMoreMachine3Entity.quadorewashing, pos, state
         );
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.025));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.05));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("quad_ore_washing_soil_pollution_amount", 0.025D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("quad_ore_washing_air_pollution_amount", 0.05D)));
     }
 
     public MultiBlockEntity getTeBlock() {
@@ -39,5 +41,8 @@ public class BlockEntityQuadOreWashing extends BlockEntityMultiMachine {
         return EnumMultiMachine.QUAD_OreWashing;
     }
 
+    public int getSize(int size) {
+        return Math.min(size, this.tank.getFluidAmount() / 1000);
+    }
 
 }

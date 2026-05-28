@@ -44,12 +44,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.AABB;
@@ -64,6 +66,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class ItemEnergyInstruments extends Item implements EnergyItem, IItemStackInventory, UpgradeWithBlackList,
@@ -146,6 +149,7 @@ public class ItemEnergyInstruments extends Item implements EnergyItem, IItemStac
                     return false;
                 }
 
+                BlockEntity blockEntity = world.getBlockEntity(pos);
 
                 if (block.onDestroyedByPlayer(state, world, pos, (ServerPlayer) entity, true, world.getFluidState(pos))) {
                     List<UpgradeItemInform> upgradeItemInforms = UpgradeSystem.system.getInformation(stack);
@@ -167,7 +171,7 @@ public class ItemEnergyInstruments extends Item implements EnergyItem, IItemStac
                     boolean black_list = nbt.getBoolean("black");
 
                     block.destroy(world, pos, state);
-                    block.playerDestroy(world, (ServerPlayer) entity, pos, state, null, stack);
+                    block.playerDestroy(world, (ServerPlayer) entity, pos, state, blockEntity, stack);
                     List<ItemEntity> items = entity.getLevel().getEntitiesOfClass(
                             ItemEntity.class,
                             new AABB(pos.getX() - 1, pos.getY() - 1, pos.getZ() - 1, pos.getX() + 1,
@@ -188,7 +192,7 @@ public class ItemEnergyInstruments extends Item implements EnergyItem, IItemStac
                                     RecipeOutput rec = Recipes.recipes.getRecipeOutput("comb_macerator", false, stack1).output;
                                     if (rec != null) {
                                         stack1 = rec.items.get(0).copy();
-                                        stack1.setCount(3);
+
                                     }
                                 } else if (mac) {
                                     RecipeOutput rec = Recipes.recipes.getRecipeOutput("macerator", false, stack1).output;
@@ -507,7 +511,11 @@ public class ItemEnergyInstruments extends Item implements EnergyItem, IItemStac
                     ?
                     UpgradeSystem.system.getModules(EnumInfoUpgradeModules.DIG_DEPTH, par1ItemStack, upgradeItemInforms).number
                     : 0);
-
+            List<Integer> list = UpgradeSystem.system.getUpgradeFromList(par1ItemStack);
+            if (list != null && list.size() >= 5) {
+                dig_depth += list.get(4);
+                aoe += list.get(3);
+            }
             par3List.add(Component.literal(Localization.translate("iu.instruments.info") + (operations.getArea_x() + aoe) + "x" + (operations.getArea_y() + aoe) + "x" + (operations.getArea_z() + dig_depth)));
         }
         float energy = energy(par1ItemStack, upgradeItemInforms);
@@ -521,16 +529,16 @@ public class ItemEnergyInstruments extends Item implements EnergyItem, IItemStac
         if (KeyboardIU.isKeyDown(InputConstants.KEY_LSHIFT)) {
 
 
-            par3List.add(Component.literal(Localization.translate("iu.changemode_key") + KeyboardClient.changemode.getKey().getDisplayName().getString() + Localization.translate(
+            par3List.add(Component.literal(Localization.translate("iu.changemode_key") + com.denfop.utils.ModUtils.cleanComponentString(KeyboardClient.changemode.getKey().getDisplayName().getString()) + Localization.translate(
                     "iu.changemode_rcm")));
 
-            par3List.add(Component.literal(Localization.translate("iu.blacklist_key") + KeyboardClient.blackmode.getKey().getDisplayName().getString()
+            par3List.add(Component.literal(Localization.translate("iu.blacklist_key") + com.denfop.utils.ModUtils.cleanComponentString(KeyboardClient.blackmode.getKey().getDisplayName().getString())
                     + Localization.translate(
                     "iu.changemode_rcm")));
 
-            par3List.add(Component.literal(Localization.translate("iu.savemode_key") + KeyboardClient.savemode.getKey().getDisplayName().getString() + Localization.translate(
+            par3List.add(Component.literal(Localization.translate("iu.savemode_key") + com.denfop.utils.ModUtils.cleanComponentString(KeyboardClient.savemode.getKey().getDisplayName().getString()) + Localization.translate(
                     "iu.changemode_rcm")));
-            par3List.add(Component.literal(Localization.translate("iu.blacklist_gui") + KeyboardClient.blacklistviewmode.getKey().getDisplayName().getString()));
+            par3List.add(Component.literal(Localization.translate("iu.blacklist_gui") + com.denfop.utils.ModUtils.cleanComponentString(KeyboardClient.blacklistviewmode.getKey().getDisplayName().getString())));
 
         }
         ModUtils.mode(par1ItemStack, par3List);
@@ -574,6 +582,10 @@ public class ItemEnergyInstruments extends Item implements EnergyItem, IItemStac
         List<UpgradeItemInform> upgradeItemInforms = UpgradeSystem.system.getInformation(stack);
         int speed = UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.EFFICIENCY, stack, upgradeItemInforms) ?
                 UpgradeSystem.system.getModules(EnumInfoUpgradeModules.EFFICIENCY, stack, upgradeItemInforms).number : 0;
+        List<Integer> list = UpgradeSystem.system.getUpgradeFromList(stack);
+        if (list != null && list.size() >= 5) {
+            speed += list.get(0);
+        }
         return !ElectricItem.manager.canUse(stack, this.energy(stack, upgradeItemInforms))
                 ? 0.0F
                 : (isCorrectToolForDrops(stack, state) ? (this.efficiency + (int) (this.efficiency * 0.2 * speed)) : 1.0F);
@@ -688,7 +700,13 @@ public class ItemEnergyInstruments extends Item implements EnergyItem, IItemStac
         int z = pos.getZ();
         byte dig_depth = (byte) (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.DIG_DEPTH, stack, upgradeItemInforms) ?
                 UpgradeSystem.system.getModules(EnumInfoUpgradeModules.DIG_DEPTH, stack, upgradeItemInforms).number : 0);
-
+        List<Integer> list = UpgradeSystem.system.getUpgradeFromList(stack);
+        if (list != null && list.size() >= 5) {
+            dig_depth += list.get(4);
+            xRange += list.get(3);
+            yRange += list.get(3);
+            zRange += list.get(3);
+        }
         switch (mop.getDirection().ordinal()) {
             case 0:
             case 1:
@@ -707,7 +725,10 @@ public class ItemEnergyInstruments extends Item implements EnergyItem, IItemStac
         boolean lowPower = false;
         boolean silktouch = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, stack) > 0;
         int fortune = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, stack);
-
+        if (list != null && list.size() >= 5) {
+            fortune += list.get(2);
+            fortune = Math.min(fortune, 3);
+        }
         int Yy;
         Yy = yRange > 0 ? yRange - 1 : 0;
         CompoundTag nbt = ModUtils.nbt(stack);
@@ -837,6 +858,18 @@ public class ItemEnergyInstruments extends Item implements EnergyItem, IItemStac
         CompoundTag nbt = ModUtils.nbt(stack);
         boolean black_list = nbt.getBoolean("black");
         final List<String> list = UpgradeSystem.system.getBlackList(stack);
+        int fortune1 = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, stack);
+        int fortune2;
+        List<Integer> list2 = UpgradeSystem.system.getUpgradeFromList(stack);
+        if (list2 != null && list2.size() >= 5) {
+            fortune2 = list2.get(2);
+            fortune1 = Math.max(fortune1, fortune2);
+        }
+        if (fortune1 != 0) {
+            Map<Enchantment, Integer> enchantmentMap = EnchantmentHelper.getEnchantments(stack);
+            enchantmentMap.put(Enchantments.BLOCK_FORTUNE, fortune1);
+            EnchantmentHelper.setEnchantments(enchantmentMap, stack);
+        }
         switch (operations) {
             case DEFAULT:
 
@@ -1394,11 +1427,12 @@ public class ItemEnergyInstruments extends Item implements EnergyItem, IItemStac
                     return false;
                 }
 
+                BlockEntity blockEntity = world.getBlockEntity(pos);
 
                 if (block.onDestroyedByPlayer(state, world, pos, (ServerPlayer) entity, true, world.getFluidState(pos))) {
                     block.destroy(world, pos, state);
 
-                    block.playerDestroy(world, (ServerPlayer) entity, pos, state, null, stack);
+                    block.playerDestroy(world, (ServerPlayer) entity, pos, state, blockEntity, stack);
                     CompoundTag nbt = ModUtils.nbt(stack);
                     List<ItemEntity> items = entity.getLevel().getEntitiesOfClass(
                             ItemEntity.class,
@@ -1420,7 +1454,7 @@ public class ItemEnergyInstruments extends Item implements EnergyItem, IItemStac
                                     RecipeOutput rec = Recipes.recipes.getRecipeOutput("comb_macerator", false, stack1).output;
                                     if (rec != null) {
                                         stack1 = rec.items.get(0).copy();
-                                        stack1.setCount(3);
+
                                     }
                                 } else if (mac) {
                                     RecipeOutput rec = Recipes.recipes.getRecipeOutput("macerator", false, stack1).output;
@@ -1549,15 +1583,21 @@ public class ItemEnergyInstruments extends Item implements EnergyItem, IItemStac
                 UpgradeSystem.system.getModules(EnumInfoUpgradeModules.ENERGY, stack, upgradeItemInforms).number : 0;
         int toolMode = readToolMode(stack);
         float energy;
+        List<Integer> list = UpgradeSystem.system.getUpgradeFromList(stack);
+        int less_draw_energy = 0;
+        if (list != null && list.size() >= 5) {
+            less_draw_energy += list.get(1);
+        }
         EnumOperations operations = this.operations.get(toolMode);
         energy = switch (operations) {
             case BIGHOLES ->
-                    (float) (this.energyBigHolePowerOperation - this.energyBigHolePowerOperation * 0.25 * energy1);
+                    (float) (this.energyBigHolePowerOperation - this.energyBigHolePowerOperation * (0.25 * energy1 + less_draw_energy * 0.05F));
             case MEGAHOLES ->
-                    (float) (this.energyPerbigHolePowerOperation - this.energyPerbigHolePowerOperation * 0.25 * energy1);
+                    (float) (this.energyPerbigHolePowerOperation - this.energyPerbigHolePowerOperation * (0.25 * energy1 + less_draw_energy * 0.05F));
             case ULTRAHOLES ->
-                    (float) (this.energyPerultraLowPowerOperation - this.energyPerultraLowPowerOperation * 0.25 * energy1);
-            default -> (float) (this.energyPerOperation - this.energyPerOperation * 0.25 * energy1);
+                    (float) (this.energyPerultraLowPowerOperation - this.energyPerultraLowPowerOperation * (0.25 * energy1 + less_draw_energy * 0.05F));
+            default ->
+                    (float) (this.energyPerOperation - this.energyPerOperation * (0.25 * energy1 + less_draw_energy * 0.05F));
         };
         return energy;
 

@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.generator.things.fluid;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -50,7 +52,7 @@ public class BlockEntityHeliumGenerator extends BlockEntityElectricMachine imple
     private double lastEnergy;
 
     public BlockEntityHeliumGenerator(BlockPos pos, BlockState state) {
-        super(50000, 1, 1, BlockBaseMachine2Entity.helium_generator, pos, state);
+        super(ModConfig.mechanismDouble("helium_generator_energy_storage", 50000.0D), 1, 1, BlockBaseMachine2Entity.helium_generator, pos, state);
 
         this.energycost = 1000;
         this.outputSlot = new InventoryOutput(this, 1);
@@ -67,8 +69,8 @@ public class BlockEntityHeliumGenerator extends BlockEntityElectricMachine imple
                 Fluids.fluidPredicate(FluidName.fluidhelium.getInstance().get())
         );
         this.upgradeSlot = new InventoryUpgrade(this, 4);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.15));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("helium_generator_soil_pollution_amount", 0.15D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("helium_generator_air_pollution_amount", 0.1D)));
     }
 
     private static int applyModifier(int extra) {

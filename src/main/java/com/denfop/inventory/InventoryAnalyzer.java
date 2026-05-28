@@ -77,7 +77,7 @@ public class InventoryAnalyzer extends Inventory implements ITypeSlot {
             for (int i = 0; i < this.size(); i++) {
                 if (!this.get(i).isEmpty()) {
 
-                    if ((itemStack.getItem() instanceof ItemQuarryModule) && IUItem.module9.getMeta((ItemQuarryModule) this.get(i).getItem()) == IUItem.module9.getMeta((ItemQuarryModule) itemStack.getItem()) && this
+                    if ((itemStack.getItem() instanceof ItemQuarryModule) && (this.get(i).getItem() instanceof ItemQuarryModule) && IUItem.module9.getMeta((ItemQuarryModule) this.get(i).getItem()) == IUItem.module9.getMeta((ItemQuarryModule) itemStack.getItem()) && this
                             .get(i)
                             .getItem() == itemStack.getItem()) {
                         return false;

@@ -417,7 +417,7 @@ public class ItemVeinSensor<T extends Enum<T> & ISubEnum> extends ItemMain<T> im
         tooltip.add(Component.translatable("iu.sensor.info"));
 
         tooltip.add(Component.translatable("iu.scanner_ore.info4"));
-        tooltip.add(Component.literal(Localization.translate("iu.vein_sensor.info7") + KeyboardClient.changemode.getKey().getDisplayName().getString() + Localization.translate(
+        tooltip.add(Component.literal(Localization.translate("iu.vein_sensor.info7") + com.denfop.utils.ModUtils.cleanComponentString(KeyboardClient.changemode.getKey().getDisplayName().getString()) + Localization.translate(
                 "iu.changemode_rcm")));
 
         tooltip.add(Component.translatable("iu.vein_sensor.info8"));
@@ -483,9 +483,9 @@ public class ItemVeinSensor<T extends Enum<T> & ISubEnum> extends ItemMain<T> im
                             VeinType veinType = veinTypeMap.get(tuple.getB());
                             if (veinTypes.contains(veinType.getId())) {
                                 final String s = Localization.translate("deposists.jei1") + (veinType.getHeavyOre() != null ?
-                                        new ItemStack(veinType.getHeavyOre().getBlock(), 1).getDisplayName().getString() :
-                                        new ItemStack(veinType.getOres().get(0).getBlock().getBlock(), 1
-                                        ).getDisplayName().getString());
+                                        com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(veinType.getHeavyOre().getBlock(), 1).getDisplayName().getString()) :
+                                        com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(veinType.getOres().get(0).getBlock().getBlock(), 1
+                                        ).getDisplayName().getString()));
                                 IUCore.proxy.messagePlayer(
                                         player,
                                         Component.literal(

@@ -34,7 +34,7 @@ public class ScreenEFReader<T extends ContainerMenuEFReader> extends ScreenMain<
     public ScreenEFReader(ContainerMenuEFReader container, final ItemStack itemStack1) {
         super(container);
         this.componentList.clear();
-        this.name = itemStack1.getDisplayName().getString();
+        this.name = com.denfop.utils.ModUtils.cleanComponentString(itemStack1.getDisplayName().getString());
         this.itemStack = itemStack1;
         this.imageHeight = 121;
         this.imageWidth = 188;

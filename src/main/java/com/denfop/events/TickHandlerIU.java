@@ -48,6 +48,7 @@ public class TickHandlerIU {
             event.setAmount(damageAmount);
         }
     }
+
     @SubscribeEvent
     public void hurt(LivingDamageEvent event) {
         if (event.getEntity() instanceof LivingEntity) {

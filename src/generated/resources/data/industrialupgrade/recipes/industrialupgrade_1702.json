@@ -24,8 +24,8 @@
     }
   },
   "pattern": [
-    "DCD",
-    "BAB",
+    "DBD",
+    "CAC",
     "EFE"
   ],
   "result": {

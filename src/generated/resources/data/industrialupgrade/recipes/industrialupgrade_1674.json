@@ -5,7 +5,7 @@
       "tag": "forge:plates/tin"
     },
     "B": {
-      "item": "industrialupgrade:crafting_elements/crafting_276_element"
+      "item": "minecraft:piston"
     },
     "C": {
       "item": "industrialupgrade:upgrade_casing"
@@ -15,9 +15,9 @@
     }
   },
   "pattern": [
-    "ADA",
-    " B ",
-    "ACA"
+    "ABA",
+    " C ",
+    "ADA"
   ],
   "result": {
     "item": "industrialupgrade:upgrades/fluid_ejector"

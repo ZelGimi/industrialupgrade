@@ -123,19 +123,14 @@ public class BlockEntitySteamQuarry extends BlockEntityInventory {
             }
         }
 
-
-        // Post the block break event
         BlockState state = level.getBlockState(pos);
         BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, pos, state, entityPlayer);
         event.setCanceled(preCancelEvent);
         MinecraftForge.EVENT_BUS.post(event);
 
-        // Handle if the event is canceled
         if (event.isCanceled()) {
-            // Let the client know the block still exists
             entityPlayer.connection.send(new ClientboundBlockUpdatePacket(level, pos));
 
-            // Update any tile entity data for this block
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity != null) {
 
@@ -174,7 +169,6 @@ public class BlockEntitySteamQuarry extends BlockEntityInventory {
     @Override
     @OnlyIn(Dist.CLIENT)
     public ScreenIndustrialUpgrade<ContainerMenuBase<? extends CustomWorldContainer>> getGui(Player var1, ContainerMenuBase<? extends CustomWorldContainer> menu) {
-
         return new ScreenSteamQuarry((ContainerMenuSteamQuarry) menu);
     }
 
@@ -201,97 +195,169 @@ public class BlockEntitySteamQuarry extends BlockEntityInventory {
         return IUItem.basemachine2.getBlock(getTeBlock());
     }
 
+    private boolean isPipeColumn(BlockPos targetPos) {
+        return targetPos.getX() == this.pos.getX()
+                && targetPos.getZ() == this.pos.getZ();
+    }
+
+    private boolean isQuarryPipe(BlockState state) {
+        return state.getBlock() instanceof BlockTileEntity
+                && ((BlockTileEntity) state.getBlock()).item == this.stackPipe.getItem();
+    }
+
+    private boolean hasFluid(BlockPos targetPos) {
+        return this.level != null && !this.level.getFluidState(targetPos).isEmpty();
+    }
+
+    private void advanceCursor() {
+        if (this.x >= this.pos.getX() + 1) {
+            this.x = this.pos.getX() - 1;
+            this.z++;
+
+            if (this.z >= this.pos.getZ() + 2) {
+                this.z = this.pos.getZ() - 1;
+                this.y--;
+            }
+        } else {
+            this.x++;
+        }
+    }
+
+    private boolean placePipe(BlockPos targetPos) {
+        if (this.level == null || this.entity == null || this.inventory1.isEmpty()) {
+            return false;
+        }
+
+        BlockState currentState = this.level.getBlockState(targetPos);
+
+        if (currentState.getMaterial() != Material.AIR || hasFluid(targetPos)) {
+            return false;
+        }
+
+        ItemStack pipeStack = this.inventory1.get(0);
+        if (pipeStack.isEmpty() || pipeStack.getItem() != this.stackPipe.getItem()) {
+            return false;
+        }
+
+        if (!(pipeStack.getItem() instanceof ItemBlockTileEntity)) {
+            return false;
+        }
+
+        ItemBlockTileEntity blockTileEntity = (ItemBlockTileEntity) pipeStack.getItem();
+        ItemStack onePipe = pipeStack.copy();
+        onePipe.setCount(1);
+
+        blockTileEntity.placeTeBlock(onePipe, this.entity, this.level, targetPos);
+
+        if (isQuarryPipe(this.level.getBlockState(targetPos))) {
+            pipeStack.shrink(1);
+            return true;
+        }
+
+        return false;
+    }
+
+    private void collectDrops(BlockPos targetPos) {
+        List<ItemEntity> items = this.entity.getLevel().getEntitiesOfClass(
+                ItemEntity.class,
+                new AABB(
+                        targetPos.getX() - 1,
+                        targetPos.getY() - 1,
+                        targetPos.getZ() - 1,
+                        targetPos.getX() + 1,
+                        targetPos.getY() + 1,
+                        targetPos.getZ() + 1
+                )
+        );
+
+        for (ItemEntity item : items) {
+            if (!this.entity.getLevel().isClientSide && !item.isRemoved()) {
+                if (this.output.addWithoutIgnoring(Collections.singletonList(item.getItem()), false)) {
+                    item.setRemoved(Entity.RemovalReason.KILLED);
+                }
+            }
+        }
+    }
+
     @Override
     public void updateEntityServer() {
         super.updateEntityServer();
-        if (!this.inventory.isEmpty() && steam.canUseEnergy(2) && work && !inventory1.isEmpty() && y > -30) {
-            BlockPos pos1 = new BlockPos(x, y, z);
-            final BlockState state = level.getBlockState(pos1);
-            Block block1 = state.getBlock();
-            steam.useEnergy(2);
-            if ((state.getMaterial() == Material.AIR || state.getDestroySpeed(level, pos1) < 0) && onBlockBreakEvent(level,
-                    GameType.SURVIVAL,
-                    entity, pos1
-            ) != -1) {
-                if (x == pos.getX() && z == pos.getZ()) {
-                    if (state.getDestroySpeed(level, pos1) < 0) {
-                        return;
-                    }
-                    inventory1.get(0).shrink(1);
-                    ItemBlockTileEntity blockTileEntity = (ItemBlockTileEntity) stackPipe.getItem();
-                    blockTileEntity.placeTeBlock(stackPipe, entity, level, pos1);
 
-                }
-                if (x == this.pos.getX() + 1) {
-                    x = this.pos.getX() - 1;
-                    z++;
-                    if (z == this.pos.getZ() + 2) {
-                        z = this.pos.getZ() - 1;
-                        y--;
-                    }
-                } else {
-                    x++;
-                }
-                return;
-            }
-            if (onBlockBreakEvent(level, GameType.SURVIVAL, entity, pos1) == -1) {
-
-                if (x == this.pos.getX() + 2) {
-                    x = this.pos.getX() - 1;
-                    z++;
-                    if (z == this.pos.getZ() + 2) {
-                        z = this.pos.getZ() - 1;
-                        y--;
-                    }
-                } else {
-                    x++;
-                }
-                return;
-            }
-
-
-            if (!(block1 instanceof BlockTileEntity) && block1.onDestroyedByPlayer(state, level, pos1, entity, true, level.getFluidState(pos1))) {
-                block1.destroy(level, pos1, state);
-                block1.playerDestroy(level, entity, pos1, state, null, entity.getMainHandItem());
-                List<ItemEntity> items = entity.getLevel().getEntitiesOfClass(
-                        ItemEntity.class,
-                        new AABB(pos1.getX() - 1, pos1.getY() - 1, pos1.getZ() - 1, pos1.getX() + 1,
-                                pos1.getY() + 1,
-                                pos1.getZ() + 1
-                        )
-                );
-                for (ItemEntity item : items) {
-                    if (!entity.getLevel().isClientSide && !item.isRemoved()) {
-                        if (this.output.addWithoutIgnoring(Collections.singletonList(item.getItem()), false)) {
-                            item.setRemoved(Entity.RemovalReason.KILLED);
-                        }
-
-                    }
-                }
-                if (x == this.getPos().getX() && z == this.getPos().getZ()) {
-                    ItemBlockTileEntity blockTileEntity = (ItemBlockTileEntity) stackPipe.getItem();
-                    blockTileEntity.placeTeBlock(stackPipe, entity, level, pos1);
-                    inventory1.get(0).shrink(1);
-                }
-            } else {
-                if (x == this.getPos().getX() && z == this
-                        .getPos()
-                        .getZ() && (block1 instanceof BlockTileEntity && ((BlockTileEntity) block1).item == stackPipe.getItem())) {
-
-                }
-                if (x == this.pos.getX() + 1) {
-                    x = this.pos.getX() - 1;
-                    z++;
-                    if (z == this.pos.getZ() + 1) {
-                        z = this.pos.getZ() - 1;
-                        y--;
-                    }
-                } else {
-                    x++;
-                }
-            }
-
+        if (this.level == null || this.entity == null) {
+            return;
         }
+
+        if (this.inventory.isEmpty()
+                || !this.work
+                || this.inventory1.isEmpty()
+                || this.y <= -30) {
+            return;
+        }
+
+        BlockPos targetPos = new BlockPos(this.x, this.y, this.z);
+        BlockState state = this.level.getBlockState(targetPos);
+        Block block = state.getBlock();
+
+        boolean pipeColumn = isPipeColumn(targetPos);
+
+        if (pipeColumn && isQuarryPipe(state)) {
+            advanceCursor();
+            return;
+        }
+
+        if (pipeColumn && hasFluid(targetPos)) {
+            return;
+        }
+
+        if (!this.steam.canUseEnergy(2)) {
+            return;
+        }
+
+        this.steam.useEnergy(2);
+
+        if (state.getMaterial() == Material.AIR) {
+            if (pipeColumn) {
+                if (onBlockBreakEvent(this.level, GameType.SURVIVAL, this.entity, targetPos) == -1) {
+                    return;
+                }
+
+                if (!placePipe(targetPos)) {
+                    return;
+                }
+            }
+
+            advanceCursor();
+            return;
+        }
+
+        if (state.getDestroySpeed(this.level, targetPos) < 0) {
+            advanceCursor();
+            return;
+        }
+
+        if (onBlockBreakEvent(this.level, GameType.SURVIVAL, this.entity, targetPos) == -1) {
+            advanceCursor();
+            return;
+        }
+
+        BlockEntity brokenBlockEntity = this.level.getBlockEntity(targetPos);
+
+        if (!(block instanceof BlockTileEntity)
+                && block.onDestroyedByPlayer(state, this.level, targetPos, this.entity, true, this.level.getFluidState(targetPos))) {
+
+            block.destroy(this.level, targetPos, state);
+            block.playerDestroy(this.level, this.entity, targetPos, state, brokenBlockEntity, this.entity.getMainHandItem());
+
+            collectDrops(targetPos);
+
+            if (pipeColumn) {
+                if (!placePipe(targetPos)) {
+                    return;
+                }
+            }
+        }
+
+        advanceCursor();
     }
 
 }

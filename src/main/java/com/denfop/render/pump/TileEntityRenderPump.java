@@ -1,6 +1,7 @@
 package com.denfop.render.pump;
 
 import com.denfop.blockentity.mechanism.BlockEntityPrimalPump;
+import com.denfop.utils.Localization;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import net.minecraft.client.Minecraft;
@@ -31,9 +32,9 @@ public class TileEntityRenderPump implements BlockEntityRenderer<BlockEntityPrim
 
             Component text;
             if (tile.fluidTank.getFluid().isEmpty()) {
-                text = Component.literal("FluidTank: 0/" + tile.fluidTank.getCapacity());
+                text = Component.literal(Localization.translate("iu.tooltip.fluid_tank") + "0/" + tile.fluidTank.getCapacity());
             } else {
-                text = Component.literal(tile.fluidTank.getFluid().getDisplayName().getString() + ": " +
+                text = Component.literal(com.denfop.utils.ModUtils.cleanComponentString(tile.fluidTank.getFluid().getDisplayName().getString()) + ": " +
                         tile.fluidTank.getFluidAmount() + "/" + tile.fluidTank.getCapacity());
             }
 

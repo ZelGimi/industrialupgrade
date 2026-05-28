@@ -21,6 +21,7 @@ public class EnergyBase {
     public static com.denfop.api.otherenergies.common.networking.GlobalNet ampere;
     public static com.denfop.api.otherenergies.common.networking.GlobalNet biofuel;
     public static com.denfop.api.otherenergies.common.networking.GlobalNet NE;
+    public static com.denfop.api.otherenergies.common.networking.GlobalNet storage;
 
     public static void init() {
         handler = new EnergyHandler();
@@ -33,6 +34,7 @@ public class EnergyBase {
         steam = new com.denfop.api.otherenergies.common.networking.GlobalNet(EnergyType.STEAM);
         ampere = new com.denfop.api.otherenergies.common.networking.GlobalNet(EnergyType.AMPERE);
         biofuel = new com.denfop.api.otherenergies.common.networking.GlobalNet(EnergyType.BIOFUEL);
+        storage = new com.denfop.api.otherenergies.common.networking.GlobalNet(EnergyType.STORAGE);
 
     }
 

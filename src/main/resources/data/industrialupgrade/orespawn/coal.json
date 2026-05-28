@@ -1,0 +1,11 @@
+{
+  "ore_block": "minecraft:coal_ore",
+  "replace_block": "minecraft:stone",
+  "min_height": 0,
+  "max_height": 128,
+  "min_vein_size": 4,
+  "max_vein_size": 17,
+  "min_veins_per_chunk": 15,
+  "max_veins_per_chunk": 30,
+  "chance": 0.9
+}

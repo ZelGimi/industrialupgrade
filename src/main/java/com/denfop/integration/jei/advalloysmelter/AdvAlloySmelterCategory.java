@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.advalloysmelter;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.api.recipe.InventoryOutput;
@@ -102,11 +103,10 @@ public class AdvAlloySmelterCategory extends ScreenMain implements IRecipeCatego
         final List<ItemStack> inputs = Arrays.asList(recipes.getInput(), recipes.getInput1(), recipes.getInput2());
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX() - 20, slots1.get(i).getJeiY() + 15).addItemStack(inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX() - 20, slots1.get(i).getJeiY() + 15).addItemStacks(JeiIngredientHelper.getInputVariants(recipes, i, inputs.get(i)));
 
 
         }
-        builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStacks(recipes.getContainer().input.getAllStackInputs());
 
         final SlotInvSlot outputSlot = container1.findClassSlot(InventoryOutput.class);
         builder.addSlot(RecipeIngredientRole.OUTPUT, outputSlot.getJeiX(), outputSlot.getJeiY()).addItemStack(recipes.getOutput());

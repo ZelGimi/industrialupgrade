@@ -33,7 +33,7 @@ public class ItemStackLegsBags extends ItemStackInventory {
         this.itemStack1 = stack;
         this.coef = 1D - (UpgradeSystem.system.hasModules(EnumInfoUpgradeModules.ENERGY, stack) ?
                 UpgradeSystem.system.getModules(EnumInfoUpgradeModules.ENERGY, stack).number * 0.25D : 0);
-        this.updatelist();
+
     }
 
     public ContainerMenuBase<ItemStackLegsBags> getGuiContainer(Player player) {

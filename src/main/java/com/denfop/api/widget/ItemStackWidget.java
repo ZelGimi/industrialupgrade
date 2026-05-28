@@ -25,7 +25,7 @@ public class ItemStackWidget extends ScreenWidget {
         ItemStack stack = this.itemSupplier.get();
         if (!ModUtils.isEmpty(stack)) {
             RenderSystem.enableBlend();
-            this.gui.drawItemStack( this.x, this.y, stack);
+            this.gui.drawItemStack(this.x, this.y, stack);
             RenderSystem.disableBlend();
         }
 

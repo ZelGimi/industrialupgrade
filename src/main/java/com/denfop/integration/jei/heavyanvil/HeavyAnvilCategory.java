@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.heavyanvil;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.blockentity.base.BlockEntityBaseHandlerHeavyOre;
@@ -80,10 +81,9 @@ public class HeavyAnvilCategory extends ScreenMain implements IRecipeCategory<He
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, HeavyAnvilHandler recipes, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 5, 25).addItemStack(recipes.getInput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 5, 25).addItemStacks(JeiIngredientHelper.getInputVariants(recipes, 0, recipes.getInput()));
         builder.addSlot(RecipeIngredientRole.INPUT, 30, 25).addItemStack(new ItemStack(IUItem.ObsidianForgeHammer.getItem()));
         builder.addSlot(RecipeIngredientRole.OUTPUT, 60, 25).addItemStack(recipes.getOutput());
-        builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStacks(recipes.getContainer().input.getAllStackInputs());
 
 
     }

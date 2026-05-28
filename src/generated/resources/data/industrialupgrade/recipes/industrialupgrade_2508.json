@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "tag": "forge:plates/bloodstone"
+    },
+    "B": {
+      "tag": "forge:plates/stellite"
+    },
+    "C": {
+      "tag": "forge:plates/woods"
+    },
+    "D": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/quantumcircuit",
+      "nbt": "{level:8}"
+    }
+  },
+  "pattern": [
+    " A ",
+    "BDB",
+    "BCB"
+  ],
+  "result": {
+    "item": "industrialupgrade:space/planetary_translocator"
+  }
+}

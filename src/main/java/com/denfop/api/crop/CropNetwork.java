@@ -9,6 +9,7 @@ import com.denfop.api.pollution.component.ChunkLevel;
 import com.denfop.api.pollution.radiation.Radiation;
 import com.denfop.blockentity.crop.TileEntityCrop;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
@@ -116,12 +117,12 @@ public class CropNetwork {
         return null;
     }
 
-    public boolean canPlantCrop(ItemStack stack, Level world, BlockPos pos, BlockState downBlock, Biome biome) {
+    public boolean canPlantCrop(ItemStack stack, Level world, BlockPos pos, BlockState downBlock, Holder<Biome> biome) {
         Crop crop = getCropFromStack(stack);
         if (crop == null) {
             return false;
         }
-        if (crop.isIgnoreSoil() || ((crop.getSoil().getState() == downBlock && !crop.getSoil().isIgnore()) || (crop
+        if (crop.isIgnoreSoil() || ((crop.getSoil().getState().getBlock() == downBlock.getBlock() && !crop.getSoil().isIgnore()) || (crop
                 .getSoil()
                 .getBlock() == downBlock.getBlock() && crop.getSoil().isIgnore())) || (crop.getSoil() == EnumSoil.FARMLAND && downBlock.getBlock() == IUItem.humus.getBlock(0))) {
             return true;
@@ -135,7 +136,7 @@ public class CropNetwork {
 
     public boolean canGrow(
             Level world, BlockPos pos, ChunkPos chunkPos, Crop crop, final Radiation radLevel,
-            final ChunkAccess chunk, Biome biome, final ChunkLevel chunkLevel
+            final ChunkAccess chunk, Holder<Biome> biome, final ChunkLevel chunkLevel
     ) {
         if ((radLevel == null || radLevel.getLevel().ordinal() <= crop.getRadiationRequirements().ordinal()) && isWaterNearby(world
                 , pos,
@@ -164,7 +165,7 @@ public class CropNetwork {
 
     public boolean canMultiGrow(
             Level world, BlockPos pos, ChunkPos chunkPos, Crop crop, final Radiation radLevel,
-            final ChunkAccess chunk, Biome biome, final ChunkLevel chunkLevel
+            final ChunkAccess chunk, Holder<Biome> biome, final ChunkLevel chunkLevel
     ) {
         if (radLevel.getLevel().ordinal() <= crop.getRadiationRequirements().ordinal()) {
             int light = (int) (world.getRawBrightness(pos, 0));

@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.antiupgradeblock;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.integration.jei.IRecipeCategory;
@@ -62,7 +63,7 @@ public class AntiUpgradeBlockCategory extends Gui implements IRecipeCategory<Ant
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, AntiUpgradeBlockHandler recipes, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 102, 31).addItemStack(recipes.getInput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 102, 31).addItemStacks(JeiIngredientHelper.getInputVariants(recipes, 0, recipes.getInput()));
         builder.addSlot(RecipeIngredientRole.OUTPUT, 89, 59).addItemStack(recipes.getOutput());
 
     }

@@ -4,12 +4,10 @@ import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
 import com.denfop.api.menu.VirtualSlot;
 import com.denfop.api.upgrades.BlockEntityUpgrade;
+import com.denfop.api.upgrades.EnumBlockEntityUpgrade;
 import com.denfop.api.upgrades.UpgradeItem;
 import com.denfop.blocks.BlockTileEntity;
-import com.denfop.componets.AbstractComponent;
-import com.denfop.componets.AirPollutionComponent;
-import com.denfop.componets.ComponentPrivate;
-import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.componets.*;
 import com.denfop.componets.client.ComponentClientEffectRender;
 import com.denfop.containermenu.ContainerMenuBase;
 import com.denfop.inventory.Inventory;
@@ -132,7 +130,7 @@ public class BlockEntityInventory extends BlockEntityBase implements CustomWorld
                     UpgradeItem iUpgradeItem = (UpgradeItem) stack.getItem();
                     BlockEntityUpgrade upgradableBlock = (BlockEntityUpgrade) this;
 
-                    if (iUpgradeItem.isSuitableFor(stack, upgradableBlock.getUpgradableProperties())) {
+                    if (iUpgradeItem.isSuitableFor(stack, upgradableBlock.getAllPossibleUpgradableProperties())) {
                         for (final Inventory invslot : this.inventories) {
                             if (invslot instanceof InventoryUpgrade upgrade) {
                                 if (upgrade.add(stack)) {
@@ -173,7 +171,54 @@ public class BlockEntityInventory extends BlockEntityBase implements CustomWorld
             NetworkHooks.openScreen((ServerPlayer) player, this, buf -> buf.writeBytes(growingBuffer));
         }
     }
+    private Set<EnumBlockEntityUpgrade> cachedAllPossibleUpgradableProperties;
+    public Set<EnumBlockEntityUpgrade> getAllPossibleUpgradableProperties() {
+        if (this.cachedAllPossibleUpgradableProperties != null) {
+            return this.cachedAllPossibleUpgradableProperties;
+        }
 
+        if (!(this instanceof BlockEntityUpgrade upgradableBlock)) {
+            this.cachedAllPossibleUpgradableProperties = Collections.emptySet();
+            return this.cachedAllPossibleUpgradableProperties;
+        }
+        Set<EnumBlockEntityUpgrade> set = EnumSet.noneOf(EnumBlockEntityUpgrade.class);
+        Set<EnumBlockEntityUpgrade> baseProperties = upgradableBlock.getUpgradableProperties();
+        if (baseProperties != null && !baseProperties.isEmpty()) {
+            set.addAll(baseProperties);
+        }
+
+        if (!this.inputSlots.isEmpty()) {
+            set.add(EnumBlockEntityUpgrade.ItemInput);
+        }
+
+        if (!this.outputSlots.isEmpty()) {
+            set.add(EnumBlockEntityUpgrade.ItemExtract);
+        }
+
+        if (this.hasComponent(ComponentProcess.class) || this.hasComponent(ProcessMultiComponent.class)) {
+            set.add(EnumBlockEntityUpgrade.Processing);
+        }
+
+        if (this.hasComponent(Energy.class)) {
+            set.add(EnumBlockEntityUpgrade.Transformer);
+            set.add(EnumBlockEntityUpgrade.EnergyStorage);
+        }
+
+        if (this.hasComponent(Fluids.class)) {
+            Fluids fluids = this.getComp(Fluids.class);
+
+            if (fluids.isHasInput()) {
+                set.add(EnumBlockEntityUpgrade.FluidInput);
+            }
+
+            if (fluids.isHasExtract()) {
+                set.add(EnumBlockEntityUpgrade.FluidExtract);
+            }
+        }
+
+        this.cachedAllPossibleUpgradableProperties = Collections.unmodifiableSet(set);
+        return this.cachedAllPossibleUpgradableProperties;
+    }
     public Tuple<Integer, Integer> locateInfoInvSlot(int extIndex) {
         try {
             return this.indexInventoryList.get(extIndex);
@@ -224,8 +269,6 @@ public class BlockEntityInventory extends BlockEntityBase implements CustomWorld
             }
         }
     }
-
-
 
 
     @Override
@@ -489,7 +532,7 @@ public class BlockEntityInventory extends BlockEntityBase implements CustomWorld
         int index = 0;
         for (Inventory slot : this.inventories) {
             for (int k = 0; k < slot.size(); k++) {
-                indexInventoryList.put(amount,new Tuple<>(index,k));
+                indexInventoryList.put(amount, new Tuple<>(index, k));
                 amount++;
             }
             index++;
@@ -507,6 +550,7 @@ public class BlockEntityInventory extends BlockEntityBase implements CustomWorld
         Inventory inventory;
         for (Iterator<Inventory> var2 = this.inventories.iterator(); var2.hasNext(); size_inventory += inventory.size()) {
             inventory = var2.next();
+            inventory.setChanged();
         }
     }
 

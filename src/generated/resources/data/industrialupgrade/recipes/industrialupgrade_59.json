@@ -2,22 +2,19 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "A": {
-      "item": "industrialupgrade:transformer_iu/umv"
+      "item": "industrialupgrade:upgrades/transformerupgrade1"
     },
     "B": {
       "item": "industrialupgrade:extreme_current_converter_to_low"
-    },
-    "C": {
-      "item": "industrialupgrade:upgrade_casing"
     },
     "D": {
       "item": "industrialupgrade:wiring/gold1"
     }
   },
   "pattern": [
-    " A ",
+    "A A",
     "DBD",
-    " C "
+    "   "
   ],
   "result": {
     "item": "industrialupgrade:upgrades/transformerupgrade2"

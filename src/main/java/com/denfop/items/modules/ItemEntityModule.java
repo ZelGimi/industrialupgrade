@@ -106,7 +106,7 @@ public class ItemEntityModule<T extends Enum<T> & ISubEnum> extends ItemMain<T> 
             if (entity instanceof Player) {
                 ItemStack stackCopy = stack.copy();
                 CompoundTag tag = new CompoundTag();
-                tag.putString("name", entity.getDisplayName().getString());
+                tag.putString("name", com.denfop.utils.ModUtils.cleanComponentString(entity.getDisplayName().getString()));
                 stack.shrink(1);
 
                 double dx = (player.getLevel().random.nextDouble() * 0.7D) + 0.15D;

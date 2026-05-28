@@ -26,19 +26,14 @@ import com.denfop.utils.ModUtils;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.config.Config;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
@@ -136,9 +131,6 @@ public class MyProbeInfoProvider implements IProbeInfoProvider {
         );
     }
 
-    public static TextureAtlas getBlockTextureMap() {
-        return (TextureAtlas) Minecraft.getInstance().getTextureManager().getTexture(InventoryMenu.BLOCK_ATLAS);
-    }
 
     @Override
     public ResourceLocation getID() {
@@ -633,10 +625,6 @@ public class MyProbeInfoProvider implements IProbeInfoProvider {
                             Fluid fluid = fluidStack.getFluid();
                             int amount = fluidStack.getAmount();
                             int capacity = tank.getCapacity();
-                            IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
-                            TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fluidStack));
-                            int color = extensions.getTintColor();
-
                             probeInfo.horizontal().text(Localization.translate(fluid.getFluidType().getDescriptionId()) + ": " + String.format("§b%d / %d mB", amount, capacity));
                         } else {
                             probeInfo.text(Component.literal("§7" + Localization.translate("iu.probe.recipe.empty")));

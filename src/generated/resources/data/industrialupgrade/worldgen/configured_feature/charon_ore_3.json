@@ -1,0 +1,20 @@
+{
+  "type": "industrialupgrade:space_generic_ore",
+  "config": {
+    "body_id": "charon",
+    "depth_bonus": 0.35,
+    "distribution_type": "vein",
+    "horizontal_radius": 10,
+    "max_y": 72,
+    "min_y": -40,
+    "ore_block_id": "industrialupgrade:blockspace/charon_zinc",
+    "path_length": 20,
+    "replaceable_block_ids": [
+      "industrialupgrade:spacestone/charon_stone",
+      "industrialupgrade:spacecobblestone/charon_cobblestone"
+    ],
+    "require_near_lava": true,
+    "size": 10,
+    "vertical_radius": 5
+  }
+}

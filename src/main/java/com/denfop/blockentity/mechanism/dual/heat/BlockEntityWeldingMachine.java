@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.dual.heat;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -40,10 +42,10 @@ public class BlockEntityWeldingMachine extends BlockEntityDoubleElectricMachine 
     private final AirPollutionComponent pollutionAir;
 
     public BlockEntityWeldingMachine(BlockPos pos, BlockState state) {
-        super(1, 140, 1, EnumDoubleElectricMachine.WELDING, BlockBaseMachine3Entity.welding, pos, state);
+        super(ModConfig.mechanismInt("welding_machine_energy_per_tick", 1), ModConfig.mechanismInt("welding_machine_operation_length", 140), 1, EnumDoubleElectricMachine.WELDING, BlockBaseMachine3Entity.welding, pos, state);
         Recipes.recipes.addInitRecipes(this);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.2));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("welding_machine_soil_pollution_amount", 0.1D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("welding_machine_air_pollution_amount", 0.2D)));
         this.input_slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
             public ItemStack set(final int index, final ItemStack content) {

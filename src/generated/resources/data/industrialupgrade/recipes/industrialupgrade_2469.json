@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "tag": "forge:plates/permalloy"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_786_element"
+    },
+    "C": {
+      "tag": "forge:plates/molybdenumsteel"
+    },
+    "D": {
+      "tag": "forge:plates/draconid"
+    }
+  },
+  "pattern": [
+    "ACA",
+    "DDD",
+    "ABA"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_787_element"
+  }
+}

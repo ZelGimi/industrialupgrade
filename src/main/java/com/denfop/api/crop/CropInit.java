@@ -6,6 +6,7 @@ import com.denfop.api.bee.BeeInit;
 import com.denfop.api.crop.genetics.GeneticTraits;
 import com.denfop.api.crop.genetics.GeneticsManager;
 import com.denfop.api.crop.genetics.Genome;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -553,9 +554,9 @@ public class CropInit {
         com.denfop.api.bee.genetics.GeneticTraits.init();
     }
 
-    public static void initBiomes() {
+    public static void initBiomes(RegistryAccess registryAccess) {
         if (geneticBiomes.isEmpty()) {
-            Genome.init();
+            Genome.init(registryAccess);
         }
         geneticBiomes.get(GeneticTraits.BIOME).forEach(biome -> {
             wheat_seed.addBiome(biome);

@@ -4,11 +4,10 @@ import com.denfop.api.container.CustomWorldContainer;
 import com.denfop.inventory.Inventory;
 import com.denfop.utils.ModUtils;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class InventoryOutput extends Inventory {
 
@@ -34,11 +33,24 @@ public class InventoryOutput extends Inventory {
     }
 
     public boolean canAdd(List<ItemStack> stacks) {
-        boolean can = true;
+        Set<Item> seen = new HashSet<>();
+
         for (ItemStack stack : stacks) {
-            can = can && this.canAdd(stack);
+            if (stack == null || stack.isEmpty()) continue;
+
+            Item item = stack.getItem();
+            if (seen.contains(item)) {
+                continue;
+            }
+
+            if (!this.canAdd(stack)) {
+                return false;
+            }
+
+            seen.add(item);
         }
-        return can;
+
+        return true;
     }
 
     public void add(ItemStack stack, int size) {
@@ -175,13 +187,19 @@ public class InventoryOutput extends Inventory {
     }
 
     public boolean addWithoutIgnoring(List<ItemStack> stacks, boolean simulate) {
-
+        Set<Item> seen = new HashSet<>();
         if (stacks != null && !stacks.isEmpty()) {
             LinkedList<Integer> linkedList = new LinkedList<>();
             int col = 0;
             cycle:
             for (ItemStack stack : stacks) {
-
+                if (simulate) {
+                    if (seen.contains(stack.getItem())) {
+                        col++;
+                        continue;
+                    }
+                    seen.add(stack.getItem());
+                }
                 int minSlot = this.size();
                 for (int i = 0; i < this.size(); i++) {
                     if (this.get(i).isEmpty()) {

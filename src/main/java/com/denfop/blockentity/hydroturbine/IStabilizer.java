@@ -1,8 +1,8 @@
 package com.denfop.blockentity.hydroturbine;
 
-import com.denfop.api.multiblock.MultiBlockElement;
+import com.denfop.api.multiblock.IMultiElement;
 
-public interface IStabilizer extends MultiBlockElement {
+public interface IStabilizer extends IMultiElement {
 
 
 }

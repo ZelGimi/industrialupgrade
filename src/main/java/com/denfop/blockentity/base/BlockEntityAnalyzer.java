@@ -1,5 +1,7 @@
 package com.denfop.blockentity.base;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -89,7 +91,7 @@ public class BlockEntityAnalyzer extends BlockEntityElectricMachine implements I
     private int indexVein;
 
     public BlockEntityAnalyzer(BlockPos pos, BlockState state) {
-        super(10000000, 14, 1, BlockBaseMachine2Entity.analyzer, pos, state);
+        super(ModConfig.mechanismDouble("analyze_energy_storage", 10000000.0D), 14, 1, BlockBaseMachine2Entity.analyzer, pos, state);
 
         this.analysis = false;
         this.numberores = 0;
@@ -106,8 +108,8 @@ public class BlockEntityAnalyzer extends BlockEntityElectricMachine implements I
         this.size = 0;
         this.chunkx = 0;
         this.chunkz = 0;
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.5));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 1));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("analyze_soil_pollution_amount", 0.5D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("analyze_air_pollution_amount", 1.0D)));
     }
 
     public DataOreList<DataOre> getDataOreList() {
@@ -646,13 +648,13 @@ public class BlockEntityAnalyzer extends BlockEntityElectricMachine implements I
     public CompoundTag writeToNBT(CompoundTag nbttagcompound) {
         super.writeToNBT(nbttagcompound);
 
-
-        for (int i = 0; i < this.xendcoord; i++) {
-            for (int j = 0; j < this.zendcoord; j++) {
-                nbttagcompound.putInt(("chunksx" + i + j), this.chunksx[i][j]);
-                nbttagcompound.putInt(("chunksz" + i + j), this.chunksz[i][j]);
+        if (chunksx != null && chunksz != null)
+            for (int i = 0; i < this.xendcoord; i++) {
+                for (int j = 0; j < this.zendcoord; j++) {
+                    nbttagcompound.putInt(("chunksx" + i + j), this.chunksx[i][j]);
+                    nbttagcompound.putInt(("chunksz" + i + j), this.chunksz[i][j]);
+                }
             }
-        }
 
 
         nbttagcompound.putBoolean("start", this.start);

@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -45,7 +47,7 @@ public class BlockEntityPlasticPlateCreator extends BlockEntityBasePlasticPlateC
     private final AirPollutionComponent pollutionAir;
 
     public BlockEntityPlasticPlateCreator(BlockPos pos, BlockState state) {
-        super(1, 300, 1, BlockBaseMachine2Entity.plastic_plate_creator, pos, state);
+        super(ModConfig.mechanismInt("plastic_plate_machine_energy_per_tick", 1), ModConfig.mechanismInt("plastic_plate_machine_operation_length", 300), 1, BlockBaseMachine2Entity.plastic_plate_creator, pos, state);
         this.inputSlotA = new InventoryRecipes(this, "plasticplate", this, this.fluidTank);
         fluidTank.setTypeItemSlot(Inventory.TypeItemSlot.INPUT);
         this.componentProcess.setInvSlotRecipes(inputSlotA);
@@ -73,8 +75,8 @@ public class BlockEntityPlasticPlateCreator extends BlockEntityBasePlasticPlateC
                 return EnumTypeSlot.RECIPE_SCHEDULE;
             }
         };
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("plastic_plate_machine_soil_pollution_amount", 0.1D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("plastic_plate_machine_air_pollution_amount", 0.1D)));
     }
 
     @Override
@@ -140,7 +142,10 @@ public class BlockEntityPlasticPlateCreator extends BlockEntityBasePlasticPlateC
                 new FluidStack(FluidName.fluidglowstone.getInstance().get(), 125),
                 input.getInput(new ItemStack(IUItem.iudust.getStack(75), 1))
         ), new RecipeOutput(null, new ItemStack(Items.ENDER_PEARL))));
-
+        Recipes.recipes.addRecipe("plasticplate", new BaseMachineRecipe(new Input(
+                new FluidStack(FluidName.fluidnitrogen.getInstance().get(), 50),
+                input.getInput(new ItemStack(IUItem.crafting_elements.getStack(790)))
+        ), new RecipeOutput(null, new ItemStack(IUItem.ore2.getItem(6)))));
         Recipes.recipes.addRecipe("plasticplate", new BaseMachineRecipe(new Input(
                 new FluidStack(FluidName.fluidglowstone.getInstance().get(), 125),
                 input.getInput(new ItemStack(IUItem.iudust.getStack(77), 1))

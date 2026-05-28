@@ -1,9 +1,9 @@
 package com.denfop.blockentity.cyclotron;
 
-import com.denfop.api.multiblock.MultiBlockElement;
+import com.denfop.api.multiblock.IMultiElement;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
-public interface ICryogen extends MultiBlockElement {
+public interface ICryogen extends IMultiElement {
 
     FluidTank getCryogenTank();
 

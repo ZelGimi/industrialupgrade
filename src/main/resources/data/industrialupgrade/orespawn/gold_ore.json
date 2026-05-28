@@ -1,0 +1,11 @@
+{
+  "ore_block": "minecraft:gold_ore",
+  "replace_block": "minecraft:stone",
+  "min_height": 0,
+  "max_height": 32,
+  "min_vein_size": 2,
+  "max_vein_size": 6,
+  "min_veins_per_chunk": 4,
+  "max_veins_per_chunk": 8,
+  "chance": 0.7
+}

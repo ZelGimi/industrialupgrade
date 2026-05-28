@@ -16,12 +16,6 @@
       "item": "minecraft:diamond_shovel",
       "nbt": "{Damage:0}"
     },
-    "E": {
-      "type": "forge:nbt",
-      "count": 1,
-      "item": "industrialupgrade:circuit/nanocircuit",
-      "nbt": "{level:5}"
-    },
     "F": {
       "item": "industrialupgrade:crafting_elements/crafting_524_element"
     },
@@ -31,7 +25,7 @@
   },
   "pattern": [
     "ADB",
-    "EFE",
+    "CFC",
     "CHC"
   ],
   "result": {

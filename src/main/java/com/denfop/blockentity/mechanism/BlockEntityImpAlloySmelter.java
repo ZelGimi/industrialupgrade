@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -59,7 +61,7 @@ public class BlockEntityImpAlloySmelter extends BlockEntityElectricMachine imple
     public MachineRecipe output;
 
     public BlockEntityImpAlloySmelter(BlockPos pos, BlockState state) {
-        super(300, 1, 1, BlockBaseMachine3Entity.imp_alloy_smelter, pos, state);
+        super(ModConfig.mechanismDouble("advanced_alloy_smelter_energy_storage", 300.0D), 1, 1, BlockBaseMachine3Entity.imp_alloy_smelter, pos, state);
         this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.inputSlotA = new InventoryRecipes(this, "impalloysmelter", this);
         this.dischargeSlot = new InventoryDischarge(this, Inventory.TypeItemSlot.INPUT, 1, false);
@@ -98,8 +100,8 @@ public class BlockEntityImpAlloySmelter extends BlockEntityElectricMachine imple
                 return EnumTypeSlot.RECIPE_SCHEDULE;
             }
         };
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.125));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("advanced_alloy_smelter_soil_pollution_amount", 0.05D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("advanced_alloy_smelter_air_pollution_amount", 0.125D)));
     }
 
     public static void addAlloysmelter(
@@ -133,7 +135,7 @@ public class BlockEntityImpAlloySmelter extends BlockEntityElectricMachine imple
             tooltip.add(Localization.translate("iu.heatmachine.info"));
             tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getEnergyConsume() + Localization.translate(
                     "iu.machines_work_energy_type_eu"));
-            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getOperationsPerTick());
+            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getDefaultOperationLength());
 
         }
 
@@ -223,7 +225,7 @@ public class BlockEntityImpAlloySmelter extends BlockEntityElectricMachine imple
                 )
                 , 5000);
 
-        addAlloysmelter(new ItemStack(Items.IRON_INGOT, 2), new ItemStack(Items.COAL, 3), "forge:ingots/Nickel", "forge:ingots/Manganese",
+        addAlloysmelter(new ItemStack(Items.IRON_INGOT, 1), new ItemStack(Items.COAL, 1), "forge:ingots/Nickel", "forge:ingots/Manganese",
                 IUItem.advIronIngot
                 , 5000
         );

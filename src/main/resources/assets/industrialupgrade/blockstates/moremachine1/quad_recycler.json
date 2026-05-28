@@ -15,37 +15,6 @@
       "model": "industrialupgrade:block/moremachine1/quad_recycler",
       "y": 90
     },
-    "facing=down,type=quad_recycler": {
-      "model": "industrialupgrade:block/moremachine1/quad_recycler",
-      "x": 90
-    },
-    "facing=up,type=quad_recycler": {
-      "model": "industrialupgrade:block/moremachine1/quad_recycler",
-      "x": 270
-    },
-    "facing=north,type=quad_recycler_invalid": {
-      "model": "industrialupgrade:block/moremachine1/quad_recycler_active"
-    },
-    "facing=south,type=quad_recycler_invalid": {
-      "model": "industrialupgrade:block/moremachine1/quad_recycler_active",
-      "y": 180
-    },
-    "facing=west,type=quad_recycler_invalid": {
-      "model": "industrialupgrade:block/moremachine1/quad_recycler_active",
-      "y": 270
-    },
-    "facing=east,type=quad_recycler_invalid": {
-      "model": "industrialupgrade:block/moremachine1/quad_recycler_active",
-      "y": 90
-    },
-    "facing=down,type=quad_recycler_invalid": {
-      "model": "industrialupgrade:block/moremachine1/quad_recycler_active",
-      "x": 90
-    },
-    "facing=up,type=quad_recycler_invalid": {
-      "model": "industrialupgrade:block/moremachine1/quad_recycler_active",
-      "x": 270
-    },
     "facing=north,type=quad_recycler_active": {
       "model": "industrialupgrade:block/moremachine1/quad_recycler_active"
     },
@@ -61,12 +30,20 @@
       "model": "industrialupgrade:block/moremachine1/quad_recycler_active",
       "y": 90
     },
+    "facing=up,type=quad_recycler_active": {
+      "model": "industrialupgrade:block/moremachine1/quad_recycler_active",
+      "x": 270
+    },
+    "facing=down,type=quad_recycler": {
+      "model": "industrialupgrade:block/moremachine1/quad_recycler",
+      "x": 90
+    },
     "facing=down,type=quad_recycler_active": {
       "model": "industrialupgrade:block/moremachine1/quad_recycler_active",
       "x": 90
     },
-    "facing=up,type=quad_recycler_active": {
-      "model": "industrialupgrade:block/moremachine1/quad_recycler_active",
+    "facing=up,type=quad_recycler": {
+      "model": "industrialupgrade:block/moremachine1/quad_recycler",
       "x": 270
     }
   }

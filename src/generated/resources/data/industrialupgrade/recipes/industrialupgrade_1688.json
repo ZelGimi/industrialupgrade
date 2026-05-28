@@ -10,8 +10,8 @@
     "B": {
       "type": "forge:nbt",
       "count": 1,
-      "item": "industrialupgrade:circuit/nanocircuit",
-      "nbt": "{level:5}"
+      "item": "minecraft:diamond_helmet",
+      "nbt": "{Damage:0}"
     },
     "C": {
       "item": "industrialupgrade:battery/energy_crystal"
@@ -25,8 +25,8 @@
   },
   "pattern": [
     "DCD",
-    "BAB",
-    "EDE"
+    "DAD",
+    "EBE"
   ],
   "result": {
     "item": "industrialupgrade:armour/nano_helmet"

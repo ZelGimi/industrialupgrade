@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "industrialupgrade:raw_block/raw_strontium"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "item": "industrialupgrade:raw_metals/raw_strontium"
+  }
+}

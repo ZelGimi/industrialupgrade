@@ -2,10 +2,10 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "A": {
-      "item": "industrialupgrade:adv_spectral_box"
+      "item": "industrialupgrade:spectral_box"
     },
     "B": {
-      "item": "industrialupgrade:itemcore/procore"
+      "item": "industrialupgrade:itemcore/specore"
     },
     "C": {
       "item": "industrialupgrade:water_rotors_upgrade/water_rotorupgrade1"
@@ -15,9 +15,9 @@
     }
   },
   "pattern": [
-    "ADA",
-    "CBC",
-    "ADA"
+    "DBD",
+    "ACA",
+    "   "
   ],
   "result": {
     "item": "industrialupgrade:water_rotors_upgrade/water_rotorupgrade2"

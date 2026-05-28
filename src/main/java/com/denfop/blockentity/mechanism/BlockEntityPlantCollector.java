@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -64,8 +66,8 @@ public class BlockEntityPlantCollector extends BlockEntityInventory implements B
         this.energy = this.addComponent(Energy.asBasicSink(this, 1024, 4));
         this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.2));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("plant_collector_soil_pollution_amount", 0.1D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("plant_collector_air_pollution_amount", 0.2D)));
         visible = this.addComponent(new ComponentVisibleArea(this));
     }
 
@@ -136,9 +138,9 @@ public class BlockEntityPlantCollector extends BlockEntityInventory implements B
     }
 
     public boolean contains(BlockPos vec) {
-        if (vec.getX() > this.searchArea.minX && vec.getX() < searchArea.maxX) {
-            if (vec.getY() > this.searchArea.minY && vec.getY() < searchArea.maxY) {
-                return vec.getZ() > searchArea.minZ && vec.getZ() < searchArea.maxZ;
+        if (vec.getX() >= this.searchArea.minX && vec.getX() < searchArea.maxX) {
+            if (vec.getY() >= this.searchArea.minY && vec.getY() < searchArea.maxY) {
+                return vec.getZ() >= searchArea.minZ && vec.getZ() < searchArea.maxZ;
             } else {
                 return false;
             }

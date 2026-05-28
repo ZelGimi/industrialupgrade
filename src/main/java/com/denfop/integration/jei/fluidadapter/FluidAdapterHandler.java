@@ -1,6 +1,8 @@
 package com.denfop.integration.jei.fluidadapter;
 
 
+import com.denfop.integration.jei.JeiIngredientHelper;
+import com.denfop.integration.jei.IJeiVariantRecipe;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseFluidMachineRecipe;
 import com.denfop.api.recipe.BaseMachineRecipe;
@@ -10,9 +12,11 @@ import net.minecraftforge.fluids.FluidStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FluidAdapterHandler {
+public class FluidAdapterHandler implements IJeiVariantRecipe {
 
     private static final List<FluidAdapterHandler> recipes = new ArrayList<>();
+    private List<List<ItemStack>> inputVariants = new java.util.ArrayList<>();
+
     private final ItemStack input;
     private final ItemStack output;
     private final FluidStack inputFluid;
@@ -26,6 +30,7 @@ public class FluidAdapterHandler {
         this.inputFluid = inputFluid;
         this.outputFluid = outputFluid;
         this.container = baseMachineRecipe;
+        JeiIngredientHelper.attachInputVariants(this, baseMachineRecipe);
     }
 
     public static List<FluidAdapterHandler> getRecipes() {
@@ -97,4 +102,15 @@ public class FluidAdapterHandler {
         return outputFluid;
     }
 
+
+
+    @Override
+    public void setInputVariants(final List<List<ItemStack>> inputVariants) {
+        this.inputVariants = inputVariants == null ? new java.util.ArrayList<>() : inputVariants;
+    }
+
+    @Override
+    public List<ItemStack> getInputVariants(final int slot, final ItemStack fallback) {
+        return JeiIngredientHelper.getInputVariants(this.inputVariants, slot, fallback);
+    }
 }

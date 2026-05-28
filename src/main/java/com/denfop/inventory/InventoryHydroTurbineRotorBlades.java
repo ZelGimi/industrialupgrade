@@ -5,6 +5,7 @@ import com.denfop.api.widget.ITypeSlot;
 import com.denfop.blockentity.hydroturbine.BlockEntityHydroTurbineController;
 import com.denfop.items.ItemWaterRod;
 import com.denfop.items.ItemWaterRotor;
+import com.denfop.network.packet.PacketUpdateFieldTile;
 import net.minecraft.world.item.ItemStack;
 
 public class InventoryHydroTurbineRotorBlades extends Inventory implements ITypeSlot {
@@ -51,12 +52,13 @@ public class InventoryHydroTurbineRotorBlades extends Inventory implements IType
                     this.windGenerator.getRotor().getLevel(),
                     ((ItemWaterRod<?>) this.get(0).getItem()).getElement().getId()
             )) {
-                if (((ItemWaterRotor) stack.getItem()).getCustomDamage(stack) <= ((ItemWaterRotor) stack.getItem()).getMaxCustomDamage(
-                        stack) * 0.75) {
+                if (((ItemWaterRotor) stack.getItem()).getCustomDamage(stack) >= ((ItemWaterRotor) stack.getItem()).getMaxCustomDamage(
+                        stack) * 0.25) {
                     this.windGenerator.slot.damage(
                             (int) (-1 * ((ItemWaterRotor) stack.getItem()).getMaxCustomDamage(stack) * 0.25),
                             0
                     );
+                    new PacketUpdateFieldTile(this.windGenerator, "slot", this.windGenerator.slot);
                     this.get(0).shrink(1);
                 }
             }

@@ -1,6 +1,8 @@
 package com.denfop.integration.jei.peralloysmelter;
 
 
+import com.denfop.integration.jei.JeiIngredientHelper;
+import com.denfop.integration.jei.IJeiVariantRecipe;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import net.minecraft.world.item.ItemStack;
@@ -9,7 +11,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class PerAlloySmelterHandler {
+public class PerAlloySmelterHandler implements IJeiVariantRecipe {
+    private List<List<ItemStack>> inputVariants = new java.util.ArrayList<>();
+
 
     public static final List<PerAlloySmelterHandler> recipes = new ArrayList<>();
     public final ItemStack input, input1, input2, input3, input4, output;
@@ -33,6 +37,7 @@ public class PerAlloySmelterHandler {
         this.output = output;
         this.temperature = temperature;
         this.container = container;
+        JeiIngredientHelper.attachInputVariants(this, container);
     }
 
     public static List<PerAlloySmelterHandler> getRecipes() {
@@ -121,5 +126,16 @@ public class PerAlloySmelterHandler {
 
     public List<ItemStack> getInputs() {
         return Arrays.asList(input, input1, input2, input3, input4);
+    }
+
+
+    @Override
+    public void setInputVariants(final List<List<ItemStack>> inputVariants) {
+        this.inputVariants = inputVariants == null ? new java.util.ArrayList<>() : inputVariants;
+    }
+
+    @Override
+    public List<ItemStack> getInputVariants(final int slot, final ItemStack fallback) {
+        return JeiIngredientHelper.getInputVariants(this.inputVariants, slot, fallback);
     }
 }

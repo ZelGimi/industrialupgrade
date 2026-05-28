@@ -5,7 +5,7 @@
       "item": "industrialupgrade:crafting_elements/crafting_24_element"
     },
     "B": {
-      "item": "industrialupgrade:itemcore/admcore"
+      "item": "industrialupgrade:itemcore/procore"
     },
     "C": {
       "tag": "forge:doubleplate/muntsa"

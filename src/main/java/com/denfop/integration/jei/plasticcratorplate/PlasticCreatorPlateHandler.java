@@ -1,6 +1,8 @@
 package com.denfop.integration.jei.plasticcratorplate;
 
 
+import com.denfop.integration.jei.JeiIngredientHelper;
+import com.denfop.integration.jei.IJeiVariantRecipe;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import net.minecraft.world.item.ItemStack;
@@ -9,9 +11,11 @@ import net.minecraftforge.fluids.FluidStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlasticCreatorPlateHandler {
+public class PlasticCreatorPlateHandler implements IJeiVariantRecipe {
 
     private static final List<PlasticCreatorPlateHandler> recipes = new ArrayList<>();
+    private List<List<ItemStack>> inputVariants = new java.util.ArrayList<>();
+
     private final FluidStack input2;
     private final ItemStack input, output;
     private final BaseMachineRecipe container;
@@ -24,6 +28,7 @@ public class PlasticCreatorPlateHandler {
         this.input2 = input2;
         this.output = output;
         this.container = container;
+        JeiIngredientHelper.attachInputVariants(this, container);
     }
 
     public static List<PlasticCreatorPlateHandler> getRecipes() {
@@ -88,4 +93,15 @@ public class PlasticCreatorPlateHandler {
         return true;
     }
 
+
+
+    @Override
+    public void setInputVariants(final List<List<ItemStack>> inputVariants) {
+        this.inputVariants = inputVariants == null ? new java.util.ArrayList<>() : inputVariants;
+    }
+
+    @Override
+    public List<ItemStack> getInputVariants(final int slot, final ItemStack fallback) {
+        return JeiIngredientHelper.getInputVariants(this.inputVariants, slot, fallback);
+    }
 }

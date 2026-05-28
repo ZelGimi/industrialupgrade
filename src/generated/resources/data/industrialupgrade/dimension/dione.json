@@ -1,0 +1,11 @@
+{
+  "type": "industrialupgrade:dione_type",
+  "generator": {
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "industrialupgrade:dione_biome"
+    },
+    "settings": "industrialupgrade:dione_noise"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "cookingtime": 200,
+  "experience": 0.6,
+  "ingredient": {
+    "item": "industrialupgrade:alloydust/stainless_steel"
+  },
+  "result": "industrialupgrade:alloyingot/stainless_steel"
+}

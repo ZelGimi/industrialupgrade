@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -44,7 +46,7 @@ public class BlockEntityCanner extends BlockEntityElectricLiquidTankInventory
     private int fluid_amount;
 
     public BlockEntityCanner(BlockPos pos, BlockState state) {
-        super(300, 1, 10, BlockBaseMachine3Entity.canner_iu, pos, state);
+        super(ModConfig.mechanismDouble("fluid_solid_canning_machine_energy_storage", 300.0D), 1, ModConfig.mechanismInt("fluid_solid_canning_machine_tank_capacity", 10), BlockBaseMachine3Entity.canner_iu, pos, state);
         fluidTank.setTypeItemSlot(Inventory.TypeItemSlot.INPUT);
         this.inputSlotA = new InventoryRecipes(this, "cannerenrich", this, this.fluidTank);
         Recipes.recipes.addInitRecipes(this);
@@ -54,8 +56,8 @@ public class BlockEntityCanner extends BlockEntityElectricLiquidTankInventory
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
                 (short) 300
         ));
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("canner_soil_pollution_amount", 0.05D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("canner_air_pollution_amount", 0.1D)));
         this.componentProcess = this.addComponent(new ComponentProcess(this, 300, 1));
         this.componentProcess.setHasAudio(true);
         this.componentProcess.setHasTank(true);
@@ -87,7 +89,7 @@ public class BlockEntityCanner extends BlockEntityElectricLiquidTankInventory
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getEnergyConsume() + Localization.translate(
                     "iu.machines_work_energy_type_eu"));
-            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getOperationsPerTick());
+            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getDefaultOperationLength());
         }
         super.addInformation(stack, tooltip);
 

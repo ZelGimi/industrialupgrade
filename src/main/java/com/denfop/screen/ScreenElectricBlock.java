@@ -60,9 +60,7 @@ public class ScreenElectricBlock<T extends ContainerMenuElectricBlock> extends S
     @Override
     protected void drawForegroundLayer(PoseStack poseStack, int par1, int par2) {
         super.drawForegroundLayer(poseStack, par1, par2);
-        this.font.draw(poseStack, this.name, (float) (this.imageWidth - this.getStringWidth(this.name)) / 2, 6,
-                4210752
-        );
+
 
         String tooltip =
                 "EF: " + ModUtils.getString(this.container.base.energy.getEnergy()) + "/" + ModUtils.getString(this.container.base.energy.getCapacity());
@@ -97,6 +95,27 @@ public class ScreenElectricBlock<T extends ContainerMenuElectricBlock> extends S
 
             drawTexturedModalRect(poseStack, j + 62, k + 27, 176, 0, i1 + 1, 22);
         }
+        int textWidth = this.getStringWidth(name);
+        float scale = 1.0f;
+
+
+        if (textWidth > 120) {
+            scale = 120f / textWidth;
+        }
+
+        PoseStack pose = poseStack;
+        pose.pushPose();
+        pose.scale(scale, scale, 1.0f);
+
+
+        int centerX = this.guiLeft + this.imageWidth / 2;
+        int textX = (int) ((centerX / scale) - (textWidth / 2.0f));
+        int textY = (int) ((this.guiTop + 6) / scale);
+
+        this.font.draw(poseStack, name, textX, textY, 4210752);
+        pose.scale(1 / scale, 1 / scale, 1);
+
+        pose.popPose();
     }
 
     private void handleUpgradeTooltip(int mouseX, int mouseY) {

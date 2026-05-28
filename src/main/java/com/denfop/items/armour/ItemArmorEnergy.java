@@ -46,7 +46,7 @@ public abstract class ItemArmorEnergy extends ItemArmorBase implements ISpecialA
             int slot
     ) {
         if (source.isBypassArmor()) {
-            return new ISpecialArmor.ArmorProperties(0, 0.0, 0);
+            return new ISpecialArmor.ArmorProperties(0, 0.0, 0, this);
         } else {
             double absorptionRatio = this.getBaseAbsorptionRatio() * this.getDamageAbsorptionRatio();
             int energyPerDamage = this.getEnergyPerDamage();
@@ -58,7 +58,7 @@ public abstract class ItemArmorEnergy extends ItemArmorBase implements ISpecialA
                 );
             }
 
-            return new ISpecialArmor.ArmorProperties(0, absorptionRatio, damageLimit);
+            return new ISpecialArmor.ArmorProperties(0, absorptionRatio, damageLimit, this);
         }
     }
 

@@ -1,5 +1,7 @@
 package com.denfop.blockentity.base;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blockentity.mechanism.BlockEntityMagnet;
@@ -38,12 +40,12 @@ public class BlockEntityAntiMagnet extends BlockEntityInventory {
     public void onLoaded() {
         super.onLoaded();
         AABB axisalignedbb = new AABB(
-                this.getBlockPos().getX() - 10,
-                this.getBlockPos().getY() - 10,
-                this.getBlockPos().getZ() - 10,
-                this.getBlockPos().getX() + 10 + 1,
-                this.getBlockPos().getY() + 10 + 1,
-                this.getBlockPos().getZ() + 10 + 1
+                this.getBlockPos().getX() - ModConfig.mechanicInt("antimagnet_radius", 10),
+                this.getBlockPos().getY() - ModConfig.mechanicInt("antimagnet_radius", 10),
+                this.getBlockPos().getZ() - ModConfig.mechanicInt("antimagnet_radius", 10),
+                this.getBlockPos().getX() + ModConfig.mechanicInt("antimagnet_radius", 10) + 1,
+                this.getBlockPos().getY() + ModConfig.mechanicInt("antimagnet_radius", 10) + 1,
+                this.getBlockPos().getZ() + ModConfig.mechanicInt("antimagnet_radius", 10) + 1
         );
         visible.aabb = axisalignedbb;
     }
@@ -69,9 +71,9 @@ public class BlockEntityAntiMagnet extends BlockEntityInventory {
         if (placer instanceof Player) {
             Player player = (Player) placer;
             this.player = player.getName().getString();
-            for (int x = this.pos.getX() - 10; x <= this.pos.getX() + 10; x++) {
-                for (int y = this.pos.getY() - 10; y <= this.pos.getY() + 10; y++) {
-                    for (int z = this.pos.getZ() - 10; z <= this.pos.getZ() + 10; z++) {
+            for (int x = this.pos.getX() - ModConfig.mechanicInt("antimagnet_radius", 10); x <= this.pos.getX() + ModConfig.mechanicInt("antimagnet_radius", 10); x++) {
+                for (int y = this.pos.getY() - ModConfig.mechanicInt("antimagnet_radius", 10); y <= this.pos.getY() + ModConfig.mechanicInt("antimagnet_radius", 10); y++) {
+                    for (int z = this.pos.getZ() - ModConfig.mechanicInt("antimagnet_radius", 10); z <= this.pos.getZ() + ModConfig.mechanicInt("antimagnet_radius", 10); z++) {
                         final BlockEntity tileEntity = getWorld().getBlockEntity(new BlockPos(x, y, z));
                         if (tileEntity != null && !(new BlockPos(
                                 x,

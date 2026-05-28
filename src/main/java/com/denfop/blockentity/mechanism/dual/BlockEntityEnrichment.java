@@ -1,6 +1,8 @@
 package com.denfop.blockentity.mechanism.dual;
 
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -42,7 +44,7 @@ public class BlockEntityEnrichment extends BlockEntityDoubleElectricMachine impl
     public final Inventory input_slot;
 
     public BlockEntityEnrichment(BlockPos pos, BlockState state) {
-        super(1, 300, 1, EnumDoubleElectricMachine.ENRICH, BlockBaseMachine1Entity.enrichment, pos, state);
+        super(ModConfig.mechanismInt("enrichment_energy_per_tick", 1), ModConfig.mechanismInt("enrichment_operation_length", 300), 1, EnumDoubleElectricMachine.ENRICH, BlockBaseMachine1Entity.enrichment, pos, state);
         Recipes.recipes.addInitRecipes(this);
         this.rad_energy = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.RADIATION, this, 10000));
         this.input_slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {

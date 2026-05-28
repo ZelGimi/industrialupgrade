@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "industrialupgrade:blocks/nitrate_mud_stage2"
+  }
+}

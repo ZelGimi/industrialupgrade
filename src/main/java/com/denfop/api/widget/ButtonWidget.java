@@ -10,6 +10,9 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 
+import java.util.Collections;
+import java.util.List;
+
 public class ButtonWidget extends ScreenWidget {
 
 
@@ -19,6 +22,7 @@ public class ButtonWidget extends ScreenWidget {
     private final BlockEntityBase tile;
     private final int x1;
     private final int y1;
+    public boolean hasHighlighted = true;
     protected boolean highlighted = false;
 
     public ButtonWidget(
@@ -46,10 +50,14 @@ public class ButtonWidget extends ScreenWidget {
     @Override
     public void drawForeground(PoseStack poseStack, int mouseX, int mouseY) {
         super.drawForeground(poseStack, mouseX, mouseY);
-        highlighted = this.contains(mouseX, mouseY);
-        if (highlighted && visible()) {
-            new TooltipWidget(this.gui, x, y, x1, y1).withTooltip(getText()).drawForeground(poseStack, mouseX, mouseY);
+        if (hasHighlighted) {
+            this.highlighted = contains(mouseX, mouseY);
         }
+    }
+
+    @Override
+    protected List<String> getToolTip() {
+        return Collections.singletonList(getText());
     }
 
     public void drawBackground(PoseStack poseStack, int mouseX, int mouseY) {

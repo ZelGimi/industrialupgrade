@@ -63,12 +63,12 @@ public class SpaceInit {
     public static List<Runnable> regAsteroid = new LinkedList<>();
     public static List<Runnable> regBaseResource = new LinkedList<>();
     public static List<Runnable> regColonyBaseResource = new LinkedList<>();
+    static boolean isRead = false;
     private static Star sextantis;
     private static Star cancri;
     private static Star kapteynSun;
     private static Star kepler186Sun;
 
-    static boolean  isRead = false;
     public static void jsonInit() {
         if (!isRead) {
             regSystem.forEach(Runnable::run);
@@ -81,6 +81,7 @@ public class SpaceInit {
             isRead = true;
         }
     }
+
     public static void init() {
         solarSystem = new System("solarsystem");
         sextantis24 = new System("sextantis");
@@ -1393,4 +1394,13 @@ public class SpaceInit {
         );
     }
 
+    public static void reset() {
+        regSystem = new LinkedList<>();
+        regStar = new LinkedList<>();
+        regPlanet = new LinkedList<>();
+        regSatellite = new LinkedList<>();
+        regAsteroid = new LinkedList<>();
+        regBaseResource = new LinkedList<>();
+        regColonyBaseResource = new LinkedList<>();
+    }
 }

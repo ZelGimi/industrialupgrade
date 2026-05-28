@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/precraft_main",
+    "down" : "industrialupgrade:blocks/precraft",
+    "up" : "industrialupgrade:blocks/precraft",
+    "north" : "industrialupgrade:blocks/precraft_main",
+    "east" : "industrialupgrade:blocks/precraft_main",
+    "south" : "industrialupgrade:blocks/precraft_main",
+    "west" : "industrialupgrade:blocks/precraft_main"
+  }
+}

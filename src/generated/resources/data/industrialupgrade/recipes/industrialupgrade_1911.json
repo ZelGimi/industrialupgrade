@@ -5,7 +5,7 @@
       "item": "industrialupgrade:quantumitems3"
     },
     "B": {
-      "item": "industrialupgrade:itemcore/procore"
+      "item": "industrialupgrade:itemcore/specore"
     },
     "C": {
       "item": "industrialupgrade:water_rotors_upgrade/water_rotorupgrade13"
@@ -15,9 +15,9 @@
     }
   },
   "pattern": [
-    "ADA",
-    "CBC",
-    "ADA"
+    "DBD",
+    "ACA",
+    "   "
   ],
   "result": {
     "item": "industrialupgrade:water_rotors_upgrade/water_rotorupgrade14"

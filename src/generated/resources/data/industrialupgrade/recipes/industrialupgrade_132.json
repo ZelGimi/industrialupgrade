@@ -8,10 +8,7 @@
       "item": "industrialupgrade:quantumitems4"
     },
     "C": {
-      "type": "forge:nbt",
-      "count": 1,
-      "item": "industrialupgrade:circuit/spectralcircuit",
-      "nbt": "{level:9}"
+      "item": "industrialupgrade:module_schedule"
     },
     "D": {
       "item": "industrialupgrade:quantumitems3"

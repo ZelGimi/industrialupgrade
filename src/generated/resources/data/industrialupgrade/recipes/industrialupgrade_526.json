@@ -10,20 +10,26 @@
     "C": {
       "item": "industrialupgrade:quantumitems2"
     },
-    "D": {
-      "item": "industrialupgrade:machines/quantum_solar_paneliu"
-    },
     "E": {
+      "item": "industrialupgrade:excitednucleus/specore"
+    },
+    "H": {
       "type": "forge:nbt",
       "count": 1,
-      "item": "industrialupgrade:crafting_elements/crafting_273_element",
-      "nbt": "{level:3}"
+      "item": "industrialupgrade:circuit/nanocircuit",
+      "nbt": "{level:5}"
+    },
+    "J": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:energy/wrench",
+      "nbt": "{Damage:0}"
     }
   },
   "pattern": [
     "ABA",
-    "C C",
-    "DED"
+    "CJC",
+    "HEH"
   ],
   "result": {
     "item": "industrialupgrade:upgradekitpanel/upgradepanelkit4"

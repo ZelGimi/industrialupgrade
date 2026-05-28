@@ -1,10 +1,10 @@
 package com.denfop.blockentity.cokeoven;
 
-import com.denfop.api.multiblock.MultiBlockElement;
+import com.denfop.api.multiblock.IMultiElement;
 import com.denfop.componets.Fluids;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
-public interface IOutputFluid extends MultiBlockElement {
+public interface IOutputFluid extends IMultiElement {
 
     FluidTank getFluidTank();
 

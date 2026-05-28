@@ -1,0 +1,26 @@
+{
+  "type": "industrialupgrade:space_rock_formation",
+  "config": {
+    "branches": 2,
+    "fluid": {
+      "Name": "industrialupgrade:fluid/fluiddecane",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "kind": "pillar_field",
+    "max_height": 18,
+    "max_radius": 5,
+    "min_height": 6,
+    "min_radius": 2,
+    "primary": {
+      "Name": "industrialupgrade:spacestone/makemake_stone"
+    },
+    "secondary": {
+      "Name": "industrialupgrade:spacecobblestone/makemake_cobblestone"
+    },
+    "tertiary": {
+      "Name": "industrialupgrade:blockspace2/makemake_bismuth"
+    }
+  }
+}

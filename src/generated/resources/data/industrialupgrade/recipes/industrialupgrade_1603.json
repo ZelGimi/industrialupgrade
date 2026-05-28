@@ -6,12 +6,21 @@
     },
     "B": {
       "item": "industrialupgrade:excitednucleus/kvrcore"
+    },
+    "C": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/photoncircuit",
+      "nbt": "{level:12}"
+    },
+    "D": {
+      "item": "industrialupgrade:quantumitems4"
     }
   },
   "pattern": [
-    "   ",
-    "BAB",
-    "ABA"
+    "DBD",
+    "CAC",
+    "CBC"
   ],
   "result": {
     "item": "industrialupgrade:admpanel/admpanel"

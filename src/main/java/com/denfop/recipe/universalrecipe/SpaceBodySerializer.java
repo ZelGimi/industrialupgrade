@@ -1,7 +1,6 @@
 package com.denfop.recipe.universalrecipe;
 
 import com.denfop.api.space.BaseResource;
-import com.denfop.api.space.IBody;
 import com.denfop.api.space.SpaceNet;
 import com.denfop.api.space.rovers.enums.EnumTypeRovers;
 import com.denfop.recipe.IInputItemStack;
@@ -20,10 +19,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import static com.denfop.IUCore.register;
 import static com.denfop.IUCore.updateRecipe;
 import static com.denfop.api.space.SpaceInit.regBaseResource;
 

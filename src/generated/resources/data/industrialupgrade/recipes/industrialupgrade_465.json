@@ -2,31 +2,22 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "A": {
-      "item": "industrialupgrade:quantumitems3"
-    },
-    "B": {
-      "type": "forge:nbt",
-      "count": 1,
-      "item": "industrialupgrade:circuit/spectralcircuit",
-      "nbt": "{level:9}"
+      "item": "industrialupgrade:crafting_elements/crafting_140_element"
     },
     "C": {
       "item": "industrialupgrade:basemachine/imp_matter"
     },
     "D": {
-      "tag": "forge:doubleplate/duralumin"
+      "item": "industrialupgrade:crafting_elements/crafting_233_element"
     },
     "E": {
-      "item": "industrialupgrade:itemcore/phocore"
-    },
-    "F": {
-      "item": "industrialupgrade:quantumitems4"
+      "item": "industrialupgrade:itemcore/procore"
     }
   },
   "pattern": [
-    "DED",
-    "BCB",
-    "AFA"
+    "AEA",
+    " C ",
+    "ADA"
   ],
   "result": {
     "item": "industrialupgrade:basemachine/per_matter"

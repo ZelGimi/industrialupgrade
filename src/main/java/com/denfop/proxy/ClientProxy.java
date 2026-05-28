@@ -4,7 +4,12 @@ import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.container.CustomWorldContainer;
 import com.denfop.api.item.MultiBlockItem;
+import com.denfop.api.pollution.client.PollutionEnvironmentBlockColors;
+import com.denfop.api.pollution.client.PollutionScreenOverlay;
+import com.denfop.api.space.dimension.worldgen.SpaceWorldgenContent;
+import com.denfop.api.space.dimension.worldgen.block.SpaceGeyserBlockEntityRenderer;
 import com.denfop.blockentity.base.*;
+import com.denfop.blockentity.bee.BlockEntityApiary;
 import com.denfop.blockentity.creative.BlockEntityCreativeSteamStorage;
 import com.denfop.blockentity.mechanism.*;
 import com.denfop.blockentity.mechanism.steam.BlockEntitySteamStorage;
@@ -18,6 +23,7 @@ import com.denfop.blockentity.panels.entity.BlockEntitySolarPanel;
 import com.denfop.blockentity.transport.tiles.BlockEntityMultiCable;
 import com.denfop.blocks.ItemBlockCore;
 import com.denfop.blocks.blockitem.ItemBlockTileEntity;
+import com.denfop.blocks.mechanism.BlockApiaryEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.blocks.mechanism.BlockCreativeBlocksEntity;
 import com.denfop.containermenu.ContainerMenuBase;
@@ -29,12 +35,15 @@ import com.denfop.events.TickHandler;
 import com.denfop.events.client.EventAutoQuests;
 import com.denfop.events.client.GlobalRenderManager;
 import com.denfop.items.IProperties;
+import com.denfop.items.storage.ClientItemGridTooltipComponent;
+import com.denfop.items.storage.ItemGridTooltipComponent;
 import com.denfop.items.upgradekit.ItemUpgradeMachinesKit;
 import com.denfop.mixin.access.RenderChunkRegionAccessor;
 import com.denfop.register.Register;
 import com.denfop.render.TileEntityRenderGasChamber;
 import com.denfop.render.advoilrefiner.TileEntityAdvOilRefinerRender;
 import com.denfop.render.anvil.RenderItemAnvil;
+import com.denfop.render.apiary.TileEntityRenderApiary;
 import com.denfop.render.autocollector.TileEntityRenderAutoLatexCollector;
 import com.denfop.render.base.DynamicFluidContainerModel;
 import com.denfop.render.base.NuclearBombRenderer;
@@ -114,7 +123,6 @@ public class ClientProxy extends CommonProxy {
 
     public ClientProxy() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        modEventBus.addListener(this::onRegisterAdditionalModels);
         modEventBus.addListener(this::registerParticleFactories);
         modEventBus.addListener(this::registerBlockColor);
         modEventBus.addListener(this::registerItemColor);
@@ -122,9 +130,18 @@ public class ClientProxy extends CommonProxy {
         modEventBus.addListener(this::onClientSetup);
         modEventBus.addListener(this::registerKeys);
         modEventBus.addListener(this::onRegisterGeometryLoaders);
+        modEventBus.addListener(this::onRegisterGuiOverlays);
+        modEventBus.addListener(this::onRegisterBlockColors);
+        modEventBus.addListener(this::registerTooltipFactories);
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new EventAutoQuests());
         new GlobalRenderManager();
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @SubscribeEvent
+    public void registerTooltipFactories(RegisterClientTooltipComponentFactoriesEvent event) {
+        event.register(ItemGridTooltipComponent.class, ClientItemGridTooltipComponent::new);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -135,10 +152,29 @@ public class ClientProxy extends CommonProxy {
     }
 
     @SubscribeEvent
+    public void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event) {
+        event.registerBelowAll("pollution_visual_overlay", PollutionScreenOverlay.INSTANCE);
+    }
+
+    @SubscribeEvent
+    public void onRegisterBlockColors(RegisterColorHandlersEvent.Block event) {
+        PollutionEnvironmentBlockColors.register(event);
+    }
+
+    @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(IUItem.entity_nuclear_bomb.get(), NuclearBombRenderer::new);
         event.registerEntityRenderer(IUItem.entity_bee.get(), SmallBeeRenderer::new);
+        event.registerBlockEntityRenderer(
+                SpaceWorldgenContent.SPACE_GEYSER_BE.get(),
+                SpaceGeyserBlockEntityRenderer::new
+        );
+    }
+
+    public void setLevelIfNull(BlockEntityBase blockEntityBase) {
+        if (blockEntityBase.getLevel() == null)
+            blockEntityBase.setLevel(Minecraft.getInstance().level);
     }
 
     @SubscribeEvent
@@ -292,6 +328,7 @@ public class ClientProxy extends CommonProxy {
         BlockEntityRenderers.register((BlockEntityType<? extends BlockEntityCreativeSteamStorage>) IUItem.creativeBlock.getBlock(BlockCreativeBlocksEntity.creative_steam_storage).getValue().getBlockType(), TileEntityRenderCreativeSteamStorage::new);
         BlockEntityRenderers.register((BlockEntityType<? extends BlockEntityLiquedTank>) IUItem.creativeBlock.getBlock(BlockCreativeBlocksEntity.creative_tank_storage).getValue().getBlockType(), TileEntityTankRender::new);
         BlockEntityRenderers.register((BlockEntityType<? extends BlockEntityAutoLatexCollector>) IUItem.basemachine2.getBlock(BlockBaseMachine3Entity.auto_latex_collector).getValue().getBlockType(), TileEntityRenderAutoLatexCollector::new);
+        BlockEntityRenderers.register((BlockEntityType<? extends BlockEntityApiary>) IUItem.apiary.getBlock(BlockApiaryEntity.apiary).getValue().getBlockType(), TileEntityRenderApiary::new);
 
 
         MinecraftForge.EVENT_BUS.register(new EventSpectralSuitEffect());
@@ -300,29 +337,6 @@ public class ClientProxy extends CommonProxy {
     }
 
 
-    @OnlyIn(Dist.CLIENT)
-    private void onRegisterAdditionalModels(ModelEvent.BakingCompleted event) {
-        for (RegistryObject<Item> registryObject : Register.ITEMS.getEntries()) {
-            Item item = registryObject.get();
-            if (item instanceof ItemBlockCore<?>) {
-                ItemBlockCore<?> blockCore = (ItemBlockCore<?>) item;
-                ModelResourceLocation model = new ModelResourceLocation(blockCore.getRegistryName(), "inventory");
-                ModelResourceLocation modelBlock = BlockModelShaper.stateToModelLocation(blockCore.getBlock().defaultBlockState());
-                if (blockCore instanceof ItemBlockTileEntity) {
-                    ItemBlockTileEntity blockTileEntity = (ItemBlockTileEntity) blockCore;
-                    if (blockTileEntity.getElement() instanceof MultiBlockItem) {
-                        MultiBlockItem blockItem = (MultiBlockItem) blockTileEntity.getElement();
-                        if (!blockItem.hasUniqueRender(null)) {
-                            event.getModels().replace(model, event.getModels().get(modelBlock));
-                        }
-                    } else {
-                        event.getModels().replace(model, event.getModels().get(modelBlock));
-                    }
-                } else
-                    event.getModels().replace(model, event.getModels().get(modelBlock));
-            }
-        }
-    }
 
 
     public void messagePlayer(Player player, String message) {

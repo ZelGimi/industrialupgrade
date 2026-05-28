@@ -3,7 +3,7 @@
   "cookingtime": 200,
   "experience": 0.6,
   "ingredient": {
-    "item": "industrialupgrade:raw_metals/raw_yttrium"
+    "item": "industrialupgrade:blockspace2/europa_mikhail_ore"
   },
-  "result": "industrialupgrade:itemingots/yttrium"
+  "result": "industrialupgrade:itemingots/mikhail_ingot"
 }

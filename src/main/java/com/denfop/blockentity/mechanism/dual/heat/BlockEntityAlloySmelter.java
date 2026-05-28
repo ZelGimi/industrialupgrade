@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.dual.heat;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -43,7 +45,7 @@ public class BlockEntityAlloySmelter extends BlockEntityDoubleElectricMachine im
     private final AirPollutionComponent pollutionAir;
 
     public BlockEntityAlloySmelter(BlockPos pos, BlockState state) {
-        super(1, 300, 1, EnumDoubleElectricMachine.ALLOY_SMELTER, BlockBaseMachineEntity.alloy_smelter, pos, state);
+        super(ModConfig.mechanismInt("alloy_smelter_energy_per_tick", 1), ModConfig.mechanismInt("alloy_smelter_operation_length", 300), 1, EnumDoubleElectricMachine.ALLOY_SMELTER, BlockBaseMachineEntity.alloy_smelter, pos, state);
         Recipes.recipes.addInitRecipes(this);
         this.input_slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
@@ -67,8 +69,8 @@ public class BlockEntityAlloySmelter extends BlockEntityDoubleElectricMachine im
                 return EnumTypeSlot.RECIPE_SCHEDULE;
             }
         };
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.2));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("alloy_smelter_soil_pollution_amount", 0.1D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("alloy_smelter_air_pollution_amount", 0.2D)));
     }
 
     public static void addAlloysmelter(IInputItemStack container, IInputItemStack fill, ItemStack output, int temperature) {
@@ -112,8 +114,8 @@ public class BlockEntityAlloySmelter extends BlockEntityDoubleElectricMachine im
 
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         addAlloysmelter(
-                input.getInput(new ItemStack(Items.IRON_INGOT), 1),
-                input.getInput(new ItemStack(Items.COAL), 2),
+                input.getInput("forge:ingots/iron", 2),
+                input.getInput(new ItemStack(Items.COAL), 3),
                 new ItemStack(IUItem.crafting_elements.getItemFromMeta(502), 1), 4000
         );
         addAlloysmelter(
@@ -138,6 +140,12 @@ public class BlockEntityAlloySmelter extends BlockEntityDoubleElectricMachine im
                 new ItemStack(IUItem.iudust.getItemFromMeta(73), 1), 1000
         );
         addAlloysmelter(
+                input.getInput("forge:ingots/steel", 2),
+                input.getInput("forge:ingots/titanium", 3),
+                new ItemStack(IUItem.crafting_elements.getItemFromMeta(503), 1), 3000
+        );
+
+        addAlloysmelter(
                 input.getInput(new ItemStack(IUItem.iuingot.getItemFromMeta(28), 2)),
                 input.getInput(new ItemStack(IUItem.iuingot.getItemFromMeta(32), 1)),
                 new ItemStack(IUItem.alloysingot.getItemFromMeta(31), 1), 4000
@@ -150,7 +158,7 @@ public class BlockEntityAlloySmelter extends BlockEntityDoubleElectricMachine im
         addAlloysmelter(
                 input.getInput(new ItemStack(Items.GOLD_INGOT), 1),
                 input.getInput("forge:ingots/silver", 1),
-                new ItemStack(IUItem.iuingot.getItemFromMeta(13), 1), 3500
+                new ItemStack(IUItem.iuingot.getItemFromMeta(13), 2), 3500
         );
         addAlloysmelter(
                 input.getInput(new ItemStack(IUItem.crafting_elements.getItemFromMeta(481), 1)),
@@ -160,7 +168,7 @@ public class BlockEntityAlloySmelter extends BlockEntityDoubleElectricMachine im
         addAlloysmelter(
                 input.getInput("forge:ingots/nickel", 1),
                 input.getInput(new ItemStack(Items.IRON_INGOT), 2),
-                input.getInput("forge:ingots/Invar", 4).getInputs().get(0), 5000
+                input.getInput("forge:ingots/Invar", 3).getInputs().get(0), 5000
         );
 
         addAlloysmelter(

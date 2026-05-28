@@ -1,5 +1,7 @@
 package com.denfop.blockentity.base;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -40,7 +42,7 @@ public class BlockEntityPainting extends BlockEntityDoubleElectricMachine implem
     private final AirPollutionComponent pollutionAir;
 
     public BlockEntityPainting(BlockPos pos, BlockState state) {
-        super(1, 300, 1, EnumDoubleElectricMachine.PAINTING, false, BlockBaseMachine2Entity.painter, pos, state);
+        super(ModConfig.mechanismInt("painting_energy_per_tick", 1), ModConfig.mechanismInt("painting_operation_length", 300), 1, EnumDoubleElectricMachine.PAINTING, false, BlockBaseMachine2Entity.painter, pos, state);
         Recipes.recipes.addInitRecipes(this);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot) {
             @Override
@@ -52,8 +54,8 @@ public class BlockEntityPainting extends BlockEntityDoubleElectricMachine implem
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
                 (short) 300
         ));
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("painting_soil_pollution_amount", 0.05D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("painting_air_pollution_amount", 0.1D)));
         this.componentProcess = this.addComponent(new ComponentProcess(this, 300, 1) {
             @Override
             public void operateWithMax(final MachineRecipe output) {

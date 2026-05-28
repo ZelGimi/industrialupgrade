@@ -112,10 +112,10 @@ public class ScreenScanner<T extends ContainerMenuScanner> extends ScreenMain<Co
                 this.font.draw(poseStack, ModUtils.getString(te.patternEu) + "EF", 105, 36, 16777215);
         }
         if (container.base.getState() == BlockEntityScanner.State.COMPLETED || container.base.getState() == BlockEntityScanner.State.TRANSFER_ERROR || container.base.getState() == BlockEntityScanner.State.FAILED) {
-            new TooltipWidget(this, 102, 49, 12, 12).withTooltip("Scanner.gui.button.delete").drawForeground(poseStack, mouseX, mouseY);
+            new TooltipWidget(this, 102, 49, 12, 12).withTooltip(Localization.translate("Scanner.gui.button.delete")).drawForeground(poseStack, mouseX, mouseY);
         }
         if (container.base.getState() == BlockEntityScanner.State.COMPLETED || container.base.getState() == BlockEntityScanner.State.TRANSFER_ERROR || container.base.getState() == BlockEntityScanner.State.FAILED) {
-            new TooltipWidget(this, 143, 49, 24, 12).withTooltip("Scanner.gui.button.save").drawForeground(poseStack, mouseX, mouseY);
+            new TooltipWidget(this, 143, 49, 24, 12).withTooltip(Localization.translate("Scanner.gui.button.save")).drawForeground(poseStack, mouseX, mouseY);
         }
     }
 
@@ -139,10 +139,10 @@ public class ScreenScanner<T extends ContainerMenuScanner> extends ScreenMain<Co
         }
 
         if (container.base.getState() == BlockEntityScanner.State.COMPLETED || container.base.getState() == BlockEntityScanner.State.TRANSFER_ERROR || container.base.getState() == BlockEntityScanner.State.FAILED) {
-            new TooltipWidget(this, 102, 49, 12, 12).withTooltip("Scanner.gui.button.delete").drawBackground(poseStack, mouseX, mouseY);
+            new TooltipWidget(this, 102, 49, 12, 12).withTooltip(Localization.translate("Scanner.gui.button.delete")).drawBackground(poseStack, mouseX, mouseY);
         }
         if (container.base.getState() == BlockEntityScanner.State.COMPLETED || container.base.getState() == BlockEntityScanner.State.TRANSFER_ERROR || container.base.getState() == BlockEntityScanner.State.FAILED) {
-            new TooltipWidget(this, 143, 49, 24, 12).withTooltip("Scanner.gui.button.save").drawBackground(poseStack, mouseX, mouseY);
+            new TooltipWidget(this, 143, 49, 24, 12).withTooltip(Localization.translate("Scanner.gui.button.save")).drawBackground(poseStack, mouseX, mouseY);
         }
         this.bindTexture();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);

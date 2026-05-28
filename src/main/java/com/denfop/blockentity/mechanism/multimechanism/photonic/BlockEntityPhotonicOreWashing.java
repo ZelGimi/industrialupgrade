@@ -24,6 +24,10 @@ public class BlockEntityPhotonicOreWashing extends BlockEntityMultiMachine {
         this.cold.buffer.storage = 0;
     }
 
+    public int getSize(int size) {
+        return Math.min(size, this.tank.getFluidAmount() / 1000);
+    }
+
     public MultiBlockEntity getTeBlock() {
         return BlocksPhotonicMachine.photonic_orewashing;
     }

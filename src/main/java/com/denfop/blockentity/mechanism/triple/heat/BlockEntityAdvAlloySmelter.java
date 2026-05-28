@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.triple.heat;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -52,7 +54,7 @@ public class BlockEntityAdvAlloySmelter extends BlockEntityTripleElectricMachine
     private final AirPollutionComponent pollutionAir;
 
     public BlockEntityAdvAlloySmelter(BlockPos pos, BlockState state) {
-        super(1, 300, 1, Localization.translate("iu.AdvAlloymachine.name"), EnumTripleElectricMachine.ADV_ALLOY_SMELTER, BlockBaseMachine1Entity.adv_alloy_smelter, pos, state);
+        super(ModConfig.mechanismInt("improved_alloy_smelter_energy_per_tick", 1), ModConfig.mechanismInt("improved_alloy_smelter_operation_length", 300), 1, Localization.translate("iu.AdvAlloymachine.name"), EnumTripleElectricMachine.ADV_ALLOY_SMELTER, BlockBaseMachine1Entity.adv_alloy_smelter, pos, state);
         this.heat = this.addComponent(HeatComponent
                 .asBasicSink(this, 5000));
         Recipes.recipes.addInitRecipes(this);
@@ -78,8 +80,8 @@ public class BlockEntityAdvAlloySmelter extends BlockEntityTripleElectricMachine
                 return EnumTypeSlot.RECIPE_SCHEDULE;
             }
         };
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.075));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.15));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("improved_alloy_smelter_soil_pollution_amount", 0.075D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("improved_alloy_smelter_air_pollution_amount", 0.15D)));
     }
 
     public static void addAlloysmelter(Object container, Object fill, Object fill1, ItemStack output, int temperature) {

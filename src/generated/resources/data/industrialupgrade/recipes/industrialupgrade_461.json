@@ -10,17 +10,14 @@
     "C": {
       "item": "industrialupgrade:armour/spectral_solar_helmet"
     },
-    "D": {
-      "type": "forge:nbt",
-      "count": 1,
-      "item": "industrialupgrade:circuit/spectralcircuit",
-      "nbt": "{level:10}"
+    "E": {
+      "item": "industrialupgrade:compresscarbonultra"
     }
   },
   "pattern": [
     " A ",
-    "DCD",
-    "BDB"
+    "ECE",
+    "B B"
   ],
   "result": {
     "item": "industrialupgrade:armour/singular_solar_helmet"

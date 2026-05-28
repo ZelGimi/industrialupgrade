@@ -1,7 +1,7 @@
 package com.denfop.blockentity.reactors.water;
 
-import com.denfop.api.multiblock.MultiBlockElement;
+import com.denfop.api.multiblock.IMultiElement;
 
-public interface IChamber extends MultiBlockElement {
+public interface IChamber extends IMultiElement {
 
 }

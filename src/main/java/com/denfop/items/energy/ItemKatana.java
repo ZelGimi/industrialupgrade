@@ -57,7 +57,7 @@ public class ItemKatana extends DiggerItem implements EnergyItem, UpgradeItem, I
     private String nameItem;
 
     public ItemKatana() {
-        super(1, 2, Tiers.DIAMOND, new TagKey<>(Registry.BLOCK_REGISTRY, new ResourceLocation("", "block")), new Properties().setNoRepair().tab(IUCore.EnergyTab).setNoRepair().stacksTo(1));
+        super(1, 2, Tiers.DIAMOND, TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation("", "block")), new Properties().setNoRepair().tab(IUCore.EnergyTab).setNoRepair().stacksTo(1));
         this.soundTicker = 0;
         this.maxCharge = 500000;
         this.transferLimit = 5000;

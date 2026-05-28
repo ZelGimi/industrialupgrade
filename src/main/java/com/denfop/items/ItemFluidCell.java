@@ -1,5 +1,7 @@
 package com.denfop.items;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.utils.FluidHandlerFix;
 import com.denfop.utils.KeyboardIU;
@@ -46,7 +48,7 @@ import static com.denfop.IUCore.fluidCellTab;
 
 public class ItemFluidCell extends ItemFluidContainer {
     public ItemFluidCell() {
-        super(new Properties().tab(fluidCellTab).stacksTo(64).setNoRepair(), 1000);
+        super(new Properties().tab(fluidCellTab).stacksTo(64).setNoRepair(), ModConfig.itemInt("universal_fluid_cell_capacity", 1000));
     }
 
     public boolean canfill(Fluid fluid) {
@@ -136,15 +138,22 @@ public class ItemFluidCell extends ItemFluidContainer {
                     boolean flag1 = world.getBlockState(blockpos).getMaterial().isReplaceable();
                     BlockPos blockpos2 = flag1 && blockhitresult.getDirection() == Direction.UP ? blockpos : blockpos.offset(blockhitresult.getDirection().getNormal());
                     if (tryPlaceContainedLiquid(new FluidStack(fluid, 1000), player, world, blockpos2)) {
-                        player.getItemInHand(hand).shrink(1);
-                        if (!ModUtils.storeInventoryItem(new ItemStack(this, 1),
-                                player, false
-                        )) {
-                            if (!world.isClientSide()) {
-                                ModUtils.dropAsEntity(world, player.blockPosition(), new ItemStack(this, 1));
+                        ItemStack emptyCell = new ItemStack(this, 1);
+
+                        if (itemstack.getCount() == 1) {
+                            player.setItemInHand(hand, emptyCell);
+                            return InteractionResultHolder.sidedSuccess(player.getItemInHand(hand), world.isClientSide);
+                        } else {
+                            itemstack.shrink(1);
+
+                            if (!ModUtils.storeInventoryItem(emptyCell, player, false)) {
+                                if (!world.isClientSide()) {
+                                    ModUtils.dropAsEntity(world, player.blockPosition(), emptyCell);
+                                }
                             }
+
+                            return InteractionResultHolder.sidedSuccess(itemstack, world.isClientSide);
                         }
-                        return InteractionResultHolder.sidedSuccess(itemstack, world.isClientSide);
                     }
 
                 } else {
@@ -194,11 +203,12 @@ public class ItemFluidCell extends ItemFluidContainer {
             return false;
         } else {
             BlockState iblockstate = worldIn.getBlockState(posIn);
+            FluidState fluidState = worldIn.getFluidState(posIn);
+            boolean flag1 = iblockstate.canBeReplaced(fluidState.getType());
             Material material = iblockstate.getMaterial();
-            boolean flag1 = iblockstate.getMaterial().isReplaceable();
-            if (material.isLiquid())
+            if (!fluidState.isEmpty() && fluidState.isSource())
                 return false;
-            if (!iblockstate.isAir() && !flag1) {
+            if (fluidState.isEmpty() && !flag1) {
                 return false;
             } else {
                 if (worldIn.dimension() == Level.NETHER && containedBlock == Blocks.WATER) {

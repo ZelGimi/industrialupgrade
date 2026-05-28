@@ -2,10 +2,10 @@ package com.denfop.api.pollution.radiation;
 
 import com.denfop.api.item.armor.HazmatLike;
 import com.denfop.api.reactors.IAdvReactor;
+import com.denfop.config.ModConfig;
 import com.denfop.network.packet.PacketRadiation;
 import com.denfop.network.packet.PacketUpdateRadiation;
 import com.denfop.potion.IUPotion;
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -30,6 +30,7 @@ public class RadiationSystem {
     public RadiationSystem() {
         rad_system = this;
         MinecraftForge.EVENT_BUS.register(new EventHandler());
+        MinecraftForge.EVENT_BUS.register(new RadiationFoodSystem());
     }
 
     public Map<ChunkPos, List<IAdvReactor>> getAdvReactorMap() {
@@ -42,7 +43,7 @@ public class RadiationSystem {
         }
 
         if (player.getLevel().getGameTime() % 200 == 0) {
-            ChunkPos pos = new ChunkPos(new BlockPos(player.getX(), player.getY(), player.getZ()));
+            ChunkPos pos = new ChunkPos(player.blockPosition());
             Radiation rad = this.map.get(pos);
             if (rad != null) {
 
@@ -50,6 +51,10 @@ public class RadiationSystem {
                     rad.process(player);
                 }
             } else {
+                if (!ModConfig.COMMON.radiationDamageEnabled.get()) {
+                    return;
+
+                }
                 double radiation = player.getPersistentData().getDouble("radiation");
                 if (radiation >= 50) {
                     player.addEffect(new MobEffectInstance(IUPotion.radiation, 43200, 0));
@@ -103,6 +108,12 @@ public class RadiationSystem {
     public void workDecay(final Level world) {
         try {
             for (Radiation radiation : this.radiationList) {
+                if (!ModConfig.COMMON.radiationChunksEnabled.get()) {
+                    radiation.setRadiation(0);
+                    radiation.setLevel(EnumLevelRadiation.LOW);
+                    new PacketUpdateRadiation(radiation);
+
+                }
                 if (radiation.getRadiation() > 0) {
                     switch (radiation.getLevel()) {
                         case LOW:

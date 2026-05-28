@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -56,18 +58,18 @@ public class BlockEntitySolidMixer extends BlockEntityElectricMachine implements
     protected short progress;
 
     public BlockEntitySolidMixer(BlockPos pos, BlockState state) {
-        super(200, 1, 2, BlockBaseMachine3Entity.solid_mixer, pos, state);
+        super(ModConfig.mechanismDouble("solid_mixer_energy_storage", 200.0D), 1, 2, BlockBaseMachine3Entity.solid_mixer, pos, state);
         Recipes.recipes.addInitRecipes(this);
 
         this.progress = 0;
-        this.defaultEnergyConsume = this.energyConsume = 1;
+        this.defaultEnergyConsume = this.energyConsume = ModConfig.mechanismInt("solid_mixer_energy_use", 1);
         this.defaultOperationLength = this.operationLength = 100;
         this.defaultTier = 1;
         this.defaultEnergyStorage = 100;
         this.inputSlotA = new InventoryRecipes(this, "solid_mixer", this);
         this.upgradeSlot = new InventoryUpgrade(this, 4);
-        this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("solid_mixer_soil_pollution_amount", 0.1D)));
+        this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("solid_mixer_air_pollution_amount", 0.1D)));
 
     }
 
@@ -95,9 +97,9 @@ public class BlockEntitySolidMixer extends BlockEntityElectricMachine implements
             tooltip.add(Localization.translate("press.lshift"));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            tooltip.add(Localization.translate("iu.machines_work_energy") + 200 + Localization.translate(
+            tooltip.add(Localization.translate("iu.machines_work_energy") + 1 + Localization.translate(
                     "iu.machines_work_energy_type_eu"));
-            tooltip.add(Localization.translate("iu.machines_work_length") + 1);
+            tooltip.add(Localization.translate("iu.machines_work_length") + 100);
         }
         super.addInformation(stack, tooltip);
 
@@ -276,7 +278,7 @@ public class BlockEntitySolidMixer extends BlockEntityElectricMachine implements
                 EnumBlockEntityUpgrade.Transformer,
                 EnumBlockEntityUpgrade.EnergyStorage,
                 EnumBlockEntityUpgrade.ItemInput,
-                EnumBlockEntityUpgrade.FluidExtract
+                EnumBlockEntityUpgrade.ItemExtract
         );
     }
 

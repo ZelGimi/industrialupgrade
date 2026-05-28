@@ -22,6 +22,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -50,6 +51,7 @@ public class ScreenVeinSensor<T extends ContainerMenuVeinSensor> extends ScreenM
     private double pointScroll;
     private int value;
     private int maxValue = 0;
+    private double dragAccumulator = 0;
 
     public ScreenVeinSensor(ContainerMenuVeinSensor container, final ItemStack itemStack1) {
         super(container);
@@ -94,7 +96,7 @@ public class ScreenVeinSensor<T extends ContainerMenuVeinSensor> extends ScreenM
                                     .getZ(),
                             1,
                             1
-                    ).withTooltip(() -> stack.getDisplayName().getString() + "\n" + "X: " + entry.getKey().getX() + "\n" + "Z: " + entry
+                    ).withTooltip(() -> com.denfop.utils.ModUtils.cleanComponentString(stack.getDisplayName().getString()) + "\n" + "X: " + entry.getKey().getX() + "\n" + "Z: " + entry
                             .getKey()
                             .getZ()));
                 }
@@ -167,7 +169,6 @@ public class ScreenVeinSensor<T extends ContainerMenuVeinSensor> extends ScreenM
         return super.mouseScrolled(d, d2, d3);
     }
 
-
     @Override
     protected void drawBackgroundAndTitle(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
@@ -193,7 +194,7 @@ public class ScreenVeinSensor<T extends ContainerMenuVeinSensor> extends ScreenM
                         value + 8
                 ))
                     break;
-                new ItemWidget(this, 173, 26 + 18 * j, entry::getValue).withTooltip(() -> entry.getValue().getDisplayName().getString()).drawForeground(poseStack, par1, par2);
+                new ItemWidget(this, 173, 26 + 18 * j, entry::getValue).withTooltip(() -> com.denfop.utils.ModUtils.cleanComponentString(entry.getValue().getDisplayName().getString())).drawForeground(poseStack, par1, par2);
                 j++;
                 i++;
 
@@ -202,13 +203,13 @@ public class ScreenVeinSensor<T extends ContainerMenuVeinSensor> extends ScreenM
             for (Map.Entry<Integer, ItemStack> entry : ItemStackMap.entrySet()) {
 
 
-                String builder = entry.getValue().getDisplayName().getString().toLowerCase();
+                String builder = com.denfop.utils.ModUtils.cleanComponentString(entry.getValue().getDisplayName().getString()).toLowerCase();
                 if (builder.toLowerCase().startsWith(name)) {
                     if (i < value) {
                         i++;
                         continue;
                     }
-                    new ItemWidget(this, 173, 26 + 18 * j, entry::getValue).withTooltip(() -> entry.getValue().getDisplayName().getString()).drawForeground(poseStack, par1, par2);
+                    new ItemWidget(this, 173, 26 + 18 * j, entry::getValue).withTooltip(() -> com.denfop.utils.ModUtils.cleanComponentString(entry.getValue().getDisplayName().getString())).drawForeground(poseStack, par1, par2);
                     j++;
                     i++;
                 } else {
@@ -218,6 +219,31 @@ public class ScreenVeinSensor<T extends ContainerMenuVeinSensor> extends ScreenM
                     break;
             }
         }
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        mouseX -= this.leftPos;
+        mouseY -= this.topPos;
+
+        if (mouseX >= 196 && mouseY >= 24 && mouseX <= 210 && mouseY <= 169) {
+
+            dragAccumulator += dragY;
+
+            int step = 6;
+
+            int delta = (int) (dragAccumulator / step);
+
+            if (delta != 0) {
+                value += delta;
+                dragAccumulator -= delta * step;
+            }
+
+            value = Mth.clamp(value, 0, maxValue);
+            return true;
+        }
+
+        return super.mouseDragged(mouseX + this.leftPos, mouseY + this.topPos, button, dragX, dragY);
     }
 
     @Override
@@ -250,7 +276,7 @@ public class ScreenVeinSensor<T extends ContainerMenuVeinSensor> extends ScreenM
                         value + 8
                 ))
                     break;
-                String builder = entry.getValue().getDisplayName().getString().toLowerCase();
+                String builder = com.denfop.utils.ModUtils.cleanComponentString(entry.getValue().getDisplayName().getString()).toLowerCase();
                 if (emptySearch || builder.startsWith(name)) {
                     if (x >= 173 && x <= 173 + 18 && y >= 26 + 18 * jj && y < 26 + 18 * jj + 18) {
                         new PacketItemStackEvent(entry.getKey(), minecraft.player);
@@ -269,7 +295,7 @@ public class ScreenVeinSensor<T extends ContainerMenuVeinSensor> extends ScreenM
             for (Map.Entry<Integer, ItemStack> entry : ItemStackMap.entrySet()) {
 
 
-                String builder = entry.getValue().getDisplayName().getString().toLowerCase();
+                String builder = com.denfop.utils.ModUtils.cleanComponentString(entry.getValue().getDisplayName().getString()).toLowerCase();
                 if (builder.startsWith(name)) {
                     if (ii < value) {
                         ii++;
@@ -329,7 +355,7 @@ public class ScreenVeinSensor<T extends ContainerMenuVeinSensor> extends ScreenM
                                         .getZ(),
                                 1,
                                 1
-                        ).withTooltip(() -> stack.getDisplayName().getString() + "\n" + "X: " + entry.getKey().getX() + "\n" + "Z: " + entry
+                        ).withTooltip(() -> com.denfop.utils.ModUtils.cleanComponentString(stack.getDisplayName().getString()) + "\n" + "X: " + entry.getKey().getX() + "\n" + "Z: " + entry
                                 .getKey()
                                 .getZ()));
                     } else {
@@ -439,7 +465,7 @@ public class ScreenVeinSensor<T extends ContainerMenuVeinSensor> extends ScreenM
                         value + 8
                 ))
                     break;
-                String builder = entry.getValue().getDisplayName().getString().toLowerCase();
+                String builder = com.denfop.utils.ModUtils.cleanComponentString(entry.getValue().getDisplayName().getString()).toLowerCase();
                 if (integerList.contains(entry.getKey())) {
                     bindTexture();
                     drawTexturedModalRect(poseStack, this.guiLeft + 172, (int) (guiTop + 25 + 18 * j), 237, 1, 18, 18);
@@ -454,7 +480,7 @@ public class ScreenVeinSensor<T extends ContainerMenuVeinSensor> extends ScreenM
             for (Map.Entry<Integer, ItemStack> entry : ItemStackMap.entrySet()) {
 
 
-                String builder = entry.getValue().getDisplayName().getString().toLowerCase();
+                String builder = com.denfop.utils.ModUtils.cleanComponentString(entry.getValue().getDisplayName().getString()).toLowerCase();
                 if (builder.startsWith(name)) {
                     if (i < value) {
                         i++;

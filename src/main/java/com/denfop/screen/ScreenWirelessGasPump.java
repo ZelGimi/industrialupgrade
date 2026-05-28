@@ -5,6 +5,7 @@ import com.denfop.IUItem;
 import com.denfop.api.vein.common.Type;
 import com.denfop.api.vein.common.VeinBase;
 import com.denfop.api.widget.*;
+import com.denfop.blocks.FluidName;
 import com.denfop.containermenu.ContainerMenuWirelessGasPump;
 import com.denfop.utils.Localization;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -22,11 +23,12 @@ public class ScreenWirelessGasPump<T extends ContainerMenuWirelessGasPump> exten
     public ScreenWirelessGasPump(ContainerMenuWirelessGasPump guiContainer) {
         super(guiContainer);
         this.stack = new ItemStack(IUItem.gasBlock.getItem());
-        this.addWidget(TankWidget.createNormal(this, this.imageWidth / 2 - 10, 20, (guiContainer.base).fluidTank));
+        this.addComponent(TankWidget.createNormal(this, this.imageWidth / 2 - 10, 20, (guiContainer.base).fluidTank));
         this.addComponent(new ScreenWidget(this, 10, (this.imageWidth - 80) / 2,
                 EnumTypeComponent.ENERGY_WEIGHT,
                 new WidgetDefault<>((this.container.base).energy)
         ));
+        this.addWidget(new ImageInterfaceWidget(this, 0, 0, imageWidth, imageHeight));
     }
 
     private void handleUpgradeTooltip(int mouseX, int mouseY) {
@@ -60,7 +62,8 @@ public class ScreenWirelessGasPump<T extends ContainerMenuWirelessGasPump> exten
                 int colmax = vein.getMaxCol();
                 boolean isOil = vein.getType() == Type.GAS;
                 String name_vein;
-                name_vein = Localization.translate("iu.fluidgas");
+                name_vein = Localization.translate(FluidName.fluidgas.getInstance().get().getFluidType().getDescriptionId());
+
                 new TooltipWidget(this, 130, 8 + i * 18, 18, 18)
                         .withTooltip(name_vein + " " + col + (isOil ? "mb" : "") + "/" + colmax + (
                                 isOil

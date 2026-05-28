@@ -22,4 +22,6 @@ public interface LocalNet {
 
     List<Path> getPaths(final Acceptor par1);
 
+    List<Path> getPaths(final Source par1);
+
 }

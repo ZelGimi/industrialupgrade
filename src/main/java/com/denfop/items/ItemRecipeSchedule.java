@@ -54,7 +54,7 @@ public class ItemRecipeSchedule extends Item implements IProperties {
                 }
             }
             for (BagsDescription description : list) {
-                tooltip.add(Component.literal(ChatFormatting.GREEN + description.getStack().getHoverName().getString()));
+                tooltip.add(Component.literal(ChatFormatting.GREEN + com.denfop.utils.ModUtils.cleanComponentString(description.getStack().getHoverName().getString())));
             }
         }
     }

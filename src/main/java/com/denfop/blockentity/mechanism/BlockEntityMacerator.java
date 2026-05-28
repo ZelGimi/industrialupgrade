@@ -37,7 +37,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -59,23 +58,25 @@ public class BlockEntityMacerator extends BlockEntityInventory implements IUpdat
     public MachineRecipe output;
     public int durability = 96;
     public Map<UUID, Double> data = PrimitiveHandler.getPlayersData(EnumPrimitive.MACERATOR);
+    ItemStack prevInput = ItemStack.EMPTY;
+    ItemStack prevOutput = ItemStack.EMPTY;
+
 
     public BlockEntityMacerator(BlockPos pos, BlockState state) {
         super(BlockMaceratorEntity.macerator, pos, state);
         this.inputSlotA = new InventoryRecipes(this, "macerator", this) {
             @Override
             public boolean canPlaceItem(final int index, final ItemStack itemStack) {
-                if (index == 4) {
-                    List<TagKey<Item>> tags = itemStack.getTags().filter(itemTagKey -> itemTagKey.location().getPath().split("/").length > 1).toList();
-                    for (TagKey<Item> i : tags) {
-                        String name = i.location().getPath();
-                        if (name.startsWith("ores") || name.startsWith("raw_materials") || name.startsWith("storage_blocks/raw_")) {
-                            return false;
-                        }
+
+                List<TagKey<Item>> tags = itemStack.getTags().filter(itemTagKey -> itemTagKey.location().getPath().split("/").length > 1).toList();
+                for (TagKey<Item> i : tags) {
+                    String name = i.location().getPath();
+                    if (name.startsWith("ores") || name.startsWith("raw_materials") || name.startsWith("storage_blocks/raw_")) {
+                        return false;
                     }
-                    return super.canPlaceItem(0, itemStack);
                 }
-                return false;
+                return super.canPlaceItem(0, itemStack);
+
             }
 
             @Override
@@ -92,11 +93,9 @@ public class BlockEntityMacerator extends BlockEntityInventory implements IUpdat
 
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction facing) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER)
-            return LazyOptional.empty();
+
         return super.getCapability(cap, facing);
     }
-
 
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
@@ -140,7 +139,6 @@ public class BlockEntityMacerator extends BlockEntityInventory implements IUpdat
         return BlockMaceratorEntity.macerator;
     }
 
-
     @Override
     public EnumTypeAudio getTypeAudio() {
         return EnumTypeAudio.ON;
@@ -177,6 +175,35 @@ public class BlockEntityMacerator extends BlockEntityInventory implements IUpdat
             new PacketUpdateFieldTile(this, "slot1", this.outputSlot);
         }
         this.output = inputSlotA.process();
+    }
+
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (prevInput.isEmpty() && !this.inputSlotA.isEmpty()) {
+            prevInput = this.inputSlotA.get(0);
+            new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
+        }
+        if (!prevInput.isEmpty() && !this.inputSlotA.isEmpty() && prevInput.getCount() != this.inputSlotA.get(0).getCount()) {
+            prevInput = this.inputSlotA.get(0);
+            new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
+        }
+        if (!prevInput.isEmpty() && this.inputSlotA.isEmpty()) {
+            prevInput = ItemStack.EMPTY;
+            new PacketUpdateFieldTile(this, "slot3", false);
+        }
+        if (prevOutput.isEmpty() && !this.outputSlot.isEmpty()) {
+            prevOutput = this.outputSlot.get(0);
+            new PacketUpdateFieldTile(this, "slot1", this.outputSlot);
+        }
+        if (prevOutput.isEmpty() && !this.outputSlot.isEmpty() && prevOutput.getCount() != this.outputSlot.get(0).getCount()) {
+            prevOutput = this.outputSlot.get(0);
+            new PacketUpdateFieldTile(this, "slot1", this.outputSlot);
+        }
+        if (!prevOutput.isEmpty() && this.outputSlot.isEmpty()) {
+            prevOutput = ItemStack.EMPTY;
+            new PacketUpdateFieldTile(this, "slot2", false);
+        }
     }
 
     @Override

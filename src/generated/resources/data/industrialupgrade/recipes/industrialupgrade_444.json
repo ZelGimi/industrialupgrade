@@ -10,12 +10,6 @@
     "C": {
       "item": "industrialupgrade:armour/quantum_helmet"
     },
-    "D": {
-      "type": "forge:nbt",
-      "count": 1,
-      "item": "industrialupgrade:circuit/quantumcircuit",
-      "nbt": "{level:7}"
-    },
     "E": {
       "item": "industrialupgrade:compresscarbonultra"
     }
@@ -23,7 +17,7 @@
   "pattern": [
     " A ",
     "BCB",
-    "DED"
+    " E "
   ],
   "result": {
     "item": "industrialupgrade:armour/hybrid_solar_helmet"

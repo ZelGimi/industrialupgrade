@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "tag": "forge:casings/electrum"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_777_element"
+    },
+    "D": {
+      "tag": "forge:plates/barium"
+    }
+  },
+  "pattern": [
+    "A A",
+    "BDB",
+    "ABA"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_778_element"
+  }
+}

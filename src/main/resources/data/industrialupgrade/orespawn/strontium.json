@@ -1,0 +1,11 @@
+{
+    "replace_block": "minecraft:stone",
+    "min_height": 0,
+    "max_height": 56,
+    "min_vein_size": 3,
+    "max_vein_size": 7,
+    "min_veins_per_chunk": 10,
+    "max_veins_per_chunk": 20,
+    "chance": 0.8,
+    "ore_block": "industrialupgrade:baseore2/strontium"
+}

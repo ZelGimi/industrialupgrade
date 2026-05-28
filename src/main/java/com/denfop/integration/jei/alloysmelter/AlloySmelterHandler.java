@@ -1,6 +1,8 @@
 package com.denfop.integration.jei.alloysmelter;
 
 
+import com.denfop.integration.jei.JeiIngredientHelper;
+import com.denfop.integration.jei.IJeiVariantRecipe;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import net.minecraft.world.item.ItemStack;
@@ -8,9 +10,11 @@ import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AlloySmelterHandler {
+public class AlloySmelterHandler implements IJeiVariantRecipe {
 
     private static final List<AlloySmelterHandler> recipes = new ArrayList<>();
+    private List<List<ItemStack>> inputVariants = new java.util.ArrayList<>();
+
     public final ItemStack input, input1, output;
     public final short temperature;
     private final BaseMachineRecipe container;
@@ -21,6 +25,7 @@ public class AlloySmelterHandler {
         this.output = output;
         this.temperature = temperature;
         this.container = container;
+        JeiIngredientHelper.attachInputVariants(this, container);
     }
 
     public static List<AlloySmelterHandler> getRecipes() {
@@ -81,4 +86,15 @@ public class AlloySmelterHandler {
     }
 
 
+
+
+    @Override
+    public void setInputVariants(final List<List<ItemStack>> inputVariants) {
+        this.inputVariants = inputVariants == null ? new java.util.ArrayList<>() : inputVariants;
+    }
+
+    @Override
+    public List<ItemStack> getInputVariants(final int slot, final ItemStack fallback) {
+        return JeiIngredientHelper.getInputVariants(this.inputVariants, slot, fallback);
+    }
 }

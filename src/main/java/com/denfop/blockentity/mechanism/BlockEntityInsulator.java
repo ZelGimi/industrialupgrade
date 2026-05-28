@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -64,9 +66,9 @@ public class BlockEntityInsulator extends BlockEntityElectricMachine implements 
     private MachineRecipe output;
 
     public BlockEntityInsulator(BlockPos pos, BlockState state) {
-        super(100, 1, 1, BlockBaseMachine3Entity.insulator, pos, state);
+        super(ModConfig.mechanismDouble("insulator_energy_storage", 100.0D), 1, 1, BlockBaseMachine3Entity.insulator, pos, state);
         this.progress = 0;
-        this.defaultEnergyConsume = this.energyConsume = 1;
+        this.defaultEnergyConsume = this.energyConsume = ModConfig.mechanismInt("insulator_energy_use", 1);
         this.defaultOperationLength = this.operationLength = 2 * 60 * 20;
         this.defaultTier = 1;
         this.defaultEnergyStorage = 100;
@@ -76,8 +78,8 @@ public class BlockEntityInsulator extends BlockEntityElectricMachine implements 
         this.inputSlotA = new InventoryRecipes(this, "insulator", this);
 
 
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.25));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("insulator_soil_pollution_amount", 0.1D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("insulator_air_pollution_amount", 0.25D)));
 
         this.fluidTank2 = fluids.addTankInsert("fluidTank2", 12 * 1000);
 

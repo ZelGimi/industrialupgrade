@@ -5,7 +5,7 @@
       "tag": "forge:doubleplate/ferromanganese"
     },
     "B": {
-      "item": "industrialupgrade:battery/itembatlamacrystal"
+      "item": "industrialupgrade:battery/lapotron_crystal"
     },
     "C": {
       "type": "forge:nbt",
@@ -18,8 +18,8 @@
     }
   },
   "pattern": [
-    "ABA",
-    "CEC",
+    "ACA",
+    "BEB",
     "ABA"
   ],
   "result": {

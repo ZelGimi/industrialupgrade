@@ -855,6 +855,25 @@ public class ItemCraftingElements<T extends Enum<T> & ISubEnum> extends ItemMain
         crafting_771_element(),
         crafting_772_element(),
         crafting_773_element(),
+        crafting_774_element(),
+        crafting_775_element(),
+
+
+        crafting_776_element(),
+        crafting_777_element(),
+        crafting_778_element(),
+        crafting_779_element(),
+        crafting_780_element(),
+        crafting_781_element(),
+        crafting_782_element(),
+        crafting_783_element(),
+        crafting_784_element(),
+        crafting_785_element(),
+        crafting_786_element(),
+        crafting_787_element(),
+        crafting_788_element(),
+        crafting_789_element(),
+        crafting_790_element(),
         ;
 
         private final String name;

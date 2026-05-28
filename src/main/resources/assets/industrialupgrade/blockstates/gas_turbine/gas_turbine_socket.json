@@ -15,36 +15,36 @@
       "model": "industrialupgrade:block/gas_turbine/gas_turbine_socket",
       "y": 90
     },
-    "facing=down,type=gas_turbine_socket": {
+    "facing=north,type=gas_turbine_socket_active": {
+      "model": "industrialupgrade:block/gas_turbine/gas_turbine_socket"
+    },
+    "facing=south,type=gas_turbine_socket_active": {
       "model": "industrialupgrade:block/gas_turbine/gas_turbine_socket",
-      "x": 90
+      "y": 180
+    },
+    "facing=west,type=gas_turbine_socket_active": {
+      "model": "industrialupgrade:block/gas_turbine/gas_turbine_socket",
+      "y": 270
+    },
+    "facing=east,type=gas_turbine_socket_active": {
+      "model": "industrialupgrade:block/gas_turbine/gas_turbine_socket",
+      "y": 90
     },
     "facing=up,type=gas_turbine_socket": {
       "model": "industrialupgrade:block/gas_turbine/gas_turbine_socket",
       "x": 270
     },
-    "facing=north,type=gas_turbine_socket_invalid": {
-      "model": "industrialupgrade:block/gas_turbine/gas_turbine_socket"
-    },
-    "facing=south,type=gas_turbine_socket_invalid": {
+    "facing=up,type=gas_turbine_socket_active": {
       "model": "industrialupgrade:block/gas_turbine/gas_turbine_socket",
-      "y": 180
+      "x": 270
     },
-    "facing=west,type=gas_turbine_socket_invalid": {
-      "model": "industrialupgrade:block/gas_turbine/gas_turbine_socket",
-      "y": 270
-    },
-    "facing=east,type=gas_turbine_socket_invalid": {
-      "model": "industrialupgrade:block/gas_turbine/gas_turbine_socket",
-      "y": 90
-    },
-    "facing=down,type=gas_turbine_socket_invalid": {
+    "facing=down,type=gas_turbine_socket_active": {
       "model": "industrialupgrade:block/gas_turbine/gas_turbine_socket",
       "x": 90
     },
-    "facing=up,type=gas_turbine_socket_invalid": {
+    "facing=down,type=gas_turbine_socket": {
       "model": "industrialupgrade:block/gas_turbine/gas_turbine_socket",
-      "x": 270
+      "x": 90
     }
   }
 }

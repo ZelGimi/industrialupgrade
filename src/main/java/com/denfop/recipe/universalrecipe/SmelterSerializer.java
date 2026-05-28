@@ -24,7 +24,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -245,7 +244,7 @@ public class SmelterSerializer implements RecipeSerializer<SmelteryRecipe> {
                     break;
             }
         }
-        if (!IUCore.updateRecipe){
+        if (!IUCore.updateRecipe) {
             List<FluidStack> fluidStacksInput = new ArrayList<>();
             List<ItemStack> itemStacksInput = new ArrayList<>();
             List<FluidStack> fluidStacksOutput = new ArrayList<>();
@@ -297,7 +296,7 @@ public class SmelterSerializer implements RecipeSerializer<SmelteryRecipe> {
                     break;
             }
         }
-        return new SmelteryRecipe(id,operation, inputs, outputs);
+        return new SmelteryRecipe(id, operation, inputs, outputs);
     }
 
     @Override

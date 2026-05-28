@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -72,7 +74,7 @@ public class BlockEntityOilPump extends BlockEntityElectricLiquidTankInventory i
     public int type;
 
     public BlockEntityOilPump(BlockPos pos, BlockState state) {
-        super(50000, 14, 20, Fluids.fluidPredicate(FluidName.fluidpetroleum.getInstance().get(),
+        super(ModConfig.mechanismDouble("pumpjack_energy_storage", 50000.0D), 14, ModConfig.mechanismInt("pumpjack_tank_capacity", 20), Fluids.fluidPredicate(FluidName.fluidpetroleum.getInstance().get(),
                 FluidName.fluidsour_light_oil.getInstance().get(), FluidName.fluidsour_heavy_oil.getInstance().get(),
                 FluidName.fluidsour_medium_oil.getInstance().get(), FluidName.fluidsweet_medium_oil.getInstance().get(),
                 FluidName.fluidsweet_heavy_oil.getInstance().get()
@@ -112,12 +114,14 @@ public class BlockEntityOilPump extends BlockEntityElectricLiquidTankInventory i
 
     @Override
     public void setLevelMech(final int levelMech) {
-        this.levelMech = levelMech;
+        this.levelMech = Math.max(0, Math.min(10, levelMech));
+        this.setChanged();
     }
 
     @Override
     public void removeLevel(final int level) {
-        this.levelMech -= level;
+        this.levelMech = Math.max(0, this.levelMech - level);
+        this.setChanged();
     }
 
 
@@ -134,7 +138,7 @@ public class BlockEntityOilPump extends BlockEntityElectricLiquidTankInventory i
         if (stack.hasTag() && stack.getTag().contains("fluid")) {
             FluidStack fluidStack = FluidStack.loadFluidStackFromNBT((CompoundTag) stack.getTag().get("fluid"));
 
-            tooltip.add(Localization.translate("iu.fluid.info") + fluidStack.getDisplayName().getString());
+            tooltip.add(Localization.translate("iu.fluid.info") + com.denfop.utils.ModUtils.cleanComponentString(fluidStack.getDisplayName().getString()));
             tooltip.add(Localization.translate("iu.fluid.info1") + fluidStack.getAmount() / 1000 + " B");
 
         }
@@ -152,7 +156,7 @@ public class BlockEntityOilPump extends BlockEntityElectricLiquidTankInventory i
     @Override
     public void readFromNBT(final CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        this.levelMech = nbttagcompound.getInt("level");
+        this.levelMech = Math.max(0, Math.min(10, nbttagcompound.contains("level") ? nbttagcompound.getInt("level") : nbttagcompound.getInt("levelMech")));
         this.find = nbttagcompound.getBoolean("find");
     }
 
@@ -201,6 +205,7 @@ public class BlockEntityOilPump extends BlockEntityElectricLiquidTankInventory i
             } else {
                 stack.shrink(1);
                 this.levelMech++;
+                this.setChanged();
                 return true;
             }
         } else {
@@ -339,7 +344,7 @@ public class BlockEntityOilPump extends BlockEntityElectricLiquidTankInventory i
 
     private void get_oil() {
         if (vein.getCol() >= 1) {
-            int size = Math.min(this.levelMech + 1, vein.getCol());
+            int size = Math.min(this.levelMech * 15 + 5, vein.getCol());
             size = Math.min(size, this.fluidTank.getCapacity() - this.fluidTank.getFluidAmount());
             if (this.fluidTank.getFluidAmount() + size <= this.fluidTank.getCapacity()) {
                 int variety = this.vein.getMeta() / 3;

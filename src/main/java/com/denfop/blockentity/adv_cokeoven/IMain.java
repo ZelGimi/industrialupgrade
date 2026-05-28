@@ -1,8 +1,8 @@
 package com.denfop.blockentity.adv_cokeoven;
 
-import com.denfop.api.multiblock.MainMultiBlock;
+import com.denfop.api.multiblock.IMainMultiBlock;
 
-public interface IMain extends MainMultiBlock {
+public interface IMain extends IMainMultiBlock {
 
     IInputFluid getInputFluid();
 

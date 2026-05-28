@@ -57,7 +57,7 @@ public class BlockEntityRefractoryFurnace extends BlockEntityInventory implement
         this.inputSlotA = new InventoryRecipes(this, "refractory_furnace", this);
         this.progress = 0;
         Fluids fluids = this.addComponent(new Fluids(this));
-        this.fluidTank1 = fluids.addTank("fluidTank1", 144 * 12, Inventory.TypeItemSlot.OUTPUT);
+        this.fluidTank1 = fluids.addTank("fluidTank1", 90 * 12, Inventory.TypeItemSlot.OUTPUT);
         this.fluid_handler = new FluidHandlerRecipe("refractory_furnace", fluids);
         this.fluidTank1.setAcceptedFluids(Fluids.fluidPredicate(this.fluid_handler.getOutputFluids(0)));
         this.fluidSlot1 = new InventoryFluidByList(this, 1, this.fluid_handler.getOutputFluids(0));
@@ -101,161 +101,161 @@ public class BlockEntityRefractoryFurnace extends BlockEntityInventory implement
     public void init() {
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(0)), // mikhail
-                new FluidStack(FluidName.fluidmoltenmikhail.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltenmikhail.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(1)), // aluminium
-                new FluidStack(FluidName.fluidmoltenaluminium.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltenaluminium.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(2)), // vanadium
-                new FluidStack(FluidName.fluidmoltenvanadium.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltenvanadium.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(3)), // tungsten
-                new FluidStack(FluidName.fluidmoltentungsten.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltentungsten.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(6)), // cobalt
-                new FluidStack(FluidName.fluidmoltencobalt.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltencobalt.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(7)), // magnesium
-                new FluidStack(FluidName.fluidmoltenmagnesium.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltenmagnesium.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(8)), // nickel
-                new FluidStack(FluidName.fluidmoltennickel.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltennickel.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(9)), // platinum
-                new FluidStack(FluidName.fluidmoltenplatinum.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltenplatinum.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(10)), // titanium
-                new FluidStack(FluidName.fluidmoltentitanium.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltentitanium.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(11)), // chromium
-                new FluidStack(FluidName.fluidmoltenchromium.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltenchromium.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(12)), // spinel
-                new FluidStack(FluidName.fluidmoltenspinel.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltenspinel.getInstance().get(), 90)
         );
 
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(14)), // silver
-                new FluidStack(FluidName.fluidmoltensilver.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltensilver.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(15)), // zinc
-                new FluidStack(FluidName.fluidmoltenzinc.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltenzinc.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(16)), // manganese
-                new FluidStack(FluidName.fluidmoltenmanganese.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltenmanganese.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(17)), // iridium
-                new FluidStack(FluidName.fluidmolteniridium.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmolteniridium.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(18)), // germanium
-                new FluidStack(FluidName.fluidmoltengermanium.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltengermanium.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(19)), // copper
-                new FluidStack(FluidName.fluidmoltencopper.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltencopper.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(20)), // gold
-                new FluidStack(FluidName.fluidmoltengold.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltengold.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(21)), // iron
-                new FluidStack(FluidName.fluidmolteniron.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmolteniron.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(22)), // lead
-                new FluidStack(FluidName.fluidmoltenlead.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltenlead.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(23)), // tin
-                new FluidStack(FluidName.fluidmoltentin.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltentin.getInstance().get(), 90)
         );
 
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(25)), // osmium
-                new FluidStack(FluidName.fluidmoltenosmium.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltenosmium.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(26)), // tantalum
-                new FluidStack(FluidName.fluidmoltentantalum.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltentantalum.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(27)), // cadmium
-                new FluidStack(FluidName.fluidmoltencadmium.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltencadmium.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(28)), // arsenic
-                new FluidStack(FluidName.fluidmoltenarsenic.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltenarsenic.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(29)), // barium
-                new FluidStack(FluidName.fluidmoltenbarium.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltenbarium.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(30)), // bismuth
-                new FluidStack(FluidName.fluidmoltenbismuth.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltenbismuth.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(31)), // gadolinium
-                new FluidStack(FluidName.fluidmoltengadolinium.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltengadolinium.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(32)), // gallium
-                new FluidStack(FluidName.fluidmoltengallium.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltengallium.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(33)), // hafnium
-                new FluidStack(FluidName.fluidmoltenhafnium.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltenhafnium.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(34)), // yttrium
-                new FluidStack(FluidName.fluidmoltenyttrium.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltenyttrium.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(35)), // molybdenum
-                new FluidStack(FluidName.fluidmoltenmolybdenum.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltenmolybdenum.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(36)), // neodymium
-                new FluidStack(FluidName.fluidmoltenneodymium.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltenneodymium.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(37)), // niobium
-                new FluidStack(FluidName.fluidmoltenniobium.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltenniobium.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(38)), // palladium
-                new FluidStack(FluidName.fluidmoltenpalladium.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltenpalladium.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(39)), // polonium
-                new FluidStack(FluidName.fluidmoltenpolonium.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltenpolonium.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(40)), // strontium
-                new FluidStack(FluidName.fluidmoltenstrontium.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltenstrontium.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(41)), // thallium
-                new FluidStack(FluidName.fluidmoltenthallium.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltenthallium.getInstance().get(), 90)
         );
         addRecipe(
                 new ItemStack(IUItem.crushed.getStack(42)), // zirconium
-                new FluidStack(FluidName.fluidmoltenzirconium.getInstance().get(), 144)
+                new FluidStack(FluidName.fluidmoltenzirconium.getInstance().get(), 90)
         );
 
 

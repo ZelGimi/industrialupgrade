@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.genaddstone;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.api.widget.ItemStackWidget;
 import com.denfop.blockentity.mechanism.multimechanism.simple.BlockEntityGearMachine;
@@ -82,8 +83,8 @@ public class GenAddStoneCategory extends ScreenMain implements IRecipeCategory<G
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, GenAddStoneHandler recipes, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 35, 19).addItemStack(recipes.getInput());
-        builder.addSlot(RecipeIngredientRole.INPUT, 35, 47).addItemStack(recipes.getInput1());
+        builder.addSlot(RecipeIngredientRole.INPUT, 35, 19).addItemStacks(JeiIngredientHelper.getInputVariants(recipes, 0, recipes.getInput()));
+        builder.addSlot(RecipeIngredientRole.INPUT, 35, 47).addItemStacks(JeiIngredientHelper.getInputVariants(recipes, 1, recipes.getInput1()));
         builder.addSlot(RecipeIngredientRole.OUTPUT, 87, 6).addItemStack(recipes.getOutput());
     }
 

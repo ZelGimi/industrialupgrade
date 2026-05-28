@@ -37,6 +37,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -73,7 +74,7 @@ public abstract class ScreenIndustrialUpgrade<T extends ContainerMenuBase<? exte
 
     private static List<ItemStack> getCompatibleUpgrades(BlockEntityUpgrade block) {
         ArrayList<ItemStack> ret = new ArrayList<>();
-        Set<EnumBlockEntityUpgrade> properties = block.getUpgradableProperties();
+        Set<EnumBlockEntityUpgrade> properties = block.getAllPossibleUpgradableProperties();
 
         for (final ItemStack stack : BlockEntityUpgradeManager.getUpgrades()) {
             UpgradeItem item = (UpgradeItem) stack.getItem();
@@ -194,6 +195,10 @@ public abstract class ScreenIndustrialUpgrade<T extends ContainerMenuBase<? exte
         }
 
         return lines;
+    }
+
+    public boolean canRenderSlot(Slot slot) {
+        return true;
     }
 
     public void drawTextInCanvasWithScissor(PoseStack poseStack, String text, int canvasX, int canvasY, int canvasWidth, int canvasHeight, int scale) {
@@ -344,7 +349,7 @@ public abstract class ScreenIndustrialUpgrade<T extends ContainerMenuBase<? exte
 
         for (int k = 0; k < this.menu.slots.size(); ++k) {
             Slot slot = this.menu.slots.get(k);
-            if (slot.isActive()) {
+            if (slot.isActive() && canRenderSlot(slot)) {
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 this.renderSlot(graphics, slot);
             }
@@ -535,7 +540,7 @@ public abstract class ScreenIndustrialUpgrade<T extends ContainerMenuBase<? exte
             arrayList.add(Localization.translate(Constants.ABBREVIATION + ".generic.text.upgrade"));
 
             for (ItemStack itemStack : getCompatibleUpgrades((BlockEntityUpgrade) this.menu.base)) {
-                arrayList.add(itemStack.getHoverName().getString());
+                arrayList.add(com.denfop.utils.ModUtils.cleanComponentString(itemStack.getHoverName().getString()));
             }
 
             this.drawTooltip(n, n2, arrayList);
@@ -575,7 +580,7 @@ public abstract class ScreenIndustrialUpgrade<T extends ContainerMenuBase<? exte
 
     protected void mouseClicked(int i, int j, int k) {
         for (Widget widget : this.renderables) {
-            if (widget instanceof GuiEventListener) {
+            if (widget instanceof GuiEventListener && !this.children().contains(widget)) {
                 ((GuiEventListener) widget).mouseClicked(i, j, k);
             }
         }
@@ -767,7 +772,7 @@ public abstract class ScreenIndustrialUpgrade<T extends ContainerMenuBase<? exte
 
     public void drawItem(int x, int y, ItemStack itemStack) {
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-        itemRenderer.renderAndDecorateItem(itemStack, x, y);
+        itemRenderer.renderAndDecorateItem(itemStack, this.guiLeft + x, this.guiTop + y);
     }
 
     public void drawColoredRect(PoseStack poseStack, int x, int y, int width, int height, int color, BufferBuilder bufferBuilder) {
@@ -896,6 +901,16 @@ public abstract class ScreenIndustrialUpgrade<T extends ContainerMenuBase<? exte
         tooltipComponents.add(stack.getDisplayName());
         strings.forEach(s -> tooltipComponents.add(Component.literal(s)));
         this.renderComponentTooltip(poseStack, tooltipComponents, x, y);
+    }
+
+    public void drawTooltipOnlyName(PoseStack poseStack, int x, int y, FluidStack stack, List<String> strings) {
+        if (stack.isEmpty()) {
+            return;
+        }
+        List<Component> tooltipComponents = new ArrayList<>();
+        tooltipComponents.add(Component.literal(Localization.translate(stack.getTranslationKey())));
+        strings.forEach(s -> tooltipComponents.add(Component.literal(s)));
+        renderComponentTooltip(poseStack, tooltipComponents, x, y);
     }
 
     public void drawTooltip(int n, int n2, List<String> list) {

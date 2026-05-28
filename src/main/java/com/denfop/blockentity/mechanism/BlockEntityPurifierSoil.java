@@ -36,10 +36,27 @@ public class BlockEntityPurifierSoil extends BlockEntityInventory implements IMa
         this.chunkLevel = null;
     }
 
+    public static int getSoilPurificationPerSecondInt(int level) {
+        return 10 + Math.max(0, level) * 50;
+    }
+
+    public static double getSoilPurificationPerSecond(int level) {
+        return getSoilPurificationPerSecondInt(level);
+    }
+
+    public static int getAirSideEffectPerSecondInt(int level) {
+        return 25 + Math.max(0, level) * 25;
+    }
+
+    public static double getAirSideEffectPerSecond(int level) {
+        return getAirSideEffectPerSecondInt(level);
+    }
+
     @Override
     public void addInformation(ItemStack stack, List<String> tooltip) {
         super.addInformation(stack, tooltip);
         tooltip.add(Localization.translate("iu.soil_purifier.info"));
+
     }
 
     @Override
@@ -51,13 +68,13 @@ public class BlockEntityPurifierSoil extends BlockEntityInventory implements IMa
             } else {
                 stack.shrink(1);
                 this.levelBlock++;
+                this.setChanged();
                 return true;
             }
         } else {
             return super.onActivated(player, hand, side, vec3);
         }
     }
-
 
     public List<ItemStack> getWrenchDrops(Player player, int fortune) {
         List<ItemStack> ret = super.getWrenchDrops(player, fortune);
@@ -71,7 +88,7 @@ public class BlockEntityPurifierSoil extends BlockEntityInventory implements IMa
     @Override
     public void readFromNBT(final CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        this.levelBlock = nbttagcompound.getInt("level");
+        this.levelBlock = Math.max(0, Math.min(10, nbttagcompound.contains("level") ? nbttagcompound.getInt("level") : nbttagcompound.getInt("levelMech")));
     }
 
     @Override
@@ -87,14 +104,15 @@ public class BlockEntityPurifierSoil extends BlockEntityInventory implements IMa
     }
 
     public void setLevelMech(final int levelBlock) {
-        this.levelBlock = levelBlock;
+        this.levelBlock = Math.max(0, Math.min(10, levelBlock));
+        this.setChanged();
     }
 
     @Override
     public void removeLevel(final int level) {
-        this.levelBlock -= level;
+        this.levelBlock = Math.max(0, this.levelBlock - level);
+        this.setChanged();
     }
-
 
     @Override
     public void onLoaded() {
@@ -127,9 +145,9 @@ public class BlockEntityPurifierSoil extends BlockEntityInventory implements IMa
         if (this.level.getGameTime() % 20 == 0 && this.energy.getEnergy() > 100) {
             this.chunkLevel = PollutionManager.pollutionManager.getChunkLevelSoil(this.chunkPos);
             if (this.chunkLevel != null) {
-                final ChunkLevel chunkLevel1 = PollutionManager.pollutionManager.getChunkLevelAir(this.chunkPos);
-                if (this.chunkLevel.removePollution(10 + levelBlock * 50)) {
-                    chunkLevel1.addPollution(25 + levelBlock * 25);
+                final ChunkLevel chunkLevelAir = PollutionManager.pollutionManager.getChunkLevelAir(this.chunkPos);
+                if (this.chunkLevel.removePollution(getSoilPurificationPerSecondInt(this.levelBlock))) {
+                    chunkLevelAir.addPollution(getAirSideEffectPerSecondInt(this.levelBlock));
                     this.energy.useEnergy(100);
                     this.setActive(true);
                 } else {
@@ -149,5 +167,4 @@ public class BlockEntityPurifierSoil extends BlockEntityInventory implements IMa
     public MultiBlockEntity getTeBlock() {
         return BlockBaseMachine3Entity.purifier_soil;
     }
-
 }

@@ -8,7 +8,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class RecipesPowerUtils {
     public static void register() {
-         Recipes.recipe.addRecipe(new ItemStack(PowerUtils.module_ic.getItem()), new Object[]{
+        Recipes.recipe.addRecipe(new ItemStack(PowerUtils.module_ic.getItem()), new Object[]{
                 "ABA", "CDC", "ABA",
 
                 Character.valueOf('A'), IUItem.copperCableItem,

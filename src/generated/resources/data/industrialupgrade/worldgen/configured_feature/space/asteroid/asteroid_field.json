@@ -1,0 +1,6 @@
+{
+  "type": "industrialupgrade:space_asteroid_field",
+  "config": {
+    "body_name": "asteroid"
+  }
+}

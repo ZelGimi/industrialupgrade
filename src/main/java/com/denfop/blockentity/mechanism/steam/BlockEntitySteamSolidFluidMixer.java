@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.steam;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -71,11 +73,11 @@ public class BlockEntitySteamSolidFluidMixer extends BlockEntityElectricMachine 
     protected short progress;
 
     public BlockEntitySteamSolidFluidMixer(BlockPos pos, BlockState state) {
-        super(0, 1, 1, BlockBaseMachine3Entity.steam_solid_fluid_mixer, pos, state);
+        super(ModConfig.mechanismDouble("steam_solid_fluid_mixer_energy_storage", 0.0D), 1, 1, BlockBaseMachine3Entity.steam_solid_fluid_mixer, pos, state);
         Recipes.recipes.addInitRecipes(this);
 
         this.progress = 0;
-        this.defaultEnergyConsume = this.energyConsume = 1;
+        this.defaultEnergyConsume = this.energyConsume = ModConfig.mechanismInt("steam_solid_fluid_mixer_energy_use", 1);
         this.defaultOperationLength = this.operationLength = 200;
         this.defaultTier = 1;
         this.defaultEnergyStorage = 100;

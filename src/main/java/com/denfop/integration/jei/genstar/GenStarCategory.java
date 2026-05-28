@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.genstar;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.blockentity.mechanism.BlockEntityNuclearWasteRecycler;
@@ -81,13 +82,13 @@ public class GenStarCategory extends ScreenMain implements IRecipeCategory<GenSt
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, GenStarHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 5, 24).addItemStack(recipe.getInput());
-        builder.addSlot(RecipeIngredientRole.INPUT, 23, 24).addItemStack(recipe.getInput1());
-        builder.addSlot(RecipeIngredientRole.INPUT, 41, 24).addItemStack(recipe.getInput2());
-        builder.addSlot(RecipeIngredientRole.INPUT, 5, 42).addItemStack(recipe.getInput3());
-        builder.addSlot(RecipeIngredientRole.INPUT, 23, 42).addItemStack(recipe.getInput4());
-        builder.addSlot(RecipeIngredientRole.INPUT, 41, 42).addItemStack(recipe.getInput5());
-        builder.addSlot(RecipeIngredientRole.INPUT, 23, 60).addItemStack(recipe.getInput6());
+        builder.addSlot(RecipeIngredientRole.INPUT, 5, 24).addItemStacks(JeiIngredientHelper.getInputVariants(recipe, 0, recipe.getInput()));
+        builder.addSlot(RecipeIngredientRole.INPUT, 23, 24).addItemStacks(JeiIngredientHelper.getInputVariants(recipe, 1, recipe.getInput1()));
+        builder.addSlot(RecipeIngredientRole.INPUT, 41, 24).addItemStacks(JeiIngredientHelper.getInputVariants(recipe, 2, recipe.getInput2()));
+        builder.addSlot(RecipeIngredientRole.INPUT, 5, 42).addItemStacks(JeiIngredientHelper.getInputVariants(recipe, 3, recipe.getInput3()));
+        builder.addSlot(RecipeIngredientRole.INPUT, 23, 42).addItemStacks(JeiIngredientHelper.getInputVariants(recipe, 4, recipe.getInput4()));
+        builder.addSlot(RecipeIngredientRole.INPUT, 41, 42).addItemStacks(JeiIngredientHelper.getInputVariants(recipe, 5, recipe.getInput5()));
+        builder.addSlot(RecipeIngredientRole.INPUT, 23, 60).addItemStacks(JeiIngredientHelper.getInputVariants(recipe, 6, recipe.getInput6()));
         builder.addSlot(RecipeIngredientRole.OUTPUT, 117, 33).addItemStack(recipe.getOutput());
     }
 

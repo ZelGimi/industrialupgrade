@@ -1,6 +1,8 @@
 package com.denfop.items;
 
 
+
+import com.denfop.config.ModConfig;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -22,7 +24,7 @@ import static com.denfop.IUCore.fluidCellTab;
 
 public class ItemSmallFluidCell extends ItemFluidContainer {
     public ItemSmallFluidCell() {
-        super(new Properties().stacksTo(64).setNoRepair().tab(fluidCellTab), 500);
+        super(new Properties().stacksTo(64).setNoRepair().tab(fluidCellTab), ModConfig.itemInt("small_fluid_cell_capacity", 500));
     }
 
     public boolean canfill(Fluid fluid) {

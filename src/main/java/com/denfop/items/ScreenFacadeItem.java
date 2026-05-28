@@ -28,7 +28,7 @@ public class ScreenFacadeItem<T extends ContainerMenuFacadeItem> extends ScreenM
 
         componentList.add(slots);
 
-        this.name = itemStack1.getDisplayName().getString();
+        this.name = com.denfop.utils.ModUtils.cleanComponentString(itemStack1.getDisplayName().getString());
         this.imageHeight = 232;
         this.addWidget(new ImageInterfaceWidget(this, 0, 0, imageWidth, imageHeight));
     }

@@ -1,5 +1,7 @@
 package com.denfop.blockentity.reactors.gas.regenerator;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blocks.BlockTileEntity;
@@ -10,7 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class BlockEntityPerRegenerator extends BlockEntityRegenerator {
 
     public BlockEntityPerRegenerator(BlockPos pos, BlockState state) {
-        super(3, 1500, BlockGasReactorEntity.per_gas_regenerator, pos, state);
+        super(3, ModConfig.mechanismInt("perfect_gas_cooling_reactor_regenerator_capacity", 1500), BlockGasReactorEntity.per_gas_regenerator, pos, state);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -40,8 +42,8 @@ public class BlockEntityMachineCharge extends BlockEntityInventory {
         super(BlockBaseMachine3Entity.machine_charger, pos, state);
         this.energy = this.addComponent(Energy.asBasicSink(this, 1000000000, 14));
 
-        this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("machine_charge_soil_pollution_amount", 0.1D)));
+        this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("machine_charge_air_pollution_amount", 0.1D)));
         visible = this.addComponent(new ComponentVisibleArea(this));
     }
 

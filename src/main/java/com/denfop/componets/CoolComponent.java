@@ -30,13 +30,11 @@ import java.util.Set;
 
 public class CoolComponent extends AbstractComponent {
 
+    public static boolean cooling = true;
     public final Level world;
-
     public final BufferEnergy buffer;
     public Set<Direction> sinkDirections;
     public Set<Direction> sourceDirections;
-
-
     public EnergyNetDelegate delegate;
     public boolean loaded;
     public boolean upgrade = false;
@@ -219,7 +217,6 @@ public class CoolComponent extends AbstractComponent {
         return false;
     }
 
-
     public double getCapacity() {
         return this.buffer.capacity;
     }
@@ -239,7 +236,6 @@ public class CoolComponent extends AbstractComponent {
         return this.buffer.storage / this.buffer.capacity;
     }
 
-    public static boolean cooling = true;
     public double addEnergy(double amount) {
 
         this.buffer.storage += amount * this.coef;
@@ -248,7 +244,7 @@ public class CoolComponent extends AbstractComponent {
         if (this.upgrade) {
             this.buffer.storage = 0;
         }
-        if (this.delegate instanceof ICoolSink){
+        if (this.delegate instanceof ICoolSink) {
             if (!cooling)
                 this.buffer.storage = 0;
 

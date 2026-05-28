@@ -1,0 +1,15 @@
+{
+  "type": "industrialupgrade:space_generic_fluid",
+  "config": {
+    "base_chance": 0.5208333,
+    "body_id": "rhea",
+    "distribution_type": "cryo",
+    "fluid_id": "industrialupgrade:iufluidnitrogenhydride",
+    "max_y": 28,
+    "min_y": -56,
+    "radius_max": 16,
+    "radius_min": 3,
+    "require_cold_context": true,
+    "surface_allowed": true
+  }
+}

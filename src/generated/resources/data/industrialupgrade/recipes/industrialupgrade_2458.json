@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "tag": "forge:casings/niobiumtitanium"
+    },
+    "B": {
+      "item": "industrialupgrade:charged_quartz"
+    },
+    "C": {
+      "tag": "forge:casings/invar"
+    }
+  },
+  "pattern": [
+    "CAC",
+    "ABA",
+    "CAC"
+  ],
+  "result": {
+    "item": "industrialupgrade:crafting_elements/crafting_776_element"
+  }
+}

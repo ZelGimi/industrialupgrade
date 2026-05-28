@@ -1,6 +1,8 @@
 package com.denfop.blockentity.base;
 
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -57,7 +59,7 @@ public class BlockEntityCombinerMatter extends BlockEntityElectricLiquidTankInve
     private int amountScrap;
 
     public BlockEntityCombinerMatter(BlockPos pos, BlockState state) {
-        super(0, 14, 12, BlockBaseMachine2Entity.combiner_matter, pos, state);
+        super(ModConfig.mechanismDouble("combined_matter_fabricator_energy_storage", 0.0D), 14, ModConfig.mechanismInt("combined_matter_fabricator_tank_capacity", 12), BlockBaseMachine2Entity.combiner_matter, pos, state);
         this.energycost = 0;
         this.amplifierSlot = new InventoryRecipes(this, "matterAmplifier", this);
         this.outputSlot = new InventoryOutput(this, 1);
@@ -80,8 +82,8 @@ public class BlockEntityCombinerMatter extends BlockEntityElectricLiquidTankInve
         );
 
         this.fluidTank.setTypeItemSlot(Inventory.TypeItemSlot.OUTPUT);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("combined_matter_fabricator_soil_pollution_amount", 0.05D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("combined_matter_fabricator_air_pollution_amount", 0.1D)));
     }
 
     private static int applyModifier(int base) {

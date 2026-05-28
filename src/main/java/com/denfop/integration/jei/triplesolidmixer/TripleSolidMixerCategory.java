@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.triplesolidmixer;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.recipe.InventoryRecipes;
@@ -112,7 +113,7 @@ public class TripleSolidMixerCategory extends ScreenMain implements IRecipeCateg
         final List<ItemStack> outputs = recipe.getOutputs();
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX() - 8, slots1.get(i).getJeiY() - 10).addItemStack(inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX() - 8, slots1.get(i).getJeiY() - 10).addItemStacks(JeiIngredientHelper.getInputVariants(recipe, i, inputs.get(i)));
 
 
         }
@@ -123,7 +124,6 @@ public class TripleSolidMixerCategory extends ScreenMain implements IRecipeCateg
 
 
         }
-        builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStacks(recipe.getContainer().input.getAllStackInputs());
 
     }
 

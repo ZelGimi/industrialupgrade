@@ -1,8 +1,8 @@
 package com.denfop.blockentity.reactors.graphite;
 
-import com.denfop.api.multiblock.MultiBlockElement;
+import com.denfop.api.multiblock.IMultiElement;
 
-public interface ICapacitor extends MultiBlockElement {
+public interface ICapacitor extends IMultiElement {
 
     double getPercent(int x);
 

@@ -107,7 +107,7 @@ public class BlockEntityWirelessOilPump extends BlockEntityInventory implements 
     @Override
     public void readFromNBT(final CompoundTag nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
-        this.levelBlock = nbtTagCompound.getInt("level");
+        this.levelBlock = Math.max(0, Math.min(10, nbtTagCompound.contains("level") ? nbtTagCompound.getInt("level") : nbtTagCompound.getInt("levelMech")));
     }
 
     @Override
@@ -126,6 +126,7 @@ public class BlockEntityWirelessOilPump extends BlockEntityInventory implements 
             } else {
                 stack.shrink(1);
                 this.levelBlock++;
+                this.setChanged();
                 return true;
             }
         } else {
@@ -141,7 +142,7 @@ public class BlockEntityWirelessOilPump extends BlockEntityInventory implements 
         for (VeinBase vein : this.veinList) {
             if (this.energy.getEnergy() >= 10 && vein.isFind()) {
                 if (vein.getCol() >= 1) {
-                    int size = Math.min((this.levelBlock + 1) * 2, vein.getCol());
+                    int size = Math.min(this.levelBlock * 15 + 5, vein.getCol());
                     size = Math.min(size, this.fluidTank.getCapacity() - this.fluidTank.getFluidAmount());
                     if (this.fluidTank.getFluidAmount() + size <= this.fluidTank.getCapacity()) {
                         int variety = vein.getMeta() / 3;
@@ -222,7 +223,7 @@ public class BlockEntityWirelessOilPump extends BlockEntityInventory implements 
         if (stack.hasTag() && stack.getTag().contains("fluid")) {
             FluidStack fluidStack = FluidStack.loadFluidStackFromNBT((CompoundTag) stack.getTag().get("fluid"));
 
-            tooltip.add(Localization.translate("iu.fluid.info") + fluidStack.getDisplayName().getString());
+            tooltip.add(Localization.translate("iu.fluid.info") + com.denfop.utils.ModUtils.cleanComponentString(fluidStack.getDisplayName().getString()));
             tooltip.add(Localization.translate("iu.fluid.info1") + fluidStack.getAmount() / 1000 + " B");
 
         }
@@ -289,12 +290,14 @@ public class BlockEntityWirelessOilPump extends BlockEntityInventory implements 
 
     @Override
     public void setLevelMech(final int level) {
-        this.levelBlock = level;
+        this.levelBlock = Math.max(0, Math.min(10, level));
+        this.setChanged();
     }
 
     @Override
     public void removeLevel(final int level) {
-        this.levelBlock -= level;
+        this.levelBlock = Math.max(0, this.levelBlock - level);
+        this.setChanged();
     }
 
 }

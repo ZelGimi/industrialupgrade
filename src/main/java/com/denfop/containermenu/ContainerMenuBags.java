@@ -1,7 +1,6 @@
 package com.denfop.containermenu;
 
 import com.denfop.IUItem;
-import com.denfop.containermenu.slot.SlotVirtual;
 import com.denfop.containermenu.slot.VirtualSlotItem;
 import com.denfop.items.bags.ItemStackBags;
 import com.denfop.utils.ModUtils;

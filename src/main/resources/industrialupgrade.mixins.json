@@ -5,6 +5,7 @@
   "refmap": "mixins.industrialupgrade.refmap.json",
   "mixins": [
     "BlockEntityMixin",
+    "ComposterBlockMixin",
     "MixinInventory",
     "MixinServerGamePacketListenerImpl",
     "access.AbstractContainerMenuAccessor",
@@ -12,11 +13,15 @@
     "access.DeferredRegisterAccessor",
     "access.ExplosionAccessor",
     "access.IngredientAccessor",
+    "access.RecipeManagerAccessor",
+    "access.StructureTemplatePoolAccessor",
     "access.TagValueAccessor",
     "invoker.LevelInvoker",
     "invoker.MaterialInvoker"
   ],
   "client": [
+    "MixinLevelRendererWeather",
+    "MixinLiquidBlockRendererTint",
     "access.AbstractContainerScreenAccessor",
     "access.LevelRendererAccessor",
     "access.RenderChunkRegionAccessor",

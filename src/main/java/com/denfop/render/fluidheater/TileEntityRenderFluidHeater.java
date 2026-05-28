@@ -1,6 +1,7 @@
 package com.denfop.render.fluidheater;
 
 import com.denfop.blockentity.mechanism.BlockEntityPrimalFluidHeater;
+import com.denfop.utils.Localization;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import net.minecraft.client.Minecraft;
@@ -30,13 +31,13 @@ public class TileEntityRenderFluidHeater implements BlockEntityRenderer<BlockEnt
             poseStack.translate(0.5, 1.75, 0.5);
 
             Component text = (tile.fluidTank1.isEmpty()) ?
-                    Component.literal("FluidTank: 0/" + tile.fluidTank1.getCapacity()) :
-                    Component.literal(tile.fluidTank1.getFluid().getDisplayName().getString() + ": " +
+                    Component.literal(Localization.translate("iu.tooltip.fluid_tank") + "0/" + tile.fluidTank1.getCapacity()) :
+                    Component.literal(com.denfop.utils.ModUtils.cleanComponentString(tile.fluidTank1.getFluid().getDisplayName().getString()) + ": " +
                             tile.fluidTank1.getFluidAmount() + "/" + tile.fluidTank1.getCapacity());
 
             Component text1 = (tile.fluidTank2.isEmpty()) ?
-                    Component.literal("FluidTank: 0/" + tile.fluidTank2.getCapacity()) :
-                    Component.literal(tile.fluidTank2.getFluid().getDisplayName().getString() + ": " +
+                    Component.literal(Localization.translate("iu.tooltip.fluid_tank") + "0/" + tile.fluidTank2.getCapacity()) :
+                    Component.literal(com.denfop.utils.ModUtils.cleanComponentString(tile.fluidTank2.getFluid().getDisplayName().getString()) + ": " +
                             tile.fluidTank2.getFluidAmount() + "/" + tile.fluidTank2.getCapacity());
 
             Component text2 = Component.literal(String.format("%d", (int) (tile.getProgress() * 100)) + "%");

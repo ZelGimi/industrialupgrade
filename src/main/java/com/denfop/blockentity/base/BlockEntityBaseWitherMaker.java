@@ -1,5 +1,7 @@
 package com.denfop.blockentity.base;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.recipe.IUpdateTick;
 import com.denfop.api.recipe.InventoryRecipes;
@@ -47,8 +49,8 @@ public abstract class BlockEntityBaseWitherMaker extends BlockEntityElectricMach
         this.componentProcess.setSlotOutput(outputSlot);
         this.componentProcess.setAction(new Action(this, 20, TypeAction.AUDIO, TypeLoad.PROGRESS, 3));
         this.componentUpgrades = this.addComponent(new ComponentUpgrade(this, TypeUpgrade.INSTANT, TypeUpgrade.STACK));
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.2));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.2));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("base_wither_maker_soil_pollution_amount", 0.2D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("base_wither_maker_air_pollution_amount", 0.2D)));
 
     }
 
@@ -65,7 +67,7 @@ public abstract class BlockEntityBaseWitherMaker extends BlockEntityElectricMach
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
             tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getEnergyConsume() + Localization.translate(
                     "iu.machines_work_energy_type_eu"));
-            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getOperationsPerTick());
+            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getDefaultOperationLength());
         }
         super.addInformation(stack, tooltip);
 

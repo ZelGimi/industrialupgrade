@@ -14,13 +14,19 @@
       "item": "industrialupgrade:machines/spectral_solar_panel"
     },
     "E": {
-      "item": "industrialupgrade:excitednucleus/specore"
+      "item": "industrialupgrade:excitednucleus/procore"
+    },
+    "H": {
+      "type": "forge:nbt",
+      "count": 1,
+      "item": "industrialupgrade:circuit/nanocircuit",
+      "nbt": "{level:6}"
     }
   },
   "pattern": [
     "ABA",
     "CDC",
-    "DED"
+    "HEH"
   ],
   "result": {
     "item": "industrialupgrade:machines/proton_solar_panel"

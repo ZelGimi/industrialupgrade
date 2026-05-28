@@ -1,8 +1,8 @@
 package com.denfop.blockentity.reactors.gas;
 
-import com.denfop.api.multiblock.MultiBlockElement;
+import com.denfop.api.multiblock.IMultiElement;
 
-public interface IRegenerator extends MultiBlockElement {
+public interface IRegenerator extends IMultiElement {
 
     int getMaxHelium();
 

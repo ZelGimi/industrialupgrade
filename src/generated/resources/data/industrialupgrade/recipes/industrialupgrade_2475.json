@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "industrialupgrade:crafting_elements/crafting_774_element"
+    },
+    {
+      "item": "industrialupgrade:crafting_elements/crafting_781_element"
+    }
+  ],
+  "result": {
+    "item": "industrialupgrade:storage/fluid_1024000"
+  }
+}

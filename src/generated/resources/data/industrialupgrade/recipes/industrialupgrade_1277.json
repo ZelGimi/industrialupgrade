@@ -1,9 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
   "key": {
-    "A": {
-      "item": "industrialupgrade:crafting_elements/crafting_32_element"
-    },
     "B": {
       "item": "industrialupgrade:basemachine3/steamboiler"
     },
@@ -15,7 +12,7 @@
     }
   },
   "pattern": [
-    " A ",
+    "   ",
     "DBC",
     "   "
   ],

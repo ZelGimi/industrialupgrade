@@ -1,8 +1,8 @@
 package com.denfop.blockentity.mechanism.blastfurnace.api;
 
-import com.denfop.api.multiblock.MainMultiBlock;
+import com.denfop.api.multiblock.IMainMultiBlock;
 
-public interface IBlastMain extends MainMultiBlock {
+public interface IBlastMain extends IMainMultiBlock {
 
     IBlastHeat getHeat();
 

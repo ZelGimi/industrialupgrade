@@ -8,16 +8,13 @@
       "item": "industrialupgrade:adv_spectral_box"
     },
     "C": {
-      "type": "forge:nbt",
-      "count": 1,
-      "item": "industrialupgrade:circuit/spectralcircuit",
-      "nbt": "{level:9}"
+      "tag": "forge:plates/mithril"
     },
     "D": {
       "item": "industrialupgrade:energy_tools/quantum_bow"
     },
     "E": {
-      "tag": "forge:doubleplate/duralumin"
+      "tag": "c:doubleplate/duralumin"
     }
   },
   "pattern": [

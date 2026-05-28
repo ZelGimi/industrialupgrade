@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -51,16 +53,16 @@ public class BlockEntityMagnet extends BlockEntityElectricMachine implements IUp
     public int energyconsume;
     public boolean work;
     public String player;
-    public int x = 11;
-    public int y = 11;
-    public int z = 11;
+    public int x = ModConfig.mechanismInt("magnet_default_x_radius", 11);
+    public int y = ModConfig.mechanismInt("magnet_default_y_radius", 11);
+    public int z = ModConfig.mechanismInt("magnet_default_z_radius", 11);
     List<ChunkAccess> list = Lists.newArrayList();
     private AABB axisalignedbb;
     private ChunkPos chunkPos;
 
     public BlockEntityMagnet(BlockPos pos, BlockState state) {
-        super(100000, 14, 24, BlockBaseMachine1Entity.magnet, pos, state);
-        this.energyconsume = 1000;
+        super(ModConfig.mechanismDouble("magnet_energy_storage", 100000.0D), 14, 24, BlockBaseMachine1Entity.magnet, pos, state);
+        this.energyconsume = ModConfig.mechanismInt("magnet_energy_per_item", 1000);
         this.player = "";
         this.work = true;
         this.slot = new SlotInfo(this, 18, false);
@@ -261,7 +263,7 @@ public class BlockEntityMagnet extends BlockEntityElectricMachine implements IUp
             ParticleUtils.spawnMagneticCatcherParticles(level, pos, level.random);
         }
         boolean ret = false;
-        if (this.getWorld().getGameTime() % 4 == 0) {
+        if (this.getWorld().getGameTime() % ModConfig.mechanismInt("magnet_work_interval_ticks", 4) == 0) {
 
             List<ItemEntity> list = getEntitiesWithinAABB();
             for (ItemEntity item : list) {
@@ -303,7 +305,7 @@ public class BlockEntityMagnet extends BlockEntityElectricMachine implements IUp
             }
             if (event == 1) {
                 x++;
-                x = Math.min(11, x);
+                x = Math.min(ModConfig.mechanismInt("magnet_max_x_radius", 11), x);
             }
             if (event == 2) {
                 y--;
@@ -311,7 +313,7 @@ public class BlockEntityMagnet extends BlockEntityElectricMachine implements IUp
             }
             if (event == 3) {
                 y++;
-                y = Math.min(11, y);
+                y = Math.min(ModConfig.mechanismInt("magnet_max_y_radius", 11), y);
             }
             if (event == 4) {
                 z--;
@@ -319,7 +321,7 @@ public class BlockEntityMagnet extends BlockEntityElectricMachine implements IUp
             }
             if (event == 5) {
                 z++;
-                z = Math.min(11, z);
+                z = Math.min(ModConfig.mechanismInt("magnet_max_z_radius", 11), z);
             }
             updateData();
         }

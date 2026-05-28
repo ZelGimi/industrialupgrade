@@ -81,6 +81,8 @@ import com.denfop.integration.jei.enchanter.EnchantCategory;
 import com.denfop.integration.jei.enchanter.EnchantHandler;
 import com.denfop.integration.jei.enrichment.EnrichCategory;
 import com.denfop.integration.jei.enrichment.EnrichHandler;
+import com.denfop.integration.jei.environment.EnvironmentalTransformationCategory;
+import com.denfop.integration.jei.environment.EnvironmentalTransformationHandler;
 import com.denfop.integration.jei.extractor.ExtractorCategory;
 import com.denfop.integration.jei.extractor.ExtractorHandler;
 import com.denfop.integration.jei.extruder.ExtruderCategory;
@@ -361,6 +363,7 @@ import mezz.jei.api.helpers.IJeiHelpers;
 import mezz.jei.api.registration.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -547,6 +550,7 @@ public class JEICompat implements IModPlugin {
     public static JeiInform world_collector_nether = new JeiInform("world_collector_nether", NetherCategory.class, NetherHandler.class);
     public static JeiInform scrapbox = new JeiInform("scrapbox", ScrapboxRecipeCategory.class, ScrapboxRecipeHandler.class);
     public static IGuiHelper guiHelper;
+    public static JeiInform environmental_transformations = new JeiInform("environmental_transformations", EnvironmentalTransformationCategory.class, EnvironmentalTransformationHandler.class);
 
     public JEICompat() {
 
@@ -591,6 +595,9 @@ public class JEICompat implements IModPlugin {
                 ItemStackHelper.fromData(IUItem.basemachine2, 1, 35),
                 world_collector_aqua.recipeType
         );
+        registry.addRecipeCatalyst(new ItemStack(Blocks.COMPOSTER), environmental_transformations.recipeType);
+        registry.addRecipeCatalyst(new ItemStack(Blocks.MUD), environmental_transformations.recipeType);
+
         registry.addRecipeCatalyst(
                 ItemStackHelper.fromData(IUItem.basemachine2, 1, 34),
                 world_collector_aer.recipeType

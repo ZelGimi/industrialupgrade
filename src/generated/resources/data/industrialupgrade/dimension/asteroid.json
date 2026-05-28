@@ -1,0 +1,11 @@
+{
+  "type": "industrialupgrade:asteroid_type",
+  "generator": {
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "industrialupgrade:asteroid_biome"
+    },
+    "settings": "industrialupgrade:asteroid_noise"
+  }
+}

@@ -4,6 +4,7 @@ import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.item.upgrade.UpgradeSystem;
 import com.denfop.api.space.SpaceInit;
+import com.denfop.blockentity.base.BlockEntityBase;
 import com.denfop.blockentity.panels.entity.BlockEntitySolarPanel;
 import com.denfop.blockentity.panels.entity.EnumSolarPanels;
 import com.denfop.blockentity.transport.tiles.BlockEntityMultiCable;
@@ -62,6 +63,10 @@ public class CommonProxy {
         return null;
     }
 
+    public void setLevelIfNull(BlockEntityBase blockEntityBase) {
+        if (blockEntityBase.getLevel() == null)
+            blockEntityBase.setLevel(ServerLifecycleHooks.getCurrentServer().overworld());
+    }
 
     public void init() {
         WorldBaseGen.initVein();
@@ -72,7 +77,7 @@ public class CommonProxy {
         objectList.add(EnumSolarPanels.QUARK_SOLAR_PANEL.producing * 4);
         objectList.add(14);
         panel_list.put(new ItemStack(IUItem.blockadmin.getItem()).getDescriptionId(), objectList);
-        //   SolarEnergySystem.system = new SolarEnergySystem();
+
     }
 
     public void postInit() {

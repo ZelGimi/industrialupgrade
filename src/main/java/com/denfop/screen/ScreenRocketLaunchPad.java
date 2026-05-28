@@ -13,7 +13,7 @@ import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 
 import static com.denfop.api.widget.ScreenWidget.bindBlockTexture;
-import static com.denfop.api.widget.ScreenWidget.getBlockTextureMap;
+import static com.denfop.api.widget.TankWidget.getSafeFluidSprite;
 
 
 public class ScreenRocketLaunchPad<T extends ContainerMenuRocketLaunchPad> extends ScreenMain<ContainerMenuRocketLaunchPad> {
@@ -22,7 +22,7 @@ public class ScreenRocketLaunchPad<T extends ContainerMenuRocketLaunchPad> exten
         super(guiContainer);
         imageHeight = 220;
         this.componentList.clear();
-        this.addWidget(new TankWidget(this, 106, 15, 12, 35, guiContainer.base.tank){
+        this.addWidget(new TankWidget(this, 106, 15, 12, 35, guiContainer.base.tank) {
             @Override
             public void drawBackground(PoseStack poseStack, int mouseX, int mouseY) {
                 bindCommonTexture();
@@ -37,7 +37,7 @@ public class ScreenRocketLaunchPad<T extends ContainerMenuRocketLaunchPad> exten
                     Fluid fluid = fs.getFluid();
 
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
-                    TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+                    TextureAtlasSprite sprite = getSafeFluidSprite(fs);
                     int color = extensions.getTintColor();
                     double renderHeight = (double) fluidHeight * ModUtils.limit(
                             (double) fs.getAmount() / (double) this.tank.getCapacity(),
@@ -97,7 +97,7 @@ public class ScreenRocketLaunchPad<T extends ContainerMenuRocketLaunchPad> exten
             int fluidHeight = 16;
             Fluid fluid = fs.getFluid();
             IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
-            TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+            TextureAtlasSprite sprite = getSafeFluidSprite(fs);
             int color = extensions.getTintColor();
             bindBlockTexture();
             this.drawSprite(poseStack,

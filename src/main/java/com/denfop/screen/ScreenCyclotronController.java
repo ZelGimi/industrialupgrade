@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import static com.denfop.api.widget.TankWidget.getSafeFluidSprite;
+
 public class ScreenCyclotronController<T extends ContainerMenuCyclotronController> extends ScreenMain<ContainerMenuCyclotronController> {
 
     private boolean hover = false;
@@ -84,7 +86,7 @@ public class ScreenCyclotronController<T extends ContainerMenuCyclotronControlle
                     int fluidHeight = 45;
                     Fluid fluid = fs.getFluid();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
-                    TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+                    TextureAtlasSprite sprite = getSafeFluidSprite(fs);
                     int color = extensions.getTintColor();
                     bindBlockTexture();
                     this.gui.drawSprite(poseStack,
@@ -134,7 +136,7 @@ public class ScreenCyclotronController<T extends ContainerMenuCyclotronControlle
                     int fluidHeight = 45;
                     Fluid fluid = fs.getFluid();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
-                    TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+                    TextureAtlasSprite sprite = getSafeFluidSprite(fs);
                     int color = extensions.getTintColor();
                     bindBlockTexture();
                     this.gui.drawSprite(poseStack,

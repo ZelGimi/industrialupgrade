@@ -1,0 +1,12 @@
+{
+  "parent" : "block/cube",
+  "textures" : {
+    "particle" : "industrialupgrade:blocks/fluid_monitor",
+    "down" : "industrialupgrade:blocks/fluid_monitor",
+    "up" : "industrialupgrade:blocks/fluid_monitor",
+    "north" : "industrialupgrade:blocks/fluid_monitor_front",
+    "east" : "industrialupgrade:blocks/fluid_monitor",
+    "south" : "industrialupgrade:blocks/fluid_monitor",
+    "west" : "industrialupgrade:blocks/fluid_monitor"
+  }
+}

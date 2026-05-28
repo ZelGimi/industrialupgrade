@@ -15,6 +15,21 @@
       "model": "industrialupgrade:block/basemachine/adv_quantum_storage",
       "y": 90
     },
+    "facing=north,type=adv_quantum_storage_active": {
+      "model": "industrialupgrade:block/basemachine/adv_quantum_storage"
+    },
+    "facing=south,type=adv_quantum_storage_active": {
+      "model": "industrialupgrade:block/basemachine/adv_quantum_storage",
+      "y": 180
+    },
+    "facing=west,type=adv_quantum_storage_active": {
+      "model": "industrialupgrade:block/basemachine/adv_quantum_storage",
+      "y": 270
+    },
+    "facing=east,type=adv_quantum_storage_active": {
+      "model": "industrialupgrade:block/basemachine/adv_quantum_storage",
+      "y": 90
+    },
     "facing=down,type=adv_quantum_storage": {
       "model": "industrialupgrade:block/basemachine/adv_quantum_storage",
       "x": 90
@@ -23,28 +38,13 @@
       "model": "industrialupgrade:block/basemachine/adv_quantum_storage",
       "x": 270
     },
-    "facing=north,type=adv_quantum_storage_invalid": {
-      "model": "industrialupgrade:block/basemachine/adv_quantum_storage"
-    },
-    "facing=south,type=adv_quantum_storage_invalid": {
-      "model": "industrialupgrade:block/basemachine/adv_quantum_storage",
-      "y": 180
-    },
-    "facing=west,type=adv_quantum_storage_invalid": {
-      "model": "industrialupgrade:block/basemachine/adv_quantum_storage",
-      "y": 270
-    },
-    "facing=east,type=adv_quantum_storage_invalid": {
-      "model": "industrialupgrade:block/basemachine/adv_quantum_storage",
-      "y": 90
-    },
-    "facing=down,type=adv_quantum_storage_invalid": {
-      "model": "industrialupgrade:block/basemachine/adv_quantum_storage",
-      "x": 90
-    },
-    "facing=up,type=adv_quantum_storage_invalid": {
+    "facing=up,type=adv_quantum_storage_active": {
       "model": "industrialupgrade:block/basemachine/adv_quantum_storage",
       "x": 270
+    },
+    "facing=down,type=adv_quantum_storage_active": {
+      "model": "industrialupgrade:block/basemachine/adv_quantum_storage",
+      "x": 90
     }
   }
 }

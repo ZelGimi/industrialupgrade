@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blockentity.base.BlockEntityElectricLiquidTankInventory;
@@ -41,7 +43,7 @@ public class BlockEntityPrimalPump extends BlockEntityElectricLiquidTankInventor
     private int prevAmount;
 
     public BlockEntityPrimalPump(BlockPos pos, BlockState state) {
-        super(0, 1, 4, BlockPrimalPumpEntity.primal_pump, pos, state);
+        super(ModConfig.mechanismDouble("primal_pump_energy_storage", 0.0D), 1, ModConfig.mechanismInt("primal_pump_tank_capacity", 4), BlockPrimalPumpEntity.primal_pump, pos, state);
         componentProgress = this.addComponent(new ComponentProgress(this, 1, (short) 25));
         this.fluidTank.setTypeItemSlot(Inventory.TypeItemSlot.OUTPUT);
     }

@@ -103,9 +103,9 @@ public class BlockEntityApothecaryBee extends BlockEntityInventory {
     }
 
     public boolean contains(BlockPos vec) {
-        if (vec.getX() > this.searchArea.minX && vec.getX() < searchArea.maxX) {
-            if (vec.getY() > this.searchArea.minY && vec.getY() < searchArea.maxY) {
-                return vec.getZ() > searchArea.minZ && vec.getZ() < searchArea.maxZ;
+        if (vec.getX() >= this.searchArea.minX && vec.getX() < searchArea.maxX) {
+            if (vec.getY() >= this.searchArea.minY && vec.getY() < searchArea.maxY) {
+                return vec.getZ() >= searchArea.minZ && vec.getZ() < searchArea.maxZ;
             } else {
                 return false;
             }

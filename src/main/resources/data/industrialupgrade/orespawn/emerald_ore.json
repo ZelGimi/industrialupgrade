@@ -1,0 +1,11 @@
+{
+  "ore_block": "minecraft:emerald_ore",
+  "replace_block": "minecraft:stone",
+  "min_height": 0,
+  "max_height": 20,
+  "min_vein_size": 1,
+  "max_vein_size": 1,
+  "min_veins_per_chunk": 3,
+  "max_veins_per_chunk": 8,
+  "chance": 0.4
+}

@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.siliconhandler;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.api.recipe.InventoryOutput;
@@ -107,7 +108,7 @@ public class SiliconCategory extends ScreenMain implements IRecipeCategory<Silic
         final List<ItemStack> inputs = recipe.getInputs1();
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStacks(JeiIngredientHelper.getInputVariants(recipe, i, inputs.get(i)));
 
 
         }

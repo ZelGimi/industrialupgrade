@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.impalloysmelter;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.recipe.InventoryRecipes;
@@ -116,7 +117,7 @@ public class ImpAlloySmelterCategory extends ScreenMain implements IRecipeCatego
         );
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
+            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStacks(JeiIngredientHelper.getInputVariants(recipes, i, inputs.get(i)));
 
         }
 

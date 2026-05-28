@@ -86,7 +86,7 @@ public class ScreenTesseract<T extends ContainerMenuTesseract> extends ScreenMai
                     if (fluid != null) {
                         ret.add(fluid.getFluidType().getDescription().getString() + ": " + fs.getAmount() + " " + Localization.translate("iu.generic.text.mb"));
                     } else {
-                        ret.add("invalid fluid stack");
+                        ret.add(Localization.translate("iu.tooltip.fluid.invalid"));
                     }
                 } else {
                     ret.add(Localization.translate("iu.generic.text.empty"));
@@ -111,7 +111,7 @@ public class ScreenTesseract<T extends ContainerMenuTesseract> extends ScreenMai
 
                     Fluid fluid = fs.getFluid();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
-                    TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+                    TextureAtlasSprite sprite = getSafeFluidSprite(fs);
                     int color = extensions.getTintColor();
                     double renderHeight = (double) fluidHeight * ModUtils.limit(
                             (double) fs.getAmount() / (double) this.tank.getCapacity(),
@@ -164,7 +164,7 @@ public class ScreenTesseract<T extends ContainerMenuTesseract> extends ScreenMai
     protected void drawBackgroundAndTitle(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
         blit(poseStack, this.getGuiLeft(), this.getGuiTop(), 0, 0, this.getXSize(), this.getYSize());
-        String name = this.container.base.getDisplayName().getString();
+        String name = com.denfop.utils.ModUtils.cleanComponentString(this.container.base.getDisplayName().getString());
         int textWidth = this.getStringWidth(name);
         float scale = 1.0f;
 
@@ -413,9 +413,9 @@ public class ScreenTesseract<T extends ContainerMenuTesseract> extends ScreenMai
                                 .toList();
                 for (int i = 0; i < itemStackList.size(); i++) {
                     final int finalI = i;
-                    new TooltipWidget(this, 35 + (i % 6) * 20, 11 + (i / 6) * 22, 18, 18).withTooltip(() -> itemStackList
-                            .get(finalI)
-                            .getDisplayName().getString()).drawForeground(poseStack, par1, par2);
+                    new TooltipWidget(this, 35 + (i % 6) * 20, 11 + (i / 6) * 22, 18, 18).withTooltip(() ->  com.denfop.utils.ModUtils.cleanComponentString(itemStackList
+                          .get(finalI)
+                            .getDisplayName().getString())).drawForeground(poseStack, par1, par2);
                 }
                 if (par1 >= 5 && par2 >= 5 && par1 <= 13 && par2 <= 16) {
                     hoverBack = true;

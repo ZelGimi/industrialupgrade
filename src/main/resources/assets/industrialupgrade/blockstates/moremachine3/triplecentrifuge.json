@@ -15,37 +15,6 @@
       "model": "industrialupgrade:block/moremachine3/triplecentrifuge",
       "y": 90
     },
-    "facing=down,type=triplecentrifuge": {
-      "model": "industrialupgrade:block/moremachine3/triplecentrifuge",
-      "x": 90
-    },
-    "facing=up,type=triplecentrifuge": {
-      "model": "industrialupgrade:block/moremachine3/triplecentrifuge",
-      "x": 270
-    },
-    "facing=north,type=triplecentrifuge_invalid": {
-      "model": "industrialupgrade:block/moremachine3/triplecentrifuge_active"
-    },
-    "facing=south,type=triplecentrifuge_invalid": {
-      "model": "industrialupgrade:block/moremachine3/triplecentrifuge_active",
-      "y": 180
-    },
-    "facing=west,type=triplecentrifuge_invalid": {
-      "model": "industrialupgrade:block/moremachine3/triplecentrifuge_active",
-      "y": 270
-    },
-    "facing=east,type=triplecentrifuge_invalid": {
-      "model": "industrialupgrade:block/moremachine3/triplecentrifuge_active",
-      "y": 90
-    },
-    "facing=down,type=triplecentrifuge_invalid": {
-      "model": "industrialupgrade:block/moremachine3/triplecentrifuge_active",
-      "x": 90
-    },
-    "facing=up,type=triplecentrifuge_invalid": {
-      "model": "industrialupgrade:block/moremachine3/triplecentrifuge_active",
-      "x": 270
-    },
     "facing=north,type=triplecentrifuge_active": {
       "model": "industrialupgrade:block/moremachine3/triplecentrifuge_active"
     },
@@ -61,9 +30,17 @@
       "model": "industrialupgrade:block/moremachine3/triplecentrifuge_active",
       "y": 90
     },
+    "facing=down,type=triplecentrifuge": {
+      "model": "industrialupgrade:block/moremachine3/triplecentrifuge",
+      "x": 90
+    },
     "facing=down,type=triplecentrifuge_active": {
       "model": "industrialupgrade:block/moremachine3/triplecentrifuge_active",
       "x": 90
+    },
+    "facing=up,type=triplecentrifuge": {
+      "model": "industrialupgrade:block/moremachine3/triplecentrifuge",
+      "x": 270
     },
     "facing=up,type=triplecentrifuge_active": {
       "model": "industrialupgrade:block/moremachine3/triplecentrifuge_active",

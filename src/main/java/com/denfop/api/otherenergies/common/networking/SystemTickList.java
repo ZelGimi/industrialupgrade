@@ -36,6 +36,19 @@ public class SystemTickList<T extends SystemTick<Source, Path>> extends ArrayLis
         return false;
     }
 
+    public T get(final Object o) {
+        if (o instanceof Source) {
+            for (SystemTick<Source, Path> tick : this) {
+                if (tick.getSource() == o) {
+                    return (T) tick;
+                }
+            }
+        } else {
+            return null;
+        }
+        return null;
+    }
+
     public SystemTick<Source, Path> removeSource(final Object o) {
         if (o instanceof Source) {
             for (int i = 0; i < this.size(); i++) {

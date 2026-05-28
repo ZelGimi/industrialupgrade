@@ -34,6 +34,15 @@ public class ScreenCombinerMatter<T extends ContainerMenuCombinerMatter> extends
         return ret;
     }
 
+    @Override
+    protected void drawBackground(PoseStack poseStack) {
+        super.drawBackground(poseStack);
+        bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/infobutton.png"));
+        drawTexturedModalRect(poseStack, guiLeft + 165, guiTop + 3, 0, 0, 10, 10);
+
+        bindTexture(getTexture());
+    }
+
     private void handleUpgradeTooltip(int x, int y) {
         if (x >= 165 && x <= 175 && y >= 0 && y <= 12) {
             List<String> text = new ArrayList<>();
@@ -46,7 +55,7 @@ public class ScreenCombinerMatter<T extends ContainerMenuCombinerMatter> extends
                 text.add(itemstack);
             }
 
-            this.drawTooltip(x, y, text);
+            this.drawTooltip(x - 50, y, text);
         }
     }
 

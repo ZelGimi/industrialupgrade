@@ -6,10 +6,13 @@
     },
     "B": {
       "item": "industrialupgrade:module_schedule"
+    },
+    "C": {
+      "tag": "forge:plates/draconid"
     }
   },
   "pattern": [
-    "   ",
+    "CCC",
     "ABA",
     "   "
   ],

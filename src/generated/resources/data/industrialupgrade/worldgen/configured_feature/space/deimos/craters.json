@@ -1,0 +1,26 @@
+{
+  "type": "industrialupgrade:surface_space_crater",
+  "config": {
+    "branches": 0,
+    "fluid": {
+      "Name": "industrialupgrade:fluid/fluidhelium",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "kind": "crater",
+    "max_height": 0,
+    "max_radius": 9,
+    "min_height": 0,
+    "min_radius": 4,
+    "primary": {
+      "Name": "industrialupgrade:spacecobblestone/deimos_cobblestone"
+    },
+    "secondary": {
+      "Name": "industrialupgrade:spacestone/deimos_stone"
+    },
+    "tertiary": {
+      "Name": "industrialupgrade:blockspace/deimos_orichalcum_ore"
+    }
+  }
+}

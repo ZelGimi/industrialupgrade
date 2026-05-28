@@ -1,0 +1,42 @@
+{
+  "type": "industrialupgrade:space_addition_crater",
+  "config": {
+    "bands": {
+      "giant": {
+        "max_radius": 44,
+        "min_radius": 27,
+        "weight": 0.05
+      },
+      "large": {
+        "max_radius": 26,
+        "min_radius": 15,
+        "weight": 0.12
+      },
+      "medium": {
+        "max_radius": 14,
+        "min_radius": 8,
+        "weight": 0.25
+      },
+      "small": {
+        "max_radius": 7,
+        "min_radius": 4,
+        "weight": 0.58
+      }
+    },
+    "central_peaks": true,
+    "ejecta": {
+      "Name": "industrialupgrade:spacestone1/miranda_stone"
+    },
+    "ejecta_blanket": true,
+    "primary": {
+      "Name": "industrialupgrade:spacestone1/miranda_stone"
+    },
+    "rim": {
+      "Name": "industrialupgrade:spacecobblestone1/miranda_cobblestone"
+    },
+    "spawn": {
+      "attempts_per_candidate_chunk": 2,
+      "spawn_chance": 0.22
+    }
+  }
+}
