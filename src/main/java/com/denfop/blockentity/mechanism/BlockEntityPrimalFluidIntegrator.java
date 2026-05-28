@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -61,11 +63,13 @@ public class BlockEntityPrimalFluidIntegrator extends BlockEntityElectricMachine
     public double guiProgress;
 
     protected short progress;
+    ItemStack prevInput = ItemStack.EMPTY;
+    ItemStack prevOutput = ItemStack.EMPTY;
     private int prevAmount;
     private int prevAmount1;
 
     public BlockEntityPrimalFluidIntegrator(BlockPos pos, BlockState state) {
-        super(0, 0, 1, BlockPrimalFluidIntegratorEntity.primal_fluid_integrator, pos, state);
+        super(ModConfig.mechanismDouble("primitive_fluid_integrator_energy_storage", 0.0D), 0, 1, BlockPrimalFluidIntegratorEntity.primal_fluid_integrator, pos, state);
         Recipes.recipes.addInitRecipes(this);
 
         this.progress = 0;
@@ -76,10 +80,7 @@ public class BlockEntityPrimalFluidIntegrator extends BlockEntityElectricMachine
         this.inputSlotA = new InventoryRecipes(this, "primal_fluid_integrator", this, this.fluidTank1) {
             @Override
             public boolean canPlaceItem(final int index, final ItemStack itemStack) {
-                if (index == 4) {
-                    return super.canPlaceItem(0, itemStack);
-                }
-                return false;
+                return super.canPlaceItem(0, itemStack);
             }
         };
 
@@ -89,7 +90,6 @@ public class BlockEntityPrimalFluidIntegrator extends BlockEntityElectricMachine
         this.fluidTank2.setAcceptedFluids(Fluids.fluidPredicate(this.fluid_handler.getOutputFluids(0)));
 
     }
-
 
     public static void addRecipe(ItemStack container, ItemStack output, FluidStack fluidStack, FluidStack outputfluidStack) {
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
@@ -132,7 +132,6 @@ public class BlockEntityPrimalFluidIntegrator extends BlockEntityElectricMachine
         return Collections.singletonList(new AABB(-0.2D, 0.0D, -0.2D, 1.2D, 1D, 1.2D));
 
     }
-
 
     @Override
     public void readPacket(final CustomPacketBuffer customPacketBuffer) {
@@ -415,7 +414,30 @@ public class BlockEntityPrimalFluidIntegrator extends BlockEntityElectricMachine
 
     public void updateEntityServer() {
         super.updateEntityServer();
-
+        if (prevInput.isEmpty() && !this.inputSlotA.isEmpty()) {
+            prevInput = this.inputSlotA.get(0);
+            new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
+        }
+        if (!prevInput.isEmpty() && !this.inputSlotA.isEmpty() && prevInput.getCount() != this.inputSlotA.get(0).getCount()) {
+            prevInput = this.inputSlotA.get(0);
+            new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
+        }
+        if (!prevInput.isEmpty() && this.inputSlotA.isEmpty()) {
+            prevInput = ItemStack.EMPTY;
+            new PacketUpdateFieldTile(this, "slot3", false);
+        }
+        if (prevOutput.isEmpty() && !this.outputSlot.isEmpty()) {
+            prevOutput = this.outputSlot.get(0);
+            new PacketUpdateFieldTile(this, "slot1", this.outputSlot);
+        }
+        if (prevOutput.isEmpty() && !this.outputSlot.isEmpty() && prevOutput.getCount() != this.outputSlot.get(0).getCount()) {
+            prevOutput = this.outputSlot.get(0);
+            new PacketUpdateFieldTile(this, "slot1", this.outputSlot);
+        }
+        if (!prevOutput.isEmpty() && this.outputSlot.isEmpty()) {
+            prevOutput = ItemStack.EMPTY;
+            new PacketUpdateFieldTile(this, "slot2", false);
+        }
         if ((this.fluid_handler.output() == null && this.output != null && this.fluidTank1.getFluidAmount() > 0)) {
             this.fluid_handler.getOutput(this.inputSlotA.get(0));
         } else {

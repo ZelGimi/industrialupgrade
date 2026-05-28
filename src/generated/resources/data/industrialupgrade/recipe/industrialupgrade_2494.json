@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "minecraft:wool"
+    },
+    "B": {
+      "tag": "c:casings/neodymium"
+    },
+    "C": {
+      "item": "industrialupgrade:charged_redstone"
+    }
+  },
+  "pattern": [
+    "AAA",
+    "BCB",
+    "AAA"
+  ],
+  "result": {
+    "count": 8,
+    "id": "industrialupgrade:wiring/storage"
+  },
+  "show_notification": false
+}

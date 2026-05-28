@@ -1,5 +1,7 @@
 package com.denfop.blockentity.base;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
@@ -76,7 +78,7 @@ public class BlockEntityDoubleMolecular extends BlockEntityElectricMachine imple
     private BakedModel transformedModel;
 
     public BlockEntityDoubleMolecular(BlockPos pos, BlockState state) {
-        super(0, 14, 1, BlockDoubleMolecularTransfomerEntity.double_transformer, pos, state);
+        super(ModConfig.mechanismDouble("advanced_molecular_transformer_energy_storage", 0.0D), 14, 1, BlockDoubleMolecularTransfomerEntity.double_transformer, pos, state);
         this.progress = 0;
         this.time = new ArrayList<>();
         this.queue = false;
@@ -552,7 +554,24 @@ public class BlockEntityDoubleMolecular extends BlockEntityElectricMachine imple
                 new ItemStack(IUItem.upgrademodule.getStack(39), 1),
                 1500000
         );
-
+        addrecipe(
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                "c:doubleplate/orichalcum",
+                new ItemStack(IUItem.upgrademodule.getStack(47)),
+                3000000
+        );
+        addrecipe(
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                "c:doubleplate/permalloy",
+                new ItemStack(IUItem.upgrademodule.getStack(48)),
+                1500000
+        );
+        addrecipe(
+                new ItemStack(IUItem.module_schedule.getItem(), 1),
+                "c:doubleplate/stainlesssteel",
+                new ItemStack(IUItem.upgrademodule.getStack(49)),
+                8000000
+        );
     }
 
     public ItemStack getBlockStack(MultiBlockEntity block) {

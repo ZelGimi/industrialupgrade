@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.multimechanism.simple;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
@@ -9,6 +11,7 @@ import com.denfop.api.recipe.Input;
 import com.denfop.api.recipe.RecipeOutput;
 import com.denfop.blockentity.base.BlockEntityMultiMachine;
 import com.denfop.blockentity.base.EnumMultiMachine;
+import com.denfop.blocks.BlockRaws;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.mechanism.BlockMoreMachine1Entity;
 import com.denfop.componets.AirPollutionComponent;
@@ -40,8 +43,8 @@ public class BlockEntityCombMacerator extends BlockEntityMultiMachine {
                 EnumMultiMachine.COMB_MACERATOR.lenghtOperation, BlockMoreMachine1Entity.comb_macerator, pos, state
         );
         Recipes.recipes.addInitRecipes(this);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.15));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("combined_macerator_soil_pollution_amount", 0.1D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("combined_macerator_air_pollution_amount", 0.15D)));
     }
 
     public static void addRecipe(String input, String output) {
@@ -53,7 +56,7 @@ public class BlockEntityCombMacerator extends BlockEntityMultiMachine {
                 .findFirst();
         ItemStack stack = ItemStack.EMPTY;
         if (maybeItem.isPresent()) {
-             stack = new ItemStack(maybeItem.get());
+            stack = new ItemStack(maybeItem.get());
 
         }
         if (!stack.isEmpty()) {
@@ -69,6 +72,23 @@ public class BlockEntityCombMacerator extends BlockEntityMultiMachine {
                     )
             );
         }
+    }
+
+    public static void addmacerator(String input, String output, int n) {
+        final IInputHandler input1 = Recipes.inputFactory;
+        ItemStack stack = input1.getInput(output).getInputs().get(0).copy();
+        stack.setCount(n);
+        com.denfop.api.Recipes.recipes.addRecipe(
+                "comb_macerator",
+                new BaseMachineRecipe(
+                        new Input(
+                                input1.getInput(input, 1)
+                        ),
+                        new RecipeOutput(null, stack)
+                )
+        );
+
+
     }
 
     public MultiBlockEntity getTeBlock() {
@@ -108,6 +128,12 @@ public class BlockEntityCombMacerator extends BlockEntityMultiMachine {
                 }
             }
         });
+        for (int i = 0; i < BlockRaws.Type.values().length; i++) {
+            addmacerator("c:storage_blocks/" + BlockRaws.Type.values()[i].getName(), "c:crushed/" + BlockRaws.Type.values()[i].name(), 27);
+        }
+        addmacerator("c:storage_blocks/raw_iron", "c:crushed/iron", 27);
+        addmacerator("c:storage_blocks/raw_copper", "c:crushed/copper", 27);
+        addmacerator("c:storage_blocks/raw_gold", "c:crushed/gold", 27);
     }
 
     private boolean isTagNotEmpty(String tagName) {

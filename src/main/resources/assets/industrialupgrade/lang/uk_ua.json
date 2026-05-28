@@ -771,8 +771,8 @@
   "block.industrialupgrade.fluid.fluidcoppersulfate": "Сульфат міді",
 
   "_comment": "Рідини та гази (у ємностях)",
-  "fluid.iufluidNeutron": "Нейтрон",
-  "fluid.iufluidHelium": "Гелій",
+  "fluid.iufluidneutron": "Нейтрон",
+  "fluid.iufluidhelium": "Гелій",
   "fluid.iufluidgasoline": "Бензин",
   "fluid.iufluiddiesel": "Дизельне паливо",
   "fluid.iufluidpetroleum": "Нафта",

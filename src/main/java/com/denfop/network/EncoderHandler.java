@@ -255,14 +255,16 @@ public class EncoderHandler {
                 DataComponentPatch componentPatch = (DataComponentPatch) o;
                 DataComponentPatch.STREAM_CODEC.encode(os, componentPatch);
                 break;
-            case BaseRecipe:
+            case BaseRecipe: {
                 BaseMachineRecipe baseMachineRecipe = (BaseMachineRecipe) o;
-                encode(os, baseMachineRecipe.writeNBT(os.registryAccess()));
+                encode(os, baseMachineRecipe.writeNBT(os.registryAccess()), false);
                 break;
-            case BaseFluidRecipe:
+            }
+            case BaseFluidRecipe: {
                 BaseFluidMachineRecipe baseFluidMachineRecipe = (BaseFluidMachineRecipe) o;
-                encode(os, baseFluidMachineRecipe.writeNBT(os.registryAccess()));
+                encode(os, baseFluidMachineRecipe.writeNBT(os.registryAccess()), false);
                 break;
+            }
             case recipeOutput:
                 RecipeOutput recipeOutput = (RecipeOutput) o;
                 encode(os, recipeOutput.items);

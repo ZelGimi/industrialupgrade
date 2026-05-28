@@ -2,12 +2,12 @@
   "type": "minecraft:smelting",
   "category": "misc",
   "cookingtime": 200,
-  "experience": 0.6,
+  "experience": 5.0,
   "ingredient": {
-    "item": "industrialupgrade:raw_metals/raw_tungsten"
+    "item": "industrialupgrade:blockspace2/makemake_gold"
   },
   "result": {
     "count": 1,
-    "id": "industrialupgrade:itemingots/tungsten_ingot"
+    "id": "minecraft:gold_ingot"
   }
 }

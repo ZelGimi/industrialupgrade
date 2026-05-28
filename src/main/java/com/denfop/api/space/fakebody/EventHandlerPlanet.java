@@ -14,6 +14,8 @@ import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
+import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 
 import java.util.Map;
 import java.util.UUID;
@@ -21,6 +23,7 @@ import java.util.UUID;
 public class EventHandlerPlanet {
 
     public static WorldSavedDataIU data;
+    private static volatile boolean serverStopping;
     private final boolean load;
     int tick = 0;
 
@@ -30,6 +33,9 @@ public class EventHandlerPlanet {
 
     @SubscribeEvent
     public void tick(final ServerTickEvent.Post event) {
+        if (serverStopping) {
+            return;
+        }
 
         tick++;
         if (tick % 20 == 0) {
@@ -93,6 +99,18 @@ public class EventHandlerPlanet {
 
     }
 
+
+    @SubscribeEvent
+    public void onServerStopping(ServerStoppingEvent event) {
+        serverStopping = true;
+    }
+
+    @SubscribeEvent
+    public void onServerStopped(ServerStoppedEvent event) {
+        serverStopping = false;
+        data = null;
+    }
+
     @SubscribeEvent
     public void onSave(LevelEvent.Save event) {
         if (event.getLevel() instanceof ServerLevel serverLevel
@@ -105,9 +123,12 @@ public class EventHandlerPlanet {
     @SubscribeEvent
     public void onUnload(LevelEvent.Unload event) {
         if (event.getLevel() instanceof ServerLevel serverLevel
-                && serverLevel.dimension() == Level.OVERWORLD
-                && data != null) {
-            data.setDirty(true);
+                && serverLevel.dimension() == Level.OVERWORLD) {
+            if (SpaceNet.instance != null && SpaceNet.instance.getFakeSpaceSystem() != null) {
+                SpaceNet.instance.getFakeSpaceSystem().getResearchTableMap().clear();
+                SpaceNet.instance.getFakeSpaceSystem().getRocketPadMap().clear();
+            }
+            data = null;
         }
     }
 

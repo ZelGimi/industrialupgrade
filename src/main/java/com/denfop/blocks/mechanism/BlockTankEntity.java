@@ -124,7 +124,7 @@ public enum BlockTankEntity implements MultiBlockEntity {
     @Override
     public boolean hasActive() {
         // TODO Auto-generated method stub
-        return false;
+        return true;
     }
 
     @Override

@@ -18,10 +18,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
@@ -30,7 +27,7 @@ import static com.denfop.register.Register.*;
 
 public class DataBlockEntity<T extends Enum<T> & MultiBlockEntity> {
     public static TileBlockCreator instance;
-    public static List<DeferredHolder<Block, ? extends BlockTileEntity>> objectsBlock1 = new ArrayList<>();
+    public static List<DeferredHolder<Block, ? extends BlockTileEntity>> objectsBlock1 =  Collections.synchronizedList(new ArrayList<>());
     public static List<DeferredHolder<Item, ?>> objects = new ArrayList<>();
     private final Map<T, DeferredHolder<Block, BlockTileEntity<T>>> block = new ConcurrentHashMap<>();
     private final Map<Integer, T> elementsMeta = new ConcurrentHashMap<>();

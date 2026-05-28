@@ -10,15 +10,12 @@
     },
     "C": {
       "item": "industrialupgrade:alloydoubleplate/beryllium_bronze"
-    },
-    "D": {
-      "item": "industrialupgrade:crafting_elements/crafting_96_element"
     }
   },
   "pattern": [
     "CCC",
     "ABA",
-    "ADA"
+    "A A"
   ],
   "result": {
     "count": 1,

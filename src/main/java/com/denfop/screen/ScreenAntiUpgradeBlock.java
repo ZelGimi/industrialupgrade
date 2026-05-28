@@ -151,7 +151,11 @@ public class ScreenAntiUpgradeBlock<T extends ContainerMenuAntiUpgrade> extends 
                     i++;
                     continue;
                 }
-                new ItemStackWidget(this, 71, 9 + i * 18, () -> stack).drawBackground(poseStack, guiLeft, guiTop);
+                if (i < 4) {
+                    new ItemStackWidget(this, 71, 9 + i * 18, () -> stack).drawBackground(poseStack, guiLeft, guiTop);
+                }else{
+                    new ItemStackWidget(this, 150, 11+ (i - 4) * 18, () -> stack).drawBackground(poseStack, guiLeft, guiTop);
+                }
                 i++;
 
             }

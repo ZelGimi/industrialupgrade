@@ -18,9 +18,9 @@ public class SystemSerializer implements RecipeSerializer<SystemRecipe> {
             Codec.STRING.fieldOf("name").forGetter(SystemRecipe::getName),
             Codec.INT.fieldOf("distance").forGetter(SystemRecipe::getDistanceFromStar)
     ).apply(instance, (name, distanceFromStar) -> {
-        if (!stringList.contains("system_"+name)) {
+        if (!stringList.contains("system_" + name)) {
             regSystem.add(() -> new System(name, distanceFromStar));
-            stringList.add("system_"+name);
+            stringList.add("system_" + name);
         }
         return new SystemRecipe(name, distanceFromStar);
     }));
@@ -29,9 +29,9 @@ public class SystemSerializer implements RecipeSerializer<SystemRecipe> {
                     ByteBufCodecs.STRING_UTF8, SystemRecipe::getName,
                     ByteBufCodecs.VAR_INT, SystemRecipe::getDistanceFromStar,
                     (name, distanceFromStar) -> {
-                        if (!stringList.contains("system_"+name)) {
+                        if (!stringList.contains("system_" + name)) {
                             regSystem.add(() -> new System(name, distanceFromStar));
-                            stringList.add("system_"+name);
+                            stringList.add("system_" + name);
                         }
                         return new SystemRecipe(name, distanceFromStar);
                     }

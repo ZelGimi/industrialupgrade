@@ -1,5 +1,7 @@
 package com.denfop.items;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
@@ -50,7 +52,7 @@ public class ItemWaterRotor extends ItemDamage implements WindRotor, IRotorUpgra
             ResourceLocation RenderTexture, int level, int index, Color color
     ) {
         super(new Properties().stacksTo(1), durability);
-        this.radius = 4;
+        this.radius = ModConfig.itemInt("water_rotor_radius", 4);
         this.efficiency = efficiency;
         this.renderTexture = RenderTexture;
         this.level = level;
@@ -108,8 +110,8 @@ public class ItemWaterRotor extends ItemDamage implements WindRotor, IRotorUpgra
     public void appendHoverText(@Nonnull ItemStack stack, @Nullable TooltipContext world, @Nonnull List<Component> tooltip, @Nonnull TooltipFlag flag) {
         int windStrength = 10;
         int windStrength1 = 20;
-        double KU = windStrength * this.getEfficiency(stack) * 25.0F;
-        double KU1 = windStrength1 * this.getEfficiency(stack) * 25.0F;
+        double KU = windStrength * this.getEfficiency(stack) * 25.0F * 0.9;
+        double KU1 = windStrength1 * this.getEfficiency(stack) * 25.0F * 0.9;
 
         tooltip.add(Component.literal(Localization.translate("iu.watergenerator") + windStrength + " m/s "
                 + Localization.translate("iu.windgenerator1") + ModUtils.getString(KU)));

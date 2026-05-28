@@ -15,36 +15,20 @@
       "model": "industrialupgrade:block/cyclotron/cyclotron_quantum",
       "y": 90
     },
-    "facing=down,type=cyclotron_quantum": {
-      "model": "industrialupgrade:block/cyclotron/cyclotron_quantum",
-      "x": 90
-    },
-    "facing=up,type=cyclotron_quantum": {
-      "model": "industrialupgrade:block/cyclotron/cyclotron_quantum",
-      "x": 270
-    },
-    "facing=north,type=cyclotron_quantum_invalid": {
+    "facing=north,type=cyclotron_quantum_active": {
       "model": "industrialupgrade:block/cyclotron/cyclotron_quantum"
     },
-    "facing=south,type=cyclotron_quantum_invalid": {
+    "facing=south,type=cyclotron_quantum_active": {
       "model": "industrialupgrade:block/cyclotron/cyclotron_quantum",
       "y": 180
     },
-    "facing=west,type=cyclotron_quantum_invalid": {
+    "facing=west,type=cyclotron_quantum_active": {
       "model": "industrialupgrade:block/cyclotron/cyclotron_quantum",
       "y": 270
     },
-    "facing=east,type=cyclotron_quantum_invalid": {
+    "facing=east,type=cyclotron_quantum_active": {
       "model": "industrialupgrade:block/cyclotron/cyclotron_quantum",
       "y": 90
-    },
-    "facing=down,type=cyclotron_quantum_invalid": {
-      "model": "industrialupgrade:block/cyclotron/cyclotron_quantum",
-      "x": 90
-    },
-    "facing=up,type=cyclotron_quantum_invalid": {
-      "model": "industrialupgrade:block/cyclotron/cyclotron_quantum",
-      "x": 270
     }
   }
 }

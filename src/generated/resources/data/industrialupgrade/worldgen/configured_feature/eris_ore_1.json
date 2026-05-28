@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:ore",
+  "config": {
+    "discard_chance_on_air_exposure": 0.0,
+    "size": 9,
+    "targets": [
+      {
+        "state": {
+          "Name": "industrialupgrade:blockspace/eris_manganese"
+        },
+        "target": {
+          "block": "industrialupgrade:spacestone/eris_stone",
+          "predicate_type": "minecraft:block_match"
+        }
+      },
+      {
+        "state": {
+          "Name": "industrialupgrade:blockspace/eris_manganese"
+        },
+        "target": {
+          "block": "industrialupgrade:spacecobblestone/eris_cobblestone",
+          "predicate_type": "minecraft:block_match"
+        }
+      }
+    ]
+  }
+}

@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -60,11 +62,11 @@ public class BlockEntityElectricDryer extends BlockEntityElectricMachine impleme
     protected double guiProgress;
 
     public BlockEntityElectricDryer(BlockPos pos, BlockState state) {
-        super(100, 1, 1, BlockBaseMachine3Entity.electric_dryer, pos, state);
+        super(ModConfig.mechanismDouble("electric_latex_dryer_energy_storage", 100.0D), 1, 1, BlockBaseMachine3Entity.electric_dryer, pos, state);
         this.progress = 0;
-        this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.addComponent(new AirPollutionComponent(this, 0.1));
-        this.defaultEnergyConsume = this.energyConsume = 1;
+        this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("electric_latex_dryer_soil_pollution_amount", 0.1D)));
+        this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("electric_latex_dryer_air_pollution_amount", 0.1D)));
+        this.defaultEnergyConsume = this.energyConsume = ModConfig.mechanismInt("electric_latex_dryer_energy_use", 1);
         this.defaultOperationLength = this.operationLength = 100;
         this.defaultTier = 1;
         this.defaultEnergyStorage = 100;

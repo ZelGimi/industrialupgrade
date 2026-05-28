@@ -11,9 +11,6 @@
     "C": {
       "item": "industrialupgrade:crafting_elements/crafting_275_element"
     },
-    "D": {
-      "item": "industrialupgrade:machines/advanced_solar_paneliu"
-    },
     "E": {
       "type": "neoforge:components",
       "components": {
@@ -30,12 +27,18 @@
         "minecraft:repair_cost": 0
       },
       "items": "industrialupgrade:crafting_elements/crafting_272_element"
+    },
+    "H": {
+      "item": "industrialupgrade:crafting_elements/crafting_565_element"
+    },
+    "J": {
+      "item": "industrialupgrade:energy/wrench"
     }
   },
   "pattern": [
     "ABA",
-    "C C",
-    "DED"
+    "CJC",
+    "HEH"
   ],
   "result": {
     "count": 1,

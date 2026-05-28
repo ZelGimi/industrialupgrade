@@ -20,13 +20,13 @@ public class BaseMachineRecipe {
         this.output = output;
     }
 
-    public static BaseMachineRecipe readNBT(CompoundTag tag,RegistryAccess access) {
+    public static BaseMachineRecipe readNBT(CompoundTag tag, RegistryAccess access) {
         Input input = Input.readNBT(tag.getCompound("Input"), access);
         List<ItemStack> items = new ArrayList<>();
         ListTag itemsTag = tag.getList("Items", Tag.TAG_COMPOUND);
         for (Tag t : itemsTag) {
             if (t instanceof CompoundTag itemTag) {
-                items.add(ItemStack.parseOptional(access,itemTag));
+                items.add(ItemStack.parseOptional(access, itemTag));
             }
         }
         CompoundTag metadata = tag.contains("Metadata", Tag.TAG_COMPOUND)
@@ -60,10 +60,10 @@ public class BaseMachineRecipe {
             if (output.items != null)
                 for (ItemStack stack : output.items) {
                     if (stack != null && !stack.isEmpty())
-                        itemsTag.add(stack.save(access,new CompoundTag()));
+                        itemsTag.add(stack.save(access, new CompoundTag()));
                 }
         if (!itemsTag.isEmpty())
-        tag.put("Items", itemsTag);
+            tag.put("Items", itemsTag);
         if (output != null && output.metadata != null) {
             tag.put("Metadata", output.metadata);
         }

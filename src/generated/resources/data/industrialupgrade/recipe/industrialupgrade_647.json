@@ -7,13 +7,10 @@
     },
     "B": {
       "tag": "c:plates/iron"
-    },
-    "C": {
-      "tag": "c:platedense/iron"
     }
   },
   "pattern": [
-    "CBC",
+    "BBB",
     "BAB",
     " A "
   ],

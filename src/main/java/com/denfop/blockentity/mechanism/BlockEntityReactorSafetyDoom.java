@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -40,7 +42,7 @@ public class BlockEntityReactorSafetyDoom extends BlockEntityElectricMachine {
     public boolean full = false;
 
     public BlockEntityReactorSafetyDoom(BlockPos pos, BlockState state) {
-        super(50000, 14, 1, BlockBaseMachine3Entity.reactor_safety_doom, pos, state);
+        super(ModConfig.mechanismDouble("reactor_protective_dome_energy_storage", 50000.0D), 14, 1, BlockBaseMachine3Entity.reactor_safety_doom, pos, state);
         this.rad = this.addComponent(ComponentBaseEnergy.asBasicSource(EnergyType.RADIATION, this, 5000000000D));
 
     }

@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.generator.things.matter;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blockentity.base.BlockEntityMultiMatter;
@@ -18,9 +20,9 @@ public class BlockEntityAdvancedMatter extends BlockEntityMultiMatter {
     private final AirPollutionComponent pollutionAir;
 
     public BlockEntityAdvancedMatter(BlockPos pos, BlockState state) {
-        super(900000F, 12, 8000000, BlockBaseMachineEntity.adv_matter, pos, state);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.02));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
+        super(ModConfig.mechanismDouble("improved_matter_fabricator_energy_storage", 900000.0D), ModConfig.mechanismInt("improved_matter_fabricator_tank_capacity", 12), ModConfig.mechanismDouble("improved_matter_fabricator_energy_storage", 8000000.0D), BlockBaseMachineEntity.adv_matter, pos, state);
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("advanced_matter_soil_pollution_amount", 0.02D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("advanced_matter_air_pollution_amount", 0.1D)));
     }
 
 

@@ -113,7 +113,7 @@ public enum BlockCreativeBlocksEntity implements MultiBlockEntity {
 
     @Override
     public boolean hasActive() {
-        return false;
+        return true;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.denfop.items.bags;
 
-
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
@@ -17,12 +16,9 @@ public class BagsDescription {
             instance.group(
                     ItemStack.CODEC.fieldOf("stack").forGetter(BagsDescription::getStack),
                     Codec.INT.fieldOf("count").forGetter(BagsDescription::getCount)
-            ).apply(instance, (stack, count) -> {
-                ItemStack copy = stack.copy();
-                copy.setCount(count);
-                return new BagsDescription(copy);
-            })
+            ).apply(instance, BagsDescription::new)
     );
+
     public static final StreamCodec<RegistryFriendlyByteBuf, BagsDescription> STREAM_CODEC = StreamCodec.of(
             (buf, value) -> {
                 ItemStack.STREAM_CODEC.encode(buf, value.getStack());
@@ -31,21 +27,46 @@ public class BagsDescription {
             buf -> {
                 ItemStack stack = ItemStack.STREAM_CODEC.decode(buf);
                 int count = buf.readInt();
-                stack.setCount(count);
-                return new BagsDescription(stack);
+                return new BagsDescription(stack, count);
             }
     );
+
     private final ItemStack stack;
-    int count;
+    private int count;
 
     public BagsDescription(ItemStack stack) {
-        this.stack = stack;
-        this.count = stack.getCount();
+        this(stack, stack.isEmpty() ? 0 : stack.getCount());
+    }
+
+    public BagsDescription(ItemStack stack, int count) {
+        this.stack = normalizePreviewStack(stack);
+        this.count = Math.max(0, count);
     }
 
     public BagsDescription(CompoundTag tagCompound, HolderLookup.Provider registries) {
-        this.stack = ItemStack.parseOptional(registries, tagCompound.getCompound("item"));
-        this.count = tagCompound.getInt("count");
+        this(
+                ItemStack.parseOptional(registries, tagCompound.getCompound("item")),
+                tagCompound.getInt("count")
+        );
+    }
+
+    private static ItemStack normalizePreviewStack(ItemStack original) {
+        if (original == null || original.isEmpty()) {
+            return ItemStack.EMPTY;
+        }
+
+        ItemStack copy = original.copy();
+        int max = Math.max(1, copy.getMaxStackSize());
+        int safeCount = copy.getCount();
+
+        if (safeCount < 1) {
+            safeCount = 1;
+        } else if (safeCount > max) {
+            safeCount = max;
+        }
+
+        copy.setCount(safeCount);
+        return copy;
     }
 
     public CompoundTag write(CompoundTag tagCompound, HolderLookup.Provider registries) {
@@ -55,7 +76,11 @@ public class BagsDescription {
     }
 
     public ItemStack getStack() {
-        return stack;
+        return this.stack.copy();
+    }
+
+    public ItemStack getDisplayStack() {
+        return this.stack.copy();
     }
 
     public void addCount(int count) {
@@ -63,7 +88,11 @@ public class BagsDescription {
     }
 
     public int getCount() {
-        return count;
+        return this.count;
+    }
+
+    public String getDisplayCountText() {
+        return "x" + this.count;
     }
 
     @Override
@@ -71,16 +100,14 @@ public class BagsDescription {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof BagsDescription that)) {
             return false;
         }
-        BagsDescription that = (BagsDescription) o;
-        return stack.getItem() == that.stack.getItem();
+        return this.stack.getItem() == that.stack.getItem();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(stack);
+        return Objects.hash(this.stack.getItem());
     }
-
 }

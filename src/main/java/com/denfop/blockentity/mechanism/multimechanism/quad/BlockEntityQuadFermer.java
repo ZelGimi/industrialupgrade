@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.multimechanism.quad;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.widget.EnumTypeSlot;
@@ -38,8 +40,8 @@ public class BlockEntityQuadFermer extends BlockEntityMultiMachine implements IF
                 return EnumTypeSlot.FERTILIZER;
             }
         };
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.025));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.05));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("quad_fermer_soil_pollution_amount", 0.025D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("quad_fermer_air_pollution_amount", 0.05D)));
     }
 
     @Override

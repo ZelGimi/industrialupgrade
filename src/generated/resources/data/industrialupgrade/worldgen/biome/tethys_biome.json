@@ -1,0 +1,83 @@
+{
+  "carvers": {},
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 10926284,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000
+    },
+    "sky_color": 5862292,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "features": [
+    [
+      "industrialupgrade:tethys_cavity",
+      "industrialupgrade:space/tethys/stone_tunnels",
+      "industrialupgrade:space/tethys/hall_system",
+      "industrialupgrade:space/tethys/fractures",
+      "industrialupgrade:space/tethys/porous",
+      "industrialupgrade:space/tethys/shafts",
+      "industrialupgrade:space/tethys/liquid_chamber",
+      "industrialupgrade:space/tethys/frozen_chamber",
+      "industrialupgrade:space/tethys/crater_chamber",
+      "industrialupgrade:space/tethys/tunnel_caves",
+      "industrialupgrade:space/tethys/shaft_caves",
+      "industrialupgrade:space/tethys/dome_caves",
+      "industrialupgrade:space/tethys/well_caves",
+      "industrialupgrade:space/tethys/multi_tier_caves",
+      "industrialupgrade:space/tethys/branched_caves",
+      "industrialupgrade:space/tethys/spiral_caves",
+      "industrialupgrade:space/tethys/chamber_caves",
+      "industrialupgrade:space/tethys/pocket_caves",
+      "industrialupgrade:space/tethys/crevice_caves",
+      "industrialupgrade:space/tethys/cathedral_caves",
+      "industrialupgrade:space/tethys/gallery_caves",
+      "industrialupgrade:space/tethys/winding_caves",
+      "industrialupgrade:space/tethys/cascade_caves",
+      "industrialupgrade:space/tethys/collapse_caves",
+      "industrialupgrade:space/tethys/vertical_collectors"
+    ],
+    [
+      "industrialupgrade:tethys_lake_0",
+      "industrialupgrade:tethys_fluid_0"
+    ],
+    [
+      "industrialupgrade:tethys_craters",
+      "industrialupgrade:space/tethys/addition_craters"
+    ],
+    [],
+    [
+      "industrialupgrade:tethys_geyser_0"
+    ],
+    [],
+    [
+      "industrialupgrade:tethys_ore_0",
+      "industrialupgrade:tethys_ore_1",
+      "industrialupgrade:tethys_ore_2",
+      "industrialupgrade:tethys_ore_3"
+    ],
+    [],
+    [],
+    [],
+    [
+      "industrialupgrade:space/tethys/ice_surface_cover"
+    ]
+  ],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": -0.7
+}

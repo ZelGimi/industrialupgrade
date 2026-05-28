@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -38,6 +40,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.NeoForge;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
@@ -45,7 +48,7 @@ import java.util.Set;
 public class BlockEntityUpgradeRover extends BlockEntityDoubleElectricMachine implements IHasRecipe {
 
     public BlockEntityUpgradeRover(BlockPos pos, BlockState state) {
-        super(1, 300, 1, EnumDoubleElectricMachine.UPGRADE_ROVER, false, BlockBaseMachine3Entity.upgrade_rover, pos, state);
+        super(ModConfig.mechanismInt("rover_upgrade_station_energy_per_tick", 1), ModConfig.mechanismInt("rover_upgrade_station_operation_length", 300), 1, EnumDoubleElectricMachine.UPGRADE_ROVER, false, BlockBaseMachine3Entity.upgrade_rover, pos, state);
         Recipes.recipes.addInitRecipes(this);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot) {
             @Override
@@ -58,8 +61,8 @@ public class BlockEntityUpgradeRover extends BlockEntityDoubleElectricMachine im
                 (short) 300
         ));
 
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("rover_upgrade_station_soil_pollution_amount", 0.1D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("rover_upgrade_station_air_pollution_amount", 0.1D)));
         this.componentProcess = this.addComponent(new ComponentProcess(this, 300, 1) {
 
             @Override
@@ -102,7 +105,7 @@ public class BlockEntityUpgradeRover extends BlockEntityDoubleElectricMachine im
                     components.stream().forEach(typedDataComponent -> stack.set((DataComponentType<Object>) typedDataComponent.type(), (Object) typedDataComponent.value()));
                     UpgradeRover upgradeItem = stack.get(DataComponentsInit.UPGRADE_ROVER);
                     boolean find = false;
-                    List<SpaceUpgradeItemInform> upgradeItemInformList = upgradeItem.upgradeItemInforms();
+                    List<SpaceUpgradeItemInform> upgradeItemInformList = new ArrayList<>(upgradeItem.upgradeItemInforms());
                     for (SpaceUpgradeItemInform upgradeItemInform : upgradeItemInformList) {
                         if (upgradeItemInform.upgrade == type) {
                             upgradeItemInform.number++;

@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -46,7 +48,7 @@ public class BlockEntityPositronConverter extends BlockEntityElectricMachine imp
 
 
     public BlockEntityPositronConverter(BlockPos pos, BlockState state) {
-        super(500, 8, 1, BlockBaseMachine3Entity.positronconverter, pos, state);
+        super(ModConfig.mechanismDouble("electric_wilson_chamber_energy_storage", 500.0D), 8, 1, BlockBaseMachine3Entity.positronconverter, pos, state);
         this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot) {
             @Override

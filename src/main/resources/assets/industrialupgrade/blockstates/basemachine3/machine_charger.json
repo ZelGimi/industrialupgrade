@@ -15,36 +15,20 @@
       "model": "industrialupgrade:block/basemachine/machine_charger",
       "y": 90
     },
-    "facing=down,type=machine_charger": {
-      "model": "industrialupgrade:block/basemachine/machine_charger",
-      "x": 90
-    },
-    "facing=up,type=machine_charger": {
-      "model": "industrialupgrade:block/basemachine/machine_charger",
-      "x": 270
-    },
-    "facing=north,type=machine_charger_invalid": {
+    "facing=north,type=machine_charger_active": {
       "model": "industrialupgrade:block/basemachine/machine_charger"
     },
-    "facing=south,type=machine_charger_invalid": {
+    "facing=south,type=machine_charger_active": {
       "model": "industrialupgrade:block/basemachine/machine_charger",
       "y": 180
     },
-    "facing=west,type=machine_charger_invalid": {
+    "facing=west,type=machine_charger_active": {
       "model": "industrialupgrade:block/basemachine/machine_charger",
       "y": 270
     },
-    "facing=east,type=machine_charger_invalid": {
+    "facing=east,type=machine_charger_active": {
       "model": "industrialupgrade:block/basemachine/machine_charger",
       "y": 90
-    },
-    "facing=down,type=machine_charger_invalid": {
-      "model": "industrialupgrade:block/basemachine/machine_charger",
-      "x": 90
-    },
-    "facing=up,type=machine_charger_invalid": {
-      "model": "industrialupgrade:block/basemachine/machine_charger",
-      "x": 270
     }
   }
 }

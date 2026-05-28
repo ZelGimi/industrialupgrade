@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -67,9 +69,9 @@ public class BlockEntityFluidHeater extends BlockEntityElectricMachine implement
     protected double guiProgress;
 
     public BlockEntityFluidHeater(BlockPos pos, BlockState state) {
-        super(100, 1, 2, BlockBaseMachine3Entity.fluid_heater, pos, state);
+        super(ModConfig.mechanismDouble("fluid_heater_energy_storage", 100.0D), 1, 2, BlockBaseMachine3Entity.fluid_heater, pos, state);
         this.progress = 0;
-        this.defaultEnergyConsume = this.energyConsume = 1;
+        this.defaultEnergyConsume = this.energyConsume = ModConfig.mechanismInt("fluid_heater_energy_use", 1);
         this.defaultOperationLength = this.operationLength = 200;
         this.defaultTier = 1;
         this.defaultEnergyStorage = 100;
@@ -77,8 +79,8 @@ public class BlockEntityFluidHeater extends BlockEntityElectricMachine implement
         Fluids fluids = this.addComponent(new Fluids(this));
         this.fluidTank1 = fluids.addTankInsert("fluidTank1", 12 * 1000);
 
-        this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("fluid_heater_soil_pollution_amount", 0.1D)));
+        this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("fluid_heater_air_pollution_amount", 0.1D)));
 
         this.fluidTank2 = fluids.addTank("fluidTank2", 12 * 1000, Inventory.TypeItemSlot.OUTPUT);
 
@@ -104,14 +106,14 @@ public class BlockEntityFluidHeater extends BlockEntityElectricMachine implement
     @Override
     public void init() {
         Recipes.recipes.getRecipeFluid().addRecipe("heat", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(net.minecraft.world.level.material.Fluids.WATER, 150)), Collections.singletonList(new FluidStack(
+                new FluidStack(net.minecraft.world.level.material.Fluids.WATER, 200)), Collections.singletonList(new FluidStack(
                 FluidName.fluidsteam.getInstance().get(),
-                75
+                100
         ))));
         Recipes.recipes.getRecipeFluid().addRecipe("heat", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidsteam.getInstance().get(), 150)), Collections.singletonList(new FluidStack(
+                new FluidStack(FluidName.fluidsteam.getInstance().get(), 200)), Collections.singletonList(new FluidStack(
                 FluidName.fluidsuperheated_steam.getInstance().get(),
-                75
+                100
         ))));
         Recipes.recipes.getRecipeFluid().addRecipe("heat", new BaseFluidMachineRecipe(new InputFluid(
                 new FluidStack(FluidName.fluidtertbutylalcohol.getInstance().get(), 100)), Collections.singletonList(new FluidStack(

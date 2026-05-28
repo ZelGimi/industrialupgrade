@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:casings/niobiumtitanium"
+    },
+    "B": {
+      "item": "industrialupgrade:charged_quartz"
+    },
+    "C": {
+      "tag": "c:casings/invar"
+    }
+  },
+  "pattern": [
+    "CAC",
+    "ABA",
+    "CAC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_776_element"
+  },
+  "show_notification": false
+}

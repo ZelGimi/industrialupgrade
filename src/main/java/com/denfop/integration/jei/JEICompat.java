@@ -81,6 +81,8 @@ import com.denfop.integration.jei.enchanter.EnchantCategory;
 import com.denfop.integration.jei.enchanter.EnchantHandler;
 import com.denfop.integration.jei.enrichment.EnrichCategory;
 import com.denfop.integration.jei.enrichment.EnrichHandler;
+import com.denfop.integration.jei.environment.EnvironmentalTransformationCategory;
+import com.denfop.integration.jei.environment.EnvironmentalTransformationHandler;
 import com.denfop.integration.jei.extractor.ExtractorCategory;
 import com.denfop.integration.jei.extractor.ExtractorHandler;
 import com.denfop.integration.jei.extruder.ExtruderCategory;
@@ -361,6 +363,7 @@ import mezz.jei.api.helpers.IJeiHelpers;
 import mezz.jei.api.registration.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -546,6 +549,8 @@ public class JEICompat implements IModPlugin {
     public static JeiInform world_collector_end = new JeiInform("world_collector_end", EndCategory.class, EndHandler.class);
     public static JeiInform world_collector_nether = new JeiInform("world_collector_nether", NetherCategory.class, NetherHandler.class);
     public static JeiInform scrapbox = new JeiInform("scrapbox", ScrapboxRecipeCategory.class, ScrapboxRecipeHandler.class);
+    public static JeiInform environmental_transformations = new JeiInform("environmental_transformations", EnvironmentalTransformationCategory.class, EnvironmentalTransformationHandler.class);
+
     public static IGuiHelper guiHelper;
 
     public JEICompat() {
@@ -599,6 +604,9 @@ public class JEICompat implements IModPlugin {
                 getBlockStack(BlockBaseMachine3Entity.electric_wire_insulator),
                 wire_insulator.recipeType
         );
+        registry.addRecipeCatalyst(new ItemStack(Blocks.COMPOSTER), environmental_transformations.recipeType);
+        registry.addRecipeCatalyst(new ItemStack(Blocks.MUD), environmental_transformations.recipeType);
+
         registry.addRecipeCatalyst(
                 getBlockStack(BlockBaseMachine3Entity.steam_wire_insulator),
                 wire_insulator.recipeType

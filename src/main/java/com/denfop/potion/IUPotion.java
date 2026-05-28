@@ -30,8 +30,7 @@ public class IUPotion extends MobEffect {
 
     @Override
     public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
-        int rate = 25 >> amplifier;
-        return rate == 0 || duration % rate == 0;
+        return true;
     }
 
 
@@ -69,13 +68,13 @@ public class IUPotion extends MobEffect {
     public void applyEffect(LivingEntity entityLiving, int radiationDuration) {
         MobEffectInstance effect = null;
         if (this == radiation) {
-            effect = new MobEffectInstance(rad, radiationDuration);
+            effect = new MobEffectInstance(rad, radiationDuration, 1);
         }
         if (this == poison_gas) {
-            effect = new MobEffectInstance(poison, radiationDuration);
+            effect = new MobEffectInstance(poison, radiationDuration, 1);
         }
         if (this == frostbite) {
-            effect = new MobEffectInstance(frost, radiationDuration);
+            effect = new MobEffectInstance(frost, radiationDuration, 1);
         }
         assert effect != null;
         entityLiving.addEffect(effect);

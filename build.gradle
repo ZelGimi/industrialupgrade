@@ -88,6 +88,7 @@ dependencies {
 //    implementation "curse.maven:glodium-957920:5614731"
 //    implementation "org.appliedenergistics:appliedenergistics2:19.2.2-beta"
  //   implementation "org.appliedenergistics:guideme:2.5.1"
+    implementation "curse.maven:embeddium-908741:6118392"
     compileOnly "mekanism:Mekanism:1.21.1-10.7.9.72"
     compileOnly "curse.maven:modern-industrialization-405388:5585300"
     compileOnly "curse.maven:grandpower-980156:5432440"

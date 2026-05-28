@@ -15,13 +15,30 @@
       "item": "industrialupgrade:machines/admin_solar_panel"
     },
     "E": {
-      "item": "industrialupgrade:excitednucleus/admcore"
+      "item": "industrialupgrade:excitednucleus/phocore"
+    },
+    "H": {
+      "type": "neoforge:components",
+      "components": {
+        "industrialupgrade:level_microchip": 9,
+        "minecraft:attribute_modifiers": {
+          "modifiers": []
+        },
+        "minecraft:enchantments": {
+          "levels": {}
+        },
+        "minecraft:lore": [],
+        "minecraft:max_stack_size": 64,
+        "minecraft:rarity": "common",
+        "minecraft:repair_cost": 0
+      },
+      "items": "industrialupgrade:circuit/spectralcircuit"
     }
   },
   "pattern": [
     "ABA",
     "CDC",
-    "DED"
+    "HEH"
   ],
   "result": {
     "count": 1,

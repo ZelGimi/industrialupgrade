@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.painting;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.blockentity.mechanism.multimechanism.simple.BlockEntityOreWashing;
@@ -82,8 +83,10 @@ public class PaintingCategory extends ScreenMain implements IRecipeCategory<Pain
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, PaintingHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 26, 33).addItemStack(recipe.getInput());
-        builder.addSlot(RecipeIngredientRole.INPUT, 48, 33).addItemStack(recipe.getInput1());
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 26, 33, recipe, 0, recipe.getInput());
+
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 48, 33, recipe, 1, recipe.getInput1());
+
         ItemStack stack1 = recipe.getOutput().copy();
         stack1.set(DataComponentsInit.SKIN, recipe.metadata.getString("mode"));
         builder.addSlot(RecipeIngredientRole.OUTPUT, 103, 33).addItemStack(stack1);

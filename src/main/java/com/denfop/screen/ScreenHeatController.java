@@ -13,6 +13,7 @@ import com.denfop.componets.ComponentButton;
 import com.denfop.containermenu.ContainerMenuHeatReactor;
 import com.denfop.containermenu.SlotInvSlot;
 import com.denfop.network.packet.PacketUpdateServerTile;
+import com.denfop.potion.IUPotion;
 import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -183,11 +184,10 @@ public class ScreenHeatController<T extends ContainerMenuHeatReactor> extends Sc
         if (this.container.base.security == EnumTypeSecurity.UNSTABLE) {
             time = this.container.base.yellow_timer.getDisplay();
         }
-        new AdvancedTooltipWidget(this, 158, 76, 188, 98).withTooltip("Radiation: " + ModUtils.getString(this.container.base
+        new AdvancedTooltipWidget(this, 158, 76, 188, 98).withTooltip(Localization.translate("iu.reactor_info.radiation") + ": " + ModUtils.getString(this.container.base
                 .getRad()
                 .getEnergy()) +
-                "/" + ModUtils.getString(this.container.base.getRad().getCapacity()) + " ☢" + "\n" + Localization.translate("iu" +
-                ".potion.radiation") + ": " + ModUtils.getString(
+                "/" + ModUtils.getString(this.container.base.getRad().getCapacity()) + " ☢" + "\n" + Localization.translate(IUPotion.radiation.getDescriptionId()) + ": " + ModUtils.getString(
                 this.container.base
                         .getReactor()
                         .getRadGeneration()) + " ☢/t \n" + ((this.container.base.getLevelReactor() < this.container.base.getMaxLevelReactor())

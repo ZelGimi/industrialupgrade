@@ -32,7 +32,7 @@ public class InventorySimulatorReactor extends Inventory implements VirtualSlot 
 
     @Override
     public boolean canPlaceVirtualItem(int index, ItemStack stack) {
-        return this.canPlaceItem(index,stack);
+        return this.canPlaceItem(index, stack);
     }
 
 }

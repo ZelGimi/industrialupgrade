@@ -71,9 +71,9 @@ public class ScreenMolecularTransformer<T extends ContainerMenuBaseMolecular> ex
                             toolip += energyPerOperation + ModUtils.getString(-container.base.energySlots[i]) + " EF/t" + "\n";
                             MachineRecipe output1 = this.container.base.output[i];
                             toolip +=
-                                    input + this.container.base.inputSlot[i].get(0).getDisplayName().getString() + "\n";
+                                    input + com.denfop.utils.ModUtils.cleanComponentString(this.container.base.inputSlot[i].get(0).getDisplayName().getString()) + "\n";
                             toolip +=
-                                    output + output1.getRecipe().output.items.get(0).getDisplayName().getString() + "\n";
+                                    output + com.denfop.utils.ModUtils.cleanComponentString(output1.getRecipe().output.items.get(0).getDisplayName().getString()) + "\n";
                             toolip += energyPerOperation + ModUtils.getString(output1.getRecipe().output.metadata.getDouble(
                                     "energy")) +
                                     " EF" + "\n";
@@ -96,17 +96,17 @@ public class ScreenMolecularTransformer<T extends ContainerMenuBaseMolecular> ex
                                     .get(0)
                                     .getInputs()
                                     .get(0)
-                                    .getCount() * coef + "x" + this.container.base.inputSlot[i]
-                                    .get(0)
-                                    .getDisplayName().getString() + "\n";
+                                    .getCount() * coef + "x" +   com.denfop.utils.ModUtils.cleanComponentString(this.container.base.inputSlot[i]
+                                   .get(0)
+                                    .getDisplayName().getString()) + "\n";
 
                             toolip +=
                                     output + this.container.base
                                             .getOutput(i)
                                             .getRecipe().output.items
                                             .get(0)
-                                            .getCount() * coef + "x" + this.container.base
-                                            .getOutput(i).getRecipe().output.items.get(0).getDisplayName().getString() + "\n";
+                                            .getCount() * coef + "x" +   com.denfop.utils.ModUtils.cleanComponentString(this.container.base
+                                           .getOutput(i).getRecipe().output.items.get(0).getDisplayName().getString()) + "\n";
                             toolip += energyPerOperation + ModUtils.getString(this.container.base.maxEnergySlots[i]) + "\n";
                         }
                         new TooltipWidget(this, dopX1 + i * mult, 76, 14, 20)
@@ -159,12 +159,12 @@ public class ScreenMolecularTransformer<T extends ContainerMenuBaseMolecular> ex
                 List<Double> time;
                 if (!this.container.base.queue) {
 
-                    draw(poseStack, input + this.container.base.inputSlot[0].get(0).getDisplayName().getString(),
+                    draw(poseStack, input + com.denfop.utils.ModUtils.cleanComponentString(this.container.base.inputSlot[0].get(0).getDisplayName().getString()),
                             this.guiLeft + 60, this.guiTop + 55, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
 
                     draw(poseStack,
-                            output + output1.getRecipe().output.items.get(0).getDisplayName().getString(),
+                            output + com.denfop.utils.ModUtils.cleanComponentString(output1.getRecipe().output.items.get(0).getDisplayName().getString()),
                             this.guiLeft + 60,
                             this.guiTop + 65,
                             ModUtils.convertRGBcolorToInt(255, 255, 255)
@@ -218,9 +218,9 @@ public class ScreenMolecularTransformer<T extends ContainerMenuBaseMolecular> ex
                                         .get(0)
                                         .getInputs()
                                         .get(0)
-                                        .getCount() * coef + "x" + this.container.base.inputSlot[0]
-                                        .get(0)
-                                        .getDisplayName().getString(),
+                                        .getCount() * coef + "x" +   com.denfop.utils.ModUtils.cleanComponentString(this.container.base.inputSlot[0]
+                                       .get(0)
+                                        .getDisplayName().getString()),
                                 this.guiLeft + 60, this.guiTop + 55, ModUtils.convertRGBcolorToInt(255, 255, 255)
                         );
 
@@ -229,7 +229,7 @@ public class ScreenMolecularTransformer<T extends ContainerMenuBaseMolecular> ex
                                         .getOutput(0)
                                         .getRecipe().output.items
                                         .get(0)
-                                        .getCount() * coef + "x" + output1.getRecipe().output.items.get(0).getDisplayName().getString(),
+                                        .getCount() * coef + "x" + com.denfop.utils.ModUtils.cleanComponentString(output1.getRecipe().output.items.get(0).getDisplayName().getString()),
                                 this.guiLeft + 60,
                                 this.guiTop + 65,
                                 ModUtils.convertRGBcolorToInt(255, 255, 255)

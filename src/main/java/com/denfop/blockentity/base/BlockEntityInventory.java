@@ -5,11 +5,9 @@ import com.denfop.api.container.CustomWorldContainer;
 import com.denfop.api.menu.VirtualSlot;
 import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.upgrades.IUpgradeItem;
+import com.denfop.api.upgrades.UpgradableProperty;
 import com.denfop.blocks.BlockTileEntity;
-import com.denfop.componets.AbstractComponent;
-import com.denfop.componets.AirPollutionComponent;
-import com.denfop.componets.ComponentPrivate;
-import com.denfop.componets.SoilPollutionComponent;
+import com.denfop.componets.*;
 import com.denfop.componets.client.ComponentClientEffectRender;
 import com.denfop.containermenu.ContainerMenuBase;
 import com.denfop.inventory.Inventory;
@@ -22,8 +20,10 @@ import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.InteractionHand;
@@ -84,26 +84,37 @@ public class BlockEntityInventory extends BlockEntityBase implements CustomWorld
     @Override
     public void readContainerPacket(CustomPacketBuffer customPacketBuffer) {
         super.readContainerPacket(customPacketBuffer);
+        HolderLookup.Provider serializationLookup = getSerializationLookup(customPacketBuffer.registryAccess());
         try {
             CompoundTag invSlotsTag = (CompoundTag) DecoderHandler.decode(customPacketBuffer);
             for (int i = 0; i < inventories.size(); i++) {
                 Inventory inventory = this.inventories.get(i);
-                inventory.readFromNbt(invSlotsTag.getCompound(String.valueOf(i)), customPacketBuffer.registryAccess());
+                inventory.readFromNbt(invSlotsTag.getCompound(String.valueOf(i)), serializationLookup);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
+    protected HolderLookup.Provider getSerializationLookup(HolderLookup.Provider fallback) {
+        if (this.level instanceof ServerLevel serverLevel) {
+            return serverLevel.getServer().registryAccess();
+        }
+        if (this.level != null) {
+            return this.level.registryAccess();
+        }
+        return fallback;
+    }
+
     @Override
     public CustomPacketBuffer writeContainerPacket() {
         CustomPacketBuffer customPacketBuffer = super.writeContainerPacket();
         CompoundTag invSlotsTag = new CompoundTag();
-
+        HolderLookup.Provider serializationLookup = getSerializationLookup(customPacketBuffer.registryAccess());
         for (int i = 0; i < inventories.size(); i++) {
             CompoundTag invSlotTag = new CompoundTag();
             Inventory inventory = this.inventories.get(i);
-            inventory.writeToNbt(invSlotTag, customPacketBuffer.registryAccess());
+            inventory.writeToNbt(invSlotTag, serializationLookup);
             invSlotsTag.put(String.valueOf(i), invSlotTag);
         }
         try {
@@ -131,7 +142,7 @@ public class BlockEntityInventory extends BlockEntityBase implements CustomWorld
                     IUpgradeItem iUpgradeItem = (IUpgradeItem) stack.getItem();
                     IUpgradableBlock upgradableBlock = (IUpgradableBlock) this;
 
-                    if (iUpgradeItem.isSuitableFor(stack, upgradableBlock.getUpgradableProperties())) {
+                    if (iUpgradeItem.isSuitableFor(stack, upgradableBlock.getAllPossibleUpgradableProperties())) {
                         for (final Inventory invslot : this.inventories) {
                             if (invslot instanceof InventoryUpgrade) {
                                 InventoryUpgrade upgrade = (InventoryUpgrade) invslot;
@@ -154,7 +165,54 @@ public class BlockEntityInventory extends BlockEntityBase implements CustomWorld
         openContainer(player);
         return true;
     }
+    private Set<UpgradableProperty> cachedAllPossibleUpgradableProperties;
+    public Set<UpgradableProperty> getAllPossibleUpgradableProperties() {
+        if (this.cachedAllPossibleUpgradableProperties != null) {
+            return this.cachedAllPossibleUpgradableProperties;
+        }
 
+        if (!(this instanceof IUpgradableBlock upgradableBlock)) {
+            this.cachedAllPossibleUpgradableProperties = Collections.emptySet();
+            return this.cachedAllPossibleUpgradableProperties;
+        }
+        Set<UpgradableProperty> set = EnumSet.noneOf(UpgradableProperty.class);
+        Set<UpgradableProperty> baseProperties = upgradableBlock.getUpgradableProperties();
+        if (baseProperties != null && !baseProperties.isEmpty()) {
+            set.addAll(baseProperties);
+        }
+
+        if (!this.inputSlots.isEmpty()) {
+            set.add(UpgradableProperty.ItemInput);
+        }
+
+        if (!this.outputSlots.isEmpty()) {
+            set.add(UpgradableProperty.ItemExtract);
+        }
+
+        if (this.hasComponent(ComponentProcess.class) || this.hasComponent(ProcessMultiComponent.class)) {
+            set.add(UpgradableProperty.Processing);
+        }
+
+        if (this.hasComponent(Energy.class)) {
+            set.add(UpgradableProperty.Transformer);
+            set.add(UpgradableProperty.EnergyStorage);
+        }
+
+        if (this.hasComponent(Fluids.class)) {
+            Fluids fluids = this.getComp(Fluids.class);
+
+            if (fluids.isHasInput()) {
+                set.add(UpgradableProperty.FluidInput);
+            }
+
+            if (fluids.isHasExtract()) {
+                set.add(UpgradableProperty.FluidExtract);
+            }
+        }
+
+        this.cachedAllPossibleUpgradableProperties = Collections.unmodifiableSet(set);
+        return this.cachedAllPossibleUpgradableProperties;
+    }
     private void openContainer(Player player) {
         if (player.level().isClientSide)
             return;
@@ -336,8 +394,7 @@ public class BlockEntityInventory extends BlockEntityBase implements CustomWorld
         super.readPacket(customPacketBuffer);
         try {
             for (AbstractComponent component : this.componentList)
-                if ((!(component instanceof ComponentPrivate)))
-                    component.onNetworkUpdate(customPacketBuffer);
+                component.onNetworkUpdate(customPacketBuffer);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -348,8 +405,7 @@ public class BlockEntityInventory extends BlockEntityBase implements CustomWorld
         CustomPacketBuffer packetBuffer = super.writePacket();
 
         for (AbstractComponent component : this.componentList)
-            if ((!(component instanceof ComponentPrivate)))
-                packetBuffer.writeBytes(component.updateComponent());
+            packetBuffer.writeBytes(component.updateComponent());
         return packetBuffer;
     }
 
@@ -477,7 +533,7 @@ public class BlockEntityInventory extends BlockEntityBase implements CustomWorld
         for (Inventory slot : this.inventories) {
 
             for (int k = 0; k < slot.size(); k++) {
-                indexInventoryList.put(amount,new Tuple<>(index,k));
+                indexInventoryList.put(amount, new Tuple<>(index, k));
                 amount++;
             }
             index++;
@@ -496,6 +552,7 @@ public class BlockEntityInventory extends BlockEntityBase implements CustomWorld
         Inventory inventory;
         for (Iterator<Inventory> var2 = this.inventories.iterator(); var2.hasNext(); size_inventory += inventory.size()) {
             inventory = var2.next();
+            inventory.setChanged();
         }
     }
 

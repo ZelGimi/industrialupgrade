@@ -32,6 +32,7 @@ public abstract class BlockCore<T extends Enum<T> & ISubEnum> extends Block {
     private final DataBlock<T, ? extends BlockCore<T>, ? extends ItemBlockCore<T>> data;
     private final DataMultiBlock<T, ? extends BlockCore<T>, ? extends ItemBlockCore<T>> multiData;
     private final T element;
+    String descriptionId;
 
     public BlockCore(MapColor material, T[] elements, T element, DataBlock<T, ? extends BlockCore<T>, ? extends ItemBlockCore<T>> dataBlock) {
         super(Properties.of().mapColor(material));
@@ -77,6 +78,16 @@ public abstract class BlockCore<T extends Enum<T> & ISubEnum> extends Block {
         return ItemStack.EMPTY;
     }
 
+    public String getDescriptionId() {
+        if (this.descriptionId == null) {
+            if (data != null)
+                this.descriptionId = this.data.getItem(getMetaFromState(this.defaultBlockState())).getDescriptionId();
+            if (multiData != null)
+                this.descriptionId = this.multiData.getItem(getMetaFromState(this.defaultBlockState())).getDescriptionId();
+        }
+
+        return this.descriptionId;
+    }
 
     public DataMultiBlock<T, ? extends BlockCore<T>, ? extends ItemBlockCore<T>> getMultiData() {
         return multiData;

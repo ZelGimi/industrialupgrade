@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.generator.energy;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -43,7 +45,7 @@ public class BlockEntityPeatGenerator extends BlockEntityElectricMachine impleme
     public int fuel = 0;
 
     public BlockEntityPeatGenerator(BlockPos pos, BlockState state) {
-        super(0, 1, 0, BlockBaseMachine3Entity.peat_generator, pos, state);
+        super(ModConfig.mechanismDouble("peat_generator_energy_storage", 0.0D), 1, 0, BlockBaseMachine3Entity.peat_generator, pos, state);
         energy = this.addComponent(Energy.asBasicSource(this, 150000, 1));
         this.slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
@@ -51,8 +53,8 @@ public class BlockEntityPeatGenerator extends BlockEntityElectricMachine impleme
                 return stack.getItem() == IUItem.cultivated_peat_balls.getItem();
             }
         };
-        this.addComponent(new SoilPollutionComponent(this, 0.2));
-        this.addComponent(new AirPollutionComponent(this, 0.2));
+        this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("peat_generator_soil_pollution_amount", 0.2D)));
+        this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("peat_generator_air_pollution_amount", 0.2D)));
 
     }
 

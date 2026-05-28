@@ -3,6 +3,7 @@ package com.denfop.network.packet;
 import com.denfop.IUCore;
 import com.denfop.api.space.IBody;
 import com.denfop.api.space.SpaceNet;
+import com.denfop.blockentity.mechanism.BlockEntityResearchTableSpace;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import net.minecraft.world.entity.player.Player;
@@ -54,6 +55,9 @@ public class PacketDeleteColony implements IPacket {
             if (entityPlayer.getUUID().equals(uuid)) {
                 String body = customPacketBuffer.readString();
                 IBody body1 = SpaceNet.instance.getBodyFromName(body);
+                if (SpaceNet.instance.getFakeSpaceSystem().getResearchTableMap().get(uuid) instanceof BlockEntityResearchTableSpace researchTableSpace) {
+                    researchTableSpace.colony = null;
+                }
                 SpaceNet.instance.getColonieNet().removeColony(body1, entityPlayer.getUUID());
             }
         } catch (IOException e) {

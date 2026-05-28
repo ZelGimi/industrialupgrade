@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.handlerho;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.blockentity.base.BlockEntityBaseHandlerHeavyOre;
@@ -93,8 +94,8 @@ public class HandlerHOCategory extends ScreenMain implements IRecipeCategory<Han
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, HandlerHOHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 34, 33)
-                .addItemStack(recipe.getInput());
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 34, 33, recipe, 0, recipe.getInput());
+
 
 
         for (int i = 0; i < recipe.getOutput().size(); ++i) {

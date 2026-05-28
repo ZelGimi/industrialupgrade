@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.bee.genetics.GenomeItem;
@@ -47,7 +49,7 @@ public class BlockEntityInoculator extends BlockEntityElectricMachine implements
     public MachineRecipe output;
 
     public BlockEntityInoculator(BlockPos pos, BlockState state) {
-        super(300, 1, 1, BlockBaseMachine3Entity.inoculator, pos, state);
+        super(ModConfig.mechanismDouble("inoculator_energy_storage", 300.0D), 1, 1, BlockBaseMachine3Entity.inoculator, pos, state);
         Recipes.recipes.addInitRecipes(this);
         this.inputSlotA = new InventoryRecipes(this, "inoculator", this) {
             @Override
@@ -55,6 +57,7 @@ public class BlockEntityInoculator extends BlockEntityElectricMachine implements
                 return itemStack.getItem() instanceof ICropItem || itemStack.getItem() instanceof GenomeItem || itemStack.getItem() instanceof IGenomeItem || itemStack.getItem() == IUItem.jarBees.getStack(0);
             }
         };
+        inputSlotA.setStackSizeLimit(1);
         this.upgradeSlot = new InventoryUpgrade(this, 4);
 
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot) {
@@ -65,8 +68,8 @@ public class BlockEntityInoculator extends BlockEntityElectricMachine implements
             }
         });
 
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.25));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("inoculator_soil_pollution_amount", 0.1D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("inoculator_air_pollution_amount", 0.25D)));
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
                 (short) 300
         ));
@@ -88,6 +91,7 @@ public class BlockEntityInoculator extends BlockEntityElectricMachine implements
                 ItemStack genome = (isCrop(this.invSlotRecipes.get(0)) || isBee(this.invSlotRecipes.get(0)))
                         ? this.invSlotRecipes.get(1)
                         : this.invSlotRecipes.get(0);
+
                 if (isCrop(stack1)) {
                     IGenomeItem genomeItem = (IGenomeItem) genome.getItem();
                     Genome genome1 = new Genome(stack1);
@@ -119,6 +123,8 @@ public class BlockEntityInoculator extends BlockEntityElectricMachine implements
                 ItemStack genome = (isCrop(this.invSlotRecipes.get(0)) || isBee(this.invSlotRecipes.get(0)))
                         ? this.invSlotRecipes.get(1)
                         : this.invSlotRecipes.get(0);
+                stack1 = stack1.copy();
+                stack1.setCount(1);
                 if (isCrop(stack1)) {
                     IGenomeItem genomeItem = (IGenomeItem) genome.getItem();
                     Genome genome1 = new Genome(stack1);

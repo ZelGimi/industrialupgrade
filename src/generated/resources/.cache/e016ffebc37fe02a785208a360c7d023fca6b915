@@ -1,0 +1,3 @@
+// 1.21.1	2026-05-22T22:15:37.0702829	Tags for minecraft:damage_type mod id industrialupgrade
+37bbea53682b6a17faa8043caa7cf8ea6db9b80b data/minecraft/tags/damage_type/bypasses_armor.json
+48f175d69d1847778b57fc0403ce994e1ff97883 data/minecraft/tags/damage_type/is_fire.json

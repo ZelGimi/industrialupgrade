@@ -1,16 +1,25 @@
 {
-  "type": "industrialupgrade:shapeless_recipe",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
-  "ingredients": [
-    {
+  "key": {
+    "A": {
+      "tag": "c:doubleplate/aluminumbronze"
+    },
+    "B": {
       "item": "industrialupgrade:energy/wrench"
     },
-    {
-      "item": "industrialupgrade:wiring_storage/mfe_iu"
+    "C": {
+      "item": "industrialupgrade:battery/energy_crystal"
     }
+  },
+  "pattern": [
+    "ACA",
+    "CBC",
+    "ACA"
   ],
   "result": {
     "count": 1,
     "id": "industrialupgrade:upgradekitstorage/upgradekit"
-  }
+  },
+  "show_notification": false
 }

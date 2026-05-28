@@ -292,7 +292,7 @@ public class ItemUpgradeModule<T extends Enum<T> & ISubEnum> extends ItemMain<T>
                     }
 
                     for (BagsDescription description : bags) {
-                        tooltip.add(Component.literal(description.getStack().getHoverName().getString()).withStyle(ChatFormatting.GREEN));
+                        tooltip.add(Component.literal(com.denfop.utils.ModUtils.cleanComponentString(description.getStack().getHoverName().getString())).withStyle(ChatFormatting.GREEN));
                     }
                 }
                 break;
@@ -313,7 +313,7 @@ public class ItemUpgradeModule<T extends Enum<T> & ISubEnum> extends ItemMain<T>
 
 
                     for (BagsDescription description : bags) {
-                        tooltip.add(Component.literal(description.getStack().getHoverName().getString()).withStyle(ChatFormatting.GREEN));
+                        tooltip.add(Component.literal(com.denfop.utils.ModUtils.cleanComponentString(description.getStack().getHoverName().getString())).withStyle(ChatFormatting.GREEN));
                     }
                 }
                 break;

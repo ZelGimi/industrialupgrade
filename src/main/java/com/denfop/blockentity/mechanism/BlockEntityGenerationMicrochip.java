@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -46,7 +48,7 @@ public class BlockEntityGenerationMicrochip extends BlockEntityBaseGenerationMic
     private final AirPollutionComponent pollutionAir;
 
     public BlockEntityGenerationMicrochip(BlockPos pos, BlockState blockState) {
-        super(1, 300, 1, BlockBaseMachineEntity.generator_microchip, pos, blockState);
+        super(ModConfig.mechanismInt("circuit_manufacturer_energy_per_tick", 1), ModConfig.mechanismInt("circuit_manufacturer_operation_length", 300), 1, BlockBaseMachineEntity.generator_microchip, pos, blockState);
         this.inputSlotA = new InventoryRecipes(this, "microchip", this);
         Recipes.recipes.addInitRecipes(this);
         this.componentProcess.setInvSlotRecipes(inputSlotA);
@@ -72,8 +74,8 @@ public class BlockEntityGenerationMicrochip extends BlockEntityBaseGenerationMic
                 return EnumTypeSlot.RECIPE_SCHEDULE;
             }
         };
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.15));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.2));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("generation_microchip_soil_pollution_amount", 0.15D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("generation_microchip_air_pollution_amount", 0.2D)));
     }
 
     private static void add(
@@ -292,7 +294,7 @@ public class BlockEntityGenerationMicrochip extends BlockEntityBaseGenerationMic
 
     public void init() {
         add(new ItemStack(Items.FLINT), new ItemStack(Items.LAPIS_LAZULI), new ItemStack(Items.IRON_INGOT),
-                new ItemStack(IUItem.iuingot.getItemFromMeta(11), 1), new ItemStack(IUItem.iuingot.getItemFromMeta(15)), new ItemStack(IUItem.basecircuit.getItemFromMeta(0)), (short) 3000, false
+                new ItemStack(IUItem.iuingot.getItemFromMeta(11), 1), new ItemStack(IUItem.iuingot.getItemFromMeta(15)), new ItemStack(IUItem.basecircuit.getItemFromMeta(0), 2), (short) 3000, false
         );
 
         add(
@@ -301,7 +303,7 @@ public class BlockEntityGenerationMicrochip extends BlockEntityBaseGenerationMic
                 new ItemStack(IUItem.iuingot.getItemFromMeta(41)),
                 new ItemStack(IUItem.alloysingot.getItemFromMeta(14)),
                 new ItemStack(IUItem.alloysingot.getItemFromMeta(23)),
-                new ItemStack(IUItem.basecircuit.getItemFromMeta(18)),
+                new ItemStack(IUItem.basecircuit.getItemFromMeta(18), 2),
                 (short) 5000, true
         );
 
@@ -311,7 +313,7 @@ public class BlockEntityGenerationMicrochip extends BlockEntityBaseGenerationMic
                 new ItemStack(Items.GOLD_INGOT),
                 new ItemStack(Items.FLINT),
                 new ItemStack(IUItem.iuingot.getItemFromMeta(14)),
-                new ItemStack(IUItem.basecircuit.getItemFromMeta(15)),
+                new ItemStack(IUItem.basecircuit.getItemFromMeta(15), 2),
                 (short) 1000, true
         );
 
@@ -321,23 +323,17 @@ public class BlockEntityGenerationMicrochip extends BlockEntityBaseGenerationMic
                 new ItemStack(Items.GOLD_INGOT),
                 new ItemStack(IUItem.iuingot.getItemFromMeta(7)),
                 "c:ingots/copper",
-                new ItemStack(IUItem.basecircuit.getItemFromMeta(1)),
+                new ItemStack(IUItem.basecircuit.getItemFromMeta(1), 2),
                 (short) 4000, true
         );
-        add(
-                new ItemStack(Items.REDSTONE, 1),
-                new ItemStack(Items.GOLD_INGOT),
-                new ItemStack(IUItem.iuingot.getItemFromMeta(7)),
-                IUItem.copperIngot,
-                new ItemStack(IUItem.basecircuit.getItemFromMeta(1))
-        );
+
         add(
                 new ItemStack(IUItem.iuingot.getItemFromMeta(18)),
                 new ItemStack(Items.REDSTONE, 1),
                 new ItemStack(Items.DIAMOND),
                 new ItemStack(IUItem.iuingot.getItemFromMeta(0)),
                 new ItemStack(IUItem.iuingot.getItemFromMeta(5)),
-                new ItemStack(IUItem.basecircuit.getItemFromMeta(2)),
+                new ItemStack(IUItem.basecircuit.getItemFromMeta(2), 2),
                 (short) 5000, true
         );
         add(
@@ -357,7 +353,7 @@ public class BlockEntityGenerationMicrochip extends BlockEntityBaseGenerationMic
                 new ItemStack(IUItem.iuingot.getItemFromMeta(9)),
                 "c:ingots/steel", new ItemStack(Items.GOLD_INGOT),
 
-                new ItemStack(IUItem.basecircuit.getItemFromMeta(12)),
+                new ItemStack(IUItem.basecircuit.getItemFromMeta(12), 2),
                 true
         );
         add(

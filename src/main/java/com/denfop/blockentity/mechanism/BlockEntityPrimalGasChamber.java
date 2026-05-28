@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -67,7 +69,7 @@ public class BlockEntityPrimalGasChamber extends BlockEntityElectricMachine impl
     private int prevAmount2;
 
     public BlockEntityPrimalGasChamber(BlockPos pos, BlockState state) {
-        super(0, 0, 0, BlockGasChamberEntity.primal_gas_chamber, pos, state);
+        super(ModConfig.mechanismDouble("gas_chamber_energy_storage", 0.0D), 0, 0, BlockGasChamberEntity.primal_gas_chamber, pos, state);
         this.progress = 0;
         this.defaultOperationLength = this.operationLength = 600;
 
@@ -94,7 +96,7 @@ public class BlockEntityPrimalGasChamber extends BlockEntityElectricMachine impl
     }
 
     public List<AABB> getAabbs(boolean forCollision) {
-        return Collections.singletonList(new AABB(-0.05D, 0.0D, -0.05D, 1.05D, 2D, 1.05D));
+        return Collections.singletonList(new AABB(0D, 0.0D, 0D, 1D, 2D, 1D));
 
     }
 

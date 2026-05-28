@@ -1,0 +1,16 @@
+{
+  "type": "industrialupgrade:shapeless_recipe",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "industrialupgrade:crafting_elements/crafting_775_element"
+    },
+    {
+      "item": "industrialupgrade:crafting_elements/crafting_779_element"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:storage/item_64000"
+  }
+}

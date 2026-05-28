@@ -6,13 +6,16 @@
       "item": "industrialupgrade:quarrymodules/for1"
     },
     "B": {
-      "tag": "c:doubleplate/nichrome"
+      "tag": "c:doubleplate/tantalum"
+    },
+    "C": {
+      "tag": "c:doubleplate/thallium"
     }
   },
   "pattern": [
-    "ABA",
-    "   ",
-    "   "
+    "CBC",
+    "BAB",
+    "CBC"
   ],
   "result": {
     "count": 1,

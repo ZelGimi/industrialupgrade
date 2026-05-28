@@ -21,9 +21,8 @@ public class ReplicatorRecipe {
         add(Items.COAL, 0.9144);
         add(IUItem.bronzeIngot, 0.9611);
         add("c:ingots/Tin", 1.082);
-        add("c:ingots/Steel", 1.066);
+        add("c:ingots/Steel", 3.066);
         add("c:ingots/Copper", 0.9174);
-        add("c:ingots/Silver", 79.25);
         add(IUItem.rubber, 100.7);
         add(Items.REDSTONE, 1.221);
         add(Items.GLOWSTONE_DUST, 39.94);
@@ -192,11 +191,17 @@ public class ReplicatorRecipe {
             add("c:ingots/" + s, 25);
         }
         for (String s : list_string) {
-            add("c:storage_blocks/" + s, 25 * 9 * 0.9);
+            add("c:storage_blocks/" + s, 25 * 9);
         }
         for (String s : list_baseore1) {
-            add("c:storage_blocks/" + s, 25 * 9 * 0.9);
+            add("c:storage_blocks/" + s, 25 * 9);
         }
+        add("c:ingots/osmium", 25);
+        add("c:ingots/tantalum", 25);
+        add("c:ingots/cadmium", 25);
+        add("c:storage_blocks/osmium", 25 * 9);
+        add("c:storage_blocks/tantalum", 25 * 9);
+        add("c:storage_blocks/cadmium", 25 * 9);
         add(ItemStackHelper.fromData(IUItem.iudust, 1, 66), 8);
         add(ItemStackHelper.fromData(IUItem.iudust, 1, 69), 8);
         add(ItemStackHelper.fromData(IUItem.iudust, 1, 70), 8);
@@ -334,6 +339,10 @@ public class ReplicatorRecipe {
         add(Blocks.POLISHED_BLACKSTONE_BRICKS, 95.0);
         add(Blocks.CRACKED_POLISHED_BLACKSTONE_BRICKS, 90.0);
         add(Blocks.CHISELED_POLISHED_BLACKSTONE, 90.0);
+
+        add(IUItem.preciousgem.getStack(0), 25);
+        add(IUItem.preciousgem.getStack(1), 25);
+        add(IUItem.preciousgem.getStack(2), 25);
     }
 
     public static double getInBuckets(ItemStack request) {

@@ -1,0 +1,27 @@
+{
+  "feature": "industrialupgrade:space/ganymede/spiral_caves",
+  "placement": [
+    {
+      "type": "minecraft:count",
+      "count": 1
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:height_range",
+      "height": {
+        "type": "minecraft:uniform",
+        "max_inclusive": {
+          "absolute": 48
+        },
+        "min_inclusive": {
+          "absolute": -60
+        }
+      }
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

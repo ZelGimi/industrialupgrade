@@ -50,11 +50,11 @@ public class ScreenGenStone<T extends ContainerMenuGenStone> extends ScreenMain<
         new TooltipWidget(this, 63, 64, 18, 18)
                 .withTooltip(Localization.translate("message.text.mode") + ": " +
                         (this.container.base.getMode() == BlockEntityBaseGenStone.Mode.SAND ?
-                                new ItemStack(Blocks.SAND).getDisplayName().getString() :
+                                com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(Blocks.SAND).getDisplayName().getString()) :
                                 this.container.base.getMode() == BlockEntityBaseGenStone.Mode.GRAVEL
                                         ?
-                                        new ItemStack(Blocks.GRAVEL).getDisplayName().getString()
-                                        : new ItemStack(Blocks.COBBLESTONE).getDisplayName().getString()
+                                        com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(Blocks.GRAVEL).getDisplayName().getString())
+                                        : com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(Blocks.COBBLESTONE).getDisplayName().getString())
                         ))
                 .drawForeground(poseStack, mouseX
                         , mouseY);

@@ -4,10 +4,10 @@
   "cookingtime": 200,
   "experience": 0.6,
   "ingredient": {
-    "item": "industrialupgrade:blockspace/eris_magnesium"
+    "item": "industrialupgrade:classicore/lead"
   },
   "result": {
     "count": 1,
-    "id": "industrialupgrade:itemingots/magnesium_ingot"
+    "id": "industrialupgrade:itemingots/lead_ingot"
   }
 }

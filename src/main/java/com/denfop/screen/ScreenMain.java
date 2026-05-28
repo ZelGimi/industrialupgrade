@@ -1,6 +1,8 @@
 package com.denfop.screen;
 
+import com.denfop.Constants;
 import com.denfop.api.container.CustomWorldContainer;
+import com.denfop.api.upgrades.IUpgradableBlock;
 import com.denfop.api.widget.EnumTypeComponent;
 import com.denfop.api.widget.ScreenWidget;
 import com.denfop.api.widget.WidgetDefault;
@@ -13,6 +15,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,6 +87,8 @@ public abstract class ScreenMain<T extends ContainerMenuBase<? extends CustomWor
                 return EnumTypeComponent.BIO_DEFAULT;
             case SPACE:
                 return EnumTypeComponent.SPACE_DEFAULT;
+            case STORAGE:
+                return EnumTypeComponent.STORAGE_DEFAULT;
             default:
                 return EnumTypeComponent.DEFAULT;
         }
@@ -109,6 +114,8 @@ public abstract class ScreenMain<T extends ContainerMenuBase<? extends CustomWor
                 return EnumTypeStyle.BIO;
             case SPACE_DEFAULT:
                 return EnumTypeStyle.SPACE;
+            case STORAGE_DEFAULT:
+                return EnumTypeStyle.STORAGE;
             default:
                 return EnumTypeStyle.DEFAULT;
         }
@@ -157,13 +164,17 @@ public abstract class ScreenMain<T extends ContainerMenuBase<? extends CustomWor
     }
 
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
-
+        if (this.container.base instanceof IUpgradableBlock){
+            bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/infobutton.png"));
+            this.drawTexturedModalRect(poseStack, this.guiLeft(), this.guiTop(), 0, 0, 10, 10);
+            bindTexture(this.getTexture());
+        }
     }
 
     protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {
         this.bindTexture();
         poseStack.blit(currentTexture, this.getGuiLeft(), this.getGuiTop(), 0, 0, this.getXSize(), this.getYSize());
-        String name = this.container.base.getDisplayName().getString();
+        String name = com.denfop.utils.ModUtils.cleanComponentString(this.container.base.getDisplayName().getString());
         int textWidth = this.getStringWidth(name);
         float scale = 1.0f;
 
@@ -195,5 +206,9 @@ public abstract class ScreenMain<T extends ContainerMenuBase<? extends CustomWor
 
     public void updateTickInterface() {
 
+    }
+
+
+    public void updateTick() {
     }
 }

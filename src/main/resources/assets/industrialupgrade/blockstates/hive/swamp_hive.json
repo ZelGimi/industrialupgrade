@@ -15,36 +15,20 @@
       "model": "industrialupgrade:block/hive/swamp_hive",
       "y": 90
     },
-    "facing=down,type=swamp_hive": {
-      "model": "industrialupgrade:block/hive/swamp_hive",
-      "x": 90
-    },
-    "facing=up,type=swamp_hive": {
-      "model": "industrialupgrade:block/hive/swamp_hive",
-      "x": 270
-    },
-    "facing=north,type=swamp_hive_invalid": {
+    "facing=north,type=swamp_hive_active": {
       "model": "industrialupgrade:block/hive/swamp_hive"
     },
-    "facing=south,type=swamp_hive_invalid": {
+    "facing=south,type=swamp_hive_active": {
       "model": "industrialupgrade:block/hive/swamp_hive",
       "y": 180
     },
-    "facing=west,type=swamp_hive_invalid": {
+    "facing=west,type=swamp_hive_active": {
       "model": "industrialupgrade:block/hive/swamp_hive",
       "y": 270
     },
-    "facing=east,type=swamp_hive_invalid": {
+    "facing=east,type=swamp_hive_active": {
       "model": "industrialupgrade:block/hive/swamp_hive",
       "y": 90
-    },
-    "facing=down,type=swamp_hive_invalid": {
-      "model": "industrialupgrade:block/hive/swamp_hive",
-      "x": 90
-    },
-    "facing=up,type=swamp_hive_invalid": {
-      "model": "industrialupgrade:block/hive/swamp_hive",
-      "x": 270
     }
   }
 }

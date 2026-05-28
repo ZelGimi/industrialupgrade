@@ -38,7 +38,7 @@ public class ScreenAutoCrafter<T extends ContainerMenuAutoCrafter> extends Scree
         super.drawForegroundLayer(poseStack, par1, par2);
         if (this.container.base.getRecipe() != null) {
             new TooltipWidget(this, 74, 52, 18, 18)
-                    .withTooltip(() -> this.container.base.getRecipe().output.items.get(0).getDisplayName().getString())
+                    .withTooltip(() -> com.denfop.utils.ModUtils.cleanComponentString(this.container.base.getRecipe().output.items.get(0).getDisplayName().getString()))
                     .drawForeground(poseStack, par1, par2);
         }
     }

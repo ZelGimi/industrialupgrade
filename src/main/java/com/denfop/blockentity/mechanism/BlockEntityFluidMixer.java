@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -71,15 +73,15 @@ public class BlockEntityFluidMixer extends BlockEntityElectricMachine implements
     protected double guiProgress;
 
     public BlockEntityFluidMixer(BlockPos pos, BlockState state) {
-        super(100, 1, 4, BlockBaseMachine3Entity.fluid_mixer, pos, state);
+        super(ModConfig.mechanismDouble("fluid_mixer_energy_storage", 100.0D), 1, 4, BlockBaseMachine3Entity.fluid_mixer, pos, state);
         this.progress = 0;
-        this.defaultEnergyConsume = this.energyConsume = 1;
+        this.defaultEnergyConsume = this.energyConsume = ModConfig.mechanismInt("fluid_mixer_energy_use", 1);
         this.defaultOperationLength = this.operationLength = 100;
         this.defaultTier = 1;
         this.defaultEnergyStorage = 100;
 
-        this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("fluid_mixer_soil_pollution_amount", 0.1D)));
+        this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("fluid_mixer_air_pollution_amount", 0.1D)));
         Fluids fluids = this.addComponent(new Fluids(this));
         this.fluidTank1 = fluids.addTankInsert("fluidTank1", 12 * 1000);
 

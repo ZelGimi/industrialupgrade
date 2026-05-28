@@ -22,6 +22,8 @@ public class ClientTickHandler {
         LocalPlayer player = mc.player;
 
         if (player == null || mc.level == null) return;
+        if (mc.level.dimension() != Level.OVERWORLD)
+            return;
         PoseStack guiGraphics = pose.pose();
         if (shouldDisplayRadiationInfo(player)) {
             guiGraphics.pushPose();

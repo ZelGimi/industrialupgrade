@@ -2,6 +2,7 @@ package com.denfop.api.pollution.radiation;
 
 import com.denfop.api.item.armor.HazmatLike;
 import com.denfop.api.reactors.IAdvReactor;
+import com.denfop.config.ModConfig;
 import com.denfop.network.packet.PacketRadiation;
 import com.denfop.network.packet.PacketUpdateRadiation;
 import com.denfop.potion.IUPotion;
@@ -30,6 +31,7 @@ public class RadiationSystem {
     public RadiationSystem() {
         rad_system = this;
         NeoForge.EVENT_BUS.register(new EventHandler());
+        NeoForge.EVENT_BUS.register(new RadiationFoodSystem());
     }
 
     public Map<ChunkPos, List<IAdvReactor>> getAdvReactorMap() {
@@ -50,6 +52,10 @@ public class RadiationSystem {
                     rad.process(player);
                 }
             } else {
+                if (!ModConfig.COMMON.radiationDamageEnabled.get()) {
+                    return;
+
+                }
                 double radiation = player.getPersistentData().getDouble("radiation");
                 if (radiation >= 50) {
                     player.addEffect(new MobEffectInstance(IUPotion.rad, 43200, 0));
@@ -103,6 +109,12 @@ public class RadiationSystem {
     public void workDecay(final Level world) {
         try {
             for (Radiation radiation : this.radiationList) {
+                if (!ModConfig.COMMON.radiationChunksEnabled.get()) {
+                    radiation.setRadiation(0);
+                    radiation.setLevel(EnumLevelRadiation.LOW);
+                    new PacketUpdateRadiation(radiation, (ServerLevel) world);
+
+                }
                 if (radiation.getRadiation() > 0) {
                     switch (radiation.getLevel()) {
                         case LOW:

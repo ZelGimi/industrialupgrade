@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -52,7 +54,7 @@ public class BlockEntityPrimalSiliconCrystalHandler extends BlockEntityElectricM
     private boolean checkState;
 
     public BlockEntityPrimalSiliconCrystalHandler(BlockPos pos, BlockState state) {
-        super(0, 0, 1, BlockPrimalSiliconCrystalHandlerEntity.primal_silicon_crystal_handler, pos, state);
+        super(ModConfig.mechanismDouble("primitive_crystal_grower_energy_storage", 0.0D), 0, 1, BlockPrimalSiliconCrystalHandlerEntity.primal_silicon_crystal_handler, pos, state);
         Recipes.recipes.addInitRecipes(this);
         inputSlotA = new InventoryRecipes(this, "silicon_recipe", this) {
             @Override
@@ -62,7 +64,7 @@ public class BlockEntityPrimalSiliconCrystalHandler extends BlockEntityElectricM
         };
 
         this.upgradeSlot = new InventoryUpgrade(this, 4);
-        this.timer = this.addComponent(new ComponentTimer(this, new Timer(0, 5, 0)));
+        this.timer = this.addComponent(new ComponentTimer(this, new Timer(0, 3, 0)));
     }
 
     @Override

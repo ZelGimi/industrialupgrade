@@ -55,7 +55,7 @@ public class ScreenGasWellController<T extends ContainerMenuGasWellController> e
                     if (fluid != null) {
                         ret.add(fluid.getFluidType().getDescription().getString() + ": " + fs.getAmount() + " " + Localization.translate("iu.generic.text.mb"));
                     } else {
-                        ret.add("invalid fluid stack");
+                        ret.add(Localization.translate("iu.tooltip.fluid.invalid"));
                     }
                 } else {
                     ret.add(Localization.translate("iu.generic.text.empty"));
@@ -80,7 +80,7 @@ public class ScreenGasWellController<T extends ContainerMenuGasWellController> e
 
                     Fluid fluid = fs.getFluid();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
-                    TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+                    TextureAtlasSprite sprite = getSafeFluidSprite(fs);
                     int color = extensions.getTintColor();
                     double renderHeight = (double) fluidHeight * ModUtils.limit(
                             (double) fs.getAmount() / (double) this.tank.getCapacity(),

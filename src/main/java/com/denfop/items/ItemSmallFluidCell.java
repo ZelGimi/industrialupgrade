@@ -1,5 +1,7 @@
 package com.denfop.items;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUCore;
 import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.tabs.IItemTab;
@@ -22,7 +24,7 @@ import java.util.List;
 
 public class ItemSmallFluidCell extends ItemFluidContainer implements IItemTab {
     public ItemSmallFluidCell() {
-        super(500);
+        super(ModConfig.itemInt("small_fluid_cell_capacity", 500));
     }
 
     public boolean canfill(Fluid fluid) {

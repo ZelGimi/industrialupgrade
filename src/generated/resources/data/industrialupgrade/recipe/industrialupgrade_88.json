@@ -1,16 +1,42 @@
 {
-  "type": "industrialupgrade:shapeless_recipe",
+  "type": "industrialupgrade:shaped_recipe",
   "category": "misc",
-  "ingredients": [
-    {
+  "key": {
+    "A": {
       "item": "industrialupgrade:energy/wrench"
     },
-    {
-      "item": "industrialupgrade:wiring_storage/had_mfsu"
+    "B": {
+      "item": "industrialupgrade:battery/itembatlamacrystal"
+    },
+    "C": {
+      "type": "neoforge:components",
+      "components": {
+        "industrialupgrade:level_microchip": 8,
+        "minecraft:attribute_modifiers": {
+          "modifiers": []
+        },
+        "minecraft:enchantments": {
+          "levels": {}
+        },
+        "minecraft:lore": [],
+        "minecraft:max_stack_size": 64,
+        "minecraft:rarity": "common",
+        "minecraft:repair_cost": 0
+      },
+      "items": "industrialupgrade:circuit/quantumcircuit"
+    },
+    "D": {
+      "item": "industrialupgrade:itemcore/neucore"
     }
+  },
+  "pattern": [
+    "CBC",
+    "DAD",
+    "CBC"
   ],
   "result": {
     "count": 1,
     "id": "industrialupgrade:upgradekitstorage/upgradekit6"
-  }
+  },
+  "show_notification": false
 }

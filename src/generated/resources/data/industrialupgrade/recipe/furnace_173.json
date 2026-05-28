@@ -4,10 +4,10 @@
   "cookingtime": 200,
   "experience": 0.6,
   "ingredient": {
-    "item": "industrialupgrade:alloydust/hafnium_boride_alloy"
+    "item": "industrialupgrade:blockspace4/triton_strontium"
   },
   "result": {
     "count": 1,
-    "id": "industrialupgrade:alloyingot/hafnium_boride_alloy"
+    "id": "industrialupgrade:itemingots/strontium"
   }
 }

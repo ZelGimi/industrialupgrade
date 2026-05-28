@@ -1,0 +1,81 @@
+{
+  "carvers": {},
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 9194030,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000
+    },
+    "sky_color": 10707246,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "features": [
+    [
+      "industrialupgrade:mercury_cavity",
+      "industrialupgrade:mercury_shaft",
+      "industrialupgrade:mercury_lava_tube",
+      "industrialupgrade:space/mercury/stone_tunnels",
+      "industrialupgrade:space/mercury/hall_system",
+      "industrialupgrade:space/mercury/fractures",
+      "industrialupgrade:space/mercury/porous",
+      "industrialupgrade:space/mercury/liquid_chamber",
+      "industrialupgrade:space/mercury/volcanic_chamber",
+      "industrialupgrade:space/mercury/thermal_chamber",
+      "industrialupgrade:space/mercury/tunnel_caves",
+      "industrialupgrade:space/mercury/labyrinth_caves",
+      "industrialupgrade:space/mercury/shaft_caves",
+      "industrialupgrade:space/mercury/dome_caves",
+      "industrialupgrade:space/mercury/multi_tier_caves",
+      "industrialupgrade:space/mercury/branched_caves",
+      "industrialupgrade:space/mercury/spiral_caves",
+      "industrialupgrade:space/mercury/arch_caves",
+      "industrialupgrade:space/mercury/chamber_caves",
+      "industrialupgrade:space/mercury/canyon_caves",
+      "industrialupgrade:space/mercury/pocket_caves",
+      "industrialupgrade:space/mercury/crevice_caves",
+      "industrialupgrade:space/mercury/amphitheater_caves",
+      "industrialupgrade:space/mercury/cathedral_caves",
+      "industrialupgrade:space/mercury/gallery_caves",
+      "industrialupgrade:space/mercury/winding_caves",
+      "industrialupgrade:space/mercury/cascade_caves",
+      "industrialupgrade:space/mercury/collapse_caves",
+      "industrialupgrade:space/mercury/vertical_collectors"
+    ],
+    [
+      "industrialupgrade:mercury_lake_0",
+      "industrialupgrade:space/mercury/lava_hydrology"
+    ],
+    [
+      "industrialupgrade:space/mercury/addition_craters",
+      "industrialupgrade:mercury_volcano"
+    ],
+    [],
+    [
+      "industrialupgrade:mercury_geyser_0"
+    ],
+    [],
+    [
+      "industrialupgrade:mercury_ore_0",
+      "industrialupgrade:mercury_ore_1",
+      "industrialupgrade:mercury_ore_2",
+      "industrialupgrade:mercury_ore_3"
+    ]
+  ],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": 2.47
+}

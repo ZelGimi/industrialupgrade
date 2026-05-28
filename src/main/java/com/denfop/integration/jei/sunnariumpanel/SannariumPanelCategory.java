@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.sunnariumpanel;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.blockentity.mechanism.BlockEntityStampMechanism;
@@ -84,10 +85,11 @@ public class SannariumPanelCategory extends ScreenMain implements IRecipeCategor
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, SannariumPanelHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 26, 33).addItemStack(recipe.getInput());
-        builder.addSlot(RecipeIngredientRole.INPUT, 48, 33).addItemStack(recipe.getInput1());
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 26, 33, recipe, 0, recipe.getInput());
+
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 48, 33, recipe, 1, recipe.getInput1());
+
         builder.addSlot(RecipeIngredientRole.OUTPUT, 103, 33).addItemStack(recipe.getOutput());
-        builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStacks(recipe.getContainer().input.getAllStackInputs());
 
     }
 

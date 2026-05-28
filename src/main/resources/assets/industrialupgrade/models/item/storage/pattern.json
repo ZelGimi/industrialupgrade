@@ -1,0 +1,22 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "industrialupgrade:item/pattern_empty"
+  },
+  "overrides": [
+	
+    {
+      "predicate": {
+        "written": 0.5
+      },
+      "model": "industrialupgrade:item/storage/pattern_written"
+    },
+	{
+      "predicate": {
+        "written": 1.0
+      },
+      "model": "industrialupgrade:item/storage/pattern_shift"
+    }
+    
+  ]
+}

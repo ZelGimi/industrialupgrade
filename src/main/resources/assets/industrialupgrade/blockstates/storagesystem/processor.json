@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,type=processor": {
+      "model": "industrialupgrade:block/storagesystem/processor"
+    },
+    "facing=south,type=processor": {
+      "model": "industrialupgrade:block/storagesystem/processor",
+      "y": 180
+    },
+    "facing=west,type=processor": {
+      "model": "industrialupgrade:block/storagesystem/processor",
+      "y": 270
+    },
+    "facing=east,type=processor": {
+      "model": "industrialupgrade:block/storagesystem/processor",
+      "y": 90
+    },
+    "facing=north,type=processor_active": {
+      "model": "industrialupgrade:block/storagesystem/processor_active"
+    },
+    "facing=south,type=processor_active": {
+      "model": "industrialupgrade:block/storagesystem/processor_active",
+      "y": 180
+    },
+    "facing=west,type=processor_active": {
+      "model": "industrialupgrade:block/storagesystem/processor_active",
+      "y": 270
+    },
+    "facing=east,type=processor_active": {
+      "model": "industrialupgrade:block/storagesystem/processor_active",
+      "y": 90
+    }
+  }
+}

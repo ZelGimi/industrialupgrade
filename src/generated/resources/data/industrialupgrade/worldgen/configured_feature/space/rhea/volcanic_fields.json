@@ -1,0 +1,26 @@
+{
+  "type": "industrialupgrade:space_rock_formation",
+  "config": {
+    "branches": 2,
+    "fluid": {
+      "Name": "industrialupgrade:fluid/fluidnitrogenhydride",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "kind": "volcanic_field",
+    "max_height": 18,
+    "max_radius": 5,
+    "min_height": 8,
+    "min_radius": 2,
+    "primary": {
+      "Name": "industrialupgrade:spacecobblestone1/rhea_cobblestone"
+    },
+    "secondary": {
+      "Name": "industrialupgrade:spacestone1/rhea_stone"
+    },
+    "tertiary": {
+      "Name": "industrialupgrade:blockspace4/rhea_chromium"
+    }
+  }
+}

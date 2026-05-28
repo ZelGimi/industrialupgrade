@@ -1,0 +1,86 @@
+{
+  "carvers": {},
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 10926284,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000
+    },
+    "sky_color": 5862292,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "features": [
+    [
+      "industrialupgrade:ganymede_cavity",
+      "industrialupgrade:space/ganymede/stone_tunnels",
+      "industrialupgrade:space/ganymede/hall_system",
+      "industrialupgrade:space/ganymede/fractures",
+      "industrialupgrade:space/ganymede/shafts",
+      "industrialupgrade:space/ganymede/liquid_chamber",
+      "industrialupgrade:space/ganymede/frozen_chamber",
+      "industrialupgrade:space/ganymede/crater_chamber",
+      "industrialupgrade:space/ganymede/tunnel_caves",
+      "industrialupgrade:space/ganymede/labyrinth_caves",
+      "industrialupgrade:space/ganymede/shaft_caves",
+      "industrialupgrade:space/ganymede/dome_caves",
+      "industrialupgrade:space/ganymede/well_caves",
+      "industrialupgrade:space/ganymede/multi_tier_caves",
+      "industrialupgrade:space/ganymede/branched_caves",
+      "industrialupgrade:space/ganymede/spiral_caves",
+      "industrialupgrade:space/ganymede/arch_caves",
+      "industrialupgrade:space/ganymede/chamber_caves",
+      "industrialupgrade:space/ganymede/canyon_caves",
+      "industrialupgrade:space/ganymede/pocket_caves",
+      "industrialupgrade:space/ganymede/crevice_caves",
+      "industrialupgrade:space/ganymede/amphitheater_caves",
+      "industrialupgrade:space/ganymede/cathedral_caves",
+      "industrialupgrade:space/ganymede/gallery_caves",
+      "industrialupgrade:space/ganymede/winding_caves",
+      "industrialupgrade:space/ganymede/cascade_caves",
+      "industrialupgrade:space/ganymede/collapse_caves",
+      "industrialupgrade:space/ganymede/vertical_collectors"
+    ],
+    [
+      "industrialupgrade:ganymede_lake_0",
+      "industrialupgrade:ganymede_fluid_0"
+    ],
+    [
+      "industrialupgrade:ganymede_craters",
+      "industrialupgrade:space/ganymede/addition_craters"
+    ],
+    [],
+    [
+      "industrialupgrade:ganymede_geyser_0"
+    ],
+    [],
+    [
+      "industrialupgrade:ganymede_ore_0",
+      "industrialupgrade:ganymede_ore_1",
+      "industrialupgrade:ganymede_ore_2",
+      "industrialupgrade:ganymede_ore_3"
+    ],
+    [],
+    [],
+    [],
+    [
+      "industrialupgrade:space/ganymede/ice_surface_cover"
+    ]
+  ],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": -0.3
+}

@@ -1,0 +1,70 @@
+{
+  "carvers": {},
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 197381,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000
+    },
+    "sky_color": 328968,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "features": [
+    [
+      "industrialupgrade:deimos_cavity",
+      "industrialupgrade:deimos_shaft",
+      "industrialupgrade:space/deimos/stone_tunnels",
+      "industrialupgrade:space/deimos/hall_system",
+      "industrialupgrade:space/deimos/fractures",
+      "industrialupgrade:space/deimos/shafts",
+      "industrialupgrade:space/deimos/crater_chamber",
+      "industrialupgrade:space/deimos/tunnel_caves",
+      "industrialupgrade:space/deimos/shaft_caves",
+      "industrialupgrade:space/deimos/dome_caves",
+      "industrialupgrade:space/deimos/well_caves",
+      "industrialupgrade:space/deimos/multi_tier_caves",
+      "industrialupgrade:space/deimos/branched_caves",
+      "industrialupgrade:space/deimos/spiral_caves",
+      "industrialupgrade:space/deimos/chamber_caves",
+      "industrialupgrade:space/deimos/pocket_caves",
+      "industrialupgrade:space/deimos/crevice_caves",
+      "industrialupgrade:space/deimos/cathedral_caves",
+      "industrialupgrade:space/deimos/gallery_caves",
+      "industrialupgrade:space/deimos/winding_caves",
+      "industrialupgrade:space/deimos/collapse_caves",
+      "industrialupgrade:space/deimos/vertical_collectors"
+    ],
+    [
+      "industrialupgrade:deimos_lake_0",
+      "industrialupgrade:deimos_fluid_0"
+    ],
+    [
+      "industrialupgrade:deimos_craters",
+      "industrialupgrade:space/deimos/addition_craters"
+    ],
+    [],
+    [],
+    [],
+    [
+      "industrialupgrade:deimos_ore_0",
+      "industrialupgrade:deimos_ore_1"
+    ]
+  ],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": 0.15000004
+}

@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.waterrotorsupgrade;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.blockentity.mechanism.BlockEntityUpgradeMachineFactory;
@@ -60,8 +61,10 @@ public class WaterRotorUpgradeCategory extends ScreenMain implements IRecipeCate
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, WaterRotorUpgradeHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 52 + 22, 37).addItemStack(recipe.getInputs()[1]);
-        builder.addSlot(RecipeIngredientRole.INPUT, 30 + 22, 37).addItemStack(recipe.getInputs()[0]);
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 52 + 22, 37, recipe, 1, recipe.getInputs()[1]);
+
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 30 + 22, 37, recipe, 0, recipe.getInputs()[0]);
+
     }
 
     protected ResourceLocation getTexture() {

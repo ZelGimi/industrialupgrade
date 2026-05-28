@@ -5,13 +5,20 @@
   "refmap": "industrialupgrade.refmap.json",
   "mixins": [
     "BlockEntityMixin",
+    "ComposterBlockMixin",
     "MixinInventory",
+    "MixinLevelRendererWeather",
+    "MixinLiquidBlockRendererTint",
     "MixinServerGamePacketListenerImpl",
     "access.AbstractContainerMenuAccessor",
     "access.BeeAccessor",
     "access.DeferredRegisterAccessor",
     "access.ExplosionAccessor",
-    "access.RenderChunkRegionAccessor"
+    "access.RecipeManagerAccessor",
+    "access.RenderChunkRegionAccessor",
+    "access.StructureTemplatePoolAccessor",
+    "enchantment.ItemEnchantmentsAccessor",
+    "enchantment.ItemEnchantmentsCodecMixin"
   ],
   "client": [
     "access.AbstractContainerScreenAccessor",

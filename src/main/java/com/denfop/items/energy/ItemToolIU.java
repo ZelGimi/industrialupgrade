@@ -16,7 +16,7 @@ public class ItemToolIU extends DiggerItem implements IItemTab, IItemTag {
     String nameItem;
 
     public ItemToolIU(TagKey<Block> p_204111_) {
-        super(Tiers.IRON, p_204111_, new Properties().stacksTo(1).setNoRepair().attributes(DiggerItem.createAttributes(Tiers.IRON, Tiers.IRON.getAttackDamageBonus(), Tiers.IRON.getSpeed())));
+        super(Tiers.IRON, p_204111_, new Properties().stacksTo(1).setNoRepair().attributes(DiggerItem.createAttributes(Tiers.IRON, Tiers.IRON.getAttackDamageBonus(), -3)));
         ItemTagProvider.list.add(this);
         ;
     }
@@ -26,7 +26,7 @@ public class ItemToolIU extends DiggerItem implements IItemTab, IItemTag {
     }
 
     public ItemToolIU(TagKey<Block> p_204111_, Properties properties, Tier tiers) {
-        super(tiers, p_204111_, properties.attributes(DiggerItem.createAttributes(tiers, tiers.getAttackDamageBonus(), tiers.getSpeed())));
+        super(tiers, p_204111_, properties.attributes(DiggerItem.createAttributes(tiers, tiers.getAttackDamageBonus(), -3)));
     }
 
     @Override

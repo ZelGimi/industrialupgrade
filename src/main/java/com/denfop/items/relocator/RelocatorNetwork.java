@@ -1,6 +1,8 @@
 package com.denfop.items.relocator;
 
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.network.packet.PacketSynhronyzationRelocator;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.player.Player;
@@ -29,6 +31,10 @@ public class RelocatorNetwork {
                 k -> new ConcurrentHashMap<>()
         );
         final List<Point> list = map.computeIfAbsent(player.getUUID(), k -> new LinkedList<>());
+        int maxPoints = ModConfig.itemInt("relocator_max_points", 0);
+        if (maxPoints > 0 && list.size() >= maxPoints) {
+            return;
+        }
         list.add(point);
         new PacketSynhronyzationRelocator(player, list);
     }
@@ -62,6 +68,10 @@ public class RelocatorNetwork {
 
     public void teleportPlayer(Player player, Point point) {
         if (!player.level().isClientSide()) {
+            int maxDistance = ModConfig.itemInt("relocator_max_teleport_distance", 0);
+            if (maxDistance > 0 && player.blockPosition().distSqr(point.getPos()) > (double) maxDistance * (double) maxDistance) {
+                return;
+            }
             double x = point.getPos().getX() + 0.5;
             double y = point.getPos().getY();
             double z = point.getPos().getZ() + 0.5;

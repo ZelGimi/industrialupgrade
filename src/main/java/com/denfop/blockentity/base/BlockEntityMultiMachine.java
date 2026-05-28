@@ -109,7 +109,7 @@ public abstract class BlockEntityMultiMachine extends BlockEntityInventory imple
                 .addManagedSlot(this.dischargeSlot));
         if (this.getMachine().type == EnumTypeMachines.OreWashing) {
             this.fluid = this.addComponent(new Fluids(this));
-            this.tank = fluid.addTank("tank", 64000, Inventory.TypeItemSlot.INPUT,
+            this.tank = fluid.addTank("tank", 64000 * sizeWorkingSlot, Inventory.TypeItemSlot.INPUT,
                     Fluids.fluidPredicate(net.minecraft.world.level.material.Fluids.WATER)
             );
         }

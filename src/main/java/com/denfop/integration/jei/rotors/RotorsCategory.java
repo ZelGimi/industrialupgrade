@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.rotors;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.blockentity.mechanism.BlockEntityRodManufacturer;
@@ -58,11 +59,16 @@ public class RotorsCategory extends ScreenMain implements IRecipeCategory<Rotors
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, RotorsHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 52, 15).addItemStack(recipe.getInputs()[0]);
-        builder.addSlot(RecipeIngredientRole.INPUT, 30, 37).addItemStack(recipe.getInputs()[0]);
-        builder.addSlot(RecipeIngredientRole.INPUT, 52, 37).addItemStack(recipe.getInputs()[4]);
-        builder.addSlot(RecipeIngredientRole.INPUT, 74, 37).addItemStack(recipe.getInputs()[0]);
-        builder.addSlot(RecipeIngredientRole.INPUT, 52, 59).addItemStack(recipe.getInputs()[0]);
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 52, 15, recipe, 0, recipe.getInputs()[0]);
+
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 30, 37, recipe, 0, recipe.getInputs()[0]);
+
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 52, 37, recipe, 4, recipe.getInputs()[4]);
+
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 74, 37, recipe, 0, recipe.getInputs()[0]);
+
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 52, 59, recipe, 0, recipe.getInputs()[0]);
+
         builder.addSlot(RecipeIngredientRole.OUTPUT, 113, 37).addItemStack(recipe.getOutput());
 
     }

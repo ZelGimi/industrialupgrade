@@ -163,7 +163,7 @@ public class ComponentBaseEnergy extends AbstractComponent {
 
     }
 
-    private void createDelegate() {
+    public void createDelegate() {
         if (this.delegate != null) {
         } else {
 

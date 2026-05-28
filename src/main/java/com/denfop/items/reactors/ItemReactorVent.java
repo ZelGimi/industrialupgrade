@@ -42,7 +42,7 @@ public class ItemReactorVent extends ItemDamage implements IReactorItem, IItemTa
         if (this.nameItem == null) {
             ResourceLocation res = BuiltInRegistries.ITEM.getKey(this);
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", res));
-            String targetString = res.getNamespace()+".";
+            String targetString = res.getNamespace() + ".";
             String replacement = "";
             if (replacement != null) {
                 int index = pathBuilder.indexOf(targetString);

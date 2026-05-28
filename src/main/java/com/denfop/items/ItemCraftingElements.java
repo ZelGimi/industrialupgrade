@@ -1,13 +1,20 @@
 package com.denfop.items;
 
 import com.denfop.IUCore;
+import com.denfop.IUItem;
 import com.denfop.blocks.ISubEnum;
 import com.denfop.datacomponent.DataComponentsInit;
+import com.denfop.recipes.ScrapboxRecipeManager;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
@@ -30,6 +37,27 @@ public class ItemCraftingElements<T extends Enum<T> & ISubEnum> extends ItemMain
         if (getElement().getId() != 272 && getElement().getId() != 273)
             return new String[]{};
         return new String[]{"level"};
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level pLevel, Player player, InteractionHand hand) {
+        if (!player.getItemInHand(hand).is(IUItem.scrapBox.getItem())) {
+            return super.use(pLevel, player, hand);
+        } else {
+            int i = 0;
+            ItemStack stack = player.getItemInHand(hand);
+            while (i < 1) {
+                if (!pLevel.isClientSide) {
+                    ItemStack drop = ScrapboxRecipeManager.instance.getDrop(IUItem.scrapBox);
+                    player.drop(drop, false);
+                }
+                i++;
+            }
+            stack.shrink(1);
+            return new InteractionResultHolder<>(InteractionResult.SUCCESS, player.getItemInHand(hand));
+
+        }
+
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -831,6 +859,25 @@ public class ItemCraftingElements<T extends Enum<T> & ISubEnum> extends ItemMain
         crafting_771_element(),
         crafting_772_element(),
         crafting_773_element(),
+        crafting_774_element(),
+        crafting_775_element(),
+
+
+        crafting_776_element(),
+        crafting_777_element(),
+        crafting_778_element(),
+        crafting_779_element(),
+        crafting_780_element(),
+        crafting_781_element(),
+        crafting_782_element(),
+        crafting_783_element(),
+        crafting_784_element(),
+        crafting_785_element(),
+        crafting_786_element(),
+        crafting_787_element(),
+        crafting_788_element(),
+        crafting_789_element(),
+        crafting_790_element(),
         ;
 
         private final String name;

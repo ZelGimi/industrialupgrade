@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -17,6 +19,7 @@ import com.denfop.componets.SoilPollutionComponent;
 import com.denfop.containermenu.ContainerMenuBase;
 import com.denfop.containermenu.ContainerMenuSolidStateElectrolyzer;
 import com.denfop.inventory.*;
+import com.denfop.items.resource.ItemDust;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.IUpdatableTileEvent;
@@ -68,17 +71,17 @@ public class BlockEntitySolidStateElectrolyzer extends BlockEntityElectricMachin
     protected short progress;
 
     public BlockEntitySolidStateElectrolyzer(BlockPos pos, BlockState state) {
-        super(200, 1, 1, BlockBaseMachine3Entity.solid_state_electrolyzer, pos, state);
+        super(ModConfig.mechanismDouble("solid_state_electrolyzer_energy_storage", 200.0D), 1, 1, BlockBaseMachine3Entity.solid_state_electrolyzer, pos, state);
         Recipes.recipes.addInitRecipes(this);
 
         this.progress = 0;
-        this.defaultEnergyConsume = this.energyConsume = 1;
+        this.defaultEnergyConsume = this.energyConsume = ModConfig.mechanismInt("solid_state_electrolyzer_energy_use", 1);
         this.defaultOperationLength = this.operationLength = 100;
         this.defaultTier = 1;
         this.defaultEnergyStorage = 100;
 
-        this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("solid_state_electrolyzer_soil_pollution_amount", 0.1D)));
+        this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("solid_state_electrolyzer_air_pollution_amount", 0.1D)));
         this.inputSlotA = new InventoryRecipes(this, "solid_electrolyzer", this);
         Fluids fluids = this.addComponent(new Fluids(this));
         this.fluidTank1 = fluids.addTank("fluidTank1", 12 * 1000, Inventory.TypeItemSlot.OUTPUT);
@@ -117,9 +120,9 @@ public class BlockEntitySolidStateElectrolyzer extends BlockEntityElectricMachin
             tooltip.add(Localization.translate("press.lshift"));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            tooltip.add(Localization.translate("iu.machines_work_energy") + 200 + Localization.translate(
+            tooltip.add(Localization.translate("iu.machines_work_energy") + defaultEnergyConsume + Localization.translate(
                     "iu.machines_work_energy_type_eu"));
-            tooltip.add(Localization.translate("iu.machines_work_length") + 1);
+            tooltip.add(Localization.translate("iu.machines_work_length") + defaultOperationLength);
         }
         super.addInformation(stack, tooltip);
 
@@ -201,6 +204,9 @@ public class BlockEntitySolidStateElectrolyzer extends BlockEntityElectricMachin
         );
         addRecipe(new ItemStack(IUItem.space_stone1.getItem(11)), new ItemStack(IUItem.spaceItem.getStack(57), 3),
                 new FluidStack(FluidName.fluidiodine.getInstance().get(), 80)
+        );
+        addRecipe(new ItemStack(Blocks.CALCITE), new ItemStack(IUItem.iudust.getStack(ItemDust.ItemDustTypes.calcium_dust), 1),
+                new FluidStack(FluidName.fluidcarbondioxide.getInstance().get(), 20)
         );
     }
 

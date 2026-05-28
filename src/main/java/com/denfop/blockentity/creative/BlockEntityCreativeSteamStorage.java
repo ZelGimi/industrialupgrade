@@ -124,7 +124,7 @@ public class BlockEntityCreativeSteamStorage extends BlockEntityInventory {
         if (stack.has(DataComponentsInit.DATA) && stack.get(DataComponentsInit.DATA).contains("fluid")) {
             FluidStack fluidStack = FluidStack.parseOptional(level.registryAccess(), (CompoundTag) stack.get(DataComponentsInit.DATA).get("fluid"));
 
-            tooltip.add(Localization.translate("iu.fluid.info") + fluidStack.getHoverName().getString());
+            tooltip.add(Localization.translate("iu.fluid.info") + com.denfop.utils.ModUtils.cleanComponentString(fluidStack.getHoverName().getString()));
             tooltip.add(Localization.translate("iu.fluid.info1") + fluidStack.getAmount() / 1000 + " B");
 
         }

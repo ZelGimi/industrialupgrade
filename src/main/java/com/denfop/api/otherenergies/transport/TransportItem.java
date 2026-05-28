@@ -36,5 +36,4 @@ public class TransportItem<T> {
     public final void setList(final T... list) {
         this.list = Arrays.asList(list);
     }
-
 }

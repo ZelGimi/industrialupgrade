@@ -207,7 +207,7 @@ public enum BlockWaterReactorsEntity implements MultiBlockEntity {
     @Override
     public boolean hasActive() {
         // TODO Auto-generated method stub
-        return false;
+        return true;
     }
 
     @Override
@@ -258,7 +258,7 @@ public enum BlockWaterReactorsEntity implements MultiBlockEntity {
             } else {
 
                 if (teBlock == BlockWaterReactorsEntity.water_controller || teBlock == BlockWaterReactorsEntity.water_per_controller || teBlock == BlockWaterReactorsEntity.water_adv_controller || teBlock == BlockWaterReactorsEntity.water_imp_controller) {
-                    return new String[]{"active", "global"};
+                    return new String[]{};
                 } else {
 
                     return MultiBlockEntity.super.getMultiModels(teBlock);

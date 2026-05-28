@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -50,12 +52,7 @@ public class BlockEntityGeneticPolymerizer extends BlockEntityElectricLiquidTank
     public MachineRecipe output;
 
     public BlockEntityGeneticPolymerizer(BlockPos pos, BlockState state) {
-        super(
-                300,
-                1,
-                12,
-                Fluids.fluidPredicate(FluidName.fluidbeegenetic.getInstance().get(), FluidName.fluidcropgenetic.getInstance().get()), BlockBaseMachine3Entity.genetic_polymerizer, pos, state
-        );
+        super(ModConfig.mechanismDouble("genetic_polymerizer_energy_storage", 300.0D), 1, ModConfig.mechanismInt("genetic_polymerizer_tank_capacity", 12), Fluids.fluidPredicate(FluidName.fluidbeegenetic.getInstance().get(), FluidName.fluidcropgenetic.getInstance().get()), BlockBaseMachine3Entity.genetic_polymerizer, pos, state);
         this.outputSlot1 = new InventoryOutput(this, 1);
         this.fluidSlot = new InventoryFluidByList(
                 this,
@@ -79,8 +76,8 @@ public class BlockEntityGeneticPolymerizer extends BlockEntityElectricLiquidTank
         this.componentProcess.setInvSlotRecipes(inputSlotA);
         this.inputSlotA.setInvSlotConsumableLiquidByList(this.fluidSlot);
         fluidTank.setTypeItemSlot(Inventory.TypeItemSlot.INPUT);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.25));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("genetic_polymerizer_soil_pollution_amount", 0.1D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("genetic_polymerizer_air_pollution_amount", 0.25D)));
         Recipes.recipes.addInitRecipes(this);
     }
 

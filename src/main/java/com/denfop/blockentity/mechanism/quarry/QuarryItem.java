@@ -1,12 +1,13 @@
 package com.denfop.blockentity.mechanism.quarry;
 
 
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.List;
 import java.util.Objects;
@@ -22,7 +23,7 @@ public class QuarryItem {
         try {
             oreDict = list.get(0);
         } catch (Exception e) {
-            oreDict = new TagKey<>(Registries.ITEM, ResourceLocation.tryBuild("", "unknown"));
+            oreDict = TagKey.create(Registries.ITEM, ResourceLocation.tryBuild("", "unknown"));
         }
     }
 
@@ -32,8 +33,13 @@ public class QuarryItem {
     }
 
     public QuarryItem(String oreDict) {
-        this.oreDict = new TagKey<>(Registries.ITEM, ResourceLocation.parse(oreDict));
-        this.stack = new Ingredient.TagValue(this.oreDict).getItems().stream().toList().get(0);
+        this.oreDict = TagKey.create(Registries.ITEM, ResourceLocation.parse(oreDict));
+        this.stack = BuiltInRegistries.ITEM.getTag(this.oreDict)
+                .flatMap(named -> named.stream().findFirst())
+                .map(Holder::value)
+                .map(ItemStack::new)
+                .orElse(ItemStack.EMPTY);
+        ;
 
     }
 

@@ -9,7 +9,7 @@ public class ContainerMenuCollectorProductBee extends ContainerMenuFullInv<Block
         super(var1, tileEntityChickenFarm, 206);
         this.addSlotToContainer(new SlotInvSlot(tileEntityChickenFarm.fluidSlot, 0, 25, 79));
         this.addSlotToContainer(new SlotInvSlot(tileEntityChickenFarm.outputSlot, 0, 25, 99));
-        this.addSlotToContainer(new SlotInvSlot(tileEntityChickenFarm.outputSlot, 3, 122, 99));
+        this.addSlotToContainer(new SlotInvSlot(tileEntityChickenFarm.outputSlot, 1, 122, 99));
         for (int i = 0; i < 16; i++) {
             addSlotToContainer(new SlotInvSlot(tileEntityChickenFarm.outputSlot1,
                     i, 47 + 18 * (i % 4), 21 + (i / 4) * 18

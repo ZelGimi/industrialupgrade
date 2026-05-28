@@ -1,0 +1,26 @@
+{
+  "type": "industrialupgrade:space_rock_formation",
+  "config": {
+    "branches": 4,
+    "fluid": {
+      "Name": "minecraft:water",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "kind": "crystal_outcrop",
+    "max_height": 14,
+    "max_radius": 2,
+    "min_height": 5,
+    "min_radius": 1,
+    "primary": {
+      "Name": "industrialupgrade:blockspace/callisto_lapis_ore"
+    },
+    "secondary": {
+      "Name": "industrialupgrade:spacestone/callisto_stone"
+    },
+    "tertiary": {
+      "Name": "industrialupgrade:spacecobblestone/callisto_cobblestone"
+    }
+  }
+}

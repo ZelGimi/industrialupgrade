@@ -1,0 +1,14 @@
+{
+  "type": "industrialupgrade:space_generic_fluid",
+  "config": {
+    "body_id": "tethys",
+    "distribution_type": "cryo",
+    "fluid_id": "industrialupgrade:iufluiddecane",
+    "max_y": 28,
+    "min_y": -56,
+    "radius_max": 24,
+    "radius_min": 3,
+    "require_cold_context": true,
+    "surface_allowed": true
+  }
+}

@@ -81,7 +81,7 @@ public class BlockEntityGasWellController extends BlockEntityMultiBlockBase impl
         if (this.full) {
             if (this.work && this.vein != null && vein.isFind() && this.getEnergy().canUseEnergy(2)) {
                 int amount = vein.getCol();
-                amount = Math.min(Math.min(1, amount), tank.getTank().getCapacity() - tank.getTank().getFluidAmount());
+                amount = Math.min(Math.min(5, amount), tank.getTank().getCapacity() - tank.getTank().getFluidAmount());
                 Fluid fluid = null;
                 if (vein.getType() == TypeGas.IODINE) {
                     fluid = FluidName.fluidiodine.getInstance().get();

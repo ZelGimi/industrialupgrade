@@ -20,6 +20,7 @@ import com.denfop.blockentity.base.BlockEntityBase;
 import com.denfop.blockentity.lightning_rod.IController;
 import com.denfop.blockentity.mechanism.BlockEntityPalletGenerator;
 import com.denfop.blockentity.transport.tiles.BlockEntityMultiCable;
+import com.denfop.blocks.BlockNitrateMud;
 import com.denfop.containermenu.ContainerMenuBags;
 import com.denfop.containermenu.ContainerMenuLeadBox;
 import com.denfop.datacomponent.DataComponentsInit;
@@ -39,6 +40,7 @@ import com.denfop.network.packet.PacketColorPickerAllLoggIn;
 import com.denfop.network.packet.PacketRadiationUpdateValue;
 import com.denfop.utils.*;
 import com.denfop.world.WorldBaseGen;
+import com.denfop.world.WorldGenVolcano;
 import com.google.common.collect.Lists;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -60,6 +62,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.entity.LevelEntityGetter;
@@ -69,13 +73,14 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
-import net.neoforged.neoforge.event.entity.living.LivingEvent;
 import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.level.block.CropGrowEvent;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
+import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
@@ -88,8 +93,8 @@ import java.util.stream.StreamSupport;
 import static com.denfop.blockentity.lightning_rod.BlockEntityLightningRodController.controllerMap;
 
 public class IUEventHandler {
-    public static TagKey<Item> electrumTag = new TagKey<>(Registries.ITEM, ResourceLocation.tryParse("c:ingots/electrum"));
-    public static TagKey<Item> coalDustTag = new TagKey<>(Registries.ITEM, ResourceLocation.tryParse("c:dusts/coal"));
+    public static TagKey<Item> electrumTag = TagKey.create(Registries.ITEM, ResourceLocation.tryParse("c:ingots/electrum"));
+    public static TagKey<Item> coalDustTag = TagKey.create(Registries.ITEM, ResourceLocation.tryParse("c:dusts/coal"));
 
     public static List<ItemEntity> entityItemList = new LinkedList<>();
     final ChatFormatting[] name = {ChatFormatting.DARK_PURPLE, ChatFormatting.YELLOW, ChatFormatting.BLUE,
@@ -142,6 +147,68 @@ public class IUEventHandler {
             }
         }
 
+    }
+    @SubscribeEvent
+    public void onLevelTick(LevelTickEvent.Post event) {
+
+
+        if (!(event.getLevel() instanceof ServerLevel level)) {
+            return;
+        }
+
+
+        if (level.getGameTime() % 20 != 0) {
+            return;
+        }
+        LevelEntityGetter<Entity> iterable = (level).getEntities();
+        List<Entity> list = StreamSupport.stream(iterable.getAll().spliterator(), false).filter(entity -> entity instanceof ItemEntity)
+                .toList();
+        for (Entity entity : list) {
+            if (!(entity instanceof ItemEntity itemEntity)) {
+                continue;
+            }
+
+            ItemStack stack = itemEntity.getItem();
+            if (!stack.is(Items.ROTTEN_FLESH)) {
+                continue;
+            }
+
+
+            BlockPos belowPos = BlockPos.containing(
+                    itemEntity.getX(),
+                    itemEntity.getBoundingBox().minY - 0.05D,
+                    itemEntity.getZ()
+            );
+
+            if (!level.getBlockState(belowPos).is(Blocks.MUD)) {
+                continue;
+            }
+
+            BlockPos aboveMud = belowPos.above();
+
+
+            if (itemEntity.getY() < aboveMud.getY() - 0.2D) {
+                continue;
+            }
+
+            level.setBlock(
+                    belowPos,
+                    IUItem.nitrate_mud.getDefaultState().setValue(BlockNitrateMud.STAGE, 0),
+                    Block.UPDATE_ALL
+            );
+
+            level.scheduleTick(belowPos, IUItem.nitrate_mud.getBlock(0), BlockNitrateMud.STAGE_TIME);
+
+            stack.shrink(1);
+
+            if (stack.isEmpty()) {
+                itemEntity.discard();
+            } else {
+                itemEntity.setItem(stack);
+            }
+
+
+        }
     }
 
     @SubscribeEvent
@@ -369,11 +436,11 @@ public class IUEventHandler {
                                         .get(2));
                                 player.getInventory().armor
                                         .get(2).set(DataComponentsInit.FLY, true);
-                            }else{
-                              if (player.getInventory().armor
-                                      .get(2).getOrDefault(DataComponentsInit.FLY, false))
-                                  player.getInventory().armor
-                                          .get(2).set(DataComponentsInit.FLY, false);
+                            } else {
+                                if (player.getInventory().armor
+                                        .get(2).getOrDefault(DataComponentsInit.FLY, false))
+                                    player.getInventory().armor
+                                            .get(2).set(DataComponentsInit.FLY, false);
                             }
                         }
                     }
@@ -395,7 +462,6 @@ public class IUEventHandler {
                         .get(2));
             }
         }
-
 
 
     }
@@ -428,8 +494,27 @@ public class IUEventHandler {
     }
 
     @SubscribeEvent
+    public void onWorldLoad(LevelEvent.Load event) {
+        WorldData.onWorldLoad((Level) event.getLevel());
+    }
+
+    @SubscribeEvent
     public void onWorldUnload(LevelEvent.Unload event) {
         WorldData.onWorldUnload((Level) event.getLevel());
+    }
+
+    @SubscribeEvent
+    public void onServerStopping(ServerStoppingEvent event) {
+        WorldData.onServerStopping();
+        WorldGenVolcano.generatorVolcanoList.clear();
+        BlockEntityBase.updates.clear();
+    }
+
+    @SubscribeEvent
+    public void onServerStopped(ServerStoppedEvent event) {
+        WorldData.onServerStopped();
+        WorldGenVolcano.generatorVolcanoList.clear();
+        BlockEntityBase.updates.clear();
     }
 
     @SubscribeEvent

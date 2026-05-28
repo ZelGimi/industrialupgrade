@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,type=storage_cells": {
+      "model": "industrialupgrade:block/storagesystem/storage_cells"
+    },
+    "facing=south,type=storage_cells": {
+      "model": "industrialupgrade:block/storagesystem/storage_cells",
+      "y": 180
+    },
+    "facing=west,type=storage_cells": {
+      "model": "industrialupgrade:block/storagesystem/storage_cells",
+      "y": 270
+    },
+    "facing=east,type=storage_cells": {
+      "model": "industrialupgrade:block/storagesystem/storage_cells",
+      "y": 90
+    },
+    "facing=north,type=storage_cells_active": {
+      "model": "industrialupgrade:block/storagesystem/storage_cells_active"
+    },
+    "facing=south,type=storage_cells_active": {
+      "model": "industrialupgrade:block/storagesystem/storage_cells_active",
+      "y": 180
+    },
+    "facing=west,type=storage_cells_active": {
+      "model": "industrialupgrade:block/storagesystem/storage_cells_active",
+      "y": 270
+    },
+    "facing=east,type=storage_cells_active": {
+      "model": "industrialupgrade:block/storagesystem/storage_cells_active",
+      "y": 90
+    }
+  }
+}

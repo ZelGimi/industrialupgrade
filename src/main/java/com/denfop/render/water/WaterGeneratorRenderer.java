@@ -3,7 +3,6 @@ package com.denfop.render.water;
 import com.denfop.api.windsystem.IWindMechanism;
 import com.denfop.api.windsystem.WindRotor;
 import com.denfop.blockentity.mechanism.water.BlockEntityBaseWaterGenerator;
-import com.denfop.render.windgenerator.RotorModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -13,20 +12,17 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.Level;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class WaterGeneratorRenderer implements BlockEntityRenderer<BlockEntityBaseWaterGenerator> {
 
-    private static final Map<Integer, RotorModel> rotorModels = new HashMap<>();
+    private static final Map<Integer, WaterRotorModel> ROTOR_MODELS = new HashMap<>();
 
     public WaterGeneratorRenderer(BlockEntityRendererProvider.Context context) {
-
     }
 
     @Override
@@ -38,51 +34,74 @@ public class WaterGeneratorRenderer implements BlockEntityRenderer<BlockEntityBa
             int packedLight,
             int packedOverlay
     ) {
-        IWindMechanism windGen = tile;
-        Level world = tile.getLevel();
-        BlockPos pos = tile.getBlockPos();
-        if (tile.getRotor() == null)
+        IWindMechanism mechanism = tile;
+        WindRotor rotor = tile.getRotor();
+        ResourceLocation rotorTexture = mechanism.getRotorRenderTexture();
+
+        int diameter = mechanism.getRotorDiameter();
+        if (diameter <= 0) {
+            diameter = 3;
+        }
+
+        if (rotor == null || rotorTexture == null || tile.slot.get(0).isEmpty()) {
             return;
-        int diameter = 3;
-        if (diameter == 0) return;
+        }
 
-        float angle = windGen.getAngle();
-        ResourceLocation rotorTexture = windGen.getRotorRenderTexture();
-        RotorModel model = rotorModels.computeIfAbsent(diameter, RotorModel::new);
+        WaterRotorModel model = ROTOR_MODELS.computeIfAbsent(diameter, WaterRotorModel::new);
+        WaterRotorDamageProfile damageProfile = WaterRotorDamageProfile.resolve(tile);
 
-        Direction facing = windGen.getFacing();
+        float angle = mechanism.getAngle();
+        Direction facing = mechanism.getFacing();
+
+        boolean rotorBroken = rotor.getMaxCustomDamage(tile.slot.get(0)) - rotor.getCustomDamage(tile.slot.get(0)) <= 0;
+        boolean spinning = false;
 
         poseStack.pushPose();
-        poseStack.translate(0D, 0.5D, 0D);
+        poseStack.translate(0.0D, 0.5D, 0.0D);
 
         switch (facing) {
-            case NORTH -> poseStack.translate(0.5, 0, 0);
-            case EAST -> poseStack.translate(1, 0, 0.5);
-            case SOUTH -> poseStack.translate(0.5, 0, 1);
-            case WEST -> poseStack.translate(0, 0, 0.5);
+            case NORTH -> poseStack.translate(0.5D, 0.0D, 0.0D);
+            case EAST -> poseStack.translate(1.0D, 0.0D, 0.5D);
+            case SOUTH -> poseStack.translate(0.5D, 0.0D, 1.0D);
+            case WEST -> poseStack.translate(0.0D, 0.0D, 0.5D);
+            case UP, DOWN -> poseStack.translate(0.5D, 0.0D, 0.5D);
         }
 
         switch (facing) {
-            case NORTH -> poseStack.mulPose(Axis.YP.rotationDegrees(-90));
-            case EAST -> poseStack.mulPose(Axis.YP.rotationDegrees(-180));
-            case SOUTH -> poseStack.mulPose(Axis.YP.rotationDegrees(-270));
-            case UP -> poseStack.mulPose(Axis.ZP.rotationDegrees(-90));
-        }
-
-        if (windGen.getSpace()) {
-            angle = windGen.getAngle();
-            WindRotor rotor = tile.getRotor();
-            if (rotor.getMaxCustomDamage(tile.slot.get(0)) - rotor.getCustomDamage(tile.slot.get(0)) == 0) {
-                angle = 0;
+            case NORTH -> poseStack.mulPose(Axis.YP.rotationDegrees(-90.0F));
+            case EAST -> poseStack.mulPose(Axis.YP.rotationDegrees(-180.0F));
+            case SOUTH -> poseStack.mulPose(Axis.YP.rotationDegrees(-270.0F));
+            case UP -> poseStack.mulPose(Axis.ZP.rotationDegrees(-90.0F));
+            case DOWN -> poseStack.mulPose(Axis.ZP.rotationDegrees(90.0F));
+            default -> {
             }
-            if (!Minecraft.getInstance().isPaused())
+        }
+
+        if (mechanism.getSpace()) {
+            if (rotorBroken) {
+                angle = 0.0F;
+            }
+
+            if (!Minecraft.getInstance().isPaused()) {
                 poseStack.mulPose(Axis.XP.rotationDegrees(angle));
+                spinning = !rotorBroken;
+            }
         }
 
         poseStack.translate(-0.2F, 0.0F, 0.0F);
 
-        VertexConsumer buffer = bufferSource.getBuffer(RenderType.entityCutout(rotorTexture));
-        model.renderToBuffer(poseStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
+        VertexConsumer buffer = bufferSource.getBuffer(RenderType.entityCutoutNoCull(rotorTexture));
+        float animationTime = tile.getLevel() != null ? tile.getLevel().getGameTime() + partialTicks : partialTicks;
+
+        model.renderDamagedRotor(
+                poseStack,
+                buffer,
+                packedLight,
+                OverlayTexture.NO_OVERLAY,
+                damageProfile,
+                animationTime,
+                spinning
+        );
 
         poseStack.popPose();
     }

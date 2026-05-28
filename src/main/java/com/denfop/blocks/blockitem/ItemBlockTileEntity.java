@@ -1,9 +1,13 @@
 package com.denfop.blocks.blockitem;
 
 import com.denfop.api.blockentity.MultiBlockEntity;
+import com.denfop.api.multiblock.IMainMultiBlock;
+import com.denfop.api.multiblock.preview.MultiblockPreviewScreens;
+import com.denfop.api.multiblock.preview.TestMultiblockStructures;
 import com.denfop.blockentity.base.FakePlayerSpawner;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.ItemBlockCore;
+import com.denfop.utils.Keyboard;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -21,6 +25,8 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import static com.denfop.utils.KeyboardClient.armormode;
 
 public class ItemBlockTileEntity<T extends Enum<T> & MultiBlockEntity> extends ItemBlockCore<T> {
     public final ResourceLocation identifier;
@@ -46,6 +52,26 @@ public class ItemBlockTileEntity<T extends Enum<T> & MultiBlockEntity> extends I
         MultiBlockEntity block = this.getTeBlock(p_40572_);
         if (block != null && block.getDummyTe() != null) {
             List<String> stringList = new LinkedList<>();
+            block.getDummyTe().setLevel(p_339655_.level());
+            if (block.getDummyTe() instanceof IMainMultiBlock block1) {
+                p_40574_.add(
+                        Component.translatable(
+                                "iu.multiblock.open_preview_hint",
+                                Component.translatable("key.keyboard.left.shift"),
+                                armormode.getTranslatedKeyMessage()
+                        )
+                );
+
+                if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) && Keyboard.isKeyDown(armormode.getKey().getValue())) {
+                    MultiblockPreviewScreens.open(
+                            Component.translatable("iu.multiblock.title"),
+                            TestMultiblockStructures.createTestModel(
+                                    block1.getMultiBlockStucture().getItemStackMap(),
+                                    block1.getMultiBlockStucture().getRotationMap()
+                            )
+                    );
+                }
+            }
             block.getDummyTe().setLevel(p_339655_.level());
             block.getDummyTe().addInformation(p_40572_, stringList);
             for (String s : stringList)

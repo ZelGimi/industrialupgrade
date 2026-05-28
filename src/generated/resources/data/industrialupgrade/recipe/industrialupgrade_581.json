@@ -34,8 +34,8 @@
   },
   "pattern": [
     "ABA",
-    "DCD",
-    "EEE"
+    "ECE",
+    " D "
   ],
   "result": {
     "count": 1,

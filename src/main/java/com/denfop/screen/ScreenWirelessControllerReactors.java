@@ -79,7 +79,7 @@ public class ScreenWirelessControllerReactors<T extends ContainerMenuWirelessCon
                 if (!stack.isEmpty()) {
                     @Nullable ReactorData reactorData = container.base.invslot.get(i).get(DataComponentsInit.REACTOR_DATA);
                     BlockPos pos = reactorData.pos();
-                    new TooltipWidget(this, 28 + (i / 3) * 36, 28 + (i % 3) * 18, 18, 18).withTooltip(stack.getDisplayName().getString() + "\n" + "x" +
+                    new TooltipWidget(this, 28 + (i / 3) * 36, 28 + (i % 3) * 18, 18, 18).withTooltip(com.denfop.utils.ModUtils.cleanComponentString(stack.getDisplayName().getString()) + "\n" + "x" +
                             ": " + pos.getX() + " y: " + pos.getY() + " z: " + pos.getZ()).drawForeground(poseStack, par1, par2);
                 }
             }

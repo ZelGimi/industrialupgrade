@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -44,7 +46,7 @@ public class BlockEntityElectricRefractoryFurnace extends BlockEntityBasePlastic
     private final AirPollutionComponent pollutionAir;
 
     public BlockEntityElectricRefractoryFurnace(BlockPos pos, BlockState state) {
-        super(1, 200, 1, BlockBaseMachine3Entity.electric_refractory_furnace, pos, state);
+        super(ModConfig.mechanismInt("electric_refractory_furnace_energy_per_tick", 1), ModConfig.mechanismInt("electric_refractory_furnace_operation_length", 200), 1, BlockBaseMachine3Entity.electric_refractory_furnace, pos, state);
         this.heat = this.addComponent(HeatComponent.asBasicSink(this, 1000));
         this.inputSlotA = new InventoryRecipes(this, "elec_refractory_furnace", this, this.fluidTank);
         fluidTank.setTypeItemSlot(Inventory.TypeItemSlot.INPUT);
@@ -73,8 +75,8 @@ public class BlockEntityElectricRefractoryFurnace extends BlockEntityBasePlastic
                 return EnumTypeSlot.RECIPE_SCHEDULE;
             }
         };
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.25));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.5));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("electric_refractory_furnace_soil_pollution_amount", 0.25D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("electric_refractory_furnace_air_pollution_amount", 0.5D)));
     }
 
     @Override

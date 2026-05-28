@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.quantummolecular;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.blockentity.mechanism.BlockEntityLaserPolisher;
 import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
@@ -43,7 +44,7 @@ public class QuantumMolecularCategory extends ScreenMain implements IRecipeCateg
     @Nonnull
     @Override
     public String getTitles() {
-        return JEICompat.getBlockStack(BlockBaseMachine3Entity.quantum_transformer).getDisplayName().getString();
+        return com.denfop.utils.ModUtils.cleanComponentString(JEICompat.getBlockStack(BlockBaseMachine3Entity.quantum_transformer).getDisplayName().getString());
     }
 
     @Override
@@ -80,8 +81,10 @@ public class QuantumMolecularCategory extends ScreenMain implements IRecipeCateg
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, QuantumMolecularHandler recipes, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 8, 7).addItemStack(recipes.getInput());
-        builder.addSlot(RecipeIngredientRole.INPUT, 28, 7).addItemStack(recipes.getInput1());
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 8, 7, recipes, 0, recipes.getInput());
+
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 28, 7, recipes, 1, recipes.getInput1());
+
         builder.addSlot(RecipeIngredientRole.OUTPUT, 18, 47).addItemStack(recipes.getOutput());
     }
 

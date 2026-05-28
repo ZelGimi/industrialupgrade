@@ -24,6 +24,16 @@ public class InventoryUpgrade extends Inventory implements ITypeSlot {
     }
 
     @Override
+    public int getStackSizeLimit() {
+        return 1;
+    }
+
+    @Override
+    public int getMaxStackSize() {
+        return 1;
+    }
+
+    @Override
     public EnumTypeSlot getTypeSlot() {
         return EnumTypeSlot.ROTOR_UPGRADE;
     }

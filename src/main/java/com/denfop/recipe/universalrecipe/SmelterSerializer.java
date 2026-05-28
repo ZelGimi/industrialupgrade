@@ -23,7 +23,6 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class SmelterSerializer implements RecipeSerializer<SmelteryRecipe> {
@@ -190,7 +189,7 @@ public class SmelterSerializer implements RecipeSerializer<SmelteryRecipe> {
                             break;
                     }
                 }
-                if (!IUCore.updateRecipe){
+                if (!IUCore.updateRecipe) {
                     List<FluidStack> fluidStacksInput = new ArrayList<>();
                     List<ItemStack> itemStacksInput = new ArrayList<>();
                     List<FluidStack> fluidStacksOutput = new ArrayList<>();

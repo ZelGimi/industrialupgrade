@@ -15,37 +15,6 @@
       "model": "industrialupgrade:block/basemachine/polymerizer",
       "y": 90
     },
-    "facing=down,type=polymerizer": {
-      "model": "industrialupgrade:block/basemachine/polymerizer",
-      "x": 90
-    },
-    "facing=up,type=polymerizer": {
-      "model": "industrialupgrade:block/basemachine/polymerizer",
-      "x": 270
-    },
-    "facing=north,type=polymerizer_invalid": {
-      "model": "industrialupgrade:block/basemachine/polymerizer_active"
-    },
-    "facing=south,type=polymerizer_invalid": {
-      "model": "industrialupgrade:block/basemachine/polymerizer_active",
-      "y": 180
-    },
-    "facing=west,type=polymerizer_invalid": {
-      "model": "industrialupgrade:block/basemachine/polymerizer_active",
-      "y": 270
-    },
-    "facing=east,type=polymerizer_invalid": {
-      "model": "industrialupgrade:block/basemachine/polymerizer_active",
-      "y": 90
-    },
-    "facing=down,type=polymerizer_invalid": {
-      "model": "industrialupgrade:block/basemachine/polymerizer_active",
-      "x": 90
-    },
-    "facing=up,type=polymerizer_invalid": {
-      "model": "industrialupgrade:block/basemachine/polymerizer_active",
-      "x": 270
-    },
     "facing=north,type=polymerizer_active": {
       "model": "industrialupgrade:block/basemachine/polymerizer_active"
     },
@@ -60,14 +29,6 @@
     "facing=east,type=polymerizer_active": {
       "model": "industrialupgrade:block/basemachine/polymerizer_active",
       "y": 90
-    },
-    "facing=down,type=polymerizer_active": {
-      "model": "industrialupgrade:block/basemachine/polymerizer_active",
-      "x": 90
-    },
-    "facing=up,type=polymerizer_active": {
-      "model": "industrialupgrade:block/basemachine/polymerizer_active",
-      "x": 270
     }
   }
 }

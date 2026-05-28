@@ -188,18 +188,18 @@ public class BaseSpaceUpgradeSystem implements ISpaceUpgradeSystem {
                 if (upgradeItemInform.upgrade.equals(enumInfoUpgradeModules)) {
                     if (upgradeItemInform.number < upgradeItemInform.upgrade.getMax()) {
                         stringList.add(ChatFormatting.GREEN + "" + (upgradeItemInform.upgrade.getMax() - upgradeItemInform.number) +
-                                "x " + (new ItemStack(
+                                "x " + (com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(
                                 IUItem.spaceupgrademodule.getStack(enumInfoUpgradeModules.ordinal()),
                                 1
-                        ).getDisplayName().getString()));
+                        ).getDisplayName().getString())));
                     }
                     continue cycle;
                 }
             }
-            stringList.add(ChatFormatting.GREEN + "" + (enumInfoUpgradeModules.getMax()) + "x " + (new ItemStack(
+            stringList.add(ChatFormatting.GREEN + "" + (enumInfoUpgradeModules.getMax()) + "x " + (com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(
                     IUItem.spaceupgrademodule.getStack(enumInfoUpgradeModules.ordinal()),
                     1
-            ).getDisplayName().getString()));
+            ).getDisplayName().getString())));
 
         }
         return list != null ? stringList : Collections.emptyList();

@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,type=precraft": {
+      "model": "industrialupgrade:block/storagesystem/precraft"
+    },
+    "facing=south,type=precraft": {
+      "model": "industrialupgrade:block/storagesystem/precraft",
+      "y": 180
+    },
+    "facing=west,type=precraft": {
+      "model": "industrialupgrade:block/storagesystem/precraft",
+      "y": 270
+    },
+    "facing=east,type=precraft": {
+      "model": "industrialupgrade:block/storagesystem/precraft",
+      "y": 90
+    },
+    "facing=north,type=precraft_active": {
+      "model": "industrialupgrade:block/storagesystem/precraft"
+    },
+    "facing=south,type=precraft_active": {
+      "model": "industrialupgrade:block/storagesystem/precraft",
+      "y": 180
+    },
+    "facing=west,type=precraft_active": {
+      "model": "industrialupgrade:block/storagesystem/precraft",
+      "y": 270
+    },
+    "facing=east,type=precraft_active": {
+      "model": "industrialupgrade:block/storagesystem/precraft",
+      "y": 90
+    }
+  }
+}

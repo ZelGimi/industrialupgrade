@@ -179,7 +179,7 @@ public class ComponentProcess extends AbstractComponent {
             return true;
         }
         if (componentRad.getDelegate() instanceof ISource && !(componentRad.getDelegate() instanceof IDual)) {
-            return this.componentRad.getCapacity() - this.componentRad.getEnergy() >= 150;
+            return this.componentRad.getCapacity() - this.componentRad.getEnergy() >= 350;
         } else {
             if (this.updateTick.getRecipeOutput() == null) {
                 return false;
@@ -539,7 +539,7 @@ public class ComponentProcess extends AbstractComponent {
             return;
         }
         if (this.componentRad.delegate instanceof ISource) {
-            this.componentRad.addEnergy(150 * size);
+            this.componentRad.addEnergy(350 * size);
             return;
         }
         final int amount = this.updateTick.getRecipeOutput().getRecipe().output.metadata.getInt("rad_amount");
@@ -552,7 +552,7 @@ public class ComponentProcess extends AbstractComponent {
             return size;
         }
         if (this.componentRad.delegate instanceof ISource) {
-            return (int) ((this.componentRad.getCapacity() - this.componentRad.getEnergy()) / 150);
+            return (int) ((this.componentRad.getCapacity() - this.componentRad.getEnergy()) / 350);
         }
         final int amount = this.updateTick.getRecipeOutput().getRecipe().output.metadata.getInt("rad_amount");
 

@@ -15,36 +15,20 @@
       "model": "industrialupgrade:block/basemachine/controller_wires",
       "y": 90
     },
-    "facing=down,type=substitute": {
-      "model": "industrialupgrade:block/basemachine/controller_wires",
-      "x": 90
-    },
-    "facing=up,type=substitute": {
-      "model": "industrialupgrade:block/basemachine/controller_wires",
-      "x": 270
-    },
-    "facing=north,type=substitute_invalid": {
+    "facing=north,type=substitute_active": {
       "model": "industrialupgrade:block/basemachine/controller_wires"
     },
-    "facing=south,type=substitute_invalid": {
+    "facing=south,type=substitute_active": {
       "model": "industrialupgrade:block/basemachine/controller_wires",
       "y": 180
     },
-    "facing=west,type=substitute_invalid": {
+    "facing=west,type=substitute_active": {
       "model": "industrialupgrade:block/basemachine/controller_wires",
       "y": 270
     },
-    "facing=east,type=substitute_invalid": {
+    "facing=east,type=substitute_active": {
       "model": "industrialupgrade:block/basemachine/controller_wires",
       "y": 90
-    },
-    "facing=down,type=substitute_invalid": {
-      "model": "industrialupgrade:block/basemachine/controller_wires",
-      "x": 90
-    },
-    "facing=up,type=substitute_invalid": {
-      "model": "industrialupgrade:block/basemachine/controller_wires",
-      "x": 270
     }
   }
 }

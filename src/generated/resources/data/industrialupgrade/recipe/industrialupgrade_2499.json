@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/hafnium"
+    },
+    "B": {
+      "item": "industrialupgrade:charged_redstone"
+    },
+    "D": {
+      "item": "industrialupgrade:upgrades/fluid_pulling"
+    }
+  },
+  "pattern": [
+    "ABA",
+    " D ",
+    "A A"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:storagesystem/fluid_importbus"
+  },
+  "show_notification": false
+}

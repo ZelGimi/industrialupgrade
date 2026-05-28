@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.crystal_charge;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.recipe.InventoryRecipes;
@@ -107,7 +108,8 @@ public class CrystalChargerCategory extends ScreenMain implements IRecipeCategor
         final List<ItemStack> inputs = Collections.singletonList(recipes.getInput());
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
+            JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY(), recipes, i, inputs.get(i));
+
         }
 
         final SlotInvSlot outputSlot = container1.findClassSlot(InventoryOutput.class);

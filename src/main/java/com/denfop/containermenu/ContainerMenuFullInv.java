@@ -20,8 +20,13 @@ public abstract class ContainerMenuFullInv<T extends BlockEntityInventory> exten
         this.addPlayerInventorySlots(player.getInventory(), 166);
     }
 
-    public ContainerMenuFullInv(Player player, T t, int width, int height) {
+    public ContainerMenuFullInv(Player player, T t, int width, int height, boolean addSlots) {
         super(t, player);
-        this.addPlayerInventorySlots(player.getInventory(), width, height);
+        if (addSlots)
+            this.addPlayerInventorySlots(player.getInventory(), width, height);
+    }
+
+    public ContainerMenuFullInv(Player player, T t, int width, int height) {
+        this(player, t, width, height, true);
     }
 }

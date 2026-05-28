@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.blastfurnace.block;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -105,8 +107,8 @@ public class BlockEntityBlastFurnaceMain extends BlockEntityMultiBlockBase imple
         this.fluidSlot = new InventoryFluidByList(this, 1, net.minecraft.world.level.material.Fluids.WATER);
         this.output1 = new InventoryOutput(this, 1);
         this.heat = this.addComponent(HeatComponent.asBasicSink(this, 1000));
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.2));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.5));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("blast_furnace_controller_soil_pollution_amount", 0.2D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("blast_furnace_controller_air_pollution_amount", 0.5D)));
     }
 
     @Override
@@ -307,7 +309,7 @@ public class BlockEntityBlastFurnaceMain extends BlockEntityMultiBlockBase imple
                 IUItem.blastfurnace.getItem(0)
         ).getDescriptionId()));
         tooltip.add(Localization.translate("iu.blastfurnace.info4"));
-        tooltip.add(Localization.translate("iu.blastfurnace.info5") + new ItemStack(IUItem.ForgeHammer.getItem()).getDisplayName().getString());
+        tooltip.add(Localization.translate("iu.blastfurnace.info5") + com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(IUItem.ForgeHammer.getItem()).getDisplayName().getString()));
         tooltip.add(Localization.translate("iu.blastfurnace.info6"));
     }
 

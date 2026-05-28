@@ -1,7 +1,6 @@
 package com.denfop.containermenu;
 
 import com.denfop.inventory.Inventory;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -29,11 +28,13 @@ public class SlotInvSlot extends Slot {
     public int getJeiX() {
         return this.x;
     }
+
     @Override
     public void setChanged() {
         super.setChanged();
         this.inventory.base.setChanged();
     }
+
     public int getJeiY() {
         return this.y;
     }

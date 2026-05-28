@@ -30,9 +30,9 @@
     }
   },
   "pattern": [
-    "ABA",
-    "DCD",
-    "ABA"
+    "A A",
+    "BCB",
+    "ADA"
   ],
   "result": {
     "count": 1,

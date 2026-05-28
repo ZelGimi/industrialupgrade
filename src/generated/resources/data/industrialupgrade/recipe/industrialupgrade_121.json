@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:itemcore/specore"
+      "item": "industrialupgrade:itemcore/ultcore"
     },
     "B": {
       "item": "industrialupgrade:photoniy"
@@ -24,12 +24,15 @@
         "minecraft:repair_cost": 0
       },
       "items": "industrialupgrade:circuit/spectralcircuit"
+    },
+    "D": {
+      "item": "industrialupgrade:module_schedule"
     }
   },
   "pattern": [
     "ABA",
     "BCB",
-    "ABA"
+    "ADA"
   ],
   "result": {
     "count": 1,

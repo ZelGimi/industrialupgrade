@@ -20,6 +20,19 @@ public class SystemTickList<T extends SystemTick<ISource, Path>> extends ArrayLi
         return false;
     }
 
+    public T get(final Object o) {
+        if (o instanceof ISource) {
+            for (SystemTick<ISource, Path> tick : this) {
+                if (tick.getSource() == o) {
+                    return (T) tick;
+                }
+            }
+        } else {
+            return null;
+        }
+        return null;
+    }
+
     @Override
     public boolean remove(final Object o) {
         if (o instanceof ISource) {

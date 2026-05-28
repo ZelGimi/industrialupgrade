@@ -2,6 +2,7 @@ package com.denfop.containermenu;
 
 import com.denfop.blockentity.mechanism.BlockEntityRotorModifier;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ClickType;
 
 public class ContainerMenuRotorUpgrade extends ContainerMenuFullInv<BlockEntityRotorModifier> {
 
@@ -24,5 +25,9 @@ public class ContainerMenuRotorUpgrade extends ContainerMenuFullInv<BlockEntityR
         ));
     }
 
-
+    @Override
+    public void clicked(int slotId, int dragType, ClickType clickType, Player player) {
+        if (clickType != ClickType.SWAP)
+            super.clicked(slotId, dragType, clickType, player);
+    }
 }

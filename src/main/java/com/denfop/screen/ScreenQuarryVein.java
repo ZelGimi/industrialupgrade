@@ -249,9 +249,9 @@ public class ScreenQuarryVein<T extends ContainerMenuQuarryVein> extends ScreenM
                 if (!isOil) {
                     if (this.container.base.vein.getType() != Type.GAS) {
                         if (container.base.vein.isOldMineral()) {
-                            name_vein = new ItemStack(IUItem.heavyore.getItem(this.container.base.vein.getMeta()), 1).getDisplayName().getString();
+                            name_vein = com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(IUItem.heavyore.getItem(this.container.base.vein.getMeta()), 1).getDisplayName().getString());
                         } else {
-                            name_vein = new ItemStack(IUItem.mineral.getItem(this.container.base.vein.getMeta()), 1).getDisplayName().getString();
+                            name_vein = com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(IUItem.mineral.getItem(this.container.base.vein.getMeta()), 1).getDisplayName().getString());
                         }
 
                     } else {
@@ -267,10 +267,10 @@ public class ScreenQuarryVein<T extends ContainerMenuQuarryVein> extends ScreenM
                             typeString) + " " + Localization.translate(new ItemStack(IUItem.oilblock.getItem()).getDescriptionId());
 
                 }
-                new AdvancedTooltipWidget(this, 20, 54, 68, 72).withTooltip(name_vein + " " + col + (isOil ? "mb" : "") + "/" + colmax + (
+                new AdvancedTooltipWidget(this, 20, 54, 68, 72).withTooltip(name_vein + " " + col + (isOil ? "mB" : "") + "/" + colmax + (
                         isOil
                                 ?
-                                "mb"
+                                "mB"
                                 : "")).drawForeground(poseStack, par1, par2);
             }
         }

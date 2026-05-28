@@ -62,7 +62,7 @@ public class ItemRecipeSchedule extends Item implements IItemTab, IProperties {
         } else {
 
             for (ItemStack description : getItems(stack)) {
-                tooltip.add(Component.literal(ChatFormatting.GREEN + description.getHoverName().getString()));
+                tooltip.add(Component.literal(ChatFormatting.GREEN + com.denfop.utils.ModUtils.cleanComponentString(description.getHoverName().getString())));
             }
         }
     }

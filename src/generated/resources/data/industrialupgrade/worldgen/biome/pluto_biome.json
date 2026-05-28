@@ -1,0 +1,83 @@
+{
+  "carvers": {},
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 7045775,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000
+    },
+    "sky_color": 4675435,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "features": [
+    [
+      "industrialupgrade:pluto_cavity",
+      "industrialupgrade:space/pluto/stone_tunnels",
+      "industrialupgrade:space/pluto/hall_system",
+      "industrialupgrade:space/pluto/fractures",
+      "industrialupgrade:space/pluto/shafts",
+      "industrialupgrade:space/pluto/liquid_chamber",
+      "industrialupgrade:space/pluto/frozen_chamber",
+      "industrialupgrade:space/pluto/tunnel_caves",
+      "industrialupgrade:space/pluto/labyrinth_caves",
+      "industrialupgrade:space/pluto/shaft_caves",
+      "industrialupgrade:space/pluto/dome_caves",
+      "industrialupgrade:space/pluto/well_caves",
+      "industrialupgrade:space/pluto/multi_tier_caves",
+      "industrialupgrade:space/pluto/branched_caves",
+      "industrialupgrade:space/pluto/arch_caves",
+      "industrialupgrade:space/pluto/chamber_caves",
+      "industrialupgrade:space/pluto/canyon_caves",
+      "industrialupgrade:space/pluto/pocket_caves",
+      "industrialupgrade:space/pluto/crevice_caves",
+      "industrialupgrade:space/pluto/amphitheater_caves",
+      "industrialupgrade:space/pluto/cathedral_caves",
+      "industrialupgrade:space/pluto/gallery_caves",
+      "industrialupgrade:space/pluto/winding_caves",
+      "industrialupgrade:space/pluto/cascade_caves",
+      "industrialupgrade:space/pluto/vertical_collectors"
+    ],
+    [
+      "industrialupgrade:pluto_lake_0",
+      "industrialupgrade:pluto_fluid_0"
+    ],
+    [
+      "industrialupgrade:pluto_craters",
+      "industrialupgrade:space/pluto/addition_craters"
+    ],
+    [],
+    [
+      "industrialupgrade:pluto_geyser_0"
+    ],
+    [],
+    [
+      "industrialupgrade:pluto_ore_0",
+      "industrialupgrade:pluto_ore_1",
+      "industrialupgrade:pluto_ore_2",
+      "industrialupgrade:pluto_ore_3"
+    ],
+    [],
+    [],
+    [],
+    [
+      "industrialupgrade:space/pluto/cryo_surface_cover"
+    ]
+  ],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": -0.7
+}

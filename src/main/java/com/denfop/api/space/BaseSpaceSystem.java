@@ -105,6 +105,23 @@ public class BaseSpaceSystem implements ISpaceNet {
         return this.colonienet;
     }
 
+    public void reset() {
+        systemList = new ArrayList<>();
+        systemIBodyMap = new HashMap<>();
+        starSystemMap = new HashMap<>();
+        planetISatelliteMap = new HashMap<>();
+        starListMap = new HashMap<>();
+        systemIPlanetMap = new HashMap<>();
+        systemIStarMap = new HashMap<>();
+        starAsteroidMap = new HashMap<>();
+        planetList = new ArrayList<>();
+        asteroidList = new ArrayList<>();
+        satelliteList = new ArrayList<>();
+        starList = new ArrayList<>();
+        bodyMap = new HashMap<>();
+        bodies = new ArrayList<>();
+    }
+
     @Override
     public List<IPlanet> getPlanetList() {
         return this.planetList;

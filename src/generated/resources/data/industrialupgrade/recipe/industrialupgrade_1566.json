@@ -3,21 +3,7 @@
   "category": "misc",
   "key": {
     "A": {
-      "type": "neoforge:components",
-      "components": {
-        "industrialupgrade:level_microchip": 1,
-        "minecraft:attribute_modifiers": {
-          "modifiers": []
-        },
-        "minecraft:enchantments": {
-          "levels": {}
-        },
-        "minecraft:lore": [],
-        "minecraft:max_stack_size": 64,
-        "minecraft:rarity": "common",
-        "minecraft:repair_cost": 0
-      },
-      "items": "industrialupgrade:crafting_elements/crafting_272_element"
+      "tag": "c:raw_materials"
     },
     "B": {
       "tag": "c:plates/iron"

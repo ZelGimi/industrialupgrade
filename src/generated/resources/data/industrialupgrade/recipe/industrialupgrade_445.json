@@ -11,30 +11,13 @@
     "C": {
       "item": "industrialupgrade:armour/hybrid_solar_helmet"
     },
-    "D": {
-      "type": "neoforge:components",
-      "components": {
-        "industrialupgrade:level_microchip": 8,
-        "minecraft:attribute_modifiers": {
-          "modifiers": []
-        },
-        "minecraft:enchantments": {
-          "levels": {}
-        },
-        "minecraft:lore": [],
-        "minecraft:max_stack_size": 64,
-        "minecraft:rarity": "common",
-        "minecraft:repair_cost": 0
-      },
-      "items": "industrialupgrade:circuit/quantumcircuit"
-    },
     "E": {
       "item": "industrialupgrade:compresscarbonultra"
     }
   },
   "pattern": [
     " A ",
-    "DCD",
+    " C ",
     "BEB"
   ],
   "result": {

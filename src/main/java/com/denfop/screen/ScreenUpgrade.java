@@ -31,7 +31,7 @@ public class ScreenUpgrade<T extends ContainerMenuUpgrade> extends ScreenMain<Co
     public ScreenUpgrade(ContainerMenuUpgrade container, final ItemStack itemStack1) {
         super(container);
         this.componentList.clear();
-        this.name = itemStack1.getDisplayName().getString();
+        this.name = com.denfop.utils.ModUtils.cleanComponentString(itemStack1.getDisplayName().getString());
         this.itemStack = itemStack1;
         this.imageWidth = 172;
         this.imageHeight = 232;

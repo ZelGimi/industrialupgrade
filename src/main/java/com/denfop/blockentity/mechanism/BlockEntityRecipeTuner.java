@@ -90,7 +90,7 @@ public class BlockEntityRecipeTuner extends BlockEntityInventory implements IUpd
                 List<ItemStack> itemStackList = new ArrayList<>();
                 for (int i = 0; i < 9; i++) {
                     if (!this.slot.get(i).isEmpty()) {
-                        itemStackList.add(this.slot.get(i));
+                        itemStackList.add(this.slot.get(i).copy());
                     }
                 }
                 this.input_slot.get(0).set(DataComponentsInit.LIST_STACK, itemStackList);

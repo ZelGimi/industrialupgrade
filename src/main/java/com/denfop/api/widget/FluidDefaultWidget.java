@@ -9,7 +9,10 @@ import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static com.denfop.api.widget.TankWidget.getSafeFluidSprite;
 
 public class FluidDefaultWidget extends ScreenWidget {
 
@@ -29,6 +32,7 @@ public class FluidDefaultWidget extends ScreenWidget {
             if (this.getTooltipProvider() != null) {
                 String tooltip = this.getTooltipProvider().get();
                 if (tooltip != null && !tooltip.isEmpty()) {
+                    lines = getToolTipOnlyName();
                     addLines(lines, tooltip);
                 }
             }
@@ -50,7 +54,7 @@ public class FluidDefaultWidget extends ScreenWidget {
             int fluidHeight = 16;
             Fluid fluid = fs.getFluid();
             IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
-            TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+            TextureAtlasSprite sprite = getSafeFluidSprite(fs);
             int color = extensions.getTintColor();
             bindBlockTexture();
             this.gui.drawSprite(poseStack,
@@ -68,6 +72,20 @@ public class FluidDefaultWidget extends ScreenWidget {
         ScreenIndustrialUpgrade.bindTexture(commonTexture1);
     }
 
+    protected List<String> getToolTipOnlyName() {
+        List<String> ret = new ArrayList<>();
+        FluidStack fs = this.fluid;
+        if (fs != null && fs.getAmount() > 0) {
+            Fluid fluid = fs.getFluid();
+            if (fluid != null) {
+                ret.add(Localization.translate(fs.getTranslationKey()));
+                ret.addAll(super.getToolTip());
+            }
+        }
+
+        return ret;
+    }
+
     protected List<String> getToolTip() {
         List<String> ret = super.getToolTip();
         FluidStack fs = this.fluid;
@@ -75,15 +93,15 @@ public class FluidDefaultWidget extends ScreenWidget {
             Fluid fluid = fs.getFluid();
             if (fluid != null) {
                 ret.add(Localization.translate(fs.getTranslationKey()));
-                ret.add("Amount: " + fs.getAmount() + " " + Localization.translate("iu.generic.text.mb"));
-                ret.add("Type: " + "Liquid");
+                ret.add(Localization.translate("iu.tooltip.fluid.amount") + fs.getAmount() + " " + Localization.translate("iu.generic.text.mb"));
+                ret.add(Localization.translate("iu.tooltip.fluid.type") + Localization.translate("iu.tooltip.fluid.type.liquid"));
             } else {
-                ret.add("Invalid FluidStack instance.");
+                ret.add(Localization.translate("iu.tooltip.fluid.invalid"));
             }
         } else {
-            ret.add("No Fluid");
-            ret.add("Amount: 0 " + Localization.translate("iu.generic.text.mb"));
-            ret.add("Type: Not Available");
+            ret.add(Localization.translate("iu.tooltip.fluid.empty"));
+            ret.add(Localization.translate("iu.tooltip.fluid.amount") + "0 " + Localization.translate("iu.generic.text.mb"));
+            ret.add(Localization.translate("iu.tooltip.fluid.type") + Localization.translate("iu.tooltip.fluid.type.not_available"));
         }
 
         return ret;

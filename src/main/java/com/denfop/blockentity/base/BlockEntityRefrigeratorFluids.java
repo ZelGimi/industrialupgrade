@@ -1,5 +1,7 @@
 package com.denfop.blockentity.base;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -66,9 +68,9 @@ public class BlockEntityRefrigeratorFluids extends BlockEntityElectricMachine im
     protected double guiProgress;
 
     public BlockEntityRefrigeratorFluids(BlockPos pos, BlockState state) {
-        super(100, 1, 2, BlockBaseMachine3Entity.refrigerator_fluids, pos, state);
+        super(ModConfig.mechanismDouble("fluid_cooler_energy_storage", 100.0D), 1, 2, BlockBaseMachine3Entity.refrigerator_fluids, pos, state);
         this.progress = 0;
-        this.defaultEnergyConsume = this.energyConsume = 1;
+        this.defaultEnergyConsume = this.energyConsume = ModConfig.mechanismInt("fluid_cooler_energy_use", 1);
         this.defaultOperationLength = this.operationLength = 100;
         this.defaultTier = 1;
         this.defaultEnergyStorage = 100;
@@ -76,8 +78,8 @@ public class BlockEntityRefrigeratorFluids extends BlockEntityElectricMachine im
         Fluids fluids = this.addComponent(new Fluids(this));
         this.fluidTank1 = fluids.addTankInsert("fluidTank1", 12 * 1000);
 
-        this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("fluid_cooler_soil_pollution_amount", 0.1D)));
+        this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("fluid_cooler_air_pollution_amount", 0.1D)));
 
         this.fluidTank2 = fluids.addTank("fluidTank2", 12 * 1000, Inventory.TypeItemSlot.OUTPUT);
 

@@ -2,6 +2,7 @@ package com.denfop.villager;
 
 import com.denfop.IUItem;
 import com.denfop.blockentity.mechanism.BlockEntityGenerationMicrochip;
+import com.denfop.config.ModConfig;
 import com.denfop.recipes.ItemStackHelper;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.npc.VillagerProfession;
@@ -31,6 +32,20 @@ public class TradingSystem {
         return instance;
     }
 
+    public static boolean isProfessionEnabled(Profession profession) {
+        if (!ModConfig.COMMON.enableAllProfessions.get())
+            return false;
+
+        return switch (profession) {
+            case ENGINEER -> ModConfig.COMMON.enableEngineer.get();
+            case MECHANIC -> ModConfig.COMMON.enableMechanic.get();
+            case NUCLEAR -> ModConfig.COMMON.enableNuclear.get();
+            case METALLURG -> ModConfig.COMMON.enableMetallurg.get();
+            case CHEMIST -> ModConfig.COMMON.enableChemist.get();
+            case BOTANIST -> ModConfig.COMMON.enableBotanist.get();
+        };
+    }
+
     public void register(Tuple<Profession, Integer> option, MerchantOffer offer) {
         trading.computeIfAbsent(option.getA(), l -> new HashMap<>()).computeIfAbsent(option.getB(), l -> new ArrayList<>()).add(offer);
     }
@@ -41,6 +56,8 @@ public class TradingSystem {
         VillagerProfession profession = event.getType();
         if (villagerProfession.containsKey(profession)) {
             Profession profession1 = villagerProfession.get(profession);
+            if (!isProfessionEnabled(profession1))
+                return;
             Map<Integer, List<MerchantOffer>> tradingList = trading.computeIfAbsent(profession1, k -> new HashMap<>());
             tradingList.forEach((level, list) -> {
                 List<VillagerTrades.ItemListing> tradingList1 = event.getTrades().computeIfAbsent(level, l -> new ArrayList<>());

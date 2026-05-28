@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:ore",
+  "config": {
+    "discard_chance_on_air_exposure": 0.0,
+    "size": 9,
+    "targets": [
+      {
+        "state": {
+          "Name": "industrialupgrade:blockspace/enceladus_magnesium_ore"
+        },
+        "target": {
+          "block": "industrialupgrade:spacestone/enceladus_stone",
+          "predicate_type": "minecraft:block_match"
+        }
+      },
+      {
+        "state": {
+          "Name": "industrialupgrade:blockspace/enceladus_magnesium_ore"
+        },
+        "target": {
+          "block": "industrialupgrade:spacecobblestone/enceladus_cobblestone",
+          "predicate_type": "minecraft:block_match"
+        }
+      }
+    ]
+  }
+}

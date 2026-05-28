@@ -146,6 +146,12 @@ public class UpgradeItemInform {
                 return ChatFormatting.GOLD + Localization.translate("iu.latex_mode");
             case WRENCH:
                 return ChatFormatting.YELLOW + Localization.translate("iu.wrench_mode");
+            case OXYGEN:
+                return ChatFormatting.WHITE + Localization.translate("iu.oxygen_mode");
+            case PRESSURE:
+                return ChatFormatting.LIGHT_PURPLE + Localization.translate("iu.pressure_mode");
+            case THERMAL:
+                return ChatFormatting.RED + Localization.translate("iu.thermal_mode");
 
         }
         return "";

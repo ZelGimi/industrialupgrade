@@ -1,0 +1,13 @@
+{
+  "type": "industrialupgrade:space_generic_fluid",
+  "config": {
+    "body_id": "proteus",
+    "cave_only": true,
+    "distribution_type": "pocket",
+    "fluid_id": "industrialupgrade:iufluidxenon",
+    "max_y": 20,
+    "min_y": -28,
+    "radius_max": 24,
+    "radius_min": 4
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "type": "industrialupgrade:jupiter_type",
+  "generator": {
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "industrialupgrade:jupiter_biome"
+    },
+    "settings": "industrialupgrade:jupiter_noise"
+  }
+}

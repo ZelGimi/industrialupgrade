@@ -75,7 +75,6 @@ public class ItemJarBees<T extends Enum<T> & ISubEnum> extends ItemMain<T> imple
         Bee bee = getBee(stack);
 
 
-
         if (bee != null) {
             tooltip.add(Component.literal(Localization.translate("iu.bee_analyzer.main_crop") + " " + Localization.translate("crop." + bee
                     .getCropFlower()

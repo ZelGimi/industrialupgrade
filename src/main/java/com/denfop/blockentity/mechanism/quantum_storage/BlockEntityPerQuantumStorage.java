@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.quantum_storage;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blocks.BlockTileEntity;
@@ -11,7 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class BlockEntityPerQuantumStorage extends BlockEntityQuantumStorage {
 
     public BlockEntityPerQuantumStorage(BlockPos pos, BlockState state) {
-        super(160000000, EnumTypeStyle.PERFECT, BlockBaseMachine3Entity.per_quantum_storage, pos, state);
+        super(ModConfig.mechanismDouble("perfect_energy_storage", 160000000.0D), EnumTypeStyle.PERFECT, BlockBaseMachine3Entity.per_quantum_storage, pos, state);
     }
 
     public MultiBlockEntity getTeBlock() {

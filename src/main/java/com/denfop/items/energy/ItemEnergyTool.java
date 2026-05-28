@@ -12,7 +12,9 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.DiggerItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Tiers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -38,7 +40,7 @@ public abstract class ItemEnergyTool extends ItemToolIU implements EnergyItem {
             int operationEnergyCost,
             TagKey<Block> mineableBlocks
     ) {
-        super(mineableBlocks, new Properties().stacksTo(1).setNoRepair());
+        super(mineableBlocks, new Properties().stacksTo(1).setNoRepair().attributes(DiggerItem.createAttributes(Tiers.IRON, Tiers.IRON.getAttackDamageBonus(), -3)));
         this.operationEnergyCost = operationEnergyCost;
     }
 

@@ -14,15 +14,16 @@ import com.denfop.recipe.IInputHandler;
 import com.denfop.utils.ModUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
@@ -37,25 +38,24 @@ import java.util.List;
 
 public class BaseUpgradeBaseSystem implements UpgradeBaseSystem {
 
-
     List<UpgradeModificator> list_modificators;
     int max;
 
     public BaseUpgradeBaseSystem() {
         this.max = 0;
         this.list_modificators = new ArrayList<>();
-
         NeoForge.EVENT_BUS.register(this);
-
     }
 
     public static void addupgrade(Item container, ItemStack fill) {
         CompoundTag nbt = ModUtils.nbt();
         nbt.putString(
                 "mode_module",
-                fill.getItem() instanceof ItemUpgradeModule ? ItemUpgradeModule.getType(IUItem.upgrademodule.getMeta((ItemUpgradeModule) fill.getItem())).name : "blacklist"
+                fill.getItem() instanceof ItemUpgradeModule
+                        ? ItemUpgradeModule.getType(IUItem.upgrademodule.getMeta((ItemUpgradeModule) fill.getItem())).name
+                        : "blacklist"
         );
-        final IInputHandler input = com.denfop.api.Recipes.inputFactory;
+        final IInputHandler input = Recipes.inputFactory;
         Recipes.recipes.addRecipe(
                 "upgradeblock",
                 new BaseMachineRecipe(
@@ -79,11 +79,8 @@ public class BaseUpgradeBaseSystem implements UpgradeBaseSystem {
 
     public static void addupgrade(Item container, ItemStack fill, String type) {
         CompoundTag nbt = ModUtils.nbt();
-        nbt.putString(
-                "type",
-                type
-        );
-        final IInputHandler input = com.denfop.api.Recipes.inputFactory;
+        nbt.putString("type", type);
+        final IInputHandler input = Recipes.inputFactory;
         Recipes.recipes.addRecipe(
                 "upgradeblock",
                 new BaseMachineRecipe(
@@ -104,8 +101,7 @@ public class BaseUpgradeBaseSystem implements UpgradeBaseSystem {
     }
 
     public List<Integer> getPositiveUpgradeFromLevel(ItemStack stack) {
-        if (stack.getItem() instanceof LevelInstruments) {
-            LevelInstruments levelInstruments = (LevelInstruments) stack.getItem();
+        if (stack.getItem() instanceof LevelInstruments levelInstruments) {
             final int level = levelInstruments.getLevel(stack);
             int speed = level / 2;
             int less_draw_energy = level / 5;
@@ -120,22 +116,22 @@ public class BaseUpgradeBaseSystem implements UpgradeBaseSystem {
             integers.add(depth);
             return integers;
         } else {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
     }
 
     public void addModificate(ItemStack container, String name) {
-        com.denfop.datacomponent.UpgradeItem upgradeItem = container.get(DataComponentsInit.UPGRADE_ITEM);
+        com.denfop.datacomponent.UpgradeItem upgradeItem =
+                container.getOrDefault(DataComponentsInit.UPGRADE_ITEM, com.denfop.datacomponent.UpgradeItem.EMPTY);
+
         for (final UpgradeModificator modification : list_modificators) {
             if (modification.matches(name) && !upgradeItem.upgradeModificators().contains(modification)) {
-                List<UpgradeModificator> upgradeModificatorList = upgradeItem.upgradeModificators();
+                List<UpgradeModificator> upgradeModificatorList = new ArrayList<>(upgradeItem.upgradeModificators());
                 upgradeModificatorList.add(modification);
                 upgradeItem.updateModificator(container, upgradeModificatorList);
                 break;
             }
         }
-
-
     }
 
     public boolean needModificate(ItemStack container, ItemStack fill) {
@@ -150,84 +146,93 @@ public class BaseUpgradeBaseSystem implements UpgradeBaseSystem {
 
     @SubscribeEvent
     public void loadItem(EventItemLoad event) {
-        if (event.getLevel().isClientSide())
+        if (event.getLevel().isClientSide()) {
             return;
+        }
         RegistryAccess.Frozen registryAccess = ((ServerLevel) event.getLevel()).getServer().registryAccess();
         this.updateListFromNBT(event.item, event.stack, registryAccess);
     }
 
     @SubscribeEvent
     public void loadItem(EventItemBlackListLoad event) {
-        if (event.getLevel().isClientSide())
+        if (event.getLevel().isClientSide()) {
             return;
+        }
         RegistryAccess.Frozen registryAccess = ((ServerLevel) event.getLevel()).getServer().registryAccess();
         this.updateBlackListFromNBT(event.item, event.stack, event.nbt, registryAccess);
     }
 
     @Override
     public boolean getModifications(final ItemStack item) {
-        return !item.getOrDefault(DataComponentsInit.UPGRADE_ITEM, com.denfop.datacomponent.UpgradeItem.EMPTY).upgradeModificators().isEmpty();
+        return !item.getOrDefault(DataComponentsInit.UPGRADE_ITEM, com.denfop.datacomponent.UpgradeItem.EMPTY)
+                .upgradeModificators().isEmpty();
     }
 
     @Override
     public List<UpgradeModificator> getListModifications(final ItemStack item) {
-        final List<UpgradeModificator> list = item.getOrDefault(DataComponentsInit.UPGRADE_ITEM, com.denfop.datacomponent.UpgradeItem.EMPTY).upgradeModificators();
+        final List<UpgradeModificator> list =
+                item.getOrDefault(DataComponentsInit.UPGRADE_ITEM, com.denfop.datacomponent.UpgradeItem.EMPTY)
+                        .upgradeModificators();
         return list != null ? list : new ArrayList<>();
     }
 
     @Override
     public int getRemaining(final ItemStack item) {
         int k = this.getListModifications(item).size();
-        return 4 + k - item.get(DataComponentsInit.UPGRADE_ITEM).amount();
+        return 4 + k - item.getOrDefault(DataComponentsInit.UPGRADE_ITEM, com.denfop.datacomponent.UpgradeItem.EMPTY).amount();
     }
 
     @Override
     public boolean hasBlackList(final ItemStack item) {
-        return !item.getOrDefault(DataComponentsInit.UPGRADE_ITEM, com.denfop.datacomponent.UpgradeItem.EMPTY).blackList().isEmpty();
+        return !item.getOrDefault(DataComponentsInit.UPGRADE_ITEM, com.denfop.datacomponent.UpgradeItem.EMPTY)
+                .blackList().isEmpty();
     }
 
     @Override
     public boolean hasInMap(final ItemStack stack) {
-
-        return stack.has(DataComponentsInit.UPGRADE_ITEM) && !stack.get(DataComponentsInit.UPGRADE_ITEM).equals(com.denfop.datacomponent.UpgradeItem.EMPTY);
+        return stack.has(DataComponentsInit.UPGRADE_ITEM)
+                && !stack.getOrDefault(DataComponentsInit.UPGRADE_ITEM, com.denfop.datacomponent.UpgradeItem.EMPTY)
+                .equals(com.denfop.datacomponent.UpgradeItem.EMPTY);
     }
 
     @Override
     public List<String> getBlackList(final ItemStack item) {
-        final List<String> list = item.getOrDefault(DataComponentsInit.UPGRADE_ITEM, com.denfop.datacomponent.UpgradeItem.EMPTY).blackList();
+        final List<String> list =
+                item.getOrDefault(DataComponentsInit.UPGRADE_ITEM, com.denfop.datacomponent.UpgradeItem.EMPTY).blackList();
         return list != null ? list : Collections.emptyList();
-
     }
 
     @Override
     public List<UpgradeItemInform> getInformation(final ItemStack item) {
-        return item.getOrDefault(DataComponentsInit.UPGRADE_ITEM, com.denfop.datacomponent.UpgradeItem.EMPTY).upgradeItemInforms();
+        return item.getOrDefault(DataComponentsInit.UPGRADE_ITEM, com.denfop.datacomponent.UpgradeItem.EMPTY)
+                .upgradeItemInforms();
     }
 
     public List<String> getAvailableUpgrade(UpgradeItem iUpgradeItem, final ItemStack item) {
-        com.denfop.datacomponent.UpgradeItem upgradeItem = item.getOrDefault(DataComponentsInit.UPGRADE_ITEM, com.denfop.datacomponent.UpgradeItem.EMPTY);
+        com.denfop.datacomponent.UpgradeItem upgradeItem =
+                item.getOrDefault(DataComponentsInit.UPGRADE_ITEM, com.denfop.datacomponent.UpgradeItem.EMPTY);
         final List<UpgradeItemInform> list = upgradeItem.upgradeItemInforms();
         final List<EnumInfoUpgradeModules> list1 = iUpgradeItem.getUpgradeModules();
         final List<String> stringList = new LinkedList<>();
+
         cycle:
         for (EnumInfoUpgradeModules enumInfoUpgradeModules : list1) {
             for (UpgradeItemInform upgradeItemInform : list) {
                 if (upgradeItemInform.upgrade.equals(enumInfoUpgradeModules)) {
                     if (upgradeItemInform.number < upgradeItemInform.upgrade.max) {
-                        stringList.add(ChatFormatting.GREEN + "" + (upgradeItemInform.upgrade.max - upgradeItemInform.number) + "x " + (new ItemStack(
+                        stringList.add(ChatFormatting.GREEN + "" + (upgradeItemInform.upgrade.max - upgradeItemInform.number) +
+                                "x " + (com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(
                                 IUItem.upgrademodule.getItemFromMeta(enumInfoUpgradeModules.ordinal()),
                                 1
-                        ).getDisplayName().getString()));
+                        ).getDisplayName().getString())));
                     }
                     continue cycle;
                 }
             }
-            stringList.add(ChatFormatting.GREEN + "" + (enumInfoUpgradeModules.max) + "x " + (new ItemStack(
+            stringList.add(ChatFormatting.GREEN + "" + (enumInfoUpgradeModules.max) + "x " + (com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(
                     IUItem.upgrademodule.getItemFromMeta(enumInfoUpgradeModules.ordinal()),
                     1
-
-            ).getDisplayName().getString()));
-
+            ).getDisplayName().getString())));
         }
         return list != null ? stringList : Collections.emptyList();
     }
@@ -282,33 +287,18 @@ public class BaseUpgradeBaseSystem implements UpgradeBaseSystem {
 
     @Override
     public void updateListFromNBT(final UpgradeItem item, ItemStack stack, RegistryAccess registryAccess) {
-        com.denfop.datacomponent.UpgradeItem upgradeItem = stack.getOrDefault(DataComponentsInit.UPGRADE_ITEM, com.denfop.datacomponent.UpgradeItem.EMPTY);
-        boolean hasID = upgradeItem == com.denfop.datacomponent.UpgradeItem.EMPTY;
-
-        if (!hasID) {
-            this.max++;
-            upgradeItem = stack.set(DataComponentsInit.UPGRADE_ITEM, com.denfop.datacomponent.UpgradeItem.EMPTY.copy());
-        }
-
         this.addModification();
+
+        com.denfop.datacomponent.UpgradeItem upgradeItem =
+                stack.getOrDefault(DataComponentsInit.UPGRADE_ITEM, com.denfop.datacomponent.UpgradeItem.EMPTY);
+
         int modesTagList = upgradeItem.amount();
         int ost = upgradeItem.upgradeModificators().size() + 4 - modesTagList;
         upgradeItem = upgradeItem.updateCanUpgrade(stack, ost > 0);
-        upgradeItem = upgradeItem.updateListUpgrades(stack, getPositiveUpgradeFromLevel(stack));
+        upgradeItem.updateListUpgrades(stack, getPositiveUpgradeFromLevel(stack));
 
-        ItemEnchantments.Mutable itemenchantments$mutable = new ItemEnchantments.Mutable(EnchantmentHelper.getEnchantmentsForCrafting(stack));
-        itemenchantments$mutable.removeIf(enchantmentHolder -> true);
-        stack.set(DataComponents.ENCHANTMENTS, itemenchantments$mutable.toImmutable());
-
-        updateEnchantment(registryAccess.registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.SILK_TOUCH), EnumInfoUpgradeModules.SILK_TOUCH, 1, stack);
-        updateEnchantment(registryAccess.registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.FORTUNE), EnumInfoUpgradeModules.LUCKY, getModulesValue(EnumInfoUpgradeModules.LUCKY, stack), stack);
-        updateEnchantment(registryAccess.registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.EFFICIENCY), EnumInfoUpgradeModules.EFFICIENT, calculateEfficiencyLevel(stack), stack);
-        updateEnchantment(registryAccess.registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.FIRE_ASPECT), EnumInfoUpgradeModules.FIRE, getModulesValue(EnumInfoUpgradeModules.FIRE, stack), stack);
-        updateEnchantment(registryAccess.registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.LOOTING), EnumInfoUpgradeModules.LOOT, getModulesValue(EnumInfoUpgradeModules.LOOT, stack), stack);
-        updateEnchantment(registryAccess.registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.PROJECTILE_PROTECTION), EnumInfoUpgradeModules.PROTECTION_ARROW, calculateProjectileProtectionLevel(stack), stack);
-
+        rebuildEnchantments(stack, registryAccess);
     }
-
 
     public List<Integer> getUpgradeFromList(ItemStack stack) {
         return stack.getOrDefault(DataComponentsInit.UPGRADE_ITEM, com.denfop.datacomponent.UpgradeItem.EMPTY).listUpgrades();
@@ -340,112 +330,133 @@ public class BaseUpgradeBaseSystem implements UpgradeBaseSystem {
 
     @Override
     public void write(final UpgradeItem item, final List<EnumInfoUpgradeModules> lst, ItemStack stack, RegistryAccess registryAccess) {
-
-        ItemEnchantments.Mutable itemenchantments$mutable = new ItemEnchantments.Mutable(EnchantmentHelper.getEnchantmentsForCrafting(stack));
-        itemenchantments$mutable.removeIf(enchantmentHolder -> true);
-        stack.set(DataComponents.ENCHANTMENTS, itemenchantments$mutable.toImmutable());
-        updateEnchantment(registryAccess.registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.SILK_TOUCH), EnumInfoUpgradeModules.SILK_TOUCH, 1, stack);
-        updateEnchantment(registryAccess.registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.FORTUNE), EnumInfoUpgradeModules.LUCKY, getModulesValue(EnumInfoUpgradeModules.LUCKY, stack), stack);
-        updateEnchantment(registryAccess.registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.EFFICIENCY), EnumInfoUpgradeModules.EFFICIENT, calculateEfficiencyLevel(stack), stack);
-        updateEnchantment(registryAccess.registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.FIRE_ASPECT), EnumInfoUpgradeModules.FIRE, getModulesValue(EnumInfoUpgradeModules.FIRE, stack), stack);
-        updateEnchantment(registryAccess.registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.LOOTING), EnumInfoUpgradeModules.LOOT, getModulesValue(EnumInfoUpgradeModules.LOOT, stack), stack);
-        updateEnchantment(registryAccess.registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.PROJECTILE_PROTECTION), EnumInfoUpgradeModules.PROTECTION_ARROW, calculateProjectileProtectionLevel(stack), stack);
-        ;
+        rebuildEnchantments(stack, registryAccess);
     }
 
+    private void rebuildEnchantments(ItemStack stack, RegistryAccess registryAccess) {
+        HolderLookup.RegistryLookup<Enchantment> lookup = registryAccess.lookupOrThrow(Registries.ENCHANTMENT);
 
-    private void updateEnchantment(Holder<Enchantment> enchantment, EnumInfoUpgradeModules module, int level, ItemStack stack) {
-        if (hasModules(module, stack)) {
-            stack.enchant(enchantment, level);
+        stack.remove(DataComponents.ENCHANTMENTS);
+        stack.set(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
+        applyResolvedEnchantment(lookup, stack, Enchantments.SILK_TOUCH,
+                EnumInfoUpgradeModules.SILK_TOUCH, 1);
+
+        applyResolvedEnchantment(lookup, stack, Enchantments.FORTUNE,
+                EnumInfoUpgradeModules.LUCKY, getModulesValue(EnumInfoUpgradeModules.LUCKY, stack));
+
+        applyResolvedEnchantment(lookup, stack, Enchantments.EFFICIENCY,
+                EnumInfoUpgradeModules.EFFICIENT, calculateEfficiencyLevel(stack));
+
+        applyResolvedEnchantment(lookup, stack, Enchantments.FIRE_ASPECT,
+                EnumInfoUpgradeModules.FIRE, getModulesValue(EnumInfoUpgradeModules.FIRE, stack));
+
+        applyResolvedEnchantment(lookup, stack, Enchantments.LOOTING,
+                EnumInfoUpgradeModules.LOOT, getModulesValue(EnumInfoUpgradeModules.LOOT, stack));
+
+        applyResolvedEnchantment(lookup, stack, Enchantments.PROJECTILE_PROTECTION,
+                EnumInfoUpgradeModules.PROTECTION_ARROW, calculateProjectileProtectionLevel(stack));
+    }
+
+    private void applyResolvedEnchantment(
+            HolderLookup.RegistryLookup<Enchantment> lookup,
+            ItemStack stack,
+            ResourceKey<Enchantment> enchantmentKey,
+            EnumInfoUpgradeModules module,
+            int level
+    ) {
+        if (level <= 0) {
+            return;
         }
+        if (!hasModules(module, stack)) {
+            return;
+        }
+
+        Holder.Reference<Enchantment> holder = lookup.getOrThrow(enchantmentKey);
+
+        stack.enchant(holder, level);
     }
 
     private int getModulesValue(EnumInfoUpgradeModules module, ItemStack stack) {
         UpgradeItemInform modules = this.getModules(module, stack);
-        if (modules == null)
+        if (modules == null) {
             return 0;
+        }
         return modules.number;
     }
 
     private int calculateEfficiencyLevel(ItemStack stack) {
         int baseLevel = 1;
         int moduleLevel = getModulesValue(EnumInfoUpgradeModules.EFFICIENT, stack);
-        if (moduleLevel == 0)
+        if (moduleLevel == 0) {
             return 0;
+        }
         return baseLevel + (moduleLevel - 1) * 2;
     }
 
     private int calculateProjectileProtectionLevel(ItemStack stack) {
         int baseLevel = 1;
         int moduleLevel = getModulesValue(EnumInfoUpgradeModules.PROTECTION_ARROW, stack);
-        if (moduleLevel == 0)
+        if (moduleLevel == 0) {
             return 0;
+        }
         return baseLevel + (moduleLevel - 1) * 2;
     }
 
     public void updateBlackListFromNBT(final UpgradeWithBlackList item, final ItemStack stack, CompoundTag nbt, RegistryAccess registryAccess) {
         this.updateListFromNBT(item, stack, registryAccess);
-
-
     }
 
     public void updateLevel(ItemStack stack) {
-        stack.get(DataComponentsInit.UPGRADE_ITEM).updateListUpgrades(stack, getPositiveUpgradeFromLevel(stack));
-
+        stack.getOrDefault(DataComponentsInit.UPGRADE_ITEM, com.denfop.datacomponent.UpgradeItem.EMPTY)
+                .updateListUpgrades(stack, getPositiveUpgradeFromLevel(stack));
     }
 
     public void updateBlackListFromStack(final ItemStack stack) {
-
-
     }
 
     @Override
     public void removeUpdate(final ItemStack stack, final Level world, final int index) {
-        com.denfop.datacomponent.UpgradeItem upgradeItem = stack.get(DataComponentsInit.UPGRADE_ITEM);
-        if (upgradeItem != null) {
-            List<UpgradeItemInform> listInform = upgradeItem.upgradeItemInforms();
-            UpgradeItemInform needRemove = null;
-            cycle:
-            for (UpgradeItemInform inform : upgradeItem.upgradeItemInforms()) {
-                if (index == inform.upgrade.ordinal()) {
-                    if (inform.number > 1) {
-                        inform.number--;
-                        break cycle;
-                    } else {
-                        needRemove = inform;
-                    }
+        com.denfop.datacomponent.UpgradeItem upgradeItem =
+                stack.getOrDefault(DataComponentsInit.UPGRADE_ITEM, com.denfop.datacomponent.UpgradeItem.EMPTY);
+
+        List<UpgradeItemInform> listInform = new ArrayList<>(upgradeItem.upgradeItemInforms());
+        UpgradeItemInform needRemove = null;
+
+        for (UpgradeItemInform inform : listInform) {
+            if (index == inform.upgrade.ordinal()) {
+                if (inform.number > 1) {
+                    inform.number--;
+                } else {
+                    needRemove = inform;
                 }
+                break;
             }
-            RegistryAccess registryAccess = ((ServerLevel) world).getServer().registryAccess();
-            ItemEnchantments.Mutable itemenchantments$mutable = new ItemEnchantments.Mutable(EnchantmentHelper.getEnchantmentsForCrafting(stack));
-            itemenchantments$mutable.removeIf(enchantmentHolder -> true);
-            stack.set(DataComponents.ENCHANTMENTS, itemenchantments$mutable.toImmutable());
-            updateEnchantment(registryAccess.registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.SILK_TOUCH), EnumInfoUpgradeModules.SILK_TOUCH, 1, stack);
-            updateEnchantment(registryAccess.registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.FORTUNE), EnumInfoUpgradeModules.LUCKY, getModulesValue(EnumInfoUpgradeModules.LUCKY, stack), stack);
-            updateEnchantment(registryAccess.registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.EFFICIENCY), EnumInfoUpgradeModules.EFFICIENT, calculateEfficiencyLevel(stack), stack);
-            updateEnchantment(registryAccess.registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.FIRE_ASPECT), EnumInfoUpgradeModules.FIRE, getModulesValue(EnumInfoUpgradeModules.FIRE, stack), stack);
-            updateEnchantment(registryAccess.registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.LOOTING), EnumInfoUpgradeModules.LOOT, getModulesValue(EnumInfoUpgradeModules.LOOT, stack), stack);
-            updateEnchantment(registryAccess.registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.PROJECTILE_PROTECTION), EnumInfoUpgradeModules.PROTECTION_ARROW, calculateProjectileProtectionLevel(stack), stack);
-            if (needRemove != null) {
-                listInform.remove(needRemove);
-                upgradeItem = upgradeItem.updateAmount(stack, upgradeItem.amount() - 1);
-                int modesTagList = upgradeItem.amount();
-                int ost = upgradeItem.upgradeModificators().size() + 4 - modesTagList;
-                upgradeItem = upgradeItem.updateCanUpgrade(stack, ost > 0);
-            }
-            upgradeItem = upgradeItem.updateUpgrades(stack, listInform);
         }
+
+        if (needRemove != null) {
+            listInform.remove(needRemove);
+        }
+
+        upgradeItem = upgradeItem.updateAmount(stack, Math.max(0, upgradeItem.amount() - 1));
+
+        int modesTagList = upgradeItem.amount();
+        int ost = upgradeItem.upgradeModificators().size() + 4 - modesTagList;
+        upgradeItem = upgradeItem.updateCanUpgrade(stack, ost > 0);
+        upgradeItem.updateUpgrades(stack, listInform);
+
+        RegistryAccess registryAccess = ((ServerLevel) world).getServer().registryAccess();
+        rebuildEnchantments(stack, registryAccess);
     }
 
     @Override
     public List<ItemStack> getListStack(final ItemStack stack) {
-        com.denfop.datacomponent.UpgradeItem upgradeItem = stack.get(DataComponentsInit.UPGRADE_ITEM);
+        com.denfop.datacomponent.UpgradeItem upgradeItem =
+                stack.getOrDefault(DataComponentsInit.UPGRADE_ITEM, com.denfop.datacomponent.UpgradeItem.EMPTY);
+
         List<ItemStack> list = new LinkedList<>();
-        if (upgradeItem != null) {
-            for (UpgradeItemInform inform : upgradeItem.upgradeItemInforms()) {
-                for (int i = 0; i < inform.number; i++) {
-                    list.add(new ItemStack(IUItem.upgrademodule.getItemFromMeta(inform.upgrade.ordinal()), 1));
-                }
+        for (UpgradeItemInform inform : upgradeItem.upgradeItemInforms()) {
+            for (int i = 0; i < inform.number; i++) {
+                list.add(new ItemStack(IUItem.upgrademodule.getItemFromMeta(inform.upgrade.ordinal()), 1));
             }
         }
         return list;
@@ -455,12 +466,12 @@ public class BaseUpgradeBaseSystem implements UpgradeBaseSystem {
     public void addRecipe(Item stack, List<EnumInfoUpgradeModules> lst) {
         for (EnumInfoUpgradeModules upgrades : lst) {
             addupgrade(stack, new ItemStack(IUItem.upgrademodule.getStack(upgrades.ordinal()), 1));
-
         }
+
         if (lst.contains(EnumInfoUpgradeModules.DIG_DEPTH)) {
             addupgrade(stack, new ItemStack(IUItem.module9.getStack(12), 1));
-
         }
+
         for (UpgradeModificator modificator : this.list_modificators) {
             addupgrade(stack, new ItemStack(modificator.itemstack), modificator.type);
         }
@@ -470,13 +481,10 @@ public class BaseUpgradeBaseSystem implements UpgradeBaseSystem {
     public boolean shouldUpdate(final EnumInfoUpgradeModules type, final ItemStack stack1) {
         List<UpgradeItemInform> list = getInformation(stack1);
         for (UpgradeItemInform inform : list) {
-            if (inform.upgrade == type) {
-                if (inform.number >= type.max) {
-                    return false;
-                }
+            if (inform.upgrade == type && inform.number >= type.max) {
+                return false;
             }
         }
         return true;
     }
-
 }

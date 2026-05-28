@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -62,8 +64,8 @@ public class BlockEntitySteamGenerator extends BlockEntityInventory implements
         this.steam = this.addComponent(ComponentSteamEnergy.asBasicSink(this, 4000));
         this.steam.setFluidTank(fluidTank1);
         this.energy = this.addComponent(Energy.asBasicSource(this, (double) 25000 * coef, 1));
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("electric_steam_generator_soil_pollution_amount", 0.1D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("electric_steam_generator_air_pollution_amount", 0.1D)));
     }
 
 
@@ -192,7 +194,7 @@ public class BlockEntitySteamGenerator extends BlockEntityInventory implements
 
     public boolean gainEnergy() {
         if (this.isConverting()) {
-            this.energy.addEnergy(8 * coef);
+            this.energy.addEnergy(6 * coef);
             this.steam.useEnergy(4);
             if (getWorld().getGameTime() % 60 == 0) {
                 initiate(0);
@@ -206,7 +208,7 @@ public class BlockEntitySteamGenerator extends BlockEntityInventory implements
     }
 
     public boolean isConverting() {
-        return this.steam.canUseEnergy(4) && this.energy.getEnergy() + (double) 8 <= this.energy.getCapacity();
+        return this.steam.canUseEnergy(4) && this.energy.getEnergy() + (double) 6 <= this.energy.getCapacity();
     }
 
 

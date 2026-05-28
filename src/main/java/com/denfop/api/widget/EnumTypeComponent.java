@@ -122,7 +122,9 @@ public enum EnumTypeComponent {
     GRAPHITE_REACTOR(209, 177, 185, 166, 9, 9, EnumTypeRender.WIDTH, 0, 0, false, true),
     HEAT_REACTOR(221, 177, 185, 166, 9, 9, EnumTypeRender.WIDTH, 0, 0, false, true),
     CHECK_MARK(220, 189, 185, 166, 10, 11, EnumTypeRender.WIDTH, 0, 0, false, true),
-    NONE(0, 0, 0, 0, 1, 1, EnumTypeRender.WIDTH, 0, 0, false);
+    NONE(0, 0, 0, 0, 1, 1, EnumTypeRender.WIDTH, 0, 0, false),
+    STORAGE_DEFAULT(225, 219, 238, 0, 18, 18, EnumTypeRender.WIDTH, 0, 0, false, true, false, false, false),
+    ;
 
     private final int x;
     private final int y;

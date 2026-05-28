@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.recipe.BaseMachineRecipe;
@@ -19,7 +21,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class BlockEntityMatter extends BlockEntityMultiMatter implements IHasRecipe {
 
     public BlockEntityMatter(BlockPos pos, BlockState state) {
-        super(1000000F, 10, 5000000, BlockSimpleMachineEntity.generator_matter, pos, state);
+        super(ModConfig.mechanismDouble("matter_fabricator_energy_storage", 1000000.0D), ModConfig.mechanismInt("matter_fabricator_tank_capacity", 10), ModConfig.mechanismDouble("matter_fabricator_energy_storage", 5000000.0D), BlockSimpleMachineEntity.generator_matter, pos, state);
         com.denfop.api.Recipes.recipes.addInitRecipes(this);
     }
 

@@ -1,5 +1,7 @@
 package com.denfop.blockentity.base;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.vein.common.Type;
@@ -65,7 +67,7 @@ public class BlockEntityQuarryVein extends BlockEntityElectricMachine implements
     private boolean work;
 
     public BlockEntityQuarryVein(BlockPos pos, BlockState state) {
-        super(400, 14, 1, BlockQuarryVeinEntity.quarry_vein, pos, state);
+        super(ModConfig.mechanismDouble("drilling_rig_energy_storage", 400.0D), 14, 1, BlockQuarryVeinEntity.quarry_vein, pos, state);
         this.progress = 0;
         this.time = 0;
         this.levelMech = 1;

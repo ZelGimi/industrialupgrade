@@ -3,29 +3,26 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:crafting_elements/crafting_256_element"
+      "item": "industrialupgrade:itemsunnarium/sunnarium2"
     },
     "B": {
-      "item": "simplyquarries:simplyquarries/simply_quarry"
+      "item": "industrialupgrade:quantumitems6"
     },
     "C": {
-      "item": "industrialupgrade:crafting_elements/crafting_20_element"
+      "item": "industrialupgrade:radiationresources/curium_gem"
     },
     "D": {
-      "item": "industrialupgrade:crafting_elements/crafting_138_element"
-    },
-    "E": {
-      "item": "industrialupgrade:crafting_elements/crafting_47_element"
+      "item": "industrialupgrade:itemcore/quacore"
     }
   },
   "pattern": [
-    "D D",
-    "ABE",
-    "DCD"
+    "ABA",
+    "CDC",
+    "ABA"
   ],
   "result": {
     "count": 1,
-    "id": "simplyquarries:simplyquarries/adv_simply_quarry"
+    "id": "powerutils:module_qe"
   },
   "show_notification": false
 }

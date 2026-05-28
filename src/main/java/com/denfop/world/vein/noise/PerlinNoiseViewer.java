@@ -45,6 +45,67 @@ public class PerlinNoiseViewer {
         return false;
     }
 
+    public static List<ShellCluster> createClusters(RandomSource random) {
+        int maxCenters = 512 * maxValue * maxValue * 2;
+        double minDist = 3;
+        ArrayList<Center> centers = generateCenters(maxCenters, minDist, WIDTH, HEIGHT);
+        double maxShellRadius = 8;
+        double maxShellRadiusSq = maxShellRadius * maxShellRadius;
+
+        List<ShellCluster> clusters = new LinkedList<>();
+
+
+        Map<Integer, List<Pixel>> centerPixels = EDTVoronoi.fastAssign(centers, WIDTH, HEIGHT, maxShellRadius, random);
+
+        for (Map.Entry<Integer, List<Pixel>> entry : centerPixels.entrySet()) {
+            List<Pixel> pixels = new ArrayList<>(entry.getValue());
+            pixels.sort(Comparator.comparingDouble(p -> p.dist));
+
+            ShellCluster cluster = new ShellCluster();
+            clusters.add(cluster);
+
+            double percentGray = (random.nextInt(10) + 1) / 10.0;
+            double percentLightGray = (random.nextInt(8) + 1) / 10.0;
+            double percentLightGray1 = (random.nextInt(5) + 1) / 10.0;
+
+            int count = 0;
+            Set<Long> blacks = new HashSet<>();
+            Set<Long> grays = new HashSet<>();
+            Set<Long> lightGrays = new HashSet<>();
+
+            for (Pixel p : pixels) {
+                long encoded = encode(p.x, p.y);
+                if (count == 0) {
+                    cluster.blacks.add(new Point(p.x, p.y));
+                    blacks.add(encoded);
+                } else if (count < 25) {
+                    if (hasNeighborInSet(p.x, p.y, blacks)) {
+                        if (random.nextDouble() < percentGray) {
+                            cluster.grays.add(new Point(p.x, p.y));
+                            grays.add(encoded);
+                        }
+                    } else if (hasNeighborInSet(p.x, p.y, grays)) {
+                        if (random.nextDouble() < percentLightGray) {
+                            cluster.lightGrays.add(new Point(p.x, p.y));
+                            lightGrays.add(encoded);
+                        }
+                    } else if (hasNeighborInSet(p.x, p.y, blacks)) {
+                        if (hasNeighborInSetNear(p.x, p.y, grays)) {
+                            if (random.nextDouble() < percentLightGray1) {
+                                cluster.lightGrays.add(new Point(p.x, p.y));
+                                lightGrays.add(encoded);
+                            }
+                        }
+                    }
+                }
+
+                count++;
+            }
+        }
+
+        return clusters;
+    }
+
     public static ShellCluster createVolcanoClusters(RandomSource random) {
         int maxCenters = 1;
         double minDist = 1;
@@ -104,102 +165,5 @@ public class PerlinNoiseViewer {
         }
 
         return clusters.get(0);
-    }
-
-    public static List<ShellCluster> createClusters(RandomSource random) {
-        int maxCenters = 512 * maxValue * maxValue * 2;
-        double minDist = 3;
-        ArrayList<Center> centers = generateCenters(maxCenters, minDist, WIDTH, HEIGHT);
-        double maxShellRadius = 8;
-        double maxShellRadiusSq = maxShellRadius * maxShellRadius;
-
-        List<ShellCluster> clusters = new LinkedList<>();
-
-        class Pixel {
-            short x, y;
-            double dist;
-
-            Pixel(int x, int y, double dist) {
-                this.x = (short) x;
-                this.y = (short) y;
-                this.dist = dist;
-            }
-        }
-
-        Map<Integer, List<Pixel>> centerPixels = new HashMap<>();
-
-        for (int y = 0; y < HEIGHT; y++) {
-            for (int x = 0; x < WIDTH; x++) {
-                double minDistSq = Double.MAX_VALUE;
-                int nearestIndex = -1;
-
-                for (int i = 0; i < centers.size(); i++) {
-                    Center c = centers.get(i);
-                    double dx = x - c.x;
-                    double dy = y - c.y;
-                    double distSq = dx * dx + dy * dy;
-
-                    if (distSq < minDistSq) {
-                        minDistSq = distSq;
-                        nearestIndex = i;
-                    }
-                }
-
-
-                double randomShellDist = random.nextDouble() * maxShellRadius;
-                if (minDistSq <= randomShellDist * randomShellDist) {
-                    List<Pixel> list = centerPixels.computeIfAbsent(nearestIndex, k -> new LinkedList<>());
-                    list.add(new Pixel(x, y, Math.sqrt(minDistSq)));
-                }
-            }
-        }
-
-        for (Map.Entry<Integer, List<Pixel>> entry : centerPixels.entrySet()) {
-            List<Pixel> pixels = new ArrayList<>(entry.getValue());
-            pixels.sort(Comparator.comparingDouble(p -> p.dist));
-
-            ShellCluster cluster = new ShellCluster();
-            clusters.add(cluster);
-
-            double percentGray = (random.nextInt(10) + 1) / 10.0;
-            double percentLightGray = (random.nextInt(8) + 1) / 10.0;
-            double percentLightGray1 = (random.nextInt(5) + 1) / 10.0;
-
-            int count = 0;
-            Set<Long> blacks = new HashSet<>();
-            Set<Long> grays = new HashSet<>();
-            Set<Long> lightGrays = new HashSet<>();
-
-            for (Pixel p : pixels) {
-                long encoded = encode(p.x, p.y);
-                if (count == 0) {
-                    cluster.blacks.add(new Point(p.x, p.y));
-                    blacks.add(encoded);
-                } else if (count < 25) {
-                    if (hasNeighborInSet(p.x, p.y, blacks)) {
-                        if (random.nextDouble() < percentGray) {
-                            cluster.grays.add(new Point(p.x, p.y));
-                            grays.add(encoded);
-                        }
-                    } else if (hasNeighborInSet(p.x, p.y, grays)) {
-                        if (random.nextDouble() < percentLightGray) {
-                            cluster.lightGrays.add(new Point(p.x, p.y));
-                            lightGrays.add(encoded);
-                        }
-                    } else if (hasNeighborInSet(p.x, p.y, blacks)) {
-                        if (hasNeighborInSetNear(p.x, p.y, grays)) {
-                            if (random.nextDouble() < percentLightGray1) {
-                                cluster.lightGrays.add(new Point(p.x, p.y));
-                                lightGrays.add(encoded);
-                            }
-                        }
-                    }
-                }
-
-                count++;
-            }
-        }
-
-        return clusters;
     }
 }

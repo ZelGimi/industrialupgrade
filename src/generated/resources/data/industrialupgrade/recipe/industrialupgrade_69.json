@@ -6,7 +6,7 @@
       "item": "industrialupgrade:battery/charging_lapotron_crystal"
     },
     "B": {
-      "item": "industrialupgrade:battery/itembatlamacrystal"
+      "item": "industrialupgrade:battery/lapotron_crystal"
     },
     "C": {
       "type": "neoforge:components",

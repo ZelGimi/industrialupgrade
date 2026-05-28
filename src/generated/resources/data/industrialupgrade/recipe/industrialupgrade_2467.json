@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/inconel"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_784_element"
+    },
+    "C": {
+      "tag": "c:plates/arsenic"
+    },
+    "D": {
+      "tag": "c:plates/alcled"
+    }
+  },
+  "pattern": [
+    "ACA",
+    "BDB",
+    "ABA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_785_element"
+  },
+  "show_notification": false
+}

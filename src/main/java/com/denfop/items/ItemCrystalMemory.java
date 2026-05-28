@@ -41,7 +41,7 @@ public class ItemCrystalMemory extends Item implements IItemTab {
 
         if (p_41421_.has(DataComponentsInit.PATTERN)) {
             @Nullable ItemStack recorded = p_41421_.get(DataComponentsInit.PATTERN);
-            p_41423_.add(Component.literal(Localization.translate("iu.item.CrystalMemory.tooltip.iu.item") + " " + recorded.getDisplayName().getString()));
+            p_41423_.add(Component.literal(Localization.translate("iu.item.CrystalMemory.tooltip.iu.item") + " " + com.denfop.utils.ModUtils.cleanComponentString(recorded.getDisplayName().getString())));
             p_41423_.add(Component.literal(Localization.translate("iu.item.CrystalMemory.tooltip.UU-Matter") + " " + ModUtils.getString(
                     ReplicatorRecipe.getInBuckets(
                             recorded)) + "B"));

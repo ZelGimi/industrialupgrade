@@ -15,37 +15,6 @@
       "model": "industrialupgrade:block/basemachine/centrifuge",
       "y": 90
     },
-    "facing=down,type=centrifuge": {
-      "model": "industrialupgrade:block/basemachine/centrifuge",
-      "x": 90
-    },
-    "facing=up,type=centrifuge": {
-      "model": "industrialupgrade:block/basemachine/centrifuge",
-      "x": 270
-    },
-    "facing=north,type=centrifuge_invalid": {
-      "model": "industrialupgrade:block/basemachine/centrifuge_active"
-    },
-    "facing=south,type=centrifuge_invalid": {
-      "model": "industrialupgrade:block/basemachine/centrifuge_active",
-      "y": 180
-    },
-    "facing=west,type=centrifuge_invalid": {
-      "model": "industrialupgrade:block/basemachine/centrifuge_active",
-      "y": 270
-    },
-    "facing=east,type=centrifuge_invalid": {
-      "model": "industrialupgrade:block/basemachine/centrifuge_active",
-      "y": 90
-    },
-    "facing=down,type=centrifuge_invalid": {
-      "model": "industrialupgrade:block/basemachine/centrifuge_active",
-      "x": 90
-    },
-    "facing=up,type=centrifuge_invalid": {
-      "model": "industrialupgrade:block/basemachine/centrifuge_active",
-      "x": 270
-    },
     "facing=north,type=centrifuge_active": {
       "model": "industrialupgrade:block/basemachine/centrifuge_active"
     },
@@ -60,14 +29,6 @@
     "facing=east,type=centrifuge_active": {
       "model": "industrialupgrade:block/basemachine/centrifuge_active",
       "y": 90
-    },
-    "facing=down,type=centrifuge_active": {
-      "model": "industrialupgrade:block/basemachine/centrifuge_active",
-      "x": 90
-    },
-    "facing=up,type=centrifuge_active": {
-      "model": "industrialupgrade:block/basemachine/centrifuge_active",
-      "x": 270
     }
   }
 }

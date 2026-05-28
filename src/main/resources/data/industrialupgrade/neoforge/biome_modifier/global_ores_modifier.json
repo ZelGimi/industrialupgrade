@@ -1,0 +1,8 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#minecraft:is_overworld",
+  "features": [
+    "industrialupgrade:global_ores"
+  ],
+  "step": "top_layer_modification"
+}

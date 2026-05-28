@@ -292,14 +292,15 @@ public class DecoderHandler {
             case inputStack:
 
                 compoundTag = (CompoundTag) decode(is);
-                return Input.readNBT(compoundTag,is.registryAccess());
+                return Input.readNBT(compoundTag, is.registryAccess());
             case inputFluidStack:
                 compoundTag = (CompoundTag) decode(is);
-                return InputFluid.readNBT(compoundTag,is.registryAccess());
+                return InputFluid.readNBT(compoundTag, is.registryAccess());
             case BaseRecipe:
-                return BaseMachineRecipe.readNBT((CompoundTag) decode(is), is.registryAccess());
+                return BaseMachineRecipe.readNBT((CompoundTag) decode(is, EncodedType.NBTTagCompound), is.registryAccess());
+
             case BaseFluidRecipe:
-                return BaseFluidMachineRecipe.readNBT((CompoundTag) decode(is), is.registryAccess());
+                return BaseFluidMachineRecipe.readNBT((CompoundTag) decode(is, EncodedType.NBTTagCompound), is.registryAccess());
             case GameProfile:
                 return new GameProfile((UUID) decode(is), is.readString());
             case Integer:
@@ -320,16 +321,15 @@ public class DecoderHandler {
                 if (size == 0) {
                     return ModUtils.emptyStack;
                 }
-                ResourceLocation resourceLocation = (ResourceLocation) decode(is, EncodedType.ResourceLocation);
+                Item item = (Item) decode(is, EncodedType.Item);
                 DataComponentPatch componentPatch1 = null;
                 if (is.readBoolean())
                     componentPatch1 = (DataComponentPatch) decode(is);
-                Holder.Reference<Item> holder = is.registryAccess().registryOrThrow(Registries.ITEM).getHolder(resourceLocation).get();
+                Holder<Item> holder = BuiltInRegistries.ITEM.wrapAsHolder(item);
                 if (componentPatch1 == null) {
                     return new ItemStack(holder, size);
                 } else {
-                    ItemStack ret1 = new ItemStack(holder, size, componentPatch1);
-                    return ret1;
+                    return new ItemStack(holder, size, componentPatch1);
                 }
             case DataComponentPatch:
                 return DataComponentPatch.STREAM_CODEC.decode(is);

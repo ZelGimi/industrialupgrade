@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LiquidBlock;
@@ -22,10 +23,12 @@ public class BlockFluidIU extends LiquidBlock {
     @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         super.entityInside(state, level, pos, entity);
-
-        if (!(entity instanceof LivingEntity)) return;
-
         Fluid fluid = this.fluid.getSource();
+        if (fluid == FluidName.fluidpahoehoe_lava.getInstance().get())
+            if (entity instanceof ItemEntity item) {
+                item.discard();
+            }
+        if (!(entity instanceof LivingEntity)) return;
 
 
         if (fluid == FluidName.fluidcoolant.getInstance().get() || fluid == FluidName.fluidnitrogen.getInstance().get()) {
@@ -33,7 +36,7 @@ public class BlockFluidIU extends LiquidBlock {
         }
 
 
-        if (!fluid.getFluidType().canDrownIn((LivingEntity) entity) && entity instanceof Player player) {
+        if (!fluid.getFluidType().canDrownIn((LivingEntity) entity) && entity instanceof Player player && isFullySubmerged(player, fluid)) {
             if (!HazmatLike.hasCompleteHazmat(player)) {
                 player.addEffect(new MobEffectInstance(IUPotion.poison, 200, 0));
             }
@@ -46,4 +49,21 @@ public class BlockFluidIU extends LiquidBlock {
         }
     }
 
+    private boolean isFullySubmerged(Player player, Fluid fluid) {
+
+        double eyeY = player.getEyeY();
+
+
+        BlockPos eyeBlockPos = BlockPos.containing(player.getX(), eyeY, player.getZ());
+
+
+        BlockState state = player.level().getBlockState(eyeBlockPos);
+
+
+        if (!state.getFluidState().isSource()) return false;
+        if (!state.getFluidState().getType().equals(fluid)) return false;
+
+
+        return state.getFluidState().getHeight(player.level(), eyeBlockPos) + eyeBlockPos.getY() >= eyeY;
+    }
 }

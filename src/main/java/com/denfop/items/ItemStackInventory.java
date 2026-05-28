@@ -50,11 +50,12 @@ public abstract class ItemStackInventory implements CustomWorldContainer, IUpdat
         this.inventory = containerItem.listItem();
 
         this.player = player;
-        if (!player.level().isClientSide()) {
-            if (containerItem.uid() == 0) {
-                containerItem = containerItem.updateUUID(containerStack, IUCore.random.nextInt());
+        if (player != null)
+            if (!player.level().isClientSide()) {
+                if (containerItem.uid() == 0) {
+                    containerItem = containerItem.updateUUID(containerStack, IUCore.random.nextInt());
+                }
             }
-        }
 
     }
 
@@ -383,6 +384,7 @@ public abstract class ItemStackInventory implements CustomWorldContainer, IUpdat
                 this.containerStack = this.player.getInventory().getSelected();
             if (!this.cleared) {
                 boolean dropItself = false;
+                this.containerItem = this.containerItem.updateItems(containerStack, inventory);
 
                 for (int i = 0; i < this.inventory.size(); ++i) {
                     if (this.isThisContainer(this.inventory.get(i))) {
@@ -391,8 +393,6 @@ public abstract class ItemStackInventory implements CustomWorldContainer, IUpdat
                     }
                 }
 
-
-                this.containerItem = this.containerItem.updateItems(containerStack, inventory);
 
                 if (dropItself) {
                     this.containerStack = ModUtils.setSize(this.containerStack, 1);
@@ -418,7 +418,7 @@ public abstract class ItemStackInventory implements CustomWorldContainer, IUpdat
         assert !player.level().isClientSide();
 
         this.containerItem = this.containerItem.updateItems(containerStack, inventory);
-
+        stack.getOrDefault(DataComponentsInit.CONTAINER, ContainerItem.EMPTY).updateItems(stack, inventory);
         assert containerItem.uid() == 0;
 
         this.clear();
@@ -428,8 +428,7 @@ public abstract class ItemStackInventory implements CustomWorldContainer, IUpdat
         ItemStack[] object = new ItemStack[inventory.size()];
         Arrays.fill(object, ItemStack.EMPTY);
         List<ItemStack> list = Arrays.asList(object);
-        this.inventory = list;
-        this.containerItem = this.containerItem.updateItems(containerStack, this.inventory);
+
         this.cleared = true;
     }
 

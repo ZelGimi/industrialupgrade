@@ -1,6 +1,8 @@
 package com.denfop.integration.jei.radioactiveorehandler;
 
 
+import com.denfop.integration.jei.IJeiVariantRecipe;
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import net.minecraft.world.item.ItemStack;
@@ -8,10 +10,12 @@ import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RadioactiveOreHandlerHandler {
+public class RadioactiveOreHandlerHandler implements IJeiVariantRecipe {
 
     private static final List<RadioactiveOreHandlerHandler> recipes = new ArrayList<>();
-    public final int chance;
+    
+    private List<List<ItemStack>> inputVariants = new ArrayList<>();
+public final int chance;
     private final ItemStack input, output;
     private final ItemStack input1;
 
@@ -59,10 +63,10 @@ public class RadioactiveOreHandlerHandler {
 
     public static void initRecipes() {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("radioactive_handler")) {
-            addRecipe(
+            JeiIngredientHelper.attachInputVariants(addRecipe(
                     container.input.getInputs().get(0).getInputs().get(0), container.getOutput().items.get(1),
                     container.getOutput().items.get(0), container.getOutput().metadata.getInt("random")
-            );
+            ), container);
 
 
         }
@@ -89,4 +93,15 @@ public class RadioactiveOreHandlerHandler {
         return true;
     }
 
+
+
+    @Override
+    public void setInputVariants(final List<List<ItemStack>> inputVariants) {
+        this.inputVariants = inputVariants == null ? new ArrayList<>() : inputVariants;
+    }
+
+    @Override
+    public List<ItemStack> getInputVariants(final int slot, final ItemStack fallback) {
+        return JeiIngredientHelper.getInputVariants(this.inputVariants, slot, fallback);
+    }
 }

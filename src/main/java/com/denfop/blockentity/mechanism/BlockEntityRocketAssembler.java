@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -48,7 +50,7 @@ public class BlockEntityRocketAssembler extends BlockEntityElectricMachine imple
     public MachineRecipe output;
 
     public BlockEntityRocketAssembler(BlockPos pos, BlockState state) {
-        super(800, 1, 1, BlockBaseMachine3Entity.rocket_assembler, pos, state);
+        super(ModConfig.mechanismDouble("rocket_assembler_energy_storage", 800.0D), 1, 1, BlockBaseMachine3Entity.rocket_assembler, pos, state);
         Recipes.recipes.addInitRecipes(this);
         this.upgradeSlot = new InventoryUpgrade(this, 4);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot));
@@ -67,8 +69,8 @@ public class BlockEntityRocketAssembler extends BlockEntityElectricMachine imple
         this.componentProcess.setInvSlotRecipes(this.inputSlotA);
 
         this.componentUpgrades = this.addComponent(new ComponentUpgrade(this, TypeUpgrade.INSTANT, TypeUpgrade.STACK));
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("rocket_assembler_soil_pollution_amount", 0.1D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("rocket_assembler_air_pollution_amount", 0.1D)));
     }
 
     public static void addRecipe(

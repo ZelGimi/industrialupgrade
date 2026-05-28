@@ -3,19 +3,18 @@ package com.denfop.containermenu;
 import com.denfop.api.menu.VirtualSlot;
 import com.denfop.blockentity.base.BlockEntityInventory;
 import com.denfop.inventory.Inventory;
+import com.denfop.utils.FluidHandlerFix;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.LiquidBlock;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SlotInfo extends Inventory implements VirtualSlot {
 
@@ -23,12 +22,14 @@ public class SlotInfo extends Inventory implements VirtualSlot {
     List<FluidStack> fluidStackList;
     private List<ItemStack> listBlack;
     private List<ItemStack> listWhite;
+    private List<FluidStack> listFluidBlack;
+    private List<FluidStack> listFluidWhite;
     private boolean fluid;
 
     public SlotInfo(BlockEntityInventory multiCable, int size, boolean fluid) {
         super(multiCable, null, size);
         this.fluid = fluid;
-        this.fluidStackList = new ArrayList<>(Collections.nCopies(this.size(), null));
+        this.fluidStackList = new ArrayList<>(Collections.nCopies(this.size(), FluidStack.EMPTY));
         this.listBlack = new ArrayList<>();
         this.listWhite = new ArrayList<>();
     }
@@ -41,21 +42,18 @@ public class SlotInfo extends Inventory implements VirtualSlot {
         return listWhite;
     }
 
+
     @Override
-    public void readFromNbt(HolderLookup.Provider provider, final CompoundTag nbt) {
-        super.readFromNbt(provider, nbt);
+    public void readFromNbt(final CompoundTag nbt, HolderLookup.Provider p_332027_) {
+        super.readFromNbt(nbt, p_332027_);
         fluid = nbt.getBoolean("fluid");
         if (this.fluid) {
-            fluidStackList = new ArrayList<>(Collections.nCopies(this.size(), null));
+            fluidStackList = new ArrayList<>(Collections.nCopies(this.size(), FluidStack.EMPTY));
 
             for (int i = 0; i < size(); i++) {
                 if (!this.get(i).isEmpty()) {
-                    Item item = this.get(i).getItem();
-                    Block block = Block.byItem(item);
-                    if (block != Blocks.AIR) {
-                        if (block instanceof LiquidBlock) {
-                            fluidStackList.set(i, new FluidStack(((LiquidBlock) block).fluid.getSource(), 1));
-                        }
+                    if (FluidHandlerFix.hasFluidHandler(this.get(i))) {
+                        fluidStackList.set(i, new FluidStack(FluidHandlerFix.getFluidHandler(this.get(i)).drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE).getFluid(), 1));
                     }
                 }
             }
@@ -63,8 +61,8 @@ public class SlotInfo extends Inventory implements VirtualSlot {
     }
 
     @Override
-    public CompoundTag writeToNbt(HolderLookup.Provider provider, CompoundTag nbt) {
-        nbt = super.writeToNbt(provider, nbt);
+    public CompoundTag writeToNbt(CompoundTag nbt, HolderLookup.Provider p_332027_) {
+        nbt = super.writeToNbt(nbt, p_332027_);
         nbt.putBoolean("fluid", isFluid());
         return nbt;
     }
@@ -73,14 +71,29 @@ public class SlotInfo extends Inventory implements VirtualSlot {
         return fluidStackList;
     }
 
+    public List<FluidStack> getListFluidBlack() {
+        return listFluidBlack == null ? Collections.emptyList() : listFluidBlack;
+    }
+
+    public List<FluidStack> getListFluidWhite() {
+        return listFluidWhite == null ? Collections.emptyList() : listFluidWhite;
+    }
+
     @Override
     public void setFluidList(final List<FluidStack> fluidStackList) {
         this.fluidStackList = fluidStackList;
+        listFluidBlack = this.getFluidStackList().subList(0, 9).stream().filter(fluidStack -> !fluidStack.isEmpty()).collect(Collectors.toList());
+        listFluidWhite =
+                this.getFluidStackList()
+                        .subList(9, this.fluidStackList.size())
+                        .stream()
+                        .filter(fluidStack -> !fluidStack.isEmpty())
+                        .collect(Collectors.toList());
     }
 
     @Override
     public boolean canPlaceVirtualItem(int index, ItemStack stack) {
-        return this.canPlaceItem(index,stack);
+        return true;
     }
 
     public boolean isFluid() {

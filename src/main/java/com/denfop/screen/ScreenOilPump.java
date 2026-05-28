@@ -1,11 +1,13 @@
 package com.denfop.screen;
 
 import com.denfop.Constants;
+import com.denfop.IUItem;
 import com.denfop.api.vein.common.Type;
 import com.denfop.api.widget.*;
 import com.denfop.containermenu.ContainerMenuOilPump;
 import com.denfop.utils.Localization;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
@@ -27,12 +29,21 @@ public class ScreenOilPump<T extends ContainerMenuOilPump> extends ScreenMain<Co
                     @Override
                     public String getText(final ScreenWidget screenWidget) {
                         if (container.base.find && container.base.count > 0 && container.base.maxcount > 0 && container.base.type == Type.OIL.ordinal()) {
-
-
+                            int col = container.base.vein.getCol();
+                            int colmax = container.base.vein.getMaxCol();
+                            boolean isOil = container.base.vein.getType() == Type.OIL;
+                            int variety = container.base.vein.getMeta() / 3;
+                            int type = container.base.vein.getMeta() % 3;
+                            String varietyString = variety == 0 ? "iu.sweet_oil" : "iu.sour_oil";
+                            String typeString = type == 0 ? "iu.light_oil" : type == 1 ? "iu.medium_oil" : "iu.heavy_oil";
+                            String name_vein = Localization.translate(varietyString) + " " + Localization.translate(
+                                    typeString) + " " + Localization.translate(new ItemStack(IUItem.oilblock.getItem()).getDescriptionId());
                             return
-                                    Localization.translate("iu.fluidneft") + ": " + container.base
-                                            .count + "/" + container.base.maxcount
-                                            + Localization.translate(Constants.ABBREVIATION + ".generic.text.mb");
+                                    name_vein + " " + col + (isOil ? "mB" : "") + "/" + colmax + (
+                                            isOil
+                                                    ?
+                                                    "mB"
+                                                    : "");
 
                         } else {
                             return Localization.translate("iu.notfindoil");

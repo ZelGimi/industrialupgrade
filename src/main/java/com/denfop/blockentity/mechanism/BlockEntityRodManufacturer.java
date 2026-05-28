@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -63,7 +65,7 @@ public class BlockEntityRodManufacturer extends BlockEntityInventory implements 
     public BlockEntityRodManufacturer(BlockPos pos, BlockState state) {
         super(BlockBaseMachine3Entity.rods_manufacturer, pos, state);
 
-        this.defaultEnergyConsume = this.energyConsume = 2;
+        this.defaultEnergyConsume = this.energyConsume = ModConfig.mechanismInt("rod_manufacturer_energy_use", 2);
         this.defaultOperationLength = this.operationLength = 300;
         this.defaultTier = 1;
         this.defaultEnergyStorage = 2 * 300;
@@ -74,8 +76,8 @@ public class BlockEntityRodManufacturer extends BlockEntityInventory implements 
         this.inputSlotA = new InventoryRecipes(this, "rod_assembler", this);
         inputSlotA.setStackSizeLimit(1);
         Recipes.recipes.addInitRecipes(this);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.05));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("rod_manufacturer_soil_pollution_amount", 0.05D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("rod_manufacturer_air_pollution_amount", 0.05D)));
         this.input_slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
             public ItemStack set(final int index, final ItemStack content) {
@@ -177,7 +179,7 @@ public class BlockEntityRodManufacturer extends BlockEntityInventory implements 
         Recipes.recipes.addRecipe("rod_assembler", new BaseMachineRecipe(
                 new Input(
                         recipeInputFactory.getInput(stack1),
-                        recipeInputFactory.getInput(stack1),
+                        recipeInputFactory.getInput(input),
                         recipeInputFactory.getInput(input),
                         recipeInputFactory.getInput(input1),
                         recipeInputFactory.getInput(input1),
@@ -211,7 +213,7 @@ public class BlockEntityRodManufacturer extends BlockEntityInventory implements 
         Recipes.recipes.addRecipe("rod_assembler", new BaseMachineRecipe(
                 new Input(
                         recipeInputFactory.getInput(stack1),
-                        recipeInputFactory.getInput(stack1),
+                        recipeInputFactory.getInput(input),
                         recipeInputFactory.getInput(input),
                         recipeInputFactory.getInput(input1),
                         recipeInputFactory.getInput(input1),

@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.farmer;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.api.recipe.InventoryMultiRecipes;
@@ -124,7 +125,8 @@ public class FarmerCategory extends ScreenMain implements IRecipeCategory<Farmer
         final List<ItemStack> inputs = Collections.singletonList(recipes.getInput());
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
+            JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY(), recipes, i, inputs.get(i));
+
 
 
         }

@@ -123,7 +123,7 @@ public enum BlockApiaryEntity implements MultiBlockEntity {
     @Override
     @Nonnull
     public Set<Direction> getSupportedFacings() {
-        return ModUtils.downSideFacings;
+        return ModUtils.horizontalFacings;
     }
 
     @Override

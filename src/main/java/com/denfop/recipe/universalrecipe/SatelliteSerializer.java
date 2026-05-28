@@ -35,13 +35,13 @@ public class SatelliteSerializer implements RecipeSerializer<SatelliteRecipe> {
 
 
         ResourceLocation texture = ResourceLocation.parse(textureStr + ".png");
-        if (!stringList.contains("satellite_"+name)) {
+        if (!stringList.contains("satellite_" + name)) {
             regSatellite.add(() -> new Satellite(name, SpaceNet.instance.getSystem().stream()
                     .filter(s -> s.getName().equals(systemStr.toLowerCase()))
                     .findFirst()
                     .orElseThrow(() -> new IllegalArgumentException("System not found: " + systemStr)), texture, level, (IPlanet) SpaceNet.instance.getBodyFromName(planetStr), temperature, pressure, distance,
                     type, oxygen, colonies, angle, time, size, rotation));
-            stringList.add("satellite_"+name);
+            stringList.add("satellite_" + name);
         }
         return new SatelliteRecipe(name, systemStr, textureStr, level, planetStr, temperature, pressure, distance, type, oxygen, colonies, angle, time, size, rotation);
     }));
@@ -82,13 +82,13 @@ public class SatelliteSerializer implements RecipeSerializer<SatelliteRecipe> {
                         double size = ByteBufCodecs.DOUBLE.decode(buf);
                         double rotation = ByteBufCodecs.DOUBLE.decode(buf);
                         ResourceLocation texture = ResourceLocation.parse(textureStr + ".png");
-                        if (!stringList.contains("satellite_"+name)) {
+                        if (!stringList.contains("satellite_" + name)) {
                             regSatellite.add(() -> new Satellite(name, SpaceNet.instance.getSystem().stream()
                                     .filter(s -> s.getName().equals(system1.toLowerCase()))
                                     .findFirst()
                                     .orElseThrow(() -> new IllegalArgumentException("System not found: " + system1)), texture, level, (IPlanet) SpaceNet.instance.getBodyFromName(planetStr), temperature, pressure, distance,
                                     type, oxygen, colonies, angle, time, size, rotation));
-                            stringList.add("satellite_"+name);
+                            stringList.add("satellite_" + name);
                         }
                         return new SatelliteRecipe(
                                 name, system1, textureStr, level, planetStr,

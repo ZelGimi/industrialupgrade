@@ -9,6 +9,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
@@ -30,33 +31,46 @@ public class NetworkManager {
 
 
     public static Map<Byte, IPacket> packetMap = new HashMap<>();
-    public static Map<Byte, CustomPacketPayload.Type<IPacket>> packetTypeMap = new HashMap<>();
-    public static boolean reg = false;
-    public static StreamCodec<RegistryFriendlyByteBuf, IPacket> STREAM_CODEC = new StreamCodec<>() {
-        public IPacket decode(RegistryFriendlyByteBuf p_320167_) {
-            CustomPacketBuffer packetBuffer = new CustomPacketBuffer(p_320167_);
+    public static final StreamCodec<RegistryFriendlyByteBuf, IPacket> STREAM_CODEC = new StreamCodec<>() {
+        @Override
+        public IPacket decode(RegistryFriendlyByteBuf buf) {
+            byte packetId = buf.readByte();
+
+            IPacket template = packetMap.get(packetId);
+            if (template == null) {
+                throw new IllegalStateException("Unknown packet id: " + packetId);
+            }
+
             IPacket packet;
             try {
-                packet = packetMap.get(packetBuffer.readByte()).getClass().getDeclaredConstructor().newInstance();
-            } catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
-                     InvocationTargetException e) {
-                throw new RuntimeException(e);
+                packet = template.getClass().getDeclaredConstructor().newInstance();
+            } catch (InstantiationException | IllegalAccessException |
+                     NoSuchMethodException | InvocationTargetException e) {
+                throw new RuntimeException("Failed to instantiate packet for id " + packetId, e);
             }
-            byte[] bytes = new byte[p_320167_.writerIndex() - p_320167_.readerIndex()];
-            p_320167_.readBytes(bytes);
-            packetBuffer = new CustomPacketBuffer(bytes, p_320167_.registryAccess());
-            packet.setPacketBuffer(packetBuffer);
+
+            byte[] bytes = new byte[buf.readableBytes()];
+            buf.readBytes(bytes);
+
+            packet.setPacketBuffer(new CustomPacketBuffer(bytes, buf.registryAccess()));
             return packet;
         }
 
-        public void encode(RegistryFriendlyByteBuf p_320240_, IPacket p_341316_) {
-            CustomPacketBuffer customPacketBuffer = p_341316_.getPacketBuffer();
-            customPacketBuffer.flip();
-            p_320240_.writeBytes(customPacketBuffer);
-            customPacketBuffer.flip();
-            p_341316_.setPacketBuffer(customPacketBuffer);
+        @Override
+        public void encode(RegistryFriendlyByteBuf buf, IPacket packet) {
+            CustomPacketBuffer src = packet.getPacketBuffer();
+            if (src == null) {
+                throw new IllegalStateException("Packet buffer is null for " + packet.getClass().getName());
+            }
+
+            int readerIndex = src.readerIndex();
+            int readableBytes = src.readableBytes();
+
+            buf.writeBytes(src, readerIndex, readableBytes);
         }
     };
+    public static Map<Byte, CustomPacketPayload.Type<IPacket>> packetTypeMap = new HashMap<>();
+    public static boolean reg = false;
 
     public NetworkManager() {
         IUCore.context.addListener(this::register);
@@ -125,6 +139,43 @@ public class NetworkManager {
         this.registerPacket(new PacketUpdateRecipe());
         this.registerPacket(new PacketFixerRecipe());
 
+        this.registerPacket(new PacketUpdatePollution());
+        this.registerPacket(new PacketPollution());
+        this.registerPacket(new PacketPollutionAnalyzerRequest());
+        this.registerPacket(new PacketPollutionAnalyzerSnapshot());
+
+
+        this.registerPacket(new PacketGasSensorScanRequest());
+        this.registerPacket(new PacketGasSensorScanProgress());
+        this.registerPacket(new PacketGasSensorScanResult());
+
+        this.registerPacket(new PacketCreateNetwork());
+        this.registerPacket(new PacketUpdateStorageCell());
+        this.registerPacket(new PackerUpdateClientRemoveStack());
+        this.registerPacket(new PacketRemoveStack());
+        this.registerPacket(new PackerUpdateClientAddStack());
+        this.registerPacket(new PacketAddStack());
+        this.registerPacket(new PacketRemoveShiftStack());
+        this.registerPacket(new PacketCanAddCraft());
+        this.registerPacket(new PacketCanAddCraftClient());
+        this.registerPacket(new PacketAddAutoCraft());
+        this.registerPacket(new PacketUpdateMonitor());
+        this.registerPacket(new PacketUpdateMonitorInterface());
+        this.registerPacket(new PacketUpdateStorageForCraft());
+        this.registerPacket(new PacketSetFluid());
+        this.registerPacket(new PacketChangeSameStack());
+        this.registerPacket(new PacketUpdatePreCraft());
+        this.registerPacket(new PacketUpdateNetworkSystem());
+
+
+        this.registerPacket(new PacketActivateAbility());
+        this.registerPacket(new PacketSyncAbilityCooldowns());
+
+        this.registerPacket(new PacketOpenPlanetaryTranslocatorScreen());
+        this.registerPacket(new PacketPlanetaryTeleportRequest());
+        this.registerPacket(new PacketPlanetaryReturnRequest());
+        this.registerPacket(new PacketSpaceTeleportStateSync());
+        this.registerPacket(new PacketSpaceTeleportFx());
 
         if (!reg) {
             reg = true;
@@ -172,13 +223,8 @@ public class NetworkManager {
         buf.writeBytes(packet.getPacketBuffer());
         try {
             packet = packet.getClass().getDeclaredConstructor().newInstance();
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
-        } catch (NoSuchMethodException e) {
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                 NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
         packet.setPacketBuffer(buf);
@@ -242,14 +288,14 @@ public class NetworkManager {
                                 packet.readPacket(is1, ctx.player());
                             }
                         } catch (Exception e) {
-                            System.err.println("Ошибка обработки пакета: " + e.getMessage());
+
                             e.printStackTrace();
                         }
                     }
                 });
             }
         } catch (Exception e) {
-            System.err.println("Ошибка обработки пакета: " + e.getMessage());
+
             e.printStackTrace();
         }
     }
@@ -267,7 +313,14 @@ public class NetworkManager {
 
     public void sendPacket(IPacket buffer) {
         if (!this.isClient()) {
-            PlayerList players = ServerLifecycleHooks.getCurrentServer().getPlayerList();
+            MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+            if (server == null || !server.isRunning()) {
+                return;
+            }
+            PlayerList players = server.getPlayerList();
+            if (players == null) {
+                return;
+            }
             for (ServerPlayer player : players.getPlayers())
                 PacketDistributor.sendToPlayer(player, makePacket(buffer));
         } else {
@@ -284,45 +337,58 @@ public class NetworkManager {
         }
     }
 
+    private boolean canQueueTile(BlockEntityBase te) {
+        return te != null && !te.isRemoved() && te.hasLevel() && te.getLevel() != null && !WorldData.isStoppingOrUnloading(te.getLevel());
+    }
+
+    private WorldData getTileWorldData(BlockEntityBase te, boolean load) {
+        if (!canQueueTile(te)) {
+            return null;
+        }
+        return WorldData.get(te.getLevel(), load);
+    }
+
     public void addTileContainerToUpdate(BlockEntityBase te, ServerPlayer player, CustomPacketBuffer packetBuffer) {
-        if (te == null) {
+        if (player == null || packetBuffer == null) {
             return;
         }
-        WorldData worldData = WorldData.get(te.getLevel());
-        if (te.isRemoved()) {
+        WorldData worldData = getTileWorldData(te, true);
+        if (worldData == null) {
             return;
         }
-        Map<Player, CustomPacketBuffer> map;
-        if (worldData.mapUpdateContainer.containsKey(te)) {
-            map = worldData.mapUpdateContainer.computeIfAbsent(te, k -> new HashMap<>());
-        } else {
-            map = new HashMap<>();
-            worldData.mapUpdateContainer.put(te, map);
-        }
+        Map<Player, CustomPacketBuffer> map = worldData.mapUpdateContainer.computeIfAbsent(te, k -> new HashMap<>());
         map.put(player, packetBuffer);
     }
 
     public void addTileToUpdate(BlockEntityBase te) {
-        if (te.hasLevel()) {
-            WorldData worldData = WorldData.get(te.getLevel());
+        WorldData worldData = getTileWorldData(te, true);
+        if (worldData != null) {
             worldData.listUpdateTile.add(te);
         }
     }
 
     public void addTileToOvertimeUpdate(BlockEntityBase te) {
-        WorldData worldData = WorldData.get(te.getLevel());
-        if (!worldData.mapUpdateOvertimeField.containsKey(te.getBlockPos())) {
+        WorldData worldData = getTileWorldData(te, true);
+        if (worldData != null && !worldData.mapUpdateOvertimeField.containsKey(te.getBlockPos())) {
             worldData.mapUpdateOvertimeField.put(te.getBlockPos(), te);
         }
     }
 
     public void removeTileToOvertimeUpdate(BlockEntityBase te) {
-        WorldData worldData = WorldData.get(te.getLevel());
-        worldData.mapUpdateOvertimeField.remove(te.getBlockPos());
+        WorldData worldData = getTileWorldData(te, false);
+        if (worldData != null) {
+            worldData.mapUpdateOvertimeField.remove(te.getBlockPos());
+        }
     }
 
     public void addTileFieldToUpdate(BlockEntityBase te, CustomPacketBuffer packet) {
-        WorldData worldData = WorldData.get(te.getLevel());
+        if (packet == null) {
+            return;
+        }
+        WorldData worldData = getTileWorldData(te, true);
+        if (worldData == null) {
+            return;
+        }
         if (worldData.mapUpdateField.containsKey(te)) {
             worldData.mapUpdateField.get(te).add(packet);
         } else {

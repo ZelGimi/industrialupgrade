@@ -9,7 +9,8 @@ public enum EnumTypeStyle {
     STEAM(0, 0),
     BIO(0, 0),
     SPACE(0, 0),
-    ;
+
+    STORAGE(0, 0);
 
     private final int x;
     private final int y;

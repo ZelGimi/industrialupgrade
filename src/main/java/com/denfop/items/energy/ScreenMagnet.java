@@ -19,6 +19,9 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
+import java.util.Collections;
+import java.util.List;
+
 @OnlyIn(Dist.CLIENT)
 public class ScreenMagnet<T extends ContainerMenuMagnet> extends ScreenMain<ContainerMenuMagnet> {
 
@@ -31,7 +34,7 @@ public class ScreenMagnet<T extends ContainerMenuMagnet> extends ScreenMain<Cont
         super(container);
         this.white = container.base.containerStack.getOrDefault(DataComponentsInit.BLACK_LIST, false);
 
-        this.name = Localization.translate(itemStack1.getDescriptionId() + ".name");
+        this.name = Localization.translate(itemStack1.getDescriptionId());
         this.slots = new ScreenWidget(this, 0, 0, getComponent(),
                 new WidgetDefault<>(new ComponentRenderInventory(EnumTypeComponentSlot.DEFAULT))
         );
@@ -54,6 +57,11 @@ public class ScreenMagnet<T extends ContainerMenuMagnet> extends ScreenMain<Cont
                 }
                 return true;
             }
+
+            @Override
+            public List<String> getToolTip() {
+                return Collections.singletonList(!container.base.containerStack.getOrDefault(DataComponentsInit.BLACK_LIST, false) ? Localization.translate("iu.blacklist_tube") : Localization.translate("iu.whitelist_tube"));
+            }
         });
     }
 
@@ -70,7 +78,7 @@ public class ScreenMagnet<T extends ContainerMenuMagnet> extends ScreenMain<Cont
 
     protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
         super.drawForegroundLayer(poseStack, par1, par2);
-        draw(poseStack, this.name, (this.imageWidth - this.getStringWidth(this.name)) / 2 - 10, 11, 0);
+        draw(poseStack, this.name, (this.imageWidth - this.getStringWidth(this.name)) / 2, 35, 0);
     }
 
     protected void drawBackgroundAndTitle(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY) {

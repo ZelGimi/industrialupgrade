@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.incubator;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.api.widget.EnumTypeComponent;
 import com.denfop.api.widget.ScreenWidget;
@@ -113,8 +114,8 @@ public class IncubatorCategory extends ScreenMain implements IRecipeCategory<Inc
                 .addFluidStack(recipe.getOutputFluid().getFluid(), recipe.getOutputFluid().getAmount());
 
 
-        builder.addSlot(RecipeIngredientRole.INPUT, 55, 44)
-                .addItemStack(recipe.getInput());
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 55, 44, recipe, 0, recipe.getInput());
+
     }
 
 

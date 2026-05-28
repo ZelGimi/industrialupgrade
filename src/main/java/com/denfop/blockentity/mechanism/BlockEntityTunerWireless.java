@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -34,7 +36,7 @@ public class BlockEntityTunerWireless extends BlockEntityElectricMachine
 
 
     public BlockEntityTunerWireless(BlockPos pos, BlockState state) {
-        super(0, 10, 1, BlockBaseMachine3Entity.tuner, pos, state);
+        super(ModConfig.mechanismDouble("wireless_adjuster_energy_storage", 0.0D), 10, 1, BlockBaseMachine3Entity.tuner, pos, state);
 
 
         this.inputslot = new InventoryTuner(this);

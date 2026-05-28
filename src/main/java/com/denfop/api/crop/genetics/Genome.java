@@ -18,21 +18,30 @@ import java.util.*;
 public class Genome implements IGenome {
 
     public static Map<GeneticTraits, List<ResourceKey<Biome>>> geneticBiomes = new HashMap<>();
-    Map<EnumGenetic, GeneticTraits> geneticTraitsMap = new HashMap<>();
-    private ItemStack stack;
+    private Map<EnumGenetic, GeneticTraits> geneticTraitsMap = new EnumMap<>(EnumGenetic.class);
+    private ItemStack stack = ItemStack.EMPTY;
 
     public Genome(ItemStack stack) {
-        if (!stack.has(DataComponentsInit.GENOME_CROP)) {
-            stack.set(DataComponentsInit.GENOME_CROP, new GenomeCrop(new HashMap<>()));
-        }
-        GenomeCrop genomeBee = stack.get(DataComponentsInit.GENOME_CROP);
+        this.stack = stack == null ? ItemStack.EMPTY : stack;
 
-        geneticTraitsMap = genomeBee.geneticTraitsMap();
-        this.stack = stack;
+        if (!this.stack.isEmpty() && !this.stack.has(DataComponentsInit.GENOME_CROP)) {
+            this.stack.set(DataComponentsInit.GENOME_CROP, new GenomeCrop(new EnumMap<>(EnumGenetic.class)));
+        }
+
+        GenomeCrop genomeCrop = this.stack.isEmpty() ? null : this.stack.get(DataComponentsInit.GENOME_CROP);
+        this.geneticTraitsMap = copyToEnumMap(genomeCrop == null ? null : genomeCrop.geneticTraitsMap());
     }
 
     public Genome(Map<EnumGenetic, GeneticTraits> geneticTraitsMap) {
-        this.geneticTraitsMap = new HashMap<>(geneticTraitsMap);
+        this.geneticTraitsMap = copyToEnumMap(geneticTraitsMap);
+    }
+
+    private static EnumMap<EnumGenetic, GeneticTraits> copyToEnumMap(Map<EnumGenetic, GeneticTraits> source) {
+        EnumMap<EnumGenetic, GeneticTraits> result = new EnumMap<>(EnumGenetic.class);
+        if (source != null && !source.isEmpty()) {
+            result.putAll(source);
+        }
+        return result;
     }
 
     private static GeneticTraits getTemperatureCategory(Holder<Biome> biomeHolder) {
@@ -40,7 +49,7 @@ public class Genome implements IGenome {
             return GeneticTraits.BIOME_IV;
         } else if (biomeHolder.is(BiomeTags.IS_OCEAN) || biomeHolder.is(BiomeTags.IS_DEEP_OCEAN) || biomeHolder.is(BiomeTags.IS_TAIGA) || biomeHolder.is(BiomeTags.IS_BADLANDS)) {
             return GeneticTraits.BIOME_III;
-        } else if (biomeHolder.is(BiomeTags.IS_OCEAN) || biomeHolder.is(BiomeTags.IS_DEEP_OCEAN) || biomeHolder.is(BiomeTags.IS_FOREST) || biomeHolder.is(Tags.Biomes.IS_PLAINS) || biomeHolder.is(BiomeTags.IS_RIVER) || biomeHolder.is(BiomeTags.IS_BEACH)) {
+        } else if (biomeHolder.is(BiomeTags.IS_FOREST) || biomeHolder.is(Tags.Biomes.IS_PLAINS) || biomeHolder.is(BiomeTags.IS_RIVER) || biomeHolder.is(BiomeTags.IS_BEACH)) {
             return GeneticTraits.BIOME;
         } else if (biomeHolder.is(BiomeTags.IS_JUNGLE) || biomeHolder.is(Tags.Biomes.IS_SWAMP)) {
             return GeneticTraits.BIOME_I;
@@ -52,17 +61,21 @@ public class Genome implements IGenome {
     }
 
     public static void init(Registry<Biome> biomeRegistry) {
+        geneticBiomes.clear();
 
         for (Map.Entry<ResourceKey<Biome>, Biome> biome : biomeRegistry.entrySet()) {
             GeneticTraits geneticTraits = getTemperatureCategory(biomeRegistry.getHolderOrThrow(biome.getKey()));
+            if (geneticTraits == null) {
+                continue;
+            }
+
             List<ResourceKey<Biome>> biomes = geneticBiomes.get(geneticTraits);
             if (biomes != null) {
                 biomes.add(biome.getKey());
             } else {
                 biomes = new ArrayList<>();
                 biomes.add(biome.getKey());
-                if (geneticTraits != null)
-                    geneticBiomes.put(geneticTraits, biomes);
+                geneticBiomes.put(geneticTraits, biomes);
             }
         }
     }
@@ -80,18 +93,10 @@ public class Genome implements IGenome {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Genome genome)) {
             return false;
         }
-        Genome genome = (Genome) o;
-        return geneticTraitsMap.values().size() == genome.geneticTraitsMap.size() && checkGenomes(genome);
-    }
-
-    private boolean checkGenomes(Genome genome) {
-        List<GeneticTraits> geneticTraits = new ArrayList<>(genome.geneticTraitsMap.values());
-        List<GeneticTraits> geneticTraits1 = new ArrayList<>(this.geneticTraitsMap.values());
-        geneticTraits1.removeIf(geneticTraits::contains);
-        return geneticTraits1.isEmpty();
+        return Objects.equals(this.geneticTraitsMap, genome.geneticTraitsMap);
     }
 
     @Override
@@ -100,28 +105,28 @@ public class Genome implements IGenome {
     }
 
     public void addGenome(GeneticTraits geneticTraits, ItemStack stack) {
-        if (!geneticTraitsMap.containsKey(geneticTraits.getGenetic())) {
+        if (geneticTraits != null && !geneticTraitsMap.containsKey(geneticTraits.getGenetic())) {
             geneticTraitsMap.put(geneticTraits.getGenetic(), geneticTraits);
             writeNBT(stack);
         }
     }
 
     public void addGenome(GeneticTraits geneticTraits) {
-        if (!geneticTraitsMap.containsKey(geneticTraits.getGenetic())) {
+        if (geneticTraits != null && !geneticTraitsMap.containsKey(geneticTraits.getGenetic())) {
             geneticTraitsMap.put(geneticTraits.getGenetic(), geneticTraits);
-            writeNBT(stack);
+            writeNBT(this.stack);
         }
     }
 
     public void removeGenome(GeneticTraits geneticTraits, ItemStack stack) {
-        if (geneticTraitsMap.containsKey(geneticTraits.getGenetic())) {
-            geneticTraitsMap.remove(geneticTraits.getGenetic(), geneticTraits);
+        if (geneticTraits != null && geneticTraitsMap.containsKey(geneticTraits.getGenetic())) {
+            geneticTraitsMap.remove(geneticTraits.getGenetic());
             writeNBT(stack);
         }
     }
 
     public GeneticTraits removeGenome(EnumGenetic genetic, ItemStack stack) {
-        if (geneticTraitsMap.containsKey(genetic)) {
+        if (genetic != null && geneticTraitsMap.containsKey(genetic)) {
             final GeneticTraits value = geneticTraitsMap.remove(genetic);
             writeNBT(stack);
             return value;
@@ -129,9 +134,12 @@ public class Genome implements IGenome {
         return null;
     }
 
+    @Override
     public void writeNBT(ItemStack stack) {
-        Map<EnumGenetic, GeneticTraits> geneticTraitsMap = new HashMap<>(this.geneticTraitsMap);
-        stack.set(DataComponentsInit.GENOME_CROP, new GenomeCrop(geneticTraitsMap));
+        if (stack == null || stack.isEmpty()) {
+            return;
+        }
+        stack.set(DataComponentsInit.GENOME_CROP, new GenomeCrop(copyToEnumMap(this.geneticTraitsMap)));
     }
 
     @Override
@@ -141,7 +149,8 @@ public class Genome implements IGenome {
 
     @Override
     public <T> T getLevelGenome(final EnumGenetic genome, Class<T> tClass) {
-        return geneticTraitsMap.get(genome).getValue(tClass);
+        GeneticTraits traits = geneticTraitsMap.get(genome);
+        return traits == null ? null : traits.getValue(tClass);
     }
 
     public GeneticTraits getGenome(final EnumGenetic genome) {
@@ -150,7 +159,7 @@ public class Genome implements IGenome {
 
     public Genome copy() {
         Genome genome = new Genome(this.geneticTraitsMap);
-        genome.stack = this.stack.copy();
+        genome.stack = this.stack == null ? ItemStack.EMPTY : this.stack.copy();
         return genome;
     }
 
@@ -166,7 +175,9 @@ public class Genome implements IGenome {
                 case BIOME_III:
                 case BIOME_IV:
                     List<ResourceKey<Biome>> biomes = geneticBiomes.get(geneticTraits);
-                    biomes.forEach(crop::addBiome);
+                    if (biomes != null) {
+                        biomes.forEach(crop::addBiome);
+                    }
                     break;
                 case AIR_I:
                 case AIR_II:
@@ -248,5 +259,4 @@ public class Genome implements IGenome {
             }
         }
     }
-
 }

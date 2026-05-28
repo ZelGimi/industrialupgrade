@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.generator.things.fluid;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -46,7 +48,7 @@ public class BlockEntityWaterGenerator extends BlockEntityElectricMachine implem
     private double lastEnergy;
 
     public BlockEntityWaterGenerator(BlockPos pos, BlockState state) {
-        super(10000, 1, 1, BlockBaseMachine3Entity.watergenerator, pos, state);
+        super(ModConfig.mechanismDouble("water_generator_energy_storage", 10000.0D), 1, 1, BlockBaseMachine3Entity.watergenerator, pos, state);
 
         this.energycost = 40;
         this.outputSlot = new InventoryOutput(this, 1);
@@ -63,8 +65,8 @@ public class BlockEntityWaterGenerator extends BlockEntityElectricMachine implem
                 Fluids.fluidPredicate(net.minecraft.world.level.material.Fluids.WATER)
         );
         this.upgradeSlot = new InventoryUpgrade(this, 4);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.25));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.25));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("water_generator_soil_pollution_amount", 0.25D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("water_generator_air_pollution_amount", 0.25D)));
 
     }
 

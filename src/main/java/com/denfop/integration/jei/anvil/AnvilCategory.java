@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.anvil;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.blockentity.mechanism.triple.heat.BlockEntityAdvAlloySmelter;
@@ -70,10 +71,10 @@ public class AnvilCategory extends ScreenMain implements IRecipeCategory<AnvilHa
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, AnvilHandler recipes, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 5, 25).addItemStack(recipes.getInput());
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 5, 25, recipes, 0, recipes.getInput());
+
         builder.addSlot(RecipeIngredientRole.INPUT, 30, 25).addItemStack(new ItemStack(IUItem.ForgeHammer.getItem()));
         builder.addSlot(RecipeIngredientRole.OUTPUT, 60, 25).addItemStack(recipes.getOutput());
-        builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStacks(recipes.getContainer().input.getAllStackInputs());
 
 
     }

@@ -15,36 +15,20 @@
       "model": "industrialupgrade:block/gas_well/gas_well_drill",
       "y": 90
     },
-    "facing=down,type=gas_well_drill": {
-      "model": "industrialupgrade:block/gas_well/gas_well_drill",
-      "x": 90
-    },
-    "facing=up,type=gas_well_drill": {
-      "model": "industrialupgrade:block/gas_well/gas_well_drill",
-      "x": 270
-    },
-    "facing=north,type=gas_well_drill_invalid": {
+    "facing=north,type=gas_well_drill_active": {
       "model": "industrialupgrade:block/gas_well/gas_well_drill"
     },
-    "facing=south,type=gas_well_drill_invalid": {
+    "facing=south,type=gas_well_drill_active": {
       "model": "industrialupgrade:block/gas_well/gas_well_drill",
       "y": 180
     },
-    "facing=west,type=gas_well_drill_invalid": {
+    "facing=west,type=gas_well_drill_active": {
       "model": "industrialupgrade:block/gas_well/gas_well_drill",
       "y": 270
     },
-    "facing=east,type=gas_well_drill_invalid": {
+    "facing=east,type=gas_well_drill_active": {
       "model": "industrialupgrade:block/gas_well/gas_well_drill",
       "y": 90
-    },
-    "facing=down,type=gas_well_drill_invalid": {
-      "model": "industrialupgrade:block/gas_well/gas_well_drill",
-      "x": 90
-    },
-    "facing=up,type=gas_well_drill_invalid": {
-      "model": "industrialupgrade:block/gas_well/gas_well_drill",
-      "x": 270
     }
   }
 }

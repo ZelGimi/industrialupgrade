@@ -7,10 +7,8 @@ import com.denfop.datagen.blocktags.IBlockTag;
 import com.denfop.dataregistry.DataBlock;
 import com.denfop.network.packet.PacketUpdateRadiationValue;
 import com.denfop.potion.IUPotion;
-import com.denfop.world.WorldBaseGen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -19,16 +17,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.AABB;
 import oshi.util.tuples.Pair;
 
@@ -36,8 +32,6 @@ import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-
-import static net.minecraft.world.level.storage.loot.parameters.LootContextParams.TOOL;
 
 public class BlockClassicOre<T extends Enum<T> & ISubEnum> extends BlockCore<T> implements IBlockTag {
 
@@ -106,9 +100,11 @@ public class BlockClassicOre<T extends Enum<T> & ISubEnum> extends BlockCore<T> 
     }
 
     @Override
-    public List<ItemStack> getDrops(BlockState p_60537_, LootParams.Builder p_60538_) {
+    public List<ItemStack> getDrops(@Nonnull final Level world,
+                                    @Nonnull final BlockPos pos,
+                                    @Nonnull final BlockState state,
+                                    final int fortune) {
         final int meta = getElement().getId();
-        int fortune = EnchantmentHelper.getItemEnchantmentLevel(p_60538_.getLevel().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.FORTUNE), p_60538_.getParameter(TOOL));
         if (meta == 0) {
             return Collections.singletonList((new ItemStack(IUItem.rawMetals.getStack(16), 1 + getDrop(fortune))));
         } else if (meta == 1) {
@@ -116,9 +112,9 @@ public class BlockClassicOre<T extends Enum<T> & ISubEnum> extends BlockCore<T> 
         } else if (meta == 2) {
             return Collections.singletonList(new ItemStack(IUItem.rawMetals.getStack(19), 1 + getDrop(fortune)));
         } else if (meta == 3) {
-            return super.getDrops(p_60537_, p_60538_);
+            return super.getDrops(world, pos, state, fortune);
         }
-        return super.getDrops(p_60537_, p_60538_);
+        return super.getDrops(world, pos, state, fortune);
     }
 
     private int getDrop(int fortune) {
@@ -126,11 +122,11 @@ public class BlockClassicOre<T extends Enum<T> & ISubEnum> extends BlockCore<T> 
             case 0:
                 return 0;
             case 1:
-                return WorldBaseGen.random.nextInt(100) < 50 ? 1 : 0;
+                return 1;
             case 2:
-                return WorldBaseGen.random.nextInt(100) < 100 ? 1 : 1;
+                return 2;
             default:
-                return WorldBaseGen.random.nextInt(100) < 50 ? 2 : 1;
+                return 3;
         }
     }
 

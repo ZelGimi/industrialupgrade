@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.dual;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -42,7 +44,7 @@ public class BlockEntitySynthesis extends BlockEntityDoubleElectricMachine imple
     public final Inventory input_slot;
 
     public BlockEntitySynthesis(BlockPos pos, BlockState state) {
-        super(1, 300, 1, EnumDoubleElectricMachine.SYNTHESIS, false, BlockBaseMachine1Entity.synthesis, pos, state);
+        super(ModConfig.mechanismInt("nuclear_fusion_reactor_energy_per_tick", 1), ModConfig.mechanismInt("nuclear_fusion_reactor_operation_length", 300), 1, EnumDoubleElectricMachine.SYNTHESIS, false, BlockBaseMachine1Entity.synthesis, pos, state);
         Recipes.recipes.addInitRecipes(this);
         this.componentUpgrade = this.addComponent(new ComponentUpgradeSlots(this, upgradeSlot) {
             @Override
@@ -194,7 +196,7 @@ public class BlockEntitySynthesis extends BlockEntityDoubleElectricMachine imple
         );
 
         addsynthesis(IUItem.uraniumBlock, new ItemStack(IUItem.toriy.getItem()), 22, new ItemStack(IUItem.radiationresources.getItemFromMeta(8), 1), 150);
-        addsynthesis(new ItemStack(IUItem.radiationresources.getItemFromMeta(1), 1), new ItemStack(IUItem.toriy.getItem()), 20, new ItemStack(IUItem.Plutonium), 100);
+        addsynthesis(new ItemStack(IUItem.radiationresources.getItemFromMeta(1), 1), new ItemStack(IUItem.toriy.getItem()), 100, new ItemStack(IUItem.Plutonium), 100);
 
     }
 

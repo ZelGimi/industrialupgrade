@@ -327,8 +327,11 @@ public class BlockEntityBaseSteamTurbineController extends BlockEntityMultiBlock
                         if (exchanger.getExchanger() == null) {
                             continue;
                         }
-                        boolean update = exchanger.getExchanger().damageItem(exchanger.getSlot().get(0), -1);
-                        if (update) {
+                        exchanger.getExchanger().damageItem(exchanger.getSlot().get(0), 1);
+
+                        if (exchanger.getSlot().get(0).getItem().getBarWidth(exchanger
+                                .getSlot()
+                                .get(0)) == 0) {
                             exchanger.getSlot().set(0, ItemStack.EMPTY);
                         }
                     }

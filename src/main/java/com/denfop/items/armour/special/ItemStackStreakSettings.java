@@ -26,7 +26,7 @@ public class ItemStackStreakSettings extends ItemStackInventory {
 
     @OnlyIn(Dist.CLIENT)
     public ScreenIndustrialUpgrade<ContainerMenuBase<? extends CustomWorldContainer>> getGui(Player player, ContainerMenuBase<? extends CustomWorldContainer> isAdmin) {
-        return new ScreenColorPicker((ContainerMenuStreak) isAdmin, itemStack1);
+        return new WidgetColorPicker((ContainerMenuStreak) isAdmin, itemStack1);
     }
 
 

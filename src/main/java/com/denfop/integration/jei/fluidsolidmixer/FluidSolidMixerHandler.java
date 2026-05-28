@@ -1,6 +1,8 @@
 package com.denfop.integration.jei.fluidsolidmixer;
 
 
+import com.denfop.integration.jei.IJeiVariantRecipe;
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseFluidMachineRecipe;
 import com.denfop.api.recipe.BaseMachineRecipe;
@@ -10,10 +12,12 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FluidSolidMixerHandler {
+public class FluidSolidMixerHandler implements IJeiVariantRecipe {
 
     private static final List<FluidSolidMixerHandler> recipes = new ArrayList<>();
-    private final ItemStack input;
+    
+    private List<List<ItemStack>> inputVariants = new ArrayList<>();
+private final ItemStack input;
     private final FluidStack outputFluid1;
     private final FluidStack inputFluid;
     private final FluidStack outputFluid;
@@ -54,9 +58,9 @@ public class FluidSolidMixerHandler {
             FluidStack outputFluid1 = baseFluidMachineRecipe.output_fluid.get(1);
 
 
-            addRecipe(input,
+            JeiIngredientHelper.attachInputVariants(addRecipe(input,
                     inputFluid, outputFluid, outputFluid1
-            );
+            ), baseMachineRecipe);
         }
 
 
@@ -91,4 +95,15 @@ public class FluidSolidMixerHandler {
         return outputFluid;
     }
 
+
+
+    @Override
+    public void setInputVariants(final List<List<ItemStack>> inputVariants) {
+        this.inputVariants = inputVariants == null ? new ArrayList<>() : inputVariants;
+    }
+
+    @Override
+    public List<ItemStack> getInputVariants(final int slot, final ItemStack fallback) {
+        return JeiIngredientHelper.getInputVariants(this.inputVariants, slot, fallback);
+    }
 }

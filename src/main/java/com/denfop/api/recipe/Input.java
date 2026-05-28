@@ -50,6 +50,23 @@ public class Input implements IInput {
         this.inputsfluid = Arrays.asList(inputs);
     }
 
+    public static Input readNBT(CompoundTag tag, RegistryAccess access) {
+        List<IInputItemStack> inputList = new ArrayList<>();
+        ListTag itemsTag = tag.getList("Items", 10);
+        for (Tag itemTag : itemsTag) {
+            if (itemTag instanceof CompoundTag compoundTag) {
+                inputList.add(InputItemStack.create(compoundTag, access));
+            }
+        }
+
+        FluidStack fluid = FluidStack.EMPTY;
+        if (tag.getBoolean("HasFluid") && tag.contains("Fluid", Tag.TAG_COMPOUND)) {
+            fluid = FluidStack.parseOptional(access, tag.getCompound("Fluid"));
+        }
+
+        return new Input(fluid, inputList.toArray(new IInputItemStack[0]));
+    }
+
     @Override
     public List<IInputItemStack> getInputs() {
         return this.list;
@@ -78,22 +95,7 @@ public class Input implements IInput {
         }
         return new ArrayList<>(stacks);
     }
-    public static Input readNBT(CompoundTag tag, RegistryAccess access) {
-        List<IInputItemStack> inputList = new ArrayList<>();
-        ListTag itemsTag = tag.getList("Items", 10);
-        for (Tag itemTag : itemsTag) {
-            if (itemTag instanceof CompoundTag compoundTag) {
-                inputList.add(InputItemStack.create(compoundTag, access));
-            }
-        }
 
-        FluidStack fluid = FluidStack.EMPTY;
-        if (tag.getBoolean("HasFluid") && tag.contains("Fluid", Tag.TAG_COMPOUND)) {
-            fluid = FluidStack.parseOptional(access,tag.getCompound("Fluid"));
-        }
-
-        return new Input(fluid, inputList.toArray(new IInputItemStack[0]));
-    }
     public CompoundTag writeNBT(RegistryAccess access) {
         CompoundTag tag = new CompoundTag();
 
@@ -107,13 +109,14 @@ public class Input implements IInput {
 
         if (hasfluid && fluid != null && !fluid.isEmpty()) {
             CompoundTag fluidTag = new CompoundTag();
-            fluid.save(access,fluidTag);
+            fluid.save(access, fluidTag);
             tag.put("Fluid", fluidTag);
         }
 
         tag.putBoolean("HasFluid", hasfluid);
         return tag;
     }
+
     @Override
     public List<ItemStack> getAllStackInputs() {
         List<ItemStack> stacks = new LinkedList<>();

@@ -62,9 +62,9 @@ public class DepositsCategory extends ScreenMain implements IRecipeCategory<Depo
         int y = 20;
         int x = 25;
         this.drawSplitString(stack, Localization.translate("deposists.jei1") + (vein.getHeavyOre() != null ?
-                        new ItemStack(vein.getHeavyOre().getBlock(), 1).getDisplayName().getString() :
-                        new ItemStack(vein.getOres().get(0).getBlock().getBlock(), 1
-                        ).getDisplayName().getString()), 5, 3,
+                        com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(vein.getHeavyOre().getBlock(), 1).getDisplayName().getString()) :
+                        com.denfop.utils.ModUtils.cleanComponentString(new ItemStack(vein.getOres().get(0).getBlock().getBlock(), 1
+                        ).getDisplayName().getString())), 5, 3,
                 200 - 5, 4210752
         );
         if (vein.getHeavyOre() != null) {

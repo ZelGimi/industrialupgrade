@@ -4,6 +4,7 @@ import com.denfop.api.Recipes;
 import com.denfop.api.crafting.BaseRecipe;
 import com.denfop.api.crafting.BaseShapelessRecipe;
 import com.denfop.datagen.furnace.FurnaceRecipe;
+import com.denfop.datagen.itemtag.ItemTagProvider;
 import com.denfop.recipe.IInputItemStack;
 import com.denfop.recipe.InputOreDict;
 import com.denfop.recipes.BaseRecipes;
@@ -22,6 +23,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 
 import java.util.ArrayList;
@@ -78,10 +80,26 @@ public class RecipeProvider extends VanillaRecipeProvider {
         }
         FurnaceRecipes.recipe();
         furnaceRecipeList = new ArrayList<>(furnaceRecipeList);
-        for (FurnaceRecipe furnaceRecipe : furnaceRecipeList)
+        for (FurnaceRecipe furnaceRecipe : furnaceRecipeList) {
 
             SimpleCookingRecipeBuilder.smelting(Ingredient.of(furnaceRecipe.getInput()), RecipeCategory.MISC, furnaceRecipe.getOutput().getItem(), furnaceRecipe.getXp(), 200).unlockedBy("any", InventoryChangeTrigger.TriggerInstance.hasItems(Items.AIR)).save(p_301191_, "industrialupgrade:" + "furnace_" + ID++);
-
+            if (ItemTagProvider.containsInAnyTag(
+                    furnaceRecipe.getInput(),
+                    Tags.Items.RAW_MATERIALS,
+                    Tags.Items.ORES,
+                    Tags.Items.DUSTS
+            )) {
+                SimpleCookingRecipeBuilder.blasting(
+                                Ingredient.of(furnaceRecipe.getInput()),
+                                RecipeCategory.MISC,
+                                furnaceRecipe.getOutput().getItem(),
+                                furnaceRecipe.getXp(),
+                                100
+                        )
+                        .unlockedBy("any", InventoryChangeTrigger.TriggerInstance.hasItems(Items.AIR))
+                        .save(p_301191_, "industrialupgrade:" + "blasting_" + ID++);
+            }
+        }
     }
 
 }

@@ -12,6 +12,7 @@ import com.denfop.utils.Localization;
 import com.denfop.utils.ModUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -126,9 +127,9 @@ public class ScreenAnalyzer<T extends ContainerMenuAnalyzer> extends ScreenMain<
                                 "%" + ".";
 
                         String tooltip =
-                                ChatFormatting.GREEN + Localization.translate("name.ore") + ChatFormatting.WHITE + dataOre
+                                ChatFormatting.GREEN + Localization.translate("name.ore") + ChatFormatting.WHITE +   com.denfop.utils.ModUtils.cleanComponentString(dataOre
                                         .getStack()
-                                        .getDisplayName().getString();
+                                        .getDisplayName().getString());
                         String tooltip3 = ChatFormatting.GREEN + Localization.translate("middleheight") + ChatFormatting.WHITE + ModUtils.getString1(
                                 dataOre.getAverage()) +
                                 ".";
@@ -215,6 +216,18 @@ public class ScreenAnalyzer<T extends ContainerMenuAnalyzer> extends ScreenMain<
         slider.setMax(this.container.base.getDataOreList().size() / 48);
     }
 
+    private void drawScaledString(GuiGraphics g, Font font, String text,
+                                  int x, int y, int color, float scale) {
+        g.pose().pushPose();
+        g.pose().scale(scale, scale, 1.0F);
+        g.drawString(font, text,
+                (int) (x / scale),
+                (int) (y / scale),
+                color,
+                false);
+        g.pose().popPose();
+    }
+
     protected void drawForegroundLayer(GuiGraphics poseStack, int par1, int par2) {
         super.drawForegroundLayer(poseStack, par1, par2);
         xOffset = guiLeft();
@@ -226,45 +239,45 @@ public class ScreenAnalyzer<T extends ContainerMenuAnalyzer> extends ScreenMain<
         int endchunk = this.container.base.xendChunk;
         int endchunk1 = this.container.base.zendChunk;
 
-        poseStack.drawString(Minecraft.getInstance().font, Localization.translate("startchunk") +
+        drawScaledString(poseStack, Minecraft.getInstance().font, Localization.translate("startchunk") +
                         "X:" + chunk + " Z:" + chunk1,
-                10, +18, ModUtils.convertRGBcolorToInt(13, 229, 34), false
+                10, +18, ModUtils.convertRGBcolorToInt(13, 229, 34), 0.6f
         );
-        poseStack.drawString(Minecraft.getInstance().font, Localization.translate("endchunk") +
+        drawScaledString(poseStack, Minecraft.getInstance().font, Localization.translate("endchunk") +
                         "X:" + endchunk + " Z:" + endchunk1,
-                10, 39, ModUtils.convertRGBcolorToInt(13, 229, 34), false
+                10, 39, ModUtils.convertRGBcolorToInt(13, 229, 34), 0.6f
         );
 
-        poseStack.drawString(Minecraft.getInstance().font,
+        drawScaledString(poseStack, Minecraft.getInstance().font,
                 ChatFormatting.GREEN + Localization.translate("analyze") +
                         ChatFormatting.WHITE + ModUtils.getString(this.container.base.breakblock),
-                10, 80 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217), false
+                10, 80 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217), 0.6f
         );
-        poseStack.drawString(Minecraft.getInstance().font, ChatFormatting.GREEN + Localization.translate("ore") +
+        drawScaledString(poseStack, Minecraft.getInstance().font, ChatFormatting.GREEN + Localization.translate("ore") +
                         ChatFormatting.WHITE + ModUtils.getString(this.container.base.numberores),
-                10, 80 + 8 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217), false
+                10, 80 + 8 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217), 0.6f
         );
 
-        poseStack.drawString(Minecraft.getInstance().font, ChatFormatting.GREEN + Localization.translate("procent_ore") +
+        drawScaledString(poseStack, Minecraft.getInstance().font, ChatFormatting.GREEN + Localization.translate("procent_ore") +
                         ChatFormatting.WHITE + ModUtils.getString1(((this.container.base.numberores / (this.container.base.breakblock * 1D)) * 100)) + "%",
-                10, 80 + 8 + 8 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217), false
+                10, 80 + 8 + 8 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217), 0.6f
         );
         int average = 0;
         for (DataOre dataOre : this.container.base.dataOreList) {
             average += dataOre.getAverage();
         }
         average /= Math.max(1, this.container.base.dataOreList.size());
-        poseStack.drawString(Minecraft.getInstance().font, ChatFormatting.GREEN + Localization.translate("middleheight") +
+        drawScaledString(poseStack, Minecraft.getInstance().font, ChatFormatting.GREEN + Localization.translate("middleheight") +
                         ChatFormatting.WHITE + ModUtils.getString1(average),
-                10, 80 + 8 + 8 + 8 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217)
+                10, 80 + 8 + 8 + 8 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217), 0.6f
         );
-        poseStack.drawString(Minecraft.getInstance().font, ChatFormatting.GREEN + Localization.translate("cost.name") +
+        drawScaledString(poseStack, Minecraft.getInstance().font, ChatFormatting.GREEN + Localization.translate("cost.name") +
                         ChatFormatting.WHITE + ModUtils.getString(this.container.base.numberores * this.container.base.consume) + " EF",
-                10, 80 + 8 + 8 + 8 + 8 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217)
+                10, 80 + 8 + 8 + 8 + 8 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217), 0.6f
         );
-        poseStack.drawString(Minecraft.getInstance().font, ChatFormatting.GREEN + Localization.translate("cost.name1") +
+        drawScaledString(poseStack, Minecraft.getInstance().font, ChatFormatting.GREEN + Localization.translate("cost.name1") +
                         ChatFormatting.WHITE + ModUtils.getString1(this.container.base.consume) + "EF",
-                10, 80 + 8 + 8 + 8 + 8 + 8 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217)
+                10, 80 + 8 + 8 + 8 + 8 + 8 - 2, ModUtils.convertRGBcolorToInt(217, 217, 217), 0.6f
         );
 
 
@@ -284,7 +297,7 @@ public class ScreenAnalyzer<T extends ContainerMenuAnalyzer> extends ScreenMain<
                     String tooltip2 = ChatFormatting.GREEN + Localization.translate("chance.ore1") + ChatFormatting.WHITE + (int) (
                             m) + "%";
 
-                    String tooltip = ChatFormatting.GREEN + Localization.translate("name.ore") + ChatFormatting.WHITE + stack.getDisplayName().getString();
+                    String tooltip = ChatFormatting.GREEN + Localization.translate("name.ore") + ChatFormatting.WHITE + com.denfop.utils.ModUtils.cleanComponentString(stack.getDisplayName().getString());
                     String tooltip3 = ChatFormatting.GREEN + Localization.translate("middleheight") + ChatFormatting.WHITE + ModUtils.getString1(
                             dataOre.getAverage());
                     String tooltip4 = ChatFormatting.GREEN + Localization.translate("cost.name") + ChatFormatting.WHITE + ModUtils.getString(

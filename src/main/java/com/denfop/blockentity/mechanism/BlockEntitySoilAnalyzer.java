@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -32,8 +34,8 @@ import java.util.List;
 
 public class BlockEntitySoilAnalyzer extends BlockEntityElectricMachine {
 
-    private static final List<AABB> aabbs = Collections.singletonList(new AABB(-0.2, 0.0D, -0.2, 1.2, 2.0D,
-            1.2
+    private static final List<AABB> aabbs = Collections.singletonList(new AABB(0, 0.0D, 0, 1, 2.0D,
+            1
     ));
     public final ComponentProgress progress;
     private final SoilPollutionComponent pollutionSoil;
@@ -42,11 +44,11 @@ public class BlockEntitySoilAnalyzer extends BlockEntityElectricMachine {
     public Radiation radiation;
 
     public BlockEntitySoilAnalyzer(BlockPos pos, BlockState state) {
-        super(5000, 14, 0, BlockBaseMachine3Entity.soil_analyzer, pos, state);
+        super(ModConfig.mechanismDouble("soil_analyzer_energy_storage", 5000.0D), 14, 0, BlockBaseMachine3Entity.soil_analyzer, pos, state);
         this.progress = this.addComponent(new ComponentProgress(this, 1, (short) 400));
         this.analyzed = false;
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.05));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("soil_analyzer_soil_pollution_amount", 0.05D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("soil_analyzer_air_pollution_amount", 0.05D)));
     }
 
     @Override

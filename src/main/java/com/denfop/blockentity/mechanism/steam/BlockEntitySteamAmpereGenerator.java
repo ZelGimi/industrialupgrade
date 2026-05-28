@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.steam;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -52,7 +54,7 @@ public class BlockEntitySteamAmpereGenerator extends BlockEntityElectricMachine 
     public short maxpressure;
 
     public BlockEntitySteamAmpereGenerator(BlockPos pos, BlockState state) {
-        super(0, 0, 1, BlockBaseMachine3Entity.steam_ampere_generator, pos, state);
+        super(ModConfig.mechanismDouble("steam_current_converter_energy_storage", 0.0D), 0, 1, BlockBaseMachine3Entity.steam_ampere_generator, pos, state);
 
 
         this.fluids = this.addComponent(new Fluids(this));
@@ -81,24 +83,11 @@ public class BlockEntitySteamAmpereGenerator extends BlockEntityElectricMachine 
     @Override
     public void onNeighborChange(final BlockState neighbor, final BlockPos neighborPos) {
         super.onNeighborChange(neighbor, neighborPos);
-        if (work) {
-            if (this.pos.below().distSqr(neighborPos) == 0) {
-                FluidState blockState = level.getFluidState(this.pos.below());
-                if (blockState.getType() != net.minecraft.world.level.material.Fluids.EMPTY) {
-                    this.work = blockState.getType().isSame(Fluids.LAVA);
-                } else {
-                    work = false;
-                }
-            }
+        FluidState blockState = level.getFluidState(this.pos.below());
+        if (!blockState.isEmpty()) {
+            this.work = blockState.getType().isSame(Fluids.LAVA);
         } else {
-            if (this.pos.below().distSqr(neighborPos) == 0) {
-                FluidState blockState = level.getFluidState(this.pos.below());
-                if (blockState.getType() != net.minecraft.world.level.material.Fluids.EMPTY) {
-                    this.work = blockState.getType().isSame(Fluids.LAVA);
-                } else {
-                    work = false;
-                }
-            }
+            work = false;
         }
     }
 
@@ -185,9 +174,9 @@ public class BlockEntitySteamAmpereGenerator extends BlockEntityElectricMachine 
         super.updateEntityServer();
         if (this.work) {
 
-            if (this.steam.getEnergy() >= 1 && this.pressure.getEnergy() + 1 <= this.pressure.getCapacity()) {
+            if (this.steam.getEnergy() >= 2 && this.pressure.getEnergy() + 1 <= this.pressure.getCapacity()) {
                 this.pressure.addEnergy(1);
-                this.steam.useEnergy(1);
+                this.steam.useEnergy(2);
                 this.setActive(true);
             } else {
                 setActive(false);

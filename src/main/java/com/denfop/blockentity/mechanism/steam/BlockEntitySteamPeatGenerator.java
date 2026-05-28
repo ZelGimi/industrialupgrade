@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.steam;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -55,7 +57,7 @@ public class BlockEntitySteamPeatGenerator extends BlockEntityElectricMachine im
     public int fuel = 0;
 
     public BlockEntitySteamPeatGenerator(BlockPos pos, BlockState state) {
-        super(0, 1, 0, BlockBaseMachine3Entity.steam_peat_generator, pos, state);
+        super(ModConfig.mechanismDouble("steam_peat_generator_energy_storage", 0.0D), 1, 0, BlockBaseMachine3Entity.steam_peat_generator, pos, state);
         this.slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean canPlaceItem(final int index, final ItemStack stack) {
@@ -152,16 +154,16 @@ public class BlockEntitySteamPeatGenerator extends BlockEntityElectricMachine im
                 this.setActive(false);
             }
         }
-        for (int i = 0; i < ComponentSteamEnergy.speedGeneration;i++)
-        if (fuel > 0 &&
-                !this.fluidTank.getFluid().isEmpty() && this.fluidTank.getFluid().getAmount() >= 4 && this.steam.getEnergy() + 4 <= this.steam.getCapacity()) {
-            this.steam.addEnergy(4);
-            this.fluidTank.drain(4, IFluidHandler.FluidAction.EXECUTE);
-            this.setActive(true);
-            fuel = Math.max(0, this.fuel - 1);
-        } else {
-            setActive(false);
-        }
+        for (int i = 0; i < ComponentSteamEnergy.speedGeneration; i++)
+            if (fuel > 0 &&
+                    !this.fluidTank.getFluid().isEmpty() && this.fluidTank.getFluid().getAmount() >= 4 && this.steam.getEnergy() + 4 <= this.steam.getCapacity()) {
+                this.steam.addEnergy(4);
+                this.fluidTank.drain(4, IFluidHandler.FluidAction.EXECUTE);
+                this.setActive(true);
+                fuel = Math.max(0, this.fuel - 1);
+            } else {
+                setActive(false);
+            }
 
 
     }

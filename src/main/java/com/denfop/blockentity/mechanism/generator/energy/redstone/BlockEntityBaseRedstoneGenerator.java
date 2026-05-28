@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.generator.energy.redstone;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
 import com.denfop.api.widget.IType;
@@ -42,7 +44,7 @@ public class BlockEntityBaseRedstoneGenerator extends BlockEntityElectricMachine
     public int redstone_coef = 1;
 
     public BlockEntityBaseRedstoneGenerator(double coef, int tier, MultiBlockEntity block, BlockPos pos, BlockState state) {
-        super(0, tier, 0, block, pos, state);
+        super(ModConfig.mechanismDouble("base_redstone_generator_energy_storage", 0.0D), tier, 0, block, pos, state);
         energy = this.addComponent(Energy.asBasicSource(this, 150000 * coef, tier));
 
 

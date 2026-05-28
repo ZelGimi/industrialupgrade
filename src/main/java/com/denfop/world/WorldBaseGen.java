@@ -13,6 +13,8 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.level.LevelEvent;
+import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
@@ -22,6 +24,7 @@ import static com.denfop.blocks.BlocksRadiationOre.BOOL_PROPERTY;
 import static com.denfop.register.Register.FEATURES;
 
 public class WorldBaseGen {
+    public static DeferredHolder<Feature<?>, GlobalOreFeature> GLOBAL_ORE_GENERATOR;
     public static DeferredHolder<Feature<?>, HiveGenerator> GEN_HIVE_GENERATOR;
     public static DeferredHolder<Feature<?>, RubTreeFeature> RUB_TREE_GENERATOR;
 
@@ -36,6 +39,7 @@ public class WorldBaseGen {
     public static Map<Integer, BlockState> blockStateMap = new HashMap<>();
     public static Map<BlockState, Integer> idToblockStateMap = new HashMap<>();
     public static int id;
+    private static volatile boolean stopping;
 
     public WorldBaseGen() {
         NeoForge.EVENT_BUS.register(this);
@@ -54,120 +58,9 @@ public class WorldBaseGen {
                 () -> new WorldGenVolcano(NoneFeatureConfiguration.CODEC));
         OIL_GENERATOR = FEATURES.register("oil",
                 () -> new WorldGenOil(NoneFeatureConfiguration.CODEC));
+        GLOBAL_ORE_GENERATOR = FEATURES.register("global_ores",
+                () -> new GlobalOreFeature());
 
-
-
-        /*
-        RUB_TREE = CONFIGURED_FEATURES.register("rub_tree",
-                () -> new ConfiguredFeature<>(RUB_TREE_GENERATOR.get(), NoneFeatureConfiguration.INSTANCE));
-        RUB_TREE_PLACER = PLACED_FEATURES.register(
-                "rub_tree_placed",
-                () -> new PlacedFeature(
-                        RUB_TREE.getHolder().orElseThrow(),
-                        List.of(
-                                InSquarePlacement.spread(),
-                                PlacementUtils.HEIGHTMAP,
-                                BiomeFilter.biome()
-                        )
-                )
-        );
-
-        VEIN = CONFIGURED_FEATURES.register("vein",
-                () -> new ConfiguredFeature<>(VEIN_GENERATOR.get(), NoneFeatureConfiguration.INSTANCE));
-       VEIN_PLACER = PLACED_FEATURES.register(
-                "vein_placed",
-                () -> new PlacedFeature(
-                        VEIN.getHolder().orElseThrow(),
-                        List.of(
-                                InSquarePlacement.spread(),
-                                PlacementUtils.HEIGHTMAP,
-                                BiomeFilter.biome()
-                        )
-                )
-        );
-         GEN_GAS = CONFIGURED_FEATURES.register("gen_gas",
-                () -> new ConfiguredFeature<>(GEN_GAS_GENERATOR.get(), NoneFeatureConfiguration.INSTANCE));
-        GEN_HIVE = CONFIGURED_FEATURES.register("gen_hive",
-                () -> new ConfiguredFeature<>(GEN_HIVE_GENERATOR.get(), NoneFeatureConfiguration.INSTANCE));
-       GEN_GAS_PLACER = PLACED_FEATURES.register(
-                "gen_gas_placed",
-                () -> new PlacedFeature(
-                        GEN_GAS.getHolder().orElseThrow(),
-                        List.of(
-                                InSquarePlacement.spread(),
-                                PlacementUtils.HEIGHTMAP,
-                                BiomeFilter.biome()
-                        )
-                )
-        );
-       GEN_HIVE_PLACER = PLACED_FEATURES.register(
-                "gen_hive_placed",
-                () -> new PlacedFeature(
-                        GEN_HIVE.getHolder().orElseThrow(),
-                        List.of(
-                                InSquarePlacement.spread(),
-                                PlacementUtils.HEIGHTMAP,
-                                BiomeFilter.biome()
-                        )
-                )
-        );
-        VOLCANO = CONFIGURED_FEATURES.register("volcano",
-                () -> new ConfiguredFeature<>(VOLCANO_GENERATOR.get(), NoneFeatureConfiguration.INSTANCE));
-       VOLCANO_PLACER = PLACED_FEATURES.register(
-                "volcano_placed",
-                () -> new PlacedFeature(
-                        VOLCANO.getHolder().orElseThrow(),
-                        List.of(
-                                InSquarePlacement.spread(),
-                                PlacementUtils.HEIGHTMAP,
-                                BiomeFilter.biome()
-                        )
-                )
-        );
-        OIL = CONFIGURED_FEATURES.register("oil",
-                () -> new ConfiguredFeature<>(OIL_GENERATOR.get(), NoneFeatureConfiguration.INSTANCE));
-     OIL_PLACER = PLACED_FEATURES.register(
-                "oil_placed",
-                () -> new PlacedFeature(
-                        OIL.getHolder().orElseThrow(),
-                        List.of(
-                                InSquarePlacement.spread(),
-                                PlacementUtils.HEIGHTMAP,
-                                BiomeFilter.biome()
-                        )
-                )
-        );
-        CALCIUM = CONFIGURED_FEATURES.register("calcium", () -> new ConfiguredFeature<>(Feature.DISK, new DiskConfiguration(RuleBasedBlockStateProvider.simple(IUItem.ore2.getStateFromMeta(7).getBlock()), BlockPredicate.matchesBlocks(List.of(Blocks.DIRT, IUItem.ore2.getStateFromMeta(7).getBlock())), UniformInt.of(3, 4), 1)));
-       SALTPETER = CONFIGURED_FEATURES.register("saltpeter", () -> new ConfiguredFeature<>(Feature.DISK, new DiskConfiguration(RuleBasedBlockStateProvider.simple(IUItem.ore2.getStateFromMeta(6).getBlock()), BlockPredicate.matchesBlocks(List.of(Blocks.DIRT, IUItem.ore2.getStateFromMeta(6).getBlock())), UniformInt.of(3, 4), 1)));
-      PEAT = CONFIGURED_FEATURES.register("peat", () -> new ConfiguredFeature<>(Feature.DISK, new DiskConfiguration(RuleBasedBlockStateProvider.simple(IUItem.blockResource.getStateFromMeta(10).getBlock()), BlockPredicate.matchesBlocks(List.of(Blocks.DIRT, IUItem.blockResource.getStateFromMeta(9).getBlock())), UniformInt.of(2, 3), 1)));
-         CALCIUM_PLACER = PLACED_FEATURES.register(
-                "calcium_placed",
-                () -> new PlacedFeature(
-                        CALCIUM.getHolder().orElseThrow(),
-                        List.of(
-                                PlacementUtils.HEIGHTMAP_TOP_SOLID, BlockPredicateFilter.forPredicate(BlockPredicate.matchesFluids(Fluids.WATER)), BiomeFilter.biome()
-                        )
-                )
-        );
-        SALTPETER_PLACER = PLACED_FEATURES.register(
-                "saltpeter_placed",
-                () -> new PlacedFeature(
-                        SALTPETER.getHolder().orElseThrow(),
-                        List.of(
-                                PlacementUtils.HEIGHTMAP_TOP_SOLID, BlockPredicateFilter.forPredicate(BlockPredicate.matchesFluids(Fluids.WATER)), BiomeFilter.biome()
-                        )
-                )
-        );
-      PEAT_PLACER = PLACED_FEATURES.register(
-                "peat_placed",
-                () -> new PlacedFeature(
-                        PEAT.getHolder().orElseThrow(),
-                        List.of(
-                                PlacementUtils.HEIGHTMAP_TOP_SOLID, BlockPredicateFilter.forPredicate(BlockPredicate.matchesFluids(Fluids.WATER)), BiomeFilter.biome()
-                        )
-                )
-        );
-        */
     }
 
     public static void initVein() {
@@ -443,22 +336,44 @@ public class WorldBaseGen {
     }
 
     @SubscribeEvent
-    public void onWorldTick(LevelTickEvent.Post event) {
-        if (!event.getLevel().isClientSide() && event.getLevel().dimension() == Level.OVERWORLD) {
-            if (!WorldGenVolcano.generatorVolcanoList.isEmpty()) {
-                GeneratorVolcano generatorVolcano = WorldGenVolcano.generatorVolcanoList.get(0);
-                try {
-                    generatorVolcano.setWorld(event.getLevel());
-                }catch (Exception e){
-                    WorldGenVolcano.generatorVolcanoList.remove(0);
-                    return;
-                }
-                generatorVolcano.generate();
-                if (generatorVolcano.isEnd()) {
-                    WorldGenVolcano.generatorVolcanoList.remove(0);
-                }
-            }
+    public void onServerStopping(ServerStoppingEvent event) {
+        stopping = true;
+        WorldGenVolcano.generatorVolcanoList.clear();
+    }
 
+    @SubscribeEvent
+    public void onWorldLoad(LevelEvent.Load event) {
+        if (event.getLevel() instanceof Level level && !level.isClientSide() && level.dimension() == Level.OVERWORLD) {
+            stopping = false;
+        }
+    }
+
+    @SubscribeEvent
+    public void onWorldUnload(LevelEvent.Unload event) {
+        if (event.getLevel() instanceof Level level && !level.isClientSide() && level.dimension() == Level.OVERWORLD) {
+            stopping = true;
+            WorldGenVolcano.generatorVolcanoList.clear();
+        }
+    }
+
+    @SubscribeEvent
+    public void onWorldTick(LevelTickEvent.Post event) {
+        Level level = event.getLevel();
+        if (stopping || level.isClientSide() || level.dimension() != Level.OVERWORLD) {
+            return;
+        }
+        if (!WorldGenVolcano.generatorVolcanoList.isEmpty()) {
+            GeneratorVolcano generatorVolcano = WorldGenVolcano.generatorVolcanoList.get(0);
+            try {
+                generatorVolcano.setWorld(level);
+            } catch (Exception e) {
+                WorldGenVolcano.generatorVolcanoList.remove(0);
+                return;
+            }
+            generatorVolcano.generate();
+            if (generatorVolcano.isEnd()) {
+                WorldGenVolcano.generatorVolcanoList.remove(0);
+            }
         }
     }
 }

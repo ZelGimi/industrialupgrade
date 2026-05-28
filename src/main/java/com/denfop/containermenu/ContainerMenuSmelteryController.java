@@ -9,7 +9,7 @@ public class ContainerMenuSmelteryController extends ContainerMenuFullInv<BlockE
             BlockEntitySmelteryController tileEntityGeothermalExchanger,
             Player var1
     ) {
-        super(var1, tileEntityGeothermalExchanger, 166);
+        super(var1, tileEntityGeothermalExchanger, 166 + 26);
 
     }
 

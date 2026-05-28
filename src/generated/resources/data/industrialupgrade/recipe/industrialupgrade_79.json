@@ -11,7 +11,7 @@
     "C": {
       "type": "neoforge:components",
       "components": {
-        "industrialupgrade:level_microchip": 5,
+        "industrialupgrade:level_microchip": 3,
         "minecraft:attribute_modifiers": {
           "modifiers": []
         },
@@ -23,7 +23,7 @@
         "minecraft:rarity": "common",
         "minecraft:repair_cost": 0
       },
-      "items": "industrialupgrade:circuit/nanocircuit"
+      "items": "industrialupgrade:crafting_elements/crafting_273_element"
     },
     "D": {
       "item": "industrialupgrade:battery/re_battery"
@@ -33,7 +33,7 @@
     }
   },
   "pattern": [
-    "C C",
+    "BCB",
     "BAB",
     "EDE"
   ],

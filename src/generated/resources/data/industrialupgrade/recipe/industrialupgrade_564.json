@@ -8,7 +8,7 @@
     "B": {
       "type": "neoforge:components",
       "components": {
-        "industrialupgrade:level_microchip": 8,
+        "industrialupgrade:level_microchip": 5,
         "minecraft:attribute_modifiers": {
           "modifiers": []
         },
@@ -20,7 +20,7 @@
         "minecraft:rarity": "common",
         "minecraft:repair_cost": 0
       },
-      "items": "industrialupgrade:circuit/quantumcircuit"
+      "items": "industrialupgrade:circuit/nanocircuit"
     },
     "C": {
       "item": "industrialupgrade:module_schedule"

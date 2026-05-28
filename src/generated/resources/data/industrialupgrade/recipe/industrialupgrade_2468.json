@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/nimonic"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_785_element"
+    },
+    "C": {
+      "tag": "c:plates/vitalium"
+    },
+    "D": {
+      "tag": "c:plates/superalloyrene"
+    }
+  },
+  "pattern": [
+    "ACA",
+    "BDB",
+    "ABA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_786_element"
+  },
+  "show_notification": false
+}

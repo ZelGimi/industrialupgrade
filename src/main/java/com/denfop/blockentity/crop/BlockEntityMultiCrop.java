@@ -1,5 +1,7 @@
 package com.denfop.blockentity.crop;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -36,6 +38,7 @@ import com.denfop.utils.ModUtils;
 import com.denfop.world.WorldBaseGen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.InteractionHand;
@@ -79,7 +82,7 @@ public class BlockEntityMultiCrop extends BlockEntityInventory {
     private Radiation radLevel;
     private ChunkPos chunkPos;
     private LevelChunk chunk;
-    private Biome biome;
+    private Holder<Biome> biome;
     private ChunkLevel chunkLevel;
 
     public BlockEntityMultiCrop(int col, MultiBlockEntity block, BlockPos pos, BlockState state) {
@@ -97,8 +100,8 @@ public class BlockEntityMultiCrop extends BlockEntityInventory {
         this.fluidWaterTank = fluids.addTankInsert("waterTank", 16000, Fluids.fluidPredicate(Fluids.WATER));
         this.fluidPestTank = fluids.addTankInsert("pestTank", 16000, Fluids.fluidPredicate(FluidName.fluidweed_ex.getInstance().get()));
         this.outputSlot = new InventoryOutput(this, 9);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1 * col / 2D));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1 * col / 2D));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("multi_crop_soil_pollution_formula_base_value", 0.1D) * col / 2D));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("multi_crop_air_pollution_formula_base_value", 0.1D) * col / 2D));
         this.fertilizerSlot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean canPlaceItem(final int index, final ItemStack stack) {
@@ -166,7 +169,7 @@ public class BlockEntityMultiCrop extends BlockEntityInventory {
                         crop[index] = CropNetwork.instance.getCropFromStack(content).copy();
                         genome[index].loadCrop(crop[index]);
                         place[index] = true;
-                        biomeCoef[index] = crop[index].canGrowInBiome(biome, level) ? 1 : 0.5;
+                        biomeCoef[index] = crop[index].canGrowInBiome(biome) ? 1 : 0.5;
                     }
                 }
                 return content;
@@ -258,8 +261,10 @@ public class BlockEntityMultiCrop extends BlockEntityInventory {
 
     public void onLoaded() {
         super.onLoaded();
+        this.biome = this.getWorld().getBiome(pos);
+        this.chunk = this.getWorld().getChunkAt(pos);
+        this.chunkPos = new ChunkPos(pos);
         if (!this.getWorld().isClientSide) {
-            this.biome = this.getWorld().getBiome(pos).value();
             for (int i = 0; i < crop.length; i++) {
                 if (downBlockSlot.get(i).isEmpty()) {
                     enumSoils[i] = null;
@@ -277,11 +282,11 @@ public class BlockEntityMultiCrop extends BlockEntityInventory {
                     crop[i] = CropNetwork.instance.getCropFromStack(content).copy();
                     genome[i].loadCrop(crop[i]);
                     crop[i].setTick(tickSoil[i]);
-                    biomeCoef[i] = crop[i].canGrowInBiome(biome, level) ? 1 : 0.5;
+                    biomeCoef[i] = crop[i].canGrowInBiome(biome) ? 1 : 0.5;
                     place[i] = true;
                 }
             }
-            this.chunkPos = new ChunkPos(pos);
+
             Radiation radiation1 = RadiationSystem.rad_system.getMap().get(chunkPos);
             if (radiation1 == null) {
                 radiation1 = new Radiation(chunkPos);
@@ -294,7 +299,7 @@ public class BlockEntityMultiCrop extends BlockEntityInventory {
                 PollutionManager.pollutionManager.addChunkLevelSoil(chunkLevel);
             }
             this.chunkLevel = chunkLevel;
-            this.chunk = this.getWorld().getChunkAt(pos);
+
 
         }
     }

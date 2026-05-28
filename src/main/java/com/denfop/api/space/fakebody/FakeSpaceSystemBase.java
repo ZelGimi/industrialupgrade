@@ -18,7 +18,7 @@ import java.util.*;
 public class FakeSpaceSystemBase implements IFakeSpaceSystemBase {
 
     private final Map<UUID, List<IFakeBody>> uuidListMap = new HashMap<>();
-    private final Map<UUID, Map<IBody, Data>> dataMap = new HashMap<>();
+    private final HashMap<UUID, Map<IBody, Data>> dataMap = new HashMap<>();
     private final List<FakePlanet> fakePlanetList;
     private final List<FakeSatellite> fakeSatelliteList;
     private final Map<UUID, IResearchTable> MapEntityPlayer;
@@ -330,19 +330,32 @@ public class FakeSpaceSystemBase implements IFakeSpaceSystemBase {
 
     @Override
     public void copyData(final Map<IBody, Data> data, final UUID uniqueID) {
-
-        if (dataMap.containsKey(uniqueID)) {
-            final Map<IBody, Data> dataPlayer = dataMap.get(uniqueID);
-            for (Map.Entry<IBody, Data> dataEntry : data.entrySet()) {
-                Data data1 = dataPlayer.get(dataEntry.getKey());
-                if (data1.getPercent() < dataEntry.getValue().getPercent()) {
-                    data1.setInformation(dataEntry.getValue().getPercent());
-                }
-            }
-        } else {
-            dataMap.put(uniqueID, new HashMap<>(data));
+        if (data == null || data.isEmpty()) {
+            return;
         }
 
+        final Map<IBody, Data> dataPlayer = dataMap.computeIfAbsent(uniqueID, id -> new HashMap<>());
+
+        for (Map.Entry<IBody, Data> entry : data.entrySet()) {
+            final IBody body = entry.getKey();
+            final Data incoming = entry.getValue();
+
+            if (body == null || incoming == null) {
+                continue;
+            }
+
+            final Data existing = dataPlayer.get(body);
+
+            if (existing != null) {
+                if (existing.getPercent() < incoming.getPercent()) {
+                    existing.setInformation(incoming.getPercent());
+                }
+            } else {
+                final Data newData = new Data(uniqueID, body);
+                newData.setInformation(incoming.getPercent());
+                dataPlayer.put(body, newData);
+            }
+        }
     }
 
     private void processTimers(IFakeBody fakeBody) {
@@ -407,7 +420,10 @@ public class FakeSpaceSystemBase implements IFakeSpaceSystemBase {
             }
             fakeBody.getSpaceOperation().setOperation(EnumOperation.SUCCESS);
             if (fakeBody.getTimerTo().getTime() == 0) {
-                fakeBody.getData().addInformation(5);
+                SpaceNet.instance.getFakeSpaceSystem().getDataFromUUID(playerId).computeIfAbsent(fakeBody.getBody(), k -> new Data(
+                        playerId,
+                        fakeBody.getBody()
+                )).addInformation(5);
             }
             removeFakeBody(fakeBody, playerId, uuidListMap);
         }

@@ -62,6 +62,7 @@ public class InventoryUpgrade extends Inventory implements ITypeSlot {
     public boolean update = false;
     List<InventoryOutput> slots = new ArrayList<>();
     List<Inventory> inv_slots = new ArrayList<>();
+    FakePlayerSpawner player;
     private Direction[] facings;
     private List<List<ItemStack>> whiteList;
     private List<List<Fluid>> whiteList1;
@@ -129,7 +130,7 @@ public class InventoryUpgrade extends Inventory implements ITypeSlot {
             return false;
         } else {
             IUpgradeItem item = (IUpgradeItem) rawItem;
-            return item.isSuitableFor(stack, ((IUpgradableBlock) this.base).getUpgradableProperties());
+            return item.isSuitableFor(stack, ((IUpgradableBlock) this.base).getAllPossibleUpgradableProperties());
         }
     }
 
@@ -160,7 +161,6 @@ public class InventoryUpgrade extends Inventory implements ITypeSlot {
             return this.add(Collections.singletonList(stack), true);
         }
     }
-
 
     public void setChanged() {
         this.resetRates();
@@ -195,7 +195,9 @@ public class InventoryUpgrade extends Inventory implements ITypeSlot {
                 rs.update();
             }
         }
-        if (this.tile.getWorld() instanceof ServerLevel)
+        if (this.tile.getWorld() instanceof ServerLevel) {
+            if (player == null)
+                this.player = new FakePlayerSpawner(this.tile.getWorld());
             for (int i = 0; i < this.size(); ++i) {
                 ItemStack stack = this.get(i);
                 if (stack.is(IUItem.ejectorUpgrade.getItem())) {
@@ -211,11 +213,11 @@ public class InventoryUpgrade extends Inventory implements ITypeSlot {
                     this.fluidEjectorUpgrade = true;
                     this.facings[i] = getDirection(stack);
                     IItemStackInventory inventory = (IItemStackInventory) stack.getItem();
-                    List<FluidStack> fluidStacks = ((ItemStackUpgradeModules) inventory.getInventory(new FakePlayerSpawner(this.tile.getWorld()), stack)).fluidStackList;
+                    List<FluidStack> fluidStacks = ((ItemStackUpgradeModules) inventory.getInventory(player, stack)).fluidStackList;
                     List<Fluid> fluidStacks1 = new ArrayList<>();
 
                     for (FluidStack stacks : fluidStacks) {
-                        if (stacks != null) {
+                        if (stacks != null && stacks.isEmpty()) {
                             fluidStacks1.add(stacks.getFluid());
                         }
                     }
@@ -233,17 +235,18 @@ public class InventoryUpgrade extends Inventory implements ITypeSlot {
                     this.fluidPullingUpgrade = true;
                     this.facings[i] = getDirection(stack);
                     IItemStackInventory inventory = (IItemStackInventory) stack.getItem();
-                    List<FluidStack> fluidStacks = ((ItemStackUpgradeModules) inventory.getInventory(new FakePlayerSpawner(this.tile.getWorld()), stack)).fluidStackList;
+                    List<FluidStack> fluidStacks = ((ItemStackUpgradeModules) inventory.getInventory(player, stack)).fluidStackList;
                     List<Fluid> fluidStacks1 = new ArrayList<>();
 
                     for (FluidStack stacks : fluidStacks) {
-                        if (stacks != null) {
+                        if (stacks != null && stacks.isEmpty()) {
                             fluidStacks1.add(stacks.getFluid());
                         }
                     }
                     this.whiteList1.set(i, fluidStacks1);
                 }
             }
+        }
     }
 
     private void resetRates() {
@@ -425,7 +428,7 @@ public class InventoryUpgrade extends Inventory implements ITypeSlot {
                         if (!fluid.isEmpty() && fluid.getAmount() > 0 && tank.canDrain(facing.getOpposite()) && tank.isFluidValid(fluid) && (itemStackList.isEmpty() || itemStackList.contains(
                                 fluid.getFluid()))) {
                             FluidStack fluidStack = fluidTankProperties.copy();
-                            fluidStack.setAmount(Math.min( tank.getCapacity() - tank.getFluidAmount(),fluidStack.getAmount()));
+                            fluidStack.setAmount(Math.min(tank.getCapacity() - tank.getFluidAmount(), fluidStack.getAmount()));
                             handler.drain(fluidStack, IFluidHandler.FluidAction.EXECUTE);
                             tank.fill(fluidStack, IFluidHandler.FluidAction.EXECUTE);
                         }
@@ -456,7 +459,7 @@ public class InventoryUpgrade extends Inventory implements ITypeSlot {
                             if (!fluid.isEmpty() && fluid.getAmount() > 0 && tank.acceptsFluid(fluid.getFluid()) && (itemStackList.isEmpty() || itemStackList.contains(
                                     fluid.getFluid()))) {
                                 FluidStack fluidStack = fluidTankProperties.copy();
-                                fluidStack.setAmount(Math.min( tank.getCapacity() - tank.getFluidAmount(),fluidStack.getAmount()));
+                                fluidStack.setAmount(Math.min(tank.getCapacity() - tank.getFluidAmount(), fluidStack.getAmount()));
                                 handler.drain(fluidStack, IFluidHandler.FluidAction.EXECUTE);
                                 tank.fill(fluidStack, IFluidHandler.FluidAction.EXECUTE);
                             }

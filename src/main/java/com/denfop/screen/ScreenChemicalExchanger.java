@@ -15,6 +15,8 @@ import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.List;
 
+import static com.denfop.api.widget.TankWidget.getSafeFluidSprite;
+
 public class ScreenChemicalExchanger<T extends ContainerMenuDefaultMultiElement> extends ScreenMain<ContainerMenuDefaultMultiElement> {
 
     public ScreenChemicalExchanger(ContainerMenuDefaultMultiElement guiContainer) {
@@ -37,7 +39,7 @@ public class ScreenChemicalExchanger<T extends ContainerMenuDefaultMultiElement>
                     int fluidHeight = 45;
                     Fluid fluid = fs.getFluid();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
-                    TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+                    TextureAtlasSprite sprite = getSafeFluidSprite(fs);
                     int color = extensions.getTintColor();
                     bindBlockTexture();
                     this.gui.drawSprite(poseStack,

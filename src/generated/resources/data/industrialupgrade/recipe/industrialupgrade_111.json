@@ -30,9 +30,9 @@
     }
   },
   "pattern": [
-    "ABA",
-    "CEC",
-    "ABA"
+    "A A",
+    "BEB",
+    "ACA"
   ],
   "result": {
     "count": 1,

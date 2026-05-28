@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -59,13 +61,13 @@ public class BlockEntityIndustrialOrePurifier extends BlockEntityElectricMachine
     protected short progress;
 
     public BlockEntityIndustrialOrePurifier(BlockPos pos, BlockState state) {
-        super(200, 1, 1, BlockBaseMachine3Entity.industrial_ore_purifier, pos, state);
+        super(ModConfig.mechanismDouble("industrial_radioactive_element_purifier_energy_storage", 200.0D), 1, 1, BlockBaseMachine3Entity.industrial_ore_purifier, pos, state);
         Recipes.recipes.addInitRecipes(this);
 
-        this.addComponent(new SoilPollutionComponent(this, 0.25));
-        this.addComponent(new AirPollutionComponent(this, 0.25));
+        this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("industrial_radioactive_element_purifier_soil_pollution_amount", 0.25D)));
+        this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("industrial_radioactive_element_purifier_air_pollution_amount", 0.25D)));
         this.progress = 0;
-        this.defaultEnergyConsume = this.energyConsume = 1;
+        this.defaultEnergyConsume = this.energyConsume = ModConfig.mechanismInt("industrial_radioactive_element_purifier_energy_use", 1);
         this.defaultOperationLength = this.operationLength = 200;
         this.defaultTier = 1;
         this.defaultEnergyStorage = 100;
@@ -95,9 +97,9 @@ public class BlockEntityIndustrialOrePurifier extends BlockEntityElectricMachine
             tooltip.add(Localization.translate("press.lshift"));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            tooltip.add(Localization.translate("iu.machines_work_energy") + 200 + Localization.translate(
+            tooltip.add(Localization.translate("iu.machines_work_energy") + defaultEnergyConsume + Localization.translate(
                     "iu.machines_work_energy_type_eu"));
-            tooltip.add(Localization.translate("iu.machines_work_length") + 1);
+            tooltip.add(Localization.translate("iu.machines_work_length") + defaultOperationLength);
         }
         super.addInformation(stack, tooltip);
 

@@ -6,7 +6,7 @@
       "item": "industrialupgrade:adv_spectral_box"
     },
     "B": {
-      "item": "industrialupgrade:itemcore/sincore"
+      "item": "industrialupgrade:itemcore/specore"
     },
     "C": {
       "item": "industrialupgrade:rotors_upgrade/rotorupgrade12"
@@ -16,9 +16,9 @@
     }
   },
   "pattern": [
-    "ADA",
-    "CBC",
-    "ADA"
+    "   ",
+    "DBD",
+    "ACA"
   ],
   "result": {
     "count": 1,

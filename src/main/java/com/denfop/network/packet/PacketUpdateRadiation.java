@@ -1,12 +1,12 @@
 package com.denfop.network.packet;
 
 import com.denfop.IUCore;
+import com.denfop.api.pollution.client.PollutionClientRenderRefresh;
 import com.denfop.api.pollution.radiation.Radiation;
 import com.denfop.api.pollution.radiation.RadiationSystem;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
 import java.io.IOException;
@@ -16,26 +16,19 @@ public class PacketUpdateRadiation implements IPacket {
     private CustomPacketBuffer buffer;
 
     public PacketUpdateRadiation() {
-
     }
 
     public PacketUpdateRadiation(Radiation radiation, ServerLevel serverLevel) {
-        for (ServerPlayer player : serverLevel.players()) {
-            CustomPacketBuffer buffer = new CustomPacketBuffer(64, serverLevel.registryAccess());
-            try {
-                buffer.writeByte(this.getId());
-                EncoderHandler.encode(buffer, radiation);
-
-
-            } catch (IOException var5) {
-                throw new RuntimeException(var5);
-            }
-
-            buffer.flip();
-            this.buffer = buffer;
-
-            IUCore.network.getServer().sendPacket(this, player, buffer);
+        CustomPacketBuffer buffer = new CustomPacketBuffer(64, serverLevel.registryAccess());
+        try {
+            buffer.writeByte(this.getId());
+            EncoderHandler.encode(buffer, radiation);
+        } catch (IOException var5) {
+            throw new RuntimeException(var5);
         }
+        buffer.flip();
+        this.buffer = buffer;
+        IUCore.network.getServer().sendPacket(this, buffer);
     }
 
     @Override
@@ -69,6 +62,8 @@ public class PacketUpdateRadiation implements IPacket {
                 radiation1.setCoef(radiation.getCoef());
                 radiation1.setLevel(radiation.getLevel());
             }
+
+            PollutionClientRenderRefresh.queueSingleChunkRadiationUpdated(radiation.getPos());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -78,5 +73,4 @@ public class PacketUpdateRadiation implements IPacket {
     public EnumTypePacket getPacketType() {
         return EnumTypePacket.SERVER;
     }
-
 }

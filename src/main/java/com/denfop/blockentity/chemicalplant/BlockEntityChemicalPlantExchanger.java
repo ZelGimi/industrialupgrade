@@ -11,11 +11,17 @@ import com.denfop.containermenu.ContainerMenuBase;
 import com.denfop.containermenu.ContainerMenuDefaultMultiElement;
 import com.denfop.screen.ScreenChemicalExchanger;
 import com.denfop.screen.ScreenIndustrialUpgrade;
+import com.denfop.utils.FluidHandlerFix;
+import com.denfop.utils.ModUtils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.capabilities.Capabilities;
 
 public class BlockEntityChemicalPlantExchanger extends BlockEntityMultiBlockElement implements IExchanger {
 
@@ -28,7 +34,17 @@ public class BlockEntityChemicalPlantExchanger extends BlockEntityMultiBlockElem
         this.fluidTank = this.fluids.addTank("fluids", 10000);
         this.fluidTank.setAcceptedFluids(Fluids.fluidPredicate(FluidName.fluidiodine.getInstance().get()));
     }
+    @Override
+    public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
+        if (!this.getWorld().isClientSide && FluidHandlerFix.getFluidHandler(player.getItemInHand(hand)) != null && this.getMain() != null) {
 
+            return ModUtils.interactWithFluidHandler(player, hand,
+                    fluids.getCapability(Capabilities.FluidHandler.BLOCK, side)
+            );
+        } else {
+            return super.onActivated(player, hand, side, vec3);
+        }
+    }
     @Override
     public boolean hasOwnInventory() {
         return true;

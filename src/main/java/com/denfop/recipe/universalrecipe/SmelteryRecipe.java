@@ -9,9 +9,7 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.fluids.FluidStack;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class SmelteryRecipe implements Recipe<CraftingInput> {
@@ -61,8 +59,6 @@ public class SmelteryRecipe implements Recipe<CraftingInput> {
     public ItemStack getResultItem(HolderLookup.Provider pRegistryAccess) {
         return ItemStack.EMPTY;
     }
-
-
 
 
     @Override

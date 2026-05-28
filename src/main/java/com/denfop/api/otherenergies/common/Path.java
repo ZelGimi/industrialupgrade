@@ -17,6 +17,10 @@ public class Path {
         this.targetDirection = facing;
     }
 
+    public ISink getSink() {
+        return target;
+    }
+
     public void tick(int tick, double adding) {
         if (this.target.isSink()) {
             if (this.target.getTick() != tick) {

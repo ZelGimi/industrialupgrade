@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.solarium_storage;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blocks.BlockTileEntity;
@@ -11,7 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class BlockEntityAdvSolariumStorage extends BlockEntitySolariumStorage {
 
     public BlockEntityAdvSolariumStorage(BlockPos pos, BlockState state) {
-        super(400000, EnumTypeStyle.ADVANCED, BlockBaseMachine3Entity.adv_solarium_storage, pos, state);
+        super(ModConfig.mechanismDouble("advanced_energy_storage", 400000.0D), EnumTypeStyle.ADVANCED, BlockBaseMachine3Entity.adv_solarium_storage, pos, state);
     }
 
     public MultiBlockEntity getTeBlock() {

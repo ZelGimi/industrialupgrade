@@ -34,6 +34,9 @@ public class PacketUpdateRecipe implements IPacket {
     }
 
     private <T> void sendChunkedRecipes(String recipeKey, List<T> fullList, boolean isFluid, ServerPlayer player) {
+        if (fullList == null) {
+            System.out.println(recipeKey);
+        }
         final int CHUNK_SIZE = 64;
         for (int i = 0; i < fullList.size(); i += CHUNK_SIZE) {
             int end = Math.min(i + CHUNK_SIZE, fullList.size());

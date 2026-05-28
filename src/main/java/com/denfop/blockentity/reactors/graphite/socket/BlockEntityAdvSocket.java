@@ -1,5 +1,7 @@
 package com.denfop.blockentity.reactors.graphite.socket;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blocks.BlockTileEntity;
@@ -10,7 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class BlockEntityAdvSocket extends BlockEntityMainSocket {
 
     public BlockEntityAdvSocket(BlockPos pos, BlockState state) {
-        super(20000, BlocksGraphiteReactors.graphite_adv_socket, pos, state);
+        super(ModConfig.mechanismInt("improved_graphite_water_reactor_socket_capacity", 20000), BlocksGraphiteReactors.graphite_adv_socket, pos, state);
     }
 
     @Override

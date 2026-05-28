@@ -138,10 +138,10 @@ public class ScreenApiary<T extends ContainerMenuApiary> extends ScreenMain<Cont
 
             } else {
                 int j = 0;
-                for (int i = indexAdditionProducts; i < Math.min((indexAdditionProducts + 1) * 3, maxIndexAdditionProducts); i++, j++) {
+                for (int i = indexAdditionProducts; i < Math.min((indexAdditionProducts + 3), maxIndexAdditionProducts); i++, j++) {
                     Product product = products.get(i);
 
-                    this.addWidget(new TooltipWidget(this, 176, (int) (8 + 16 * (j + 3.5)), 16, 16).withTooltip(() -> product.getCrop().getDrop().get(0).getDisplayName().getString() + "\n" + Localization.translate("iu.space_chance") + " " + ModUtils.getString(product.getChance() / 3) + "%"));
+                    this.addWidget(new TooltipWidget(this, 176, (int) (8 + 16 * (j + 3.5)), 16, 16).withTooltip(() -> com.denfop.utils.ModUtils.cleanComponentString(product.getCrop().getDrop().get(0).getDisplayName().getString()) + "\n" + Localization.translate("iu.space_chance") + " " + ModUtils.getString(product.getChance() / (2 / this.container.base.coef)) + "%"));
 
 
                 }
@@ -158,6 +158,32 @@ public class ScreenApiary<T extends ContainerMenuApiary> extends ScreenMain<Cont
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, float f, int x, int y) {
         super.drawGuiContainerBackgroundLayer(poseStack, f, x, y);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        int renderHeight = (int) (49 * ModUtils.limit(
+                this.container.base.food / (this.container.base.maxFood * 1D),
+                0.0D,
+                1.0D
+        ));
+        this.drawTexturedModalRect(
+                poseStack, this.guiLeft + 10,
+                this.guiTop + 20 + 50 - renderHeight,
+                236,
+                50 - renderHeight,
+                12,
+                renderHeight
+        );
+        renderHeight = (int) (49 * ModUtils.limit(
+                this.container.base.royalJelly / (this.container.base.maxJelly * 1D),
+                0.0D,
+                1.0D
+        ));
+        this.drawTexturedModalRect(
+                poseStack, this.guiLeft + 154,
+                this.guiTop + 20 + 50 - renderHeight,
+                223,
+                50 - renderHeight,
+                12,
+                renderHeight
+        );
         if (this.container.base.getQueen() == null)
             return;
         if (this.container.base.getGenome() != null) {
@@ -175,7 +201,7 @@ public class ScreenApiary<T extends ContainerMenuApiary> extends ScreenMain<Cont
             j = 0;
             List<Product> products = this.container.base.getQueen().getProduct();
             maxIndexAdditionProducts = products.size();
-            for (int i = indexAdditionProducts; i < Math.min((indexAdditionProducts + 1) * 3, maxIndexAdditionProducts); i++, j++) {
+            for (int i = indexAdditionProducts; i < Math.min((indexAdditionProducts + 3), maxIndexAdditionProducts); i++, j++) {
                 Product product = products.get(i);
                 RenderSystem.enableBlend();
                 poseStack.renderItem(product.getCrop().getDrop().get(0), 176 + this.guiLeft(), (int) (8 + 16 * (j + 3.5) + this.guiTop()));
@@ -205,32 +231,7 @@ public class ScreenApiary<T extends ContainerMenuApiary> extends ScreenMain<Cont
         if (this.container.base.illTask == 1) {
             this.drawTexturedModalRect(poseStack, this.guiLeft + 60, this.guiTop + 86, 249, 1, 6, 6);
         }
-        int renderHeight = (int) (49 * ModUtils.limit(
-                this.container.base.food / (this.container.base.maxFood * 1D),
-                0.0D,
-                1.0D
-        ));
-        this.drawTexturedModalRect(
-                poseStack, this.guiLeft + 10,
-                this.guiTop + 20 + 50 - renderHeight,
-                236,
-                50 - renderHeight,
-                12,
-                renderHeight
-        );
-        renderHeight = (int) (49 * ModUtils.limit(
-                this.container.base.royalJelly / (this.container.base.maxJelly * 1D),
-                0.0D,
-                1.0D
-        ));
-        this.drawTexturedModalRect(
-                poseStack, this.guiLeft + 154,
-                this.guiTop + 20 + 50 - renderHeight,
-                223,
-                50 - renderHeight,
-                12,
-                renderHeight
-        );
+
         bindTexture(ResourceLocation.tryBuild("industrialupgrade", "textures/gui/infobutton.png"));
         this.drawTexturedRect(poseStack, 3.0D, 3.0D, 10.0D, 10.0D, 0.0D, 0.0D);
     }

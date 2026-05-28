@@ -2,6 +2,7 @@ package com.denfop;
 
 
 import com.denfop.api.recipe.BaseMachineRecipe;
+import com.denfop.blockentity.collision.BlockEntityCollisionProxy;
 import com.denfop.blockentity.panels.entity.EnumSolarPanels;
 import com.denfop.blocks.*;
 import com.denfop.blocks.blockitem.*;
@@ -34,6 +35,9 @@ import com.denfop.items.resource.*;
 import com.denfop.items.resource.alloys.*;
 import com.denfop.items.resource.preciousresources.ItemPreciousGem;
 import com.denfop.items.space.*;
+import com.denfop.items.storage.ItemCell;
+import com.denfop.items.storage.ItemPattern;
+import com.denfop.items.storage.ItemWirelessTerminal;
 import com.denfop.items.upgradekit.ItemUpgradeKit;
 import com.denfop.items.upgradekit.ItemUpgradeMachinesKit;
 import com.denfop.items.upgradekit.ItemUpgradePanelKit;
@@ -41,9 +45,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.*;
+
+import static com.denfop.register.Register.BLOCKS;
+import static com.denfop.register.Register.BLOCK_ENTITIES;
 
 public class IUItem {
     public static final Map<String, List<Object>> panel_list = new HashMap<>();
@@ -572,6 +581,14 @@ public class IUItem {
     public static DataBlock<BlockSpace3.Type, BlockSpace3, ItemBlockSpace3> space_ore3;
     public static DataBlock<BlockSpace1.Type, BlockSpace1, ItemBlockSpace1> space_ore1;
     public static DataBlock<BlockSpace.Type, BlockSpace, ItemBlockSpace> space_ore;
+    public static DataBlock<BlockAsteroidOre.Type, BlockAsteroidOre, ItemBlockAsteroidOre> asteroid_ore;
+    public static DataBlock<BlockAsteroidOre1.Type, BlockAsteroidOre1, ItemBlockAsteroidOre1> asteroid_ore1;
+    public static DataBlock<BlockAsteroidOre2.Type, BlockAsteroidOre2, ItemBlockAsteroidOre2> asteroid_ore2;
+    public static DataBlock<BlockAsteroidOre3.Type, BlockAsteroidOre3, ItemBlockAsteroidOre3> asteroid_ore3;
+    public static DataBlock<BlockDeepOre.Type, BlockDeepOre, ItemBlockDeepOre> deep_ore;
+    public static DataBlock<BlockDeepOre1.Type, BlockDeepOre1, ItemBlockDeepOre1> deep_ore1;
+    public static DataBlock<BlockDeepOre2.Type, BlockDeepOre2, ItemBlockDeepOre2> deep_ore2;
+    public static DataBlock<BlockDeepOre3.Type, BlockDeepOre3, ItemBlockDeepOre3> deep_ore3;
     public static DataSimpleItem<ItemArmorVolcanoHazmat, ResourceLocation> volcano_hazmat_chestplate;
     public static DataSimpleItem<ItemArmorVolcanoHazmat, ResourceLocation> volcano_hazmat_helmet;
     public static DataSimpleItem<ItemArmorVolcanoHazmat, ResourceLocation> volcano_hazmat_leggings;
@@ -845,6 +862,40 @@ public class IUItem {
     public static DataSimpleItem<ItemReinforcedFluidCell, ResourceLocation> reinforcedFluidCell;
     public static DataSimpleItem<ItemLatexPipette, ResourceLocation> latexPipette;
     public static DataBlockEntity<BlockVolcanoChest> volcanoChest;
+    public static DataSimpleItem<ItemCell, ResourceLocation> itemCell1000;
+    public static DataSimpleItem<ItemCell, ResourceLocation> itemCell4000;
+    public static DataSimpleItem<ItemCell, ResourceLocation> itemCell16000;
+    public static DataSimpleItem<ItemCell, ResourceLocation> itemCell64000;
+    public static DataSimpleItem<ItemCell, ResourceLocation> itemCell256000;
+    public static DataSimpleItem<ItemCell, ResourceLocation> itemCell1024000;
+    public static DataSimpleItem<ItemCell, ResourceLocation> fluidCell1024000;
+    public static DataSimpleItem<ItemCell, ResourceLocation> fluidCell256000;
+    public static DataSimpleItem<ItemCell, ResourceLocation> fluidCell64000;
+    public static DataSimpleItem<ItemCell, ResourceLocation> fluidCell16000;
+    public static DataSimpleItem<ItemCell, ResourceLocation> fluidCell4000;
+    public static DataSimpleItem<ItemCell, ResourceLocation> fluidCell1000;
+    public static DataBlockEntity<BlockStorageSystemEntity> storageSystem;
+    public static DataBlockEntity<BlockStorageSystemCableEntity> storagepipes;
+    public static DataSimpleItem<ItemPattern, ResourceLocation> patternStack;
+    public static DataSimpleItem<ItemCell, ResourceLocation> itemCell4096000;
+    public static DataSimpleItem<ItemCell, ResourceLocation> itemCell16384000;
+    public static DataSimpleItem<ItemCell, ResourceLocation> itemCell65536000;
+    public static DataSimpleItem<ItemCell, ResourceLocation> itemCell262144000;
+    public static DataSimpleItem<ItemCell, ResourceLocation> itemCell1048576000;
+    public static DataSimpleItem<ItemCell, ResourceLocation> itemCell2097152000;
+    public static DataSimpleItem<ItemWirelessTerminal, ResourceLocation> terminalWireless;
+    public static DeferredHolder<Block, BlockCollisionProxy> COLLISION_PROXY =
+            BLOCKS.register("collision_proxy", BlockCollisionProxy::new);
+    public static DataBlock<SootBlock.Type, SootBlock, ItemBlockSoot> sootBlock;    public static DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockEntityCollisionProxy>> COLLISION_PROXY_STATE =
+            BLOCK_ENTITIES.register("collision_proxy",
+                    () -> BlockEntityType.Builder.of(
+                            BlockEntityCollisionProxy::new,
+                            COLLISION_PROXY.get()
+                    ).build(null));
+    public static DataBlock<RadiationDustBlock.Type, RadiationDustBlock, ItemBlockRadiationDust> radiationDustBlock;
+    public static DataSimpleItem<ItemPlanetaryTranslocator, ResourceLocation> planetary_translocator;
+    public static DataBlock<BlockNitrateMud.Type, BlockNitrateMud, ItemBlockNitrateMud> nitrate_mud;
+    public static DataBlock<BlockRawSaltpeter.Type, BlockRawSaltpeter, ItemBlockRawSaltpeter> raw_saltpeter;
 
     public static void register_mineral() {
         name_mineral = new ArrayList<>();
@@ -900,4 +951,6 @@ public class IUItem {
 
 
     }
+
+
 }

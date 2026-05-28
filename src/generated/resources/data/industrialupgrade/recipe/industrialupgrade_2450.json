@@ -1,0 +1,22 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/muntsa"
+    },
+    "B": {
+      "item": "wateringcan:simple_watering_can"
+    }
+  },
+  "pattern": [
+    "  A",
+    "AB ",
+    "AAA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "wateringcan:adv_watering_can"
+  },
+  "show_notification": false
+}

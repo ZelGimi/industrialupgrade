@@ -28,6 +28,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -134,6 +135,7 @@ public class ItemSteelHammer extends ItemToolIU {
             Level level, Block block, BlockHitResult mop, byte modeItem, Player player, BlockPos pos,
             ItemStack stack
     ) {
+
         byte xRange = modeItem;
         byte yRange = modeItem;
         byte zRange = modeItem;
@@ -162,13 +164,12 @@ public class ItemSteelHammer extends ItemToolIU {
         fortune = Math.min(3, fortune);
 
         int yOffset = yRange > 0 ? yRange - 1 : 0;
-        stack.hurtAndBreak(1, player, EquipmentSlot.MAINHAND);
-
+        boolean breakBlocks = false;
         if (!player.getAbilities().instabuild) {
             for (int xPos = x - xRange; xPos <= x + xRange; xPos++) {
                 for (int yPos = y - yRange + yOffset; yPos <= y + yRange + yOffset; yPos++) {
                     for (int zPos = z - zRange; zPos <= z + zRange; zPos++) {
-                        if (stack.getDamageValue() > 0) {
+                        if (stack.getDamageValue() != stack.getMaxDamage()) {
                             BlockPos blockPos = new BlockPos(xPos, yPos, zPos);
                             BlockState state = level.getBlockState(blockPos);
                             Block localBlock = state.getBlock();
@@ -177,7 +178,7 @@ public class ItemSteelHammer extends ItemToolIU {
                                     && state.getDestroySpeed(level, blockPos) >= 0.0F
                             ) {
                                 if (state.getDestroySpeed(level, blockPos) > 0.0F) {
-                                    onDestroyed(stack, level, state, blockPos, player);
+                                    breakBlocks = onDestroyed(stack, level, state, blockPos, player) || breakBlocks;
                                 }
                                 if (!silkTouch) {
                                     ExperienceUtils.addPlayerXP(player, getExperience(state, level, blockPos, player, stack, localBlock));
@@ -190,31 +191,34 @@ public class ItemSteelHammer extends ItemToolIU {
                 }
             }
         } else {
-            if (stack.getDamageValue() > 0) {
-                BlockState state = level.getBlockState(pos);
-                Block localBlock = state.getBlock();
-                if ((localBlock != Blocks.AIR && isCorrectToolForDrops(stack, state)
-                        && state.getDestroySpeed(level, pos) >= 0.0F)
-                        || (block == Blocks.INFESTED_STONE)) {
-                    if (state.getDestroySpeed(level, pos) >= 0.0F) {
-                        onDestroyed(stack, level, state, pos, player);
-                    }
-                    if (!silkTouch) {
-                        ExperienceUtils.addPlayerXP(player, getExperience(state, level, pos, player, stack, localBlock));
-                    }
-                } else {
-                    if (state.getDestroySpeed(level, pos) >= 0.0F) {
-                        return onDestroyed(stack, level, state, pos, player);
-                    }
+
+            BlockState state = level.getBlockState(pos);
+            Block localBlock = state.getBlock();
+            if ((localBlock != Blocks.AIR && isCorrectToolForDrops(stack, state)
+                    && state.getDestroySpeed(level, pos) >= 0.0F)
+                    || (block == Blocks.INFESTED_STONE)) {
+                if (state.getDestroySpeed(level, pos) >= 0.0F) {
+                    breakBlocks = onDestroyed(stack, level, state, pos, player) || breakBlocks;
+                }
+                if (!silkTouch) {
+                    ExperienceUtils.addPlayerXP(player, getExperience(state, level, pos, player, stack, localBlock));
+                }
+            } else {
+                if (state.getDestroySpeed(level, pos) >= 0.0F) {
+                    return onDestroyed(stack, level, state, pos, player);
                 }
             }
         }
+
+        if (breakBlocks)
+            stack.hurtAndBreak(1, player, EquipmentSlot.MAINHAND);
         return true;
     }
 
     @Override
     public float getDestroySpeed(ItemStack stack, BlockState state) {
-        return mineableBlocks.contains(state) ? this.getTier().getSpeed() : 1.0F;
+        return state.is(BlockTags.MINEABLE_WITH_PICKAXE) || state.is(BlockTags.MINEABLE_WITH_SHOVEL) ? this.getTier().getSpeed() : 1.0F;
+
     }
 
     @Override
@@ -243,10 +247,10 @@ public class ItemSteelHammer extends ItemToolIU {
             if (CommonHooks.fireBlockBreak(serverWorld, serverPlayer.gameMode.getGameModeForPlayer(), serverPlayer, pos, state).isCanceled()) {
                 return false;
             }
-
+            BlockEntity blockEntity = world.getBlockEntity(pos);
             if (block.onDestroyedByPlayer(state, world, pos, (ServerPlayer) entity, true, world.getFluidState(pos))) {
                 block.destroy(world, pos, state);
-                block.playerDestroy(world, (ServerPlayer) entity, pos, state, null, stack);
+                block.playerDestroy(world, (ServerPlayer) entity, pos, state, blockEntity, stack);
 
 
                 List<ItemEntity> items = world.getEntitiesOfClass(
@@ -267,9 +271,10 @@ public class ItemSteelHammer extends ItemToolIU {
             }
 
         } else {
-            if (block.onDestroyedByPlayer(state, world, pos, (ServerPlayer) entity, true, world.getFluidState(pos))) {
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            if (block.onDestroyedByPlayer(state, world, pos, (Player) entity, true, world.getFluidState(pos))) {
                 block.destroy(world, pos, state);
-                block.playerDestroy(world, (ServerPlayer) entity, pos, state, null, stack);
+                block.playerDestroy(world, (Player) entity, pos, state, blockEntity, stack);
             }
 
         }

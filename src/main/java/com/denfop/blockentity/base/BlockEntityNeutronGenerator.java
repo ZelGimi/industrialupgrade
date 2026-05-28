@@ -1,5 +1,7 @@
 package com.denfop.blockentity.base;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -79,8 +81,8 @@ public class BlockEntityNeutronGenerator extends BlockEntityElectricMachine impl
                                     }
                                 }
         );
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.005));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.05));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("neutron_particle_generator_soil_pollution_amount", 0.005D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("neutron_particle_generator_air_pollution_amount", 0.05D)));
         this.upgradeSlot = new InventoryUpgrade(this, 4);
     }
 

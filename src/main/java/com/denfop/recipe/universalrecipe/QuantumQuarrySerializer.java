@@ -9,7 +9,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
@@ -147,7 +146,7 @@ public class QuantumQuarrySerializer implements RecipeSerializer<QuantumQuarryRe
                                 default -> throw new IllegalArgumentException("Unknown input type: " + type);
                             }
                         }
-                        if (!IUCore.updateRecipe){
+                        if (!IUCore.updateRecipe) {
                             List<ItemStack> input = new ArrayList<>();
                             for (IInputItemStack o : inputs) {
                                 input.add(o.getInputs().get(0));

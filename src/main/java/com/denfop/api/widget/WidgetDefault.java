@@ -15,7 +15,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import static com.denfop.api.widget.ScreenWidget.bindBlockTexture;
-import static com.denfop.api.widget.ScreenWidget.getBlockTextureMap;
+import static com.denfop.api.widget.TankWidget.getSafeFluidSprite;
 
 
 public class WidgetDefault<T> {
@@ -77,7 +77,7 @@ public class WidgetDefault<T> {
                     int fluidHeight = 16;
                     Fluid fluid = fs.getFluid();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
-                    TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+                    TextureAtlasSprite sprite = getSafeFluidSprite(fs);
                     int color = extensions.getTintColor();
                     bindBlockTexture();
                     screenWidget.getGui().drawSprite(poseStack,
@@ -103,7 +103,7 @@ public class WidgetDefault<T> {
                     int fluidHeight = 16;
                     Fluid fluid = fs.getFluid();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
-                    TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+                    TextureAtlasSprite sprite = getSafeFluidSprite(fs);
                     int color = extensions.getTintColor();
                     bindBlockTexture();
                     screenWidget.getGui().drawSprite(poseStack,

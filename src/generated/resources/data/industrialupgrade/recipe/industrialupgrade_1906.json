@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:adv_spectral_box"
+      "item": "industrialupgrade:spectral_box"
     },
     "B": {
       "item": "industrialupgrade:module_schedule"

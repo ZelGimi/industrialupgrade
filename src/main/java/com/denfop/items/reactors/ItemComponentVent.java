@@ -1,5 +1,7 @@
 package com.denfop.items.reactors;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.api.reactors.EnumTypeComponent;
@@ -25,7 +27,7 @@ public class ItemComponentVent extends ItemDamage implements IReactorItem, IItem
     private final int autoRepair;
 
     public ItemComponentVent(int level, int autoRepair) {
-        super(new Item.Properties().stacksTo(1), 1);
+        super(new Item.Properties().stacksTo(1), ModConfig.itemInt("restores_nearby_durability_by_durability", 1));
         this.level = level;
         this.autoRepair = autoRepair;
     }
@@ -39,7 +41,7 @@ public class ItemComponentVent extends ItemDamage implements IReactorItem, IItem
         if (this.nameItem == null) {
             ResourceLocation res = BuiltInRegistries.ITEM.getKey(this);
             StringBuilder pathBuilder = new StringBuilder(Util.makeDescriptionId("iu", res));
-            String targetString = res.getNamespace()+".";
+            String targetString = res.getNamespace() + ".";
             String replacement = "";
             if (replacement != null) {
                 int index = pathBuilder.indexOf(targetString);

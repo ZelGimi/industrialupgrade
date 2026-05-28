@@ -62,7 +62,7 @@ public class ItemStackBags extends ItemStackInventory {
         if (!this.player.level().isClientSide) {
             if (!this.cleared) {
                 boolean dropItself = false;
-
+                this.containerAdditionItem = this.containerAdditionItem.updateItems(containerStack, list);
                 for (int i = 0; i < this.list.size(); ++i) {
                     if (this.isThisContainer(this.list.get(i))) {
                         this.list.set(i, ItemStack.EMPTY);
@@ -73,7 +73,7 @@ public class ItemStackBags extends ItemStackInventory {
                 ListTag contentList = new ListTag();
 
                 int idx;
-                this.containerAdditionItem = this.containerAdditionItem.updateItems(containerStack, list);
+
 
                 if (dropItself) {
                     ModUtils.dropAsEntity(this.player.level(), this.player.blockPosition(), this.containerStack);

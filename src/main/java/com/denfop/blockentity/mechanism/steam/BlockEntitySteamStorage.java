@@ -75,16 +75,6 @@ public class BlockEntitySteamStorage extends BlockEntityInventory {
 
 
     @Override
-    public int getLightValue() {
-        if (this.fluidTank.getFluid().isEmpty() || this.fluidTank.getFluid().getFluid().getFluidType() == null) {
-            return super.getLightValue();
-        } else {
-            return this.fluidTank.getFluid().getFluid().getFluidType().getLightLevel();
-        }
-    }
-
-
-    @Override
     public BlockTileEntity getBlock() {
         return IUItem.basemachine2.getBlock(BlockBaseMachine3Entity.steam_storage);
     }
@@ -124,7 +114,7 @@ public class BlockEntitySteamStorage extends BlockEntityInventory {
         if (stack.has(DataComponentsInit.DATA) && stack.get(DataComponentsInit.DATA).contains("fluid")) {
             FluidStack fluidStack = FluidStack.parseOptional(level.registryAccess(), (CompoundTag) stack.get(DataComponentsInit.DATA).get("fluid"));
 
-            tooltip.add(Localization.translate("iu.fluid.info") + fluidStack.getHoverName().getString());
+            tooltip.add(Localization.translate("iu.fluid.info") + com.denfop.utils.ModUtils.cleanComponentString(fluidStack.getHoverName().getString()));
             tooltip.add(Localization.translate("iu.fluid.info1") + fluidStack.getAmount() / 1000 + " B");
 
         }
@@ -194,9 +184,6 @@ public class BlockEntitySteamStorage extends BlockEntityInventory {
         }
     }
 
-    public boolean needsFluid() {
-        return this.getFluidTank().getFluidAmount() < this.getFluidTank().getCapacity();
-    }
 
     public void updateEntityServer() {
         super.updateEntityServer();

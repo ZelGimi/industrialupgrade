@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blockentity.base.BlockEntityInventory;
@@ -25,8 +27,8 @@ public class BlockEntityMobMagnet extends BlockEntityInventory {
         super(BlockBaseMachine3Entity.mob_magnet, pos, state);
         this.energy = this.addComponent(Energy.asBasicSink(this, 10000, 14));
 
-        this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("mob_magnet_soil_pollution_amount", 0.1D)));
+        this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("mob_magnet_air_pollution_amount", 0.1D)));
     }
 
 

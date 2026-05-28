@@ -15,13 +15,30 @@
       "item": "industrialupgrade:machines/neutronium_solar_panel"
     },
     "E": {
-      "item": "industrialupgrade:excitednucleus/neucore"
+      "item": "industrialupgrade:excitednucleus/barcore"
+    },
+    "H": {
+      "type": "neoforge:components",
+      "components": {
+        "industrialupgrade:level_microchip": 11,
+        "minecraft:attribute_modifiers": {
+          "modifiers": []
+        },
+        "minecraft:enchantments": {
+          "levels": {}
+        },
+        "minecraft:lore": [],
+        "minecraft:max_stack_size": 64,
+        "minecraft:rarity": "common",
+        "minecraft:repair_cost": 0
+      },
+      "items": "industrialupgrade:circuit/photoncircuit"
     }
   },
   "pattern": [
     "ABA",
     "CDC",
-    "DED"
+    "HEH"
   ],
   "result": {
     "count": 1,

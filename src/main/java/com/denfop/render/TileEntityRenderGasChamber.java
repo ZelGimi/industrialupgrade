@@ -31,16 +31,16 @@ public class TileEntityRenderGasChamber implements BlockEntityRenderer<BlockEnti
 
             Component text = (tile.fluidTank1.isEmpty()) ?
                     Component.literal("FluidTank: 0/" + tile.fluidTank1.getCapacity()) :
-                    Component.literal(tile.fluidTank1.getFluid().getHoverName().getString() + ": " +
+                    Component.literal(com.denfop.utils.ModUtils.cleanComponentString(tile.fluidTank1.getFluid().getHoverName().getString()) + ": " +
                             tile.fluidTank1.getFluidAmount() + "/" + tile.fluidTank1.getCapacity());
 
             Component text1 = (tile.fluidTank2.isEmpty()) ?
                     Component.literal("FluidTank: 0/" + tile.fluidTank2.getCapacity()) :
-                    Component.literal(tile.fluidTank2.getFluid().getHoverName().getString() + ": " +
+                    Component.literal(com.denfop.utils.ModUtils.cleanComponentString(tile.fluidTank2.getFluid().getHoverName().getString()) + ": " +
                             tile.fluidTank2.getFluidAmount() + "/" + tile.fluidTank2.getCapacity());
             Component text2 = (tile.fluidTank3.isEmpty()) ?
                     Component.literal("FluidTank: 0/" + tile.fluidTank3.getCapacity()) :
-                    Component.literal(tile.fluidTank3.getFluid().getHoverName().getString() + ": " +
+                    Component.literal(com.denfop.utils.ModUtils.cleanComponentString(tile.fluidTank3.getFluid().getHoverName().getString()) + ": " +
                             tile.fluidTank3.getFluidAmount() + "/" + tile.fluidTank3.getCapacity());
 
             Component text3 = Component.literal(String.format("%d", (int) (tile.getProgress() * 100)) + "%");

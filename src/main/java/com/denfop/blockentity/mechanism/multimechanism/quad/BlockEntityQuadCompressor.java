@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.multimechanism.quad;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blockentity.base.BlockEntityMultiMachine;
@@ -22,8 +24,8 @@ public class BlockEntityQuadCompressor extends BlockEntityMultiMachine {
                 EnumMultiMachine.QUAD_COMPRESSER.usagePerTick,
                 EnumMultiMachine.QUAD_COMPRESSER.lenghtOperation, BlockMoreMachineEntity.quad_commpressor, pos, state
         );
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.025));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.05));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("quad_compressor_soil_pollution_amount", 0.025D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("quad_compressor_air_pollution_amount", 0.05D)));
     }
 
     public MultiBlockEntity getTeBlock() {

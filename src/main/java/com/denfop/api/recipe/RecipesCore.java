@@ -24,6 +24,7 @@ public class RecipesCore implements IRecipes {
     public Map<String, List<Fluid>> map_fluid_input = new HashMap<>();
     public List<RecipeRemove> recipeRemoves = new ArrayList<>();
     public List<RecipeFluidRemove> recipeFluidRemoves = new ArrayList<>();
+    public List<RecipeRemove> recipeFluidItemRemoves = new ArrayList<>();
 
     public List<RecipeFluidAdder> recipeFluidAdders = new ArrayList<>();
     public List<RecipeAdder> recipeAdders = new ArrayList<>();
@@ -93,7 +94,6 @@ public class RecipesCore implements IRecipes {
         this.addRecipeManager("cannerenrich", 2, true, true);
         this.addRecipeManager("empty", 1, false, true);
         this.addRecipeManager("matterAmplifier", 1, true, true);
-        this.addRecipeManager("scrapbox", 1, true, true);
         this.addRecipeManager("battery_factory", 9, true, true);
         this.addRecipeManager("socket_factory", 6, true, true);
         this.addRecipeManager("active_matter_factory", 1, true, true);
@@ -188,15 +188,36 @@ public class RecipesCore implements IRecipes {
         this.recipeFluidRemoves.add(new RecipeFluidRemove(name, stack, removeAll));
     }
 
+    public void addFluidItemRemoveRecipe(String name, ItemStack stack, boolean removeAll) {
+        if (name == null || name.isBlank() || stack == null || stack.isEmpty()) {
+            return;
+        }
+        this.recipeFluidItemRemoves.add(new RecipeRemove(name, stack.copy(), removeAll));
+    }
+
     public void removeAllRecipesFromList() {
         this.recipeRemoves.forEach(recipeRemove -> {
-            this.removeAllRecipe(recipeRemove.getNameRecipe(), recipeRemove.isRemoveAll(), new RecipeOutput(null, recipeRemove.getStack()));
-
+            this.removeAllRecipe(
+                    recipeRemove.getNameRecipe(),
+                    recipeRemove.isRemoveAll(),
+                    new RecipeOutput(null, recipeRemove.getStack())
+            );
         });
 
         this.recipeFluidRemoves.forEach(recipeRemove -> {
-            this.getRecipeFluid().removeAllRecipe(recipeRemove.getNameRecipe(), recipeRemove.isRemoveAll(), recipeRemove.getStack());
+            this.getRecipeFluid().removeAllRecipe(
+                    recipeRemove.getNameRecipe(),
+                    recipeRemove.isRemoveAll(),
+                    recipeRemove.getStack()
+            );
+        });
 
+        this.recipeFluidItemRemoves.forEach(recipeRemove -> {
+            this.getRecipeFluid().removeAllRecipe(
+                    recipeRemove.getNameRecipe(),
+                    recipeRemove.isRemoveAll(),
+                    recipeRemove.getStack()
+            );
         });
     }
 
@@ -289,41 +310,81 @@ public class RecipesCore implements IRecipes {
 
     public void removeAllRecipe(String name, boolean removeAll, RecipeOutput output) {
         List<BaseMachineRecipe> recipes = this.map_recipes.get(name);
+
+        if (recipes == null || recipes.isEmpty()) {
+            return;
+        }
+        if (output == null || output.items == null || output.items.isEmpty()) {
+            return;
+        }
+
         List<BaseMachineRecipe> deleteRecipes = new ArrayList<>();
         boolean find = false;
+
         for (BaseMachineRecipe recipe : recipes) {
+            if (recipe == null || recipe.output == null || recipe.output.items == null) {
+                continue;
+            }
+
             for (ItemStack stack : output.items) {
-                for (ItemStack output_stack : recipe.output.items) {
-                    if (ModUtils.checkItemEquality(output_stack, stack) && (removeAll || !find)) {
+                if (stack == null || stack.isEmpty()) {
+                    continue;
+                }
+
+                for (ItemStack outputStack : recipe.output.items) {
+                    if (outputStack == null || outputStack.isEmpty()) {
+                        continue;
+                    }
+
+                    if (ModUtils.checkItemEquality(outputStack, stack) && (removeAll || !find)) {
                         deleteRecipes.add(recipe);
                         find = true;
                         break;
                     }
                 }
-                if (find) {
+
+                if (find && !removeAll) {
                     break;
                 }
             }
 
+            if (find && !removeAll) {
+                break;
+            }
         }
+
         for (BaseMachineRecipe deleteRecipe : deleteRecipes) {
             recipes.remove(deleteRecipe);
+
             final List<IRecipeInputStack> list = this.map_recipe_managers_itemStack.get(name);
-            IInput input = deleteRecipe.input;
-            final List<IInputItemStack> list2 = input.getInputs();
-            for (IInputItemStack input1 : list2) {
-                IRecipeInputStack iRecipeInputStack = new RecipeInputStack(input1);
-                list.remove(iRecipeInputStack);
+            if (list == null || deleteRecipe.input == null) {
+                continue;
             }
 
-        }
+            final List<IInputItemStack> inputs = deleteRecipe.input.getInputs();
+            if (inputs == null || inputs.isEmpty()) {
+                continue;
+            }
 
+            for (IInputItemStack input : inputs) {
+                list.remove(new RecipeInputStack(input));
+            }
+        }
     }
 
     public void removeRecipe(String name, ItemStack input) {
         List<BaseMachineRecipe> recipes = this.map_recipes.get(name);
-        recipes.removeIf(recipe -> recipe.input.getInputs().get(0).matches(input));
+        if (recipes == null || recipes.isEmpty() || input == null || input.isEmpty()) {
+            return;
+        }
 
+        recipes.removeIf(recipe ->
+                recipe != null
+                        && recipe.input != null
+                        && recipe.input.getInputs() != null
+                        && !recipe.input.getInputs().isEmpty()
+                        && recipe.input.getInputs().get(0).matches(input)
+        );
     }
 
     @Override
@@ -511,9 +572,25 @@ public class RecipesCore implements IRecipes {
             this.recipes.add(hasRecipe);
         }
     }
+
     public List<String> getMap_recipe_managers() {
         return map_recipe_managers.keySet().stream().toList();
     }
+
+    @Override
+    public void reset() {
+        registeredRecipes.clear();
+        this.fluid_recipe.registeredRecipes.clear();
+        map_recipes.clear();
+        map_recipe_managers_itemStack.clear();
+        map_fluid_input.clear();
+
+
+        this.fluid_recipe.map_recipes_fluid.clear();
+        this.fluid_recipe.map_recipe_managers_itemStack.clear();
+        initializationRecipes();
+    }
+
     @Override
     public MachineRecipe getRecipeOutputMachineFluid(
             final String name,
@@ -611,15 +688,11 @@ public class RecipesCore implements IRecipes {
                 map_fluid_input.put(name, fluidStackList);
             }
             List<BaseMachineRecipe> lst = new LinkedList<>();
-            if (name.equals("comb_macerator")) {
-                recipe.output.items.get(0).setCount(3);
-            }
+
             lst.add(recipe);
             this.map_recipes.put(name, lst);
         } else {
-            if (name.equals("comb_macerator")) {
-                recipe.output.items.get(0).setCount(3);
-            }
+
             RecipeArrayList<IRecipeInputStack> iRecipeInputList = this.map_recipe_managers_itemStack.get(name);
             if (recipe.input.hasFluids()) {
                 List<Fluid> fluidStackList = map_fluid_input.get(name);

@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -69,9 +71,9 @@ public class BlockEntityGasCombiner extends BlockEntityElectricMachine implement
     protected double guiProgress;
 
     public BlockEntityGasCombiner(BlockPos pos, BlockState state) {
-        super(100, 1, 3, BlockBaseMachine3Entity.gas_combiner, pos, state);
+        super(ModConfig.mechanismDouble("gas_mixer_energy_storage", 100.0D), 1, 3, BlockBaseMachine3Entity.gas_combiner, pos, state);
         this.progress = 0;
-        this.defaultEnergyConsume = this.energyConsume = 1;
+        this.defaultEnergyConsume = this.energyConsume = ModConfig.mechanismInt("gas_mixer_energy_use", 1);
         this.defaultOperationLength = this.operationLength = 100;
         this.defaultTier = 1;
         this.defaultEnergyStorage = 100;
@@ -95,8 +97,8 @@ public class BlockEntityGasCombiner extends BlockEntityElectricMachine implement
         this.fluidSlot3 = new InventoryFluidByList(this, 1, this.fluid_handler.getOutputFluids(0));
         this.fluidSlot3.setTypeFluidSlot(InventoryFluid.TypeFluidSlot.OUTPUT);
         Recipes.recipes.getRecipeFluid().addInitRecipes(this);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.2));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.2));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("gas_mixer_soil_pollution_amount", 0.2D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("gas_mixer_air_pollution_amount", 0.2D)));
 
     }
 

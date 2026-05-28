@@ -1,0 +1,26 @@
+{
+  "type": "industrialupgrade:space_rock_formation",
+  "config": {
+    "branches": 2,
+    "fluid": {
+      "Name": "industrialupgrade:fluid/fluidpahoehoe_lava",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "kind": "volcanic_field",
+    "max_height": 18,
+    "max_radius": 5,
+    "min_height": 8,
+    "min_radius": 2,
+    "primary": {
+      "Name": "minecraft:cyan_terracotta"
+    },
+    "secondary": {
+      "Name": "minecraft:light_blue_terracotta"
+    },
+    "tertiary": {
+      "Name": "minecraft:cyan_terracotta"
+    }
+  }
+}

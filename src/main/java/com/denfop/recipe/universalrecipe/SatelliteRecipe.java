@@ -2,8 +2,6 @@ package com.denfop.recipe.universalrecipe;
 
 import com.denfop.api.space.EnumLevels;
 import com.denfop.api.space.EnumType;
-import com.denfop.recipe.IInputItemStack;
-import com.denfop.recipe.InputItemStack;
 import com.denfop.register.Register;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.ItemStack;
@@ -12,9 +10,6 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class SatelliteRecipe implements Recipe<CraftingInput> {
 
@@ -73,9 +68,6 @@ public class SatelliteRecipe implements Recipe<CraftingInput> {
     public ItemStack getResultItem(HolderLookup.Provider provider) {
         return ItemStack.EMPTY;
     }
-
-
-
 
 
     @Override

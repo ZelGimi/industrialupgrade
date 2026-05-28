@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,type=fluid_monitor": {
+      "model": "industrialupgrade:block/storagesystem/fluid_monitor"
+    },
+    "facing=south,type=fluid_monitor": {
+      "model": "industrialupgrade:block/storagesystem/fluid_monitor",
+      "y": 180
+    },
+    "facing=west,type=fluid_monitor": {
+      "model": "industrialupgrade:block/storagesystem/fluid_monitor",
+      "y": 270
+    },
+    "facing=east,type=fluid_monitor": {
+      "model": "industrialupgrade:block/storagesystem/fluid_monitor",
+      "y": 90
+    },
+    "facing=north,type=fluid_monitor_active": {
+      "model": "industrialupgrade:block/storagesystem/fluid_monitor_active"
+    },
+    "facing=south,type=fluid_monitor_active": {
+      "model": "industrialupgrade:block/storagesystem/fluid_monitor_active",
+      "y": 180
+    },
+    "facing=west,type=fluid_monitor_active": {
+      "model": "industrialupgrade:block/storagesystem/fluid_monitor_active",
+      "y": 270
+    },
+    "facing=east,type=fluid_monitor_active": {
+      "model": "industrialupgrade:block/storagesystem/fluid_monitor_active",
+      "y": 90
+    }
+  }
+}

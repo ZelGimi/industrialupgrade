@@ -276,8 +276,8 @@ public class InventoryRecipes extends Inventory implements ITypeSlot {
             return tile
                     .getRecipeOutput(index) != null &&
 
-                    slot.canAdd(tile.getRecipeOutput(index).getRecipe().output.items)&&  this.get(0).getCount() >= tile
-                            .getRecipeOutput(index).getList().get(0);
+                    slot.canAdd(tile.getRecipeOutput(index).getRecipe().output.items) && this.get(0).getCount() >= tile
+                    .getRecipeOutput(index).getList().get(0);
         } else {
             return tile
                     .getRecipeOutput(index) != null && slot.canAdd(tile.getRecipeOutput(index).getRecipe().output.items) && this.get(0).getCount() >= tile

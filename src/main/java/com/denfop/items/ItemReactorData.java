@@ -70,7 +70,7 @@ public class ItemReactorData extends Item implements IItemTab {
         BlockEntity tileEntity = world.getBlockEntity(p_41427_.getClickedPos());
         if (tileEntity instanceof BlockEntityMultiBlockBase && tileEntity instanceof IAdvReactor) {
             BlockEntityMultiBlockBase tileMultiBlockBase = (BlockEntityMultiBlockBase) tileEntity;
-            player.getItemInHand(hand).set(DataComponentsInit.REACTOR_DATA, new ReactorData(tileMultiBlockBase.getBlockPos(), tileMultiBlockBase.getPickBlock(player, null).getDisplayName().getString()));
+            player.getItemInHand(hand).set(DataComponentsInit.REACTOR_DATA, new ReactorData(tileMultiBlockBase.getBlockPos(), com.denfop.utils.ModUtils.cleanComponentString(tileMultiBlockBase.getPickBlock(player, null).getDisplayName().getString())));
             return InteractionResult.SUCCESS;
         }
         return InteractionResult.PASS;

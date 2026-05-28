@@ -1,5 +1,7 @@
 package com.denfop.blockentity.base;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -34,7 +36,7 @@ public class BlockEntitySunnariumMaker extends BlockEntityBaseSunnariumMaker imp
     public final Inventory input_slot;
 
     public BlockEntitySunnariumMaker(BlockPos pos, BlockState state) {
-        super(1, 300, 1, BlockSunnariumPanelMakerEntity.gen_sunnarium, pos, state);
+        super(ModConfig.mechanismInt("solarite_transformer_energy_per_tick", 1), ModConfig.mechanismInt("solarite_transformer_operation_length", 300), 1, BlockSunnariumPanelMakerEntity.gen_sunnarium, pos, state);
         this.inputSlotA = new InventoryRecipes(this, "sunnurium", this);
         Recipes.recipes.addInitRecipes(this);
         this.componentProcess.setInvSlotRecipes(inputSlotA);

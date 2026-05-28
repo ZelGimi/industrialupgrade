@@ -2,6 +2,8 @@ package com.denfop.blocks;
 
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.blockentity.Wrenchable;
+import com.denfop.api.collision.IMultiCellCollisionProvider;
+import com.denfop.api.collision.MultiCellCollisionShapeHelper;
 import com.denfop.blockentity.base.BlockEntityBase;
 import com.denfop.blocks.blockitem.ItemBlockTileEntity;
 import com.denfop.blocks.state.HarvestTool;
@@ -45,6 +47,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -62,7 +65,6 @@ import static com.denfop.api.blockentity.MultiBlockEntity.CABLE;
 
 public class BlockTileEntity<T extends Enum<T> & MultiBlockEntity> extends Block implements EntityBlock, Wrenchable, IBlockTag {
 
-    public static final Map<BlockPos, BlockEntityBase> teBlockDrop = new HashMap<>();
     public static final Property<Direction> ALL_FACING_PROPERTY = DirectionProperty.create("facing", ModUtils.allFacings);
     public static final Property<Direction> HORIZONTAL_FACING_PROPERTY = DirectionProperty.create("facing", ModUtils.horizontalFacings);
     public static final Property<Direction> VERTICAL_FACING_PROPERTY = DirectionProperty.create("facing", ModUtils.verticalFacings);
@@ -87,13 +89,13 @@ public class BlockTileEntity<T extends Enum<T> & MultiBlockEntity> extends Block
 
     };
     public static TypeProperty currentTypeProperty;
-    public static LinkedList<BlockEntityBase> drops = new LinkedList<>();
     private static MultiBlockEntity preValue;
     public final Property<Direction> facingProperty;
     public final com.denfop.blocks.TileBlockCreator.InfoAboutTile<?> teInfo;
     private final ResourceLocation identifier;
     private final T value;
     public ItemBlockTileEntity<T> item;
+    String descriptionId;
 
     public BlockTileEntity(BlockBehaviour.Properties properties, T value,
                            ResourceLocation identifier,
@@ -148,6 +150,21 @@ public class BlockTileEntity<T extends Enum<T> & MultiBlockEntity> extends Block
         return te instanceof BlockEntityBase ? (BlockEntityBase) te : null;
     }
 
+    private static VoxelShape buildShapeFromAabbs(@Nullable List<AABB> boxes) {
+        if (boxes == null || boxes.isEmpty()) {
+            return Shapes.empty();
+        }
+
+        VoxelShape shape = Shapes.empty();
+        for (AABB box : boxes) {
+            if (box == null) {
+                continue;
+            }
+            shape = Shapes.or(shape, Shapes.create(box));
+        }
+        return shape.optimize();
+    }
+
     private static BlockEntityBase getTe(BlockGetter getter, BlockPos pos) {
         BlockEntity blockEntity = getter.getBlockEntity(pos);
         if (blockEntity instanceof BlockEntityBase te) {
@@ -156,9 +173,12 @@ public class BlockTileEntity<T extends Enum<T> & MultiBlockEntity> extends Block
         return null;
     }
 
-    @Override
-    public boolean hasDynamicShape() {
-        return true;
+    private VoxelShape getTileShape(BlockGetter level, BlockPos pos, boolean collision) {
+        BlockEntityBase te = getTe(level, pos);
+        if (te == null) {
+            return Shapes.empty();
+        }
+        return buildShapeFromAabbs(te.getAabbs(collision));
     }
 
     public float getShadeBrightness(BlockState p_48731_, BlockGetter p_48732_, BlockPos p_48733_) {
@@ -210,6 +230,14 @@ public class BlockTileEntity<T extends Enum<T> & MultiBlockEntity> extends Block
         return 0;
     }
 
+    public String getDescriptionId() {
+        if (this.descriptionId == null) {
+            this.descriptionId = this.item.getDescriptionId();
+        }
+
+        return this.descriptionId;
+    }
+
     @Override
     public int getAnalogOutputSignal(BlockState state, Level world, BlockPos pos) {
         BlockEntity te = world.getBlockEntity(pos);
@@ -219,36 +247,109 @@ public class BlockTileEntity<T extends Enum<T> & MultiBlockEntity> extends Block
         return 0;
     }
 
+    @Override
     public @NotNull VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext collisionContext) {
         BlockEntityBase te = getTe(world, pos);
-        return te == null ? super.getShape(state, world, pos, collisionContext) : Shapes.create(te.getVisualBoundingBox());
+        if (te != null) {
+            if (useMultiCellCollision(world, pos)) {
+                VoxelShape local = MultiCellCollisionShapeHelper.buildClippedShapeForCell(te, pos, pos, false);
+                return local.isEmpty() ? Shapes.empty() : local;
+            }
 
+            VoxelShape shape = Shapes.empty();
+            for (AABB box : te.getAabbs(false)) {
+                shape = Shapes.or(shape, Shapes.create(box));
+            }
+            return shape.optimize();
+        }
+        return super.getShape(state, world, pos, collisionContext);
+    }
+
+    @Override
+    public boolean hasDynamicShape() {
+        return true;
     }
 
     @Override
     public VoxelShape getInteractionShape(BlockState state, BlockGetter world, BlockPos pos) {
-        BlockEntity te = world.getBlockEntity(pos);
-        if (te instanceof BlockEntityBase) {
-            return Shapes.create(((BlockEntityBase) te).getOutlineBoundingBox().move(pos));
+        BlockEntityBase te = getTe(world, pos);
+        if (te != null) {
+            if (useMultiCellCollision(world, pos)) {
+                VoxelShape local = MultiCellCollisionShapeHelper.buildClippedShapeForCell(te, pos, pos, false);
+                return local.isEmpty() ? Shapes.empty() : local;
+            }
+
+            VoxelShape shape = Shapes.empty();
+            for (AABB box : te.getAabbs(false)) {
+                shape = Shapes.or(shape, Shapes.create(box));
+            }
+            return shape.optimize();
         }
         return super.getInteractionShape(state, world, pos);
     }
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        if (!this.hasCollision)
+        if (!this.hasCollision) {
             return Shapes.empty();
-        BlockEntity te = world.getBlockEntity(pos);
-        if (te instanceof BlockEntityBase) {
-            return Shapes.create(((BlockEntityBase) te).getPhysicsBoundingBox());
         }
+
+        BlockEntityBase te = getTe(world, pos);
+        if (te != null) {
+            if (useMultiCellCollision(world, pos)) {
+                VoxelShape local = MultiCellCollisionShapeHelper.buildClippedShapeForCell(te, pos, pos, true);
+                return local.isEmpty() ? Shapes.empty() : local;
+            }
+
+            VoxelShape shape = Shapes.empty();
+            for (AABB box : te.getAabbs(true)) {
+                shape = Shapes.or(shape, Shapes.create(box));
+            }
+            return shape.optimize();
+        }
+
         return super.getCollisionShape(state, world, pos, context);
     }
 
+    @Override
     public @NotNull VoxelShape getOcclusionShape(@NotNull BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos) {
-        BlockEntityBase te = getTe(world, pos);
-        return te == null ? super.getOcclusionShape(state, world, pos) : Shapes.create(te.getPhysicsBoundingBox());
+        return Shapes.empty();
+    }
 
+    @Override
+    public boolean useShapeForLightOcclusion(BlockState state) {
+        return false;
+    }
+
+    private boolean useMultiCellCollision(BlockGetter level, BlockPos pos) {
+        BlockEntityBase te = getTe(level, pos);
+        if (te instanceof IMultiCellCollisionProvider) {
+            return ((IMultiCellCollisionProvider) te).useMultiCellCollision();
+        }
+        return false;
+    }
+
+    @Override
+    public @NotNull VoxelShape getBlockSupportShape(BlockState state, BlockGetter world, BlockPos pos) {
+        BlockEntityBase te = getTe(world, pos);
+        if (te != null) {
+            if (useMultiCellCollision(world, pos)) {
+                VoxelShape local = MultiCellCollisionShapeHelper.buildClippedShapeForCell(te, pos, pos, true);
+                return local.isEmpty() ? Shapes.empty() : local;
+            }
+
+            VoxelShape shape = Shapes.empty();
+            for (AABB box : te.getAabbs(true)) {
+                shape = Shapes.or(shape, Shapes.create(box));
+            }
+            return shape.optimize();
+        }
+        return super.getBlockSupportShape(state, world, pos);
+    }
+
+    @Override
+    public boolean isCollisionShapeFullBlock(BlockState state, BlockGetter level, BlockPos pos) {
+        return false;
     }
 
     private TypeProperty getTypeProperty() {
@@ -353,6 +454,27 @@ public class BlockTileEntity<T extends Enum<T> & MultiBlockEntity> extends Block
     @Override
     public void playerDestroy(Level p_49827_, Player p_49828_, BlockPos p_49829_, BlockState p_49830_, @Nullable BlockEntity p_49831_, ItemStack p_49832_) {
         super.playerDestroy(p_49827_, p_49828_, p_49829_, p_49830_, p_49831_, p_49832_);
+        BlockEntityBase te = (BlockEntityBase) p_49831_;
+        if (te != null) {
+
+
+            List<ItemStack> ret = new ArrayList<>();
+            boolean wasWrench = false;
+            if (p_49828_ instanceof Player) {
+                ItemStack stack = p_49828_.getMainHandItem();
+                if (!stack.isEmpty()) {
+                    wasWrench = stack.is(ItemTags.create(ResourceLocation.tryBuild("c", "tools/wrench")));
+                }
+            }
+            final int chance = te.getLevel().random.nextInt(100);
+            ret.addAll(te.getSelfDrops(chance, wasWrench));
+            ret.addAll(te.getAuxDrops(chance));
+            for (ItemStack stack : ret) {
+                if (!stack.isEmpty()) {
+                    popResource(p_49827_, p_49829_, stack);
+                }
+            }
+        }
     }
 
     public boolean onDestroyedByPlayer(BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
@@ -361,7 +483,6 @@ public class BlockTileEntity<T extends Enum<T> & MultiBlockEntity> extends Block
             if (!te.onRemovedByPlayer(player, willHarvest)) {
                 return false;
             }
-            drops.add(te);
         }
 
         return super.onDestroyedByPlayer(state, world, pos, player, willHarvest, fluid);
@@ -439,10 +560,10 @@ public class BlockTileEntity<T extends Enum<T> & MultiBlockEntity> extends Block
     protected ItemInteractionResult useItemOn(ItemStack p_316304_, BlockState p_316362_, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
         if (player.isSecondaryUseActive()) {
             BlockEntityBase te = getTe(level, blockPos);
-            return te == null || isWrench(player,interactionHand)? ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION : getResult(te.onSneakingActivated(player, interactionHand, blockHitResult.getDirection(), blockHitResult.getLocation()));
+            return te == null || isWrench(player, interactionHand) ? ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION : getResult(te.onSneakingActivated(player, interactionHand, blockHitResult.getDirection(), blockHitResult.getLocation()));
         } else {
             BlockEntityBase te = getTe(level, blockPos);
-            return te == null || isWrench(player,interactionHand) ? ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION : te.getCooldownTracker().getTick() == 0 ? getResult(te.onActivated(player, interactionHand, blockHitResult.getDirection(), blockHitResult.getLocation())) : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            return te == null || isWrench(player, interactionHand) ? ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION : te.getCooldownTracker().getTick() == 0 ? getResult(te.onActivated(player, interactionHand, blockHitResult.getDirection(), blockHitResult.getLocation())) : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
     }
 
@@ -494,70 +615,59 @@ public class BlockTileEntity<T extends Enum<T> & MultiBlockEntity> extends Block
     @Override
     public boolean canHarvestBlock(BlockState state, BlockGetter world, BlockPos pos, Player player) {
         boolean ret = super.canHarvestBlock(state, world, pos, player);
-        if (ret) {
-            return ret;
+
+        BlockEntityBase te = getTe(world, pos);
+        if (te == null) {
+            return false;
         } else {
-            BlockEntityBase te = getTe(world, pos);
-            if (te == null) {
-                return false;
-            } else {
-                if (te.canEntityDestroy(player)) {
-                    switch (te.teBlock.getHarvestTool()) {
-                        case None:
-                            return true;
-                        case Axe:
-                            ItemStack stack = player.getMainHandItem();
-                            if (!stack.isEmpty()) {
-                                return stack.is(ItemTags.create(ResourceLocation.tryBuild("c", "tools/axes")));
-                            }
-                            break;
-                        case Pickaxe:
-                            stack = player.getMainHandItem();
-                            if (!stack.isEmpty()) {
-                                return stack.is(ItemTags.create(ResourceLocation.tryBuild("c", "tools/pickaxes")));
-                            }
-                            break;
-                        case Shovel:
-                            stack = player.getMainHandItem();
-                            if (!stack.isEmpty()) {
-                                return stack.is(ItemTags.create(ResourceLocation.tryBuild("c", "tools/shovels")));
-                            }
-                            break;
-                        case Wrench:
-                            stack = player.getMainHandItem();
-                            if (!stack.isEmpty()) {
-                                return stack.is(ItemTags.create(ResourceLocation.tryBuild("c", "tools/wrench")));
-                            }
-                            break;
-                        default:
-                            return false;
-                    }
+            if (te.canEntityDestroy(player)) {
+                switch (te.teBlock.getHarvestTool()) {
+                    case None:
+                        return true;
+                    case Axe:
+                        ItemStack stack = player.getMainHandItem();
+                        if (!stack.isEmpty()) {
+                            return stack.is(ItemTags.create(ResourceLocation.tryBuild("minecraft", "axes"))) && ret;
+                        }
+                        break;
+                    case Pickaxe:
+                        stack = player.getMainHandItem();
+                        if (!stack.isEmpty()) {
+                            return stack.is(ItemTags.create(ResourceLocation.tryBuild("minecraft", "pickaxes"))) && ret;
+                        }
+                        break;
+                    case Shovel:
+                        stack = player.getMainHandItem();
+                        if (!stack.isEmpty()) {
+                            return stack.is(ItemTags.create(ResourceLocation.tryBuild("minecraft", "shovels"))) && ret;
+                        }
+                        break;
+                    case Wrench:
+                        stack = player.getMainHandItem();
+                        if (!stack.isEmpty()) {
+                            return stack.is(ItemTags.create(ResourceLocation.tryBuild("minecraft", "wrench"))) && ret;
+                        }
+                        break;
+                    default:
+                        return false;
                 }
             }
         }
+
         return false;
+    }
+
+    @Override
+    protected float getDestroyProgress(BlockState p_60466_, Player p_60467_, BlockGetter p_60468_, BlockPos p_60469_) {
+        if (!this.canHarvestBlock(p_60466_, p_60468_, p_60469_, p_60467_))
+            return 0;
+        return super.getDestroyProgress(p_60466_, p_60467_, p_60468_, p_60469_);
     }
 
     public List<ItemStack> getDrops(Level world, BlockPos pos, BlockState state, Entity player) {
         BlockEntityBase te = getTe(world, pos);
         if (te == null) {
-            te = drops.removeLast();
-            if (te == null) {
-                return new ArrayList<>();
-            } else {
-                List<ItemStack> ret = new ArrayList<>();
-                boolean wasWrench = false;
-                if (player instanceof Player) {
-                    ItemStack stack = ((Player) player).getMainHandItem();
-                    if (!stack.isEmpty()) {
-                        wasWrench = stack.is(ItemTags.create(ResourceLocation.tryBuild("c", "tools/wrench")));
-                    }
-                }
-                final int chance = te.getLevel().random.nextInt(100);
-                ret.addAll(te.getSelfDrops(chance, wasWrench));
-                ret.addAll(te.getAuxDrops(chance));
-                return ret;
-            }
+            return new ArrayList<>();
         }
         List<ItemStack> ret = new ArrayList<>();
         boolean wasWrench = false;
@@ -588,11 +698,6 @@ public class BlockTileEntity<T extends Enum<T> & MultiBlockEntity> extends Block
         BlockEntityBase te = getTe(world, pos);
         if (te != null)
             te.onClicked(player);
-    }
-
-    @Override
-    public boolean isCollisionShapeFullBlock(BlockState p_181242_, BlockGetter p_181243_, BlockPos p_181244_) {
-        return super.isCollisionShapeFullBlock(p_181242_, p_181243_, p_181244_);
     }
 
     public ItemInteractionResult getResult(boolean result) {

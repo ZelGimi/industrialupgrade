@@ -24,7 +24,7 @@ public class PacketFixerRecipe implements IPacket {
     }
 
     public PacketFixerRecipe(ServerPlayer player) {
-        CustomPacketBuffer buffer = new CustomPacketBuffer(player.registryAccess()  );
+        CustomPacketBuffer buffer = new CustomPacketBuffer(player.registryAccess());
         buffer.writeByte(this.getId());
         this.buffer = buffer;
         IUCore.network.getServer().sendPacket(this, buffer, player);
@@ -38,12 +38,12 @@ public class PacketFixerRecipe implements IPacket {
     @Override
     public void readPacket(final CustomPacketBuffer is, final Player entityPlayer) {
         if (IUCore.registry == null)
-            IUCore.registry =is.registryAccess();
+            IUCore.registry = is.registryAccess();
         if (IUCore.registryAccess == null)
-            IUCore.registryAccess =is.registryAccess();
+            IUCore.registryAccess = is.registryAccess();
         if (!IUCore.register) {
             IUCore.register = true;
-            Iterable<Holder<Item>> tagOres = BuiltInRegistries.ITEM.getTagOrEmpty(ItemTags.create( ResourceLocation.tryBuild("c", "ores")));
+            Iterable<Holder<Item>> tagOres = BuiltInRegistries.ITEM.getTagOrEmpty(ItemTags.create(ResourceLocation.tryBuild("c", "ores")));
             SpaceInit.jsonInit();
             new ScrapboxRecipeManager();
             for (Holder<Item> holder : tagOres) {
@@ -68,10 +68,10 @@ public class PacketFixerRecipe implements IPacket {
                         name = pathBuilder.toString();
                         if (IUCore.stringList.contains(name))
                             continue;
-                        TagKey<Item> tag = ItemTags.create( ResourceLocation.tryBuild("c", "gems/" + name));
+                        TagKey<Item> tag = ItemTags.create(ResourceLocation.tryBuild("c", "gems/" + name));
                         List<Holder<Item>> gemList = new ArrayList<>();
                         BuiltInRegistries.ITEM.getTagOrEmpty(tag).forEach(gemList::add);
-                        TagKey<Item> tag1 = ItemTags.create( ResourceLocation.tryBuild("c", "raw_materials/" + name));
+                        TagKey<Item> tag1 = ItemTags.create(ResourceLocation.tryBuild("c", "raw_materials/" + name));
                         List<Holder<Item>> rawList = new ArrayList<>();
                         BuiltInRegistries.ITEM.getTagOrEmpty(tag1).forEach(rawList::add);
                         if (!gemList.isEmpty()) {
@@ -109,7 +109,7 @@ public class PacketFixerRecipe implements IPacket {
 
     @Override
     public void setPacketBuffer(CustomPacketBuffer customPacketBuffer) {
-        this.buffer=customPacketBuffer;
+        this.buffer = customPacketBuffer;
     }
 
     @Override

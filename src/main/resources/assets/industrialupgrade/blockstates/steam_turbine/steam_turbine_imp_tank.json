@@ -15,36 +15,20 @@
       "model": "industrialupgrade:block/steam_turbine/steam_turbine_imp_tank",
       "y": 90
     },
-    "facing=down,type=steam_turbine_imp_tank": {
-      "model": "industrialupgrade:block/steam_turbine/steam_turbine_imp_tank",
-      "x": 90
-    },
-    "facing=up,type=steam_turbine_imp_tank": {
-      "model": "industrialupgrade:block/steam_turbine/steam_turbine_imp_tank",
-      "x": 270
-    },
-    "facing=north,type=steam_turbine_imp_tank_invalid": {
+    "facing=north,type=steam_turbine_imp_tank_active": {
       "model": "industrialupgrade:block/steam_turbine/steam_turbine_imp_tank"
     },
-    "facing=south,type=steam_turbine_imp_tank_invalid": {
+    "facing=south,type=steam_turbine_imp_tank_active": {
       "model": "industrialupgrade:block/steam_turbine/steam_turbine_imp_tank",
       "y": 180
     },
-    "facing=west,type=steam_turbine_imp_tank_invalid": {
+    "facing=west,type=steam_turbine_imp_tank_active": {
       "model": "industrialupgrade:block/steam_turbine/steam_turbine_imp_tank",
       "y": 270
     },
-    "facing=east,type=steam_turbine_imp_tank_invalid": {
+    "facing=east,type=steam_turbine_imp_tank_active": {
       "model": "industrialupgrade:block/steam_turbine/steam_turbine_imp_tank",
       "y": 90
-    },
-    "facing=down,type=steam_turbine_imp_tank_invalid": {
-      "model": "industrialupgrade:block/steam_turbine/steam_turbine_imp_tank",
-      "x": 90
-    },
-    "facing=up,type=steam_turbine_imp_tank_invalid": {
-      "model": "industrialupgrade:block/steam_turbine/steam_turbine_imp_tank",
-      "x": 270
     }
   }
 }

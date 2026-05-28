@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:quantumitems7"
+      "item": "industrialupgrade:nanobox"
     },
     "B": {
       "item": "industrialupgrade:rotorupgrade_schemes"
@@ -15,7 +15,7 @@
       "tag": "c:doubleplate/vitalium"
     },
     "E": {
-      "item": "industrialupgrade:itemcore/specore"
+      "item": "industrialupgrade:itemcore/quacore"
     }
   },
   "pattern": [

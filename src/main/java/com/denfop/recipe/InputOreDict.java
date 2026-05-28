@@ -103,7 +103,7 @@ public class InputOreDict implements IInputItemStack {
     }
 
     public InputOreDict(FriendlyByteBuf buffer) {
-        this(buffer.readInt(), new TagKey<>(Registries.ITEM, buffer.readResourceLocation()));
+        this(buffer.readInt(), TagKey.create(Registries.ITEM, buffer.readResourceLocation()));
 
     }
 

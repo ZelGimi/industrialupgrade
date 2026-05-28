@@ -8,21 +8,30 @@ import java.util.*;
 
 public class Genome implements GenomeBase {
 
-    Map<EnumGenetic, GeneticTraits> geneticTraitsMap = new HashMap<>();
-    private ItemStack stack;
+    private Map<EnumGenetic, GeneticTraits> geneticTraitsMap = new EnumMap<>(EnumGenetic.class);
+    private ItemStack stack = ItemStack.EMPTY;
 
     public Genome(ItemStack stack) {
-        if (!stack.has(DataComponentsInit.GENOME_BEE)) {
-            stack.set(DataComponentsInit.GENOME_BEE, new GenomeBee(new HashMap<>()));
-        }
-        GenomeBee genomeBee = stack.get(DataComponentsInit.GENOME_BEE);
+        this.stack = stack == null ? ItemStack.EMPTY : stack;
 
-        geneticTraitsMap = genomeBee.geneticTraitsMap();
-        this.stack = stack;
+        if (!this.stack.isEmpty() && !this.stack.has(DataComponentsInit.GENOME_BEE)) {
+            this.stack.set(DataComponentsInit.GENOME_BEE, new GenomeBee(new EnumMap<>(EnumGenetic.class)));
+        }
+
+        GenomeBee genomeBee = this.stack.isEmpty() ? null : this.stack.get(DataComponentsInit.GENOME_BEE);
+        this.geneticTraitsMap = copyToEnumMap(genomeBee == null ? null : genomeBee.geneticTraitsMap());
     }
 
     public Genome(Map<EnumGenetic, GeneticTraits> geneticTraitsMap) {
-        this.geneticTraitsMap = new HashMap<>(geneticTraitsMap);
+        this.geneticTraitsMap = copyToEnumMap(geneticTraitsMap);
+    }
+
+    private static EnumMap<EnumGenetic, GeneticTraits> copyToEnumMap(Map<EnumGenetic, GeneticTraits> source) {
+        EnumMap<EnumGenetic, GeneticTraits> result = new EnumMap<>(EnumGenetic.class);
+        if (source != null && !source.isEmpty()) {
+            result.putAll(source);
+        }
+        return result;
     }
 
     public Map<EnumGenetic, GeneticTraits> getGeneticTraitsMap() {
@@ -38,11 +47,10 @@ public class Genome implements GenomeBase {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Genome genome)) {
             return false;
         }
-        Genome genome = (Genome) o;
-        return geneticTraitsMap.values().size() == genome.geneticTraitsMap.size() && checkGenomes(genome);
+        return Objects.equals(this.geneticTraitsMap, genome.geneticTraitsMap);
     }
 
     private boolean checkGenomes(Genome genome) {
@@ -58,35 +66,34 @@ public class Genome implements GenomeBase {
     }
 
     public void addGenome(GeneticTraits geneticTraits, ItemStack stack) {
-        if (!geneticTraitsMap.containsKey(geneticTraits.getGenetic())) {
+        if (geneticTraits != null && !geneticTraitsMap.containsKey(geneticTraits.getGenetic())) {
             geneticTraitsMap.put(geneticTraits.getGenetic(), geneticTraits);
             writeNBT(stack);
         }
     }
 
     public void addGenome(GeneticTraits geneticTraits) {
-        if (!geneticTraitsMap.containsKey(geneticTraits.getGenetic())) {
+        if (geneticTraits != null && !geneticTraitsMap.containsKey(geneticTraits.getGenetic())) {
             geneticTraitsMap.put(geneticTraits.getGenetic(), geneticTraits);
-            writeNBT(stack);
+            writeNBT(this.stack);
         }
     }
 
     public void removeGenome(GeneticTraits geneticTraits, ItemStack stack) {
-        if (geneticTraitsMap.containsKey(geneticTraits.getGenetic())) {
-            geneticTraitsMap.remove(geneticTraits.getGenetic(), geneticTraits);
+        if (geneticTraits != null && geneticTraitsMap.containsKey(geneticTraits.getGenetic())) {
+            geneticTraitsMap.remove(geneticTraits.getGenetic());
             writeNBT(stack);
         }
     }
 
     public GeneticTraits removeGenome(EnumGenetic genetic, ItemStack stack) {
-        if (geneticTraitsMap.containsKey(genetic)) {
-            final GeneticTraits value = geneticTraitsMap.remove(genetic);
+        if (genetic != null && geneticTraitsMap.containsKey(genetic)) {
+            GeneticTraits value = geneticTraitsMap.remove(genetic);
             writeNBT(stack);
             return value;
         }
         return null;
     }
-
 
     @Override
     public boolean hasGenome(final EnumGenetic genome) {
@@ -95,7 +102,8 @@ public class Genome implements GenomeBase {
 
     @Override
     public <T> T getLevelGenome(final EnumGenetic genome, Class<T> tClass) {
-        return geneticTraitsMap.get(genome).getValue(tClass);
+        GeneticTraits traits = geneticTraitsMap.get(genome);
+        return traits == null ? null : traits.getValue(tClass);
     }
 
     public GeneticTraits getGenome(final EnumGenetic genome) {
@@ -104,15 +112,15 @@ public class Genome implements GenomeBase {
 
     public Genome copy() {
         Genome genome = new Genome(this.geneticTraitsMap);
-        genome.stack = this.stack.copy();
+        genome.stack = this.stack == null ? ItemStack.EMPTY : this.stack.copy();
         return genome;
     }
 
     @Override
     public void writeNBT(ItemStack stack) {
-        Map<EnumGenetic, GeneticTraits> geneticTraitsMap = new HashMap<>(this.geneticTraitsMap);
-        stack.set(DataComponentsInit.GENOME_BEE, new GenomeBee(geneticTraitsMap));
+        if (stack == null || stack.isEmpty()) {
+            return;
+        }
+        stack.set(DataComponentsInit.GENOME_BEE, new GenomeBee(copyToEnumMap(this.geneticTraitsMap)));
     }
-
-
 }

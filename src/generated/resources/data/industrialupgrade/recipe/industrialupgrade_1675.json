@@ -6,18 +6,18 @@
       "tag": "c:plates/tin"
     },
     "B": {
-      "item": "industrialupgrade:crafting_elements/crafting_276_element"
+      "item": "minecraft:sticky_piston"
     },
     "C": {
-      "item": "industrialupgrade:tools/treetap"
+      "item": "industrialupgrade:upgrade_casing"
     },
     "D": {
-      "item": "industrialupgrade:upgrade_casing"
+      "item": "industrialupgrade:itemcell/itemcell"
     }
   },
   "pattern": [
-    "ACA",
-    " B ",
+    "ABA",
+    " C ",
     "ADA"
   ],
   "result": {

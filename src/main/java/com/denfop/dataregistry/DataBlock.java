@@ -16,14 +16,15 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 public class DataBlock<T extends Enum<T> & ISubEnum, E extends Block, F extends ItemBlockCore<T>> {
-    public static List<DeferredHolder<Item, ?>> objects = new ArrayList<>();
-    public static List<DeferredHolder<Block, ?>> objectsBlock = new ArrayList<>();
+    public static List<DeferredHolder<Item, ?>> objects =  Collections.synchronizedList(new ArrayList<>());
+    public static List<DeferredHolder<Block, ?>> objectsBlock =  Collections.synchronizedList(new ArrayList<>());
     private final Map<T, DeferredHolder<Block, E>> block = new ConcurrentHashMap<>();
     private final Map<Integer, T> elementsMeta = new ConcurrentHashMap<>();
     private final T[] collections;
@@ -132,6 +133,14 @@ public class DataBlock<T extends Enum<T> & ISubEnum, E extends Block, F extends 
         return block.get(collections[0]).get().defaultBlockState();
     }
 
+    public ItemStack getItem(ItemStack stack) {
+        for (DeferredHolder<Item, F> registryObject : registryObjectList.values()) {
+            if (registryObject.get() == stack.getItem()) {
+                return new ItemStack(registryObject.get());
+            }
+        }
+        return ItemStack.EMPTY;
+    }
 
     public F getItem(T element) {
         return registryObjectList.get(element).get();

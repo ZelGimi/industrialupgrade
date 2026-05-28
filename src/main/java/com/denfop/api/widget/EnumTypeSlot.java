@@ -32,6 +32,7 @@ public enum EnumTypeSlot {
     BIT(48 + 32, 0, 16, 16, true),
     EXCHANGE(48 + 48, 0, 16, 16, true),
     CAPACITOR(96 + 16, 0, 16, 16, true),
+    STORAGE_CELL(239, 239, 16, 17, false),
     ;
     final boolean next;
     private final int x;

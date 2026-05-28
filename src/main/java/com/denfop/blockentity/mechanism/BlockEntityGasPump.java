@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -68,7 +70,7 @@ public class BlockEntityGasPump extends BlockEntityElectricLiquidTankInventory i
     public int type;
 
     public BlockEntityGasPump(BlockPos pos, BlockState state) {
-        super(50000, 14, 20, Fluids.fluidPredicate(FluidName.fluidgas.getInstance().get()), BlockBaseMachine3Entity.gas_pump, pos, state);
+        super(ModConfig.mechanismDouble("gas_installation_energy_storage", 50000.0D), 14, ModConfig.mechanismInt("gas_installation_tank_capacity", 20), Fluids.fluidPredicate(FluidName.fluidgas.getInstance().get()), BlockBaseMachine3Entity.gas_pump, pos, state);
         this.containerslot = new InventoryFluidByList(this,
                 Inventory.TypeItemSlot.INPUT, 1, InventoryFluid.TypeFluidSlot.OUTPUT,
                 FluidName.fluidgas.getInstance().get()
@@ -100,12 +102,14 @@ public class BlockEntityGasPump extends BlockEntityElectricLiquidTankInventory i
     }
 
     public void setLevelMech(final int levelBlock) {
-        this.levelBlock = levelBlock;
+        this.levelBlock = Math.max(0, Math.min(10, levelBlock));
+        this.setChanged();
     }
 
     @Override
     public void removeLevel(final int level) {
-        this.levelBlock -= level;
+        this.levelBlock = Math.max(0, this.levelBlock - level);
+        this.setChanged();
     }
 
 
@@ -132,7 +136,7 @@ public class BlockEntityGasPump extends BlockEntityElectricLiquidTankInventory i
     @Override
     public void readFromNBT(final CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        this.levelBlock = nbttagcompound.getInt("level");
+        this.levelBlock = Math.max(0, Math.min(10, nbttagcompound.contains("level") ? nbttagcompound.getInt("level") : nbttagcompound.getInt("levelMech")));
         this.find = nbttagcompound.getBoolean("find");
     }
 
@@ -181,6 +185,7 @@ public class BlockEntityGasPump extends BlockEntityElectricLiquidTankInventory i
             } else {
                 stack.shrink(1);
                 this.levelBlock++;
+                this.setChanged();
                 return true;
             }
         } else {
@@ -313,8 +318,7 @@ public class BlockEntityGasPump extends BlockEntityElectricLiquidTankInventory i
 
     private void getGas() {
         if (vein.getCol() >= 1) {
-            int size = Math.min(this.levelBlock + 1, vein.getCol());
-            size = Math.min(size, this.fluidTank.getCapacity() - this.fluidTank.getFluidAmount());
+            int size = Math.min(this.levelBlock*15 + 5, vein.getCol());   size = Math.min(size, this.fluidTank.getCapacity() - this.fluidTank.getFluidAmount());
             if (this.fluidTank.getFluidAmount() + size <= this.fluidTank.getCapacity()) {
                 this.fluidTank.fill(new FluidStack(FluidName.fluidgas.getInstance().get(), size), IFluidHandler.FluidAction.EXECUTE);
                 vein.removeCol(size);

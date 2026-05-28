@@ -44,29 +44,33 @@ public class VeinSystem implements VeinBaseSystem {
 
     @Override
     public void addVein(final LevelChunk chunk) {
-        Random rand = new Random();
         int chance = rand.nextInt(100);
         VeinBase vein = new VeinBase(Type.EMPTY, 0, chunk.getPos());
         Holder<Biome> holder = chunk.getLevel().getBiome(new BlockPos(chunk.getPos().x * 16, 0, chunk.getPos().z * 16));
-        int col = holder.is(BiomeTags.IS_HILL) ? 25 : 0;
-        if (chance >= 15 + col) {
-            col = (holder.is(BiomeTags.IS_TAIGA) || holder.is(Tags.Biomes.IS_SNOWY)) ? 15 : 0;
-            if (rand.nextInt(100) < 85 - col) {
+        int hillBonus = holder.is(BiomeTags.IS_HILL)
+                ? ModConfig.COMMON.hillChanceBonus.get()
+                : 0;
+
+        if (chance >= ModConfig.COMMON.baseChance.get() + hillBonus) {
+
+            int biomePenalty = (holder.is(BiomeTags.IS_TAIGA) || holder.is(Tags.Biomes.IS_SNOWY))
+                    ? ModConfig.COMMON.taigaSnowyChancePenalty.get()
+                    : 0;
+
+            if (rand.nextInt(100) < ModConfig.COMMON.gasRollChance.get() - biomePenalty) {
                 getnumber(vein, holder);
             } else {
                 vein.setType(Type.GAS);
                 vein.setOldMineral(false);
                 vein.setMeta(0);
-                vein.setMaxCol(450000);
-                vein.setCol(450000);
+                vein.setMaxCol(ModConfig.COMMON.gasVeinMaxCol.get());
+                vein.setCol(ModConfig.COMMON.gasVeinMaxCol.get());
             }
-            getnumber(vein, holder);
-
         } else {
-            int meta = rand.nextInt(16);
+            int meta = rand.nextInt(30);
             vein.setType(Type.VEIN);
             vein.setOldMineral(meta <= 15);
-            vein.setMeta(meta);
+            vein.setMeta(meta % 16);
             vein.setMaxCol(ModConfig.COMMON.maxVein.get());
             vein.setCol(ModConfig.COMMON.maxVein.get());
         }
@@ -97,100 +101,66 @@ public class VeinSystem implements VeinBaseSystem {
         this.chunkPosVeinMap.clear();
     }
 
-    private void getnumber(VeinBase vein, final Holder<Biome> biome) {
-        int number;
+    private void applyOilVein(VeinBase vein, int chance, int min, int max, int meta) {
+        int roll = rand.nextInt(100);
 
-        rand.setSeed(rand.nextLong());
+        if (roll < chance) {
+            int number = rand.nextInt(max) + min;
+            vein.setCol(number);
+            vein.setMaxCol(number);
+            vein.setType(Type.OIL);
+            vein.setOldMineral(true);
+            vein.setMeta(meta);
+        } else {
+            vein.setType(Type.EMPTY);
+            vein.setCol(0);
+            vein.setMaxCol(0);
+        }
+    }
+
+    private void getnumber(VeinBase vein, final Holder<Biome> biome) {
         int meta = rand.nextInt(6);
         if (biome.is(Tags.Biomes.IS_DESERT)) {
-            int random = rand.nextInt(100);
-            if (random >= 35) {
-                number = rand.nextInt(500000) + 150000;
-                vein.setCol(number);
-                vein.setMaxCol(number);
-                vein.setType(Type.OIL);
-                vein.setOldMineral(true);
-                vein.setMeta(meta);
-            } else {
-                vein.setType(Type.EMPTY);
-                vein.setCol(0);
-                vein.setMaxCol(0);
-            }
+            applyOilVein(vein,
+                    ModConfig.COMMON.desertChance.get(),
+                    ModConfig.COMMON.desertMin.get(),
+                    ModConfig.COMMON.desertMax.get(),
+                    meta);
+
         } else if (biome.is(BiomeTags.IS_OCEAN)) {
-            int random;
-            random = rand.nextInt(100);
-            if (random >= 40) {
-                number = rand.nextInt(500000) + 150000;
-                vein.setCol(number);
-                vein.setMaxCol(number);
-                vein.setType(Type.OIL);
-                vein.setOldMineral(true);
-                vein.setMeta(meta);
-            } else {
-                vein.setType(Type.EMPTY);
-                vein.setCol(0);
-                vein.setMaxCol(0);
-            }
+            applyOilVein(vein,
+                    ModConfig.COMMON.oceanChance.get(),
+                    ModConfig.COMMON.oceanMin.get(),
+                    ModConfig.COMMON.oceanMax.get(),
+                    meta);
+
         } else if (biome.is(BiomeTags.IS_DEEP_OCEAN)) {
-            int random;
-            random = rand.nextInt(100);
-            if (random > 35) {
-                number = rand.nextInt(300000) + 100000;
-                vein.setCol(number);
-                vein.setMaxCol(number);
-                vein.setType(Type.OIL);
-                vein.setOldMineral(true);
-                vein.setMeta(meta);
-            } else {
-                vein.setType(Type.EMPTY);
-                vein.setCol(0);
-                vein.setMaxCol(0);
-            }
+            applyOilVein(vein,
+                    ModConfig.COMMON.deepOceanChance.get(),
+                    ModConfig.COMMON.deepOceanMin.get(),
+                    ModConfig.COMMON.deepOceanMax.get(),
+                    meta);
+
         } else if (biome.is(BiomeTags.IS_RIVER)) {
-            int random;
-            random = rand.nextInt(100);
-            if (random > 50) {
-                number = rand.nextInt(200000) + 50000;
-                vein.setCol(number);
-                vein.setMaxCol(number);
-                vein.setType(Type.OIL);
-                vein.setOldMineral(true);
-                vein.setMeta(meta);
-            } else {
-                vein.setType(Type.EMPTY);
-                vein.setCol(0);
-                vein.setMaxCol(0);
-            }
+            applyOilVein(vein,
+                    ModConfig.COMMON.riverChance.get(),
+                    ModConfig.COMMON.riverMin.get(),
+                    ModConfig.COMMON.riverMax.get(),
+                    meta);
+
         } else if (biome.is(BiomeTags.IS_SAVANNA)) {
-            int random;
-            random = rand.nextInt(100);
-            if (random > 50) {
-                number = rand.nextInt(300000) + 100000;
-                vein.setCol(number);
-                vein.setMaxCol(number);
-                vein.setType(Type.OIL);
-                vein.setOldMineral(true);
-                vein.setMeta(meta);
-            } else {
-                vein.setType(Type.EMPTY);
-                vein.setCol(0);
-                vein.setMaxCol(0);
-            }
+            applyOilVein(vein,
+                    ModConfig.COMMON.savannaChance.get(),
+                    ModConfig.COMMON.savannaMin.get(),
+                    ModConfig.COMMON.savannaMax.get(),
+                    meta);
+
         } else {
-            int random;
-            random = rand.nextInt(100);
-            if (random > 89) {
-                number = rand.nextInt(300000);
-                vein.setCol(number);
-                vein.setMaxCol(number);
-                vein.setType(Type.OIL);
-                vein.setOldMineral(true);
-                vein.setMeta(meta);
-            } else {
-                vein.setType(Type.EMPTY);
-                vein.setCol(0);
-                vein.setMaxCol(0);
-            }
+            applyOilVein(vein,
+                    ModConfig.COMMON.defaultChance.get(),
+                    ModConfig.COMMON.defaultMin.get(),
+                    ModConfig.COMMON.defaultMax.get(),
+                    meta);
         }
     }
 

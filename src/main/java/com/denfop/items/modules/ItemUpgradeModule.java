@@ -87,6 +87,9 @@ public class ItemUpgradeModule<T extends Enum<T> & ISubEnum> extends ItemMain<T>
         upgrademodule44(44),
         upgrademodule45(45),
         upgrademodule46(46),
+        upgrademodule47(47),
+        upgrademodule48(48),
+        upgrademodule49(49),
         ;
 
         private final String name;

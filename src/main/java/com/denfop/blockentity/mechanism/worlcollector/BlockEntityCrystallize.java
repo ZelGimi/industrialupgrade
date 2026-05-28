@@ -56,10 +56,6 @@ public class BlockEntityCrystallize extends BlockEntityBaseWorldCollector implem
 
         addRecipe(IUItem.iridiumOre, 20, new ItemStack(IUItem.iuingot.getStack(17)));
 
-        addRecipe(new ItemStack(Items.DIAMOND_ORE), 4, new ItemStack(Items.DIAMOND, 2));
-        addRecipe(new ItemStack(Items.EMERALD_ORE), 4, new ItemStack(Items.EMERALD, 2));
-        addRecipe(new ItemStack(Items.REDSTONE_ORE), 1, new ItemStack(Items.REDSTONE, 4));
-        addRecipe(new ItemStack(Items.LAPIS_ORE), 1, new ItemStack(Items.LAPIS_LAZULI, 4));
 
         addRecipe(new ItemStack(Items.GOLDEN_APPLE), 4, new ItemStack(Items.ENCHANTED_GOLDEN_APPLE));
 
@@ -68,7 +64,19 @@ public class BlockEntityCrystallize extends BlockEntityBaseWorldCollector implem
         addRecipe(new ItemStack(Items.STRING), 20, new ItemStack(Blocks.COBWEB));
         addRecipe(IUItem.latex, 10, new ItemStack(Items.SLIME_BALL));
 
+        addRecipe("c:ores/Diamond", 4, new ItemStack(Items.DIAMOND, 8));
+        addRecipe("c:ores/Coal", 4, new ItemStack(Items.COAL, 10));
 
+        addRecipe("c:ores/emerald", 4, new ItemStack(Items.EMERALD, 8));
+        addRecipe("c:ores/Quartz", 4, new ItemStack(Items.QUARTZ, 8));
+        addRecipe("c:ores/Lapis", 4, new ItemStack(Items.LAPIS_LAZULI, 10));
+        addRecipe("c:ores/Sulfur", 4, new ItemStack(IUItem.iudust.getStack(31), 8));
+        addRecipe("c:ores/Redstone", 4, new ItemStack(Items.REDSTONE, 10));
+
+
+        addRecipe("c:ores/ruby", 4, new ItemStack(IUItem.preciousgem.getStack(0), 8));
+        addRecipe("c:ores/sapphire", 4, new ItemStack(IUItem.preciousgem.getStack(1), 8));
+        addRecipe("c:ores/topaz", 4, new ItemStack(IUItem.preciousgem.getStack(2), 8));
     }
 
     public MultiBlockEntity getTeBlock() {

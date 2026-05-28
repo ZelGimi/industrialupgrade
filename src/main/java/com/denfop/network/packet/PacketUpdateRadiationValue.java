@@ -1,12 +1,12 @@
 package com.denfop.network.packet;
 
 import com.denfop.IUCore;
+import com.denfop.api.pollution.client.PollutionClientRenderRefresh;
 import com.denfop.api.pollution.radiation.Radiation;
 import com.denfop.api.pollution.radiation.RadiationSystem;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 
@@ -16,35 +16,28 @@ public class PacketUpdateRadiationValue implements IPacket {
 
     private CustomPacketBuffer buffer;
 
-    ;
-
     public PacketUpdateRadiationValue() {
     }
 
-    public PacketUpdateRadiationValue(ChunkPos pos, double radiation, ServerLevel level) {
-        for (ServerPlayer player : level.players()) {
-            Radiation radiation1 = RadiationSystem.rad_system.getMap().get(pos);
-            if (radiation1 == null) {
-                radiation1 = new Radiation(pos);
-                ;
-                RadiationSystem.rad_system.addRadiation(radiation1);
-            }
-
-            radiation1.addRadiation(radiation);
-            CustomPacketBuffer buffer = new CustomPacketBuffer(64, null);
-            try {
-                buffer.writeByte(this.getId());
-                EncoderHandler.encode(buffer, radiation1);
-
-
-            } catch (IOException var5) {
-                throw new RuntimeException(var5);
-            }
-
-            buffer.flip();
-            this.buffer = buffer;
-            IUCore.network.getServer().sendPacket(this, player, buffer);
+    public PacketUpdateRadiationValue(ChunkPos pos, double radiation, ServerLevel serverLevel) {
+        Radiation radiation1 = RadiationSystem.rad_system.getMap().get(pos);
+        if (radiation1 == null) {
+            radiation1 = new Radiation(pos);
+            RadiationSystem.rad_system.addRadiation(radiation1);
         }
+        radiation1.addRadiation(radiation);
+
+        CustomPacketBuffer buffer = new CustomPacketBuffer(64, serverLevel.registryAccess());
+        try {
+            buffer.writeByte(this.getId());
+            EncoderHandler.encode(buffer, radiation1);
+        } catch (IOException var5) {
+            throw new RuntimeException(var5);
+        }
+
+        buffer.flip();
+        this.buffer = buffer;
+        IUCore.network.getServer().sendPacket(this, buffer);
     }
 
     @Override
@@ -78,6 +71,8 @@ public class PacketUpdateRadiationValue implements IPacket {
                 radiation1.setCoef(radiation.getCoef());
                 radiation1.setLevel(radiation.getLevel());
             }
+
+            PollutionClientRenderRefresh.queueSingleChunkRadiationUpdated(radiation.getPos());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -87,5 +82,4 @@ public class PacketUpdateRadiationValue implements IPacket {
     public EnumTypePacket getPacketType() {
         return EnumTypePacket.SERVER;
     }
-
 }

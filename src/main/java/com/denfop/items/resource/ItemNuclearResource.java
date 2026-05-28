@@ -37,7 +37,7 @@ public class ItemNuclearResource<T extends Enum<T> & ISubEnum> extends ItemMain<
 
         uranium(0, 60, 100),
         uranium_235(1, 150, 100),
-        uranium_238(2, 10, 90),
+        uranium_238(2, 150, 90),
         plutonium(3, 150, 100),
         mox(4, 300, 100),
         small_uranium_235(5, 150, 100),

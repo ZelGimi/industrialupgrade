@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.recipe.FluidHandlerRecipe;
@@ -53,7 +55,7 @@ public class BlockEntityPrimalFluidHeater extends BlockEntityElectricMachine imp
     private int prevAmount1;
 
     public BlockEntityPrimalFluidHeater(BlockPos pos, BlockState state) {
-        super(0, 0, 0, BlockPrimalFluidHeaterEntity.primal_fluid_heater, pos, state);
+        super(ModConfig.mechanismDouble("primitive_fluid_heater_energy_storage", 0.0D), 0, 0, BlockPrimalFluidHeaterEntity.primal_fluid_heater, pos, state);
         this.progress = 0;
         this.defaultOperationLength = this.operationLength = 200;
 

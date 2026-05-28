@@ -15,37 +15,6 @@
       "model": "industrialupgrade:block/basemachine/generator_microchip",
       "y": 90
     },
-    "facing=down,type=generator_microchip": {
-      "model": "industrialupgrade:block/basemachine/generator_microchip",
-      "x": 90
-    },
-    "facing=up,type=generator_microchip": {
-      "model": "industrialupgrade:block/basemachine/generator_microchip",
-      "x": 270
-    },
-    "facing=north,type=generator_microchip_invalid": {
-      "model": "industrialupgrade:block/basemachine/generator_microchip_active"
-    },
-    "facing=south,type=generator_microchip_invalid": {
-      "model": "industrialupgrade:block/basemachine/generator_microchip_active",
-      "y": 180
-    },
-    "facing=west,type=generator_microchip_invalid": {
-      "model": "industrialupgrade:block/basemachine/generator_microchip_active",
-      "y": 270
-    },
-    "facing=east,type=generator_microchip_invalid": {
-      "model": "industrialupgrade:block/basemachine/generator_microchip_active",
-      "y": 90
-    },
-    "facing=down,type=generator_microchip_invalid": {
-      "model": "industrialupgrade:block/basemachine/generator_microchip_active",
-      "x": 90
-    },
-    "facing=up,type=generator_microchip_invalid": {
-      "model": "industrialupgrade:block/basemachine/generator_microchip_active",
-      "x": 270
-    },
     "facing=north,type=generator_microchip_active": {
       "model": "industrialupgrade:block/basemachine/generator_microchip_active"
     },
@@ -60,14 +29,6 @@
     "facing=east,type=generator_microchip_active": {
       "model": "industrialupgrade:block/basemachine/generator_microchip_active",
       "y": 90
-    },
-    "facing=down,type=generator_microchip_active": {
-      "model": "industrialupgrade:block/basemachine/generator_microchip_active",
-      "x": 90
-    },
-    "facing=up,type=generator_microchip_active": {
-      "model": "industrialupgrade:block/basemachine/generator_microchip_active",
-      "x": 270
     }
   }
 }

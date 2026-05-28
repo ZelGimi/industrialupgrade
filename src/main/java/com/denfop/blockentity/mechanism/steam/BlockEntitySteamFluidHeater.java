@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.steam;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -51,7 +53,7 @@ public class BlockEntitySteamFluidHeater extends BlockEntityElectricMachine impl
     public boolean work = true;
 
     public BlockEntitySteamFluidHeater(BlockPos pos, BlockState state) {
-        super(0, 0, 1, BlockBaseMachine3Entity.steam_fluid_heater, pos, state);
+        super(ModConfig.mechanismDouble("steam_fluid_heater_energy_storage", 0.0D), 0, 1, BlockBaseMachine3Entity.steam_fluid_heater, pos, state);
 
 
         this.fluids = this.addComponent(new Fluids(this));

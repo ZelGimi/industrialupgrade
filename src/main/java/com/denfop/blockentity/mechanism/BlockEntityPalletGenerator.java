@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -34,7 +36,7 @@ public class BlockEntityPalletGenerator extends BlockEntityElectricMachine {
 
 
     public BlockEntityPalletGenerator(BlockPos pos, BlockState state) {
-        super(0, 14, 0, BlockBaseMachine3Entity.pallet_generator, pos, state);
+        super(ModConfig.mechanismDouble("radioisotope_thermoelectric_generator_energy_storage", 0.0D), 14, 0, BlockBaseMachine3Entity.pallet_generator, pos, state);
         this.energy = this.addComponent(Energy.asBasicSource(this, 5000000, tier));
         this.rad = this.addComponent(ComponentBaseEnergy.asBasicSink(EnergyType.RADIATION, this, 50000D));
         this.slot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 6) {

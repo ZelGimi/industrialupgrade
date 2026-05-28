@@ -1,0 +1,89 @@
+{
+  "carvers": {},
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 10926284,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000
+    },
+    "sky_color": 5862292,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "features": [
+    [
+      "industrialupgrade:rhea_cavity",
+      "industrialupgrade:space/rhea/stone_tunnels",
+      "industrialupgrade:space/rhea/hall_system",
+      "industrialupgrade:space/rhea/fractures",
+      "industrialupgrade:space/rhea/porous",
+      "industrialupgrade:space/rhea/shafts",
+      "industrialupgrade:space/rhea/liquid_chamber",
+      "industrialupgrade:space/rhea/frozen_chamber",
+      "industrialupgrade:space/rhea/crater_chamber",
+      "industrialupgrade:space/rhea/tunnel_caves",
+      "industrialupgrade:space/rhea/labyrinth_caves",
+      "industrialupgrade:space/rhea/shaft_caves",
+      "industrialupgrade:space/rhea/dome_caves",
+      "industrialupgrade:space/rhea/well_caves",
+      "industrialupgrade:space/rhea/multi_tier_caves",
+      "industrialupgrade:space/rhea/branched_caves",
+      "industrialupgrade:space/rhea/spiral_caves",
+      "industrialupgrade:space/rhea/arch_caves",
+      "industrialupgrade:space/rhea/chamber_caves",
+      "industrialupgrade:space/rhea/canyon_caves",
+      "industrialupgrade:space/rhea/pocket_caves",
+      "industrialupgrade:space/rhea/crevice_caves",
+      "industrialupgrade:space/rhea/amphitheater_caves",
+      "industrialupgrade:space/rhea/cathedral_caves",
+      "industrialupgrade:space/rhea/gallery_caves",
+      "industrialupgrade:space/rhea/winding_caves",
+      "industrialupgrade:space/rhea/cascade_caves",
+      "industrialupgrade:space/rhea/collapse_caves",
+      "industrialupgrade:space/rhea/vertical_collectors"
+    ],
+    [
+      "industrialupgrade:rhea_lake_0",
+      "industrialupgrade:rhea_fluid_0"
+    ],
+    [
+      "industrialupgrade:rhea_craters",
+      "industrialupgrade:space/rhea/addition_craters"
+    ],
+    [],
+    [
+      "industrialupgrade:rhea_geyser_0"
+    ],
+    [],
+    [
+      "industrialupgrade:rhea_ore_0",
+      "industrialupgrade:rhea_ore_1",
+      "industrialupgrade:rhea_ore_2",
+      "industrialupgrade:rhea_ore_3",
+      "industrialupgrade:rhea_ore_4",
+      "industrialupgrade:rhea_ore_5"
+    ],
+    [],
+    [],
+    [],
+    [
+      "industrialupgrade:space/rhea/ice_surface_cover"
+    ]
+  ],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": -0.59999996
+}

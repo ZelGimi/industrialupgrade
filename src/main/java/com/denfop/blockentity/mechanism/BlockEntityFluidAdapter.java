@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -71,11 +73,11 @@ public class BlockEntityFluidAdapter extends BlockEntityElectricMachine implemen
     protected short progress;
 
     public BlockEntityFluidAdapter(BlockPos pos, BlockState state) {
-        super(200, 1, 1, BlockBaseMachine3Entity.fluid_adapter, pos, state);
+        super(ModConfig.mechanismDouble("fluid_adapter_energy_storage", 200.0D), 1, 1, BlockBaseMachine3Entity.fluid_adapter, pos, state);
         Recipes.recipes.addInitRecipes(this);
 
         this.progress = 0;
-        this.defaultEnergyConsume = this.energyConsume = 1;
+        this.defaultEnergyConsume = this.energyConsume = ModConfig.mechanismInt("fluid_adapter_energy_use", 1);
         this.defaultOperationLength = this.operationLength = 100;
         this.defaultTier = 1;
         this.defaultEnergyStorage = 100;
@@ -85,8 +87,8 @@ public class BlockEntityFluidAdapter extends BlockEntityElectricMachine implemen
         this.fluidTank2 = fluids.addTank("fluidTank2", 12 * 1000, Inventory.TypeItemSlot.OUTPUT);
         this.inputSlotA = new InventoryRecipes(this, "fluid_adapter", this, fluidTank1);
 
-        this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("fluid_adapter_soil_pollution_amount", 0.1D)));
+        this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("fluid_adapter_air_pollution_amount", 0.1D)));
 
         this.fluid_handler = new FluidHandlerRecipe("fluid_adapter", fluids);
         this.fluidTank1.setAcceptedFluids(Fluids.fluidPredicate(this.fluid_handler.getFluids(0)));
@@ -118,9 +120,9 @@ public class BlockEntityFluidAdapter extends BlockEntityElectricMachine implemen
             tooltip.add(Localization.translate("press.lshift"));
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            tooltip.add(Localization.translate("iu.machines_work_energy") + 200 + Localization.translate(
+            tooltip.add(Localization.translate("iu.machines_work_energy") + defaultEnergyConsume + Localization.translate(
                     "iu.machines_work_energy_type_eu"));
-            tooltip.add(Localization.translate("iu.machines_work_length") + 1);
+            tooltip.add(Localization.translate("iu.machines_work_length") + defaultOperationLength);
         }
         super.addInformation(stack, tooltip);
 

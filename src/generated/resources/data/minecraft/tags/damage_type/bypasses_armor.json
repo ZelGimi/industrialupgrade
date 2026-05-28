@@ -1,0 +1,20 @@
+{
+  "values": [
+    {
+      "id": "#industrialupgrade:bee",
+      "required": false
+    },
+    {
+      "id": "#industrialupgrade:current",
+      "required": false
+    },
+    {
+      "id": "#industrialupgrade:frostbite",
+      "required": false
+    },
+    {
+      "id": "#industrialupgrade:poison_gas",
+      "required": false
+    }
+  ]
+}

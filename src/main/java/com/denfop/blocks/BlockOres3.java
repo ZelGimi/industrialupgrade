@@ -91,11 +91,11 @@ public class BlockOres3<T extends Enum<T> & ISubEnum> extends BlockCore<T> imple
             case 0:
                 return 0;
             case 1:
-                return WorldBaseGen.random.nextInt(100) < 50 ? 1 : 0;
+                return 1;
             case 2:
-                return WorldBaseGen.random.nextInt(100) < 100 ? 1 : 1;
+                return 2;
             default:
-                return WorldBaseGen.random.nextInt(100) < 50 ? 2 : 1;
+                return 3;
         }
     }
 

@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.doublemolecular;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.blockentity.mechanism.BlockEntityImpOilRefiner;
@@ -84,9 +85,11 @@ public class DoubleMolecularTransformerCategory extends ScreenMain implements IR
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, DoubleMolecularTransformerHandler recipes, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 8, 7).addItemStack(recipes.getInput());
-        builder.addSlot(RecipeIngredientRole.INPUT, 28, 7).addItemStack(recipes.getInput1());
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 18, 47).addItemStack(recipes.getOutput());
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 9, 8, recipes, 0, recipes.getInput());
+
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 29, 8, recipes, 1, recipes.getInput1());
+
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 19, 48).addItemStack(recipes.getOutput());
     }
 
 

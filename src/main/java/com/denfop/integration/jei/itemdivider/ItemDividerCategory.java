@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.itemdivider;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.api.widget.EnumTypeComponent;
 import com.denfop.api.widget.ScreenWidget;
@@ -101,7 +102,8 @@ public class ItemDividerCategory extends ScreenMain implements IRecipeCategory<I
     public void setRecipe(IRecipeLayoutBuilder builder, ItemDividerHandler recipe, IFocusGroup focuses) {
         builder.addSlot(RecipeIngredientRole.OUTPUT, 20 + 71, 21).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipe.getInputFluid().getFluid(), recipe.getInputFluid().getAmount());
         builder.addSlot(RecipeIngredientRole.OUTPUT, 50 + 71, 21).setFluidRenderer(10000, true, 12, 47).addFluidStack(recipe.getOutputFluid().getFluid(), recipe.getOutputFluid().getAmount());
-        builder.addSlot(RecipeIngredientRole.INPUT, 30 - 20, 44).addItemStack(recipe.getInput());
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 30 - 20, 44, recipe, 0, recipe.getInput());
+
         builder.addSlot(RecipeIngredientRole.OUTPUT, 65, 44).addItemStack(recipe.getOutput());
 
     }

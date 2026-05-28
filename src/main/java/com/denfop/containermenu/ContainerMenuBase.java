@@ -114,7 +114,7 @@ public class ContainerMenuBase<T extends CustomWorldContainer> extends AbstractC
             return;
         }
         Slot slot = this.slots.get(slotId);
-        if (!(slot instanceof SlotVirtual)) {
+        if (!(slot instanceof SlotVirtual) && !(slot instanceof SlotVirtualMonitor) && !(slot instanceof SlotVirtualPreCraft)) {
             if (slot instanceof SlotInvSlot) {
                 SlotInvSlot slot1 = (SlotInvSlot) slot;
                 if (!slot1.inventory.canShift() && clickType == ClickType.QUICK_MOVE) {
@@ -125,7 +125,12 @@ public class ContainerMenuBase<T extends CustomWorldContainer> extends AbstractC
             super.clicked(slotId, dragType, clickType, player);
             this.base.setChanged();
         } else {
-            ((SlotVirtual) slot).slotClick(slotId, dragType, clickType, player);
+            if (slot instanceof SlotVirtual)
+                ((SlotVirtual) slot).slotClick(slotId, dragType, clickType, player);
+            if (slot instanceof SlotVirtualMonitor)
+                ((SlotVirtualMonitor) slot).slotClick(slotId, dragType, clickType, player);
+            if (slot instanceof SlotVirtualPreCraft)
+                ((SlotVirtualPreCraft) slot).slotClick(slotId, dragType, clickType, player);
         }
 
 
@@ -136,7 +141,7 @@ public class ContainerMenuBase<T extends CustomWorldContainer> extends AbstractC
         return Minecraft.getInstance().getSingleplayerServer() != null;
     }
 
-    public final ItemStack quickMoveStack(Player player, int sourceSlotIndex) {
+    public ItemStack quickMoveStack(Player player, int sourceSlotIndex) {
         Slot sourceSlot = this.slots.get(sourceSlotIndex);
         if (sourceSlot != null && sourceSlot.hasItem()) {
             ItemStack sourceItemStack = sourceSlot.getItem();
@@ -182,7 +187,7 @@ public class ContainerMenuBase<T extends CustomWorldContainer> extends AbstractC
 
                 slot = (Slot) slots.get(i);
                 itemstack = slot.getItem();
-                if (!itemstack.isEmpty() && slot.mayPlace(stack) && ItemStack.isSameItem(stack, itemstack)) {
+                if (!itemstack.isEmpty() && slot.mayPlace(stack) && canStacksMergeStrict(stack, itemstack)) {
                     int j = itemstack.getCount() + stack.getCount();
                     int maxSize = Math.min(slot.getMaxStackSize(itemstack), stack.getMaxStackSize());
                     if (j <= maxSize) {
@@ -234,7 +239,7 @@ public class ContainerMenuBase<T extends CustomWorldContainer> extends AbstractC
         for (int run = 0; run < 4 && !ModUtils.isEmpty(sourceItemStack); ++run) {
 
             for (final Slot targetSlot : this.slots) {
-                if (targetSlot instanceof SlotVirtual) {
+                if (targetSlot instanceof SlotVirtual || targetSlot instanceof SlotVirtualMonitor || targetSlot instanceof SlotVirtualPreCraft) {
                     continue;
                 }
 
@@ -261,7 +266,7 @@ public class ContainerMenuBase<T extends CustomWorldContainer> extends AbstractC
 
             while (it.hasPrevious()) {
                 Slot targetSlot = it.previous();
-                if (targetSlot instanceof SlotVirtual) {
+                if (targetSlot instanceof SlotVirtual || targetSlot instanceof SlotVirtualMonitor || targetSlot instanceof SlotVirtualPreCraft) {
                     continue;
                 }
 
@@ -328,12 +333,19 @@ public class ContainerMenuBase<T extends CustomWorldContainer> extends AbstractC
         return stack;
     }
 
+    public boolean checkItemEqualityStrict(ItemStack a, ItemStack b) {
+        if (a.isEmpty() || b.isEmpty()) {
+            return false;
+        }
+        return ItemStack.isSameItemSameComponents(a, b);
+    }
+
     private int getTransferAmount(ItemStack stack, Slot dst) {
         int amount = Math.min(dst.container.getMaxStackSize(), dst.getMaxStackSize());
         amount = Math.min(amount, stack.isStackable() ? stack.getMaxStackSize() : 1);
         ItemStack dstStack = dst.getItem();
         if (!ModUtils.isEmpty(dstStack)) {
-            if (!ModUtils.checkItemEqualityStrict(stack, dstStack)) {
+            if (!checkItemEqualityStrict(stack, dstStack)) {
                 return 0;
             }
 
@@ -344,6 +356,12 @@ public class ContainerMenuBase<T extends CustomWorldContainer> extends AbstractC
         return amount;
     }
 
+    private boolean canStacksMergeStrict(ItemStack a, ItemStack b) {
+        if (a.isEmpty() || b.isEmpty()) {
+            return false;
+        }
+        return ItemStack.isSameItemSameComponents(a, b);
+    }
 
     public SlotInvSlot findClassSlot(Class<? extends Inventory> invSlotClass) {
         for (Slot slot : this.slots) {

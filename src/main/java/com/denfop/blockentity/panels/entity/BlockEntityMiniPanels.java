@@ -68,9 +68,10 @@ public class BlockEntityMiniPanels extends BlockEntityInventory implements ISola
     public boolean rain;
     public boolean sunIsUp;
     public boolean skyIsVisible;
-    public List<List<EnumState>> listStable =  IntStream.range(0, 9)
+    public List<List<EnumState>> listStable = IntStream.range(0, 9)
             .mapToObj(i -> new ArrayList<EnumState>())
-            .collect(Collectors.toList());;
+            .collect(Collectors.toList());
+    ;
     public double bonusGeneration;
     public BlockEntitySolarPanel.GenerationState activeState = BlockEntitySolarPanel.GenerationState.NONE;
     public double load;

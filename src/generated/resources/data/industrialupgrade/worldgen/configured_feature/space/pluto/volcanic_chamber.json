@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:space_chamber",
+  "config": {
+    "flooded": false,
+    "fluid": {
+      "Name": "industrialupgrade:fluid/fluidnitricacid",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "kind": "volcanic_chamber",
+    "max_length": 12,
+    "max_radius": 7,
+    "max_vertical": 20,
+    "min_length": 6,
+    "min_radius": 4,
+    "open_to_surface": false,
+    "primary": {
+      "Name": "industrialupgrade:spacestone1/pluto_stone"
+    },
+    "secondary": {
+      "Name": "industrialupgrade:spacecobblestone1/pluto_cobblestone"
+    },
+    "tertiary": {
+      "Name": "industrialupgrade:spacecobblestone1/pluto_cobblestone"
+    }
+  }
+}

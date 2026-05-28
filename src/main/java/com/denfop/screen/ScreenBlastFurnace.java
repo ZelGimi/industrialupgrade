@@ -97,7 +97,7 @@ public class ScreenBlastFurnace<T extends ContainerMenuBlastFurnace> extends Scr
                             ret.add(Localization.translate(fluid.getFluidType().getDescriptionId()) + ": " + fs.getAmount() + " " + Localization.translate(
                                     "iu.generic.text.mb"));
                         } else {
-                            ret.add("invalid fluid stack");
+                            ret.add(Localization.translate("iu.tooltip.fluid.invalid"));
                         }
                     } else {
                         ret.add(Localization.translate("iu.generic.text.empty"));
@@ -124,7 +124,7 @@ public class ScreenBlastFurnace<T extends ContainerMenuBlastFurnace> extends Scr
                     fluidHeight = 48;
                     Fluid fluid = fs.getFluid();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
-                    TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+                    TextureAtlasSprite sprite = getSafeFluidSprite(fs);
                     int color = extensions.getTintColor();
                     double renderHeight = (double) fluidHeight * ModUtils.limit(
                             (double) fs.getAmount() / (double) this.tank.getCapacity(),
@@ -167,7 +167,7 @@ public class ScreenBlastFurnace<T extends ContainerMenuBlastFurnace> extends Scr
                             ret.add(Localization.translate(fluid.getFluidType().getDescriptionId()) + ": " + fs.getAmount() + " " + Localization.translate(
                                     "iu.generic.text.mb"));
                         } else {
-                            ret.add("invalid fluid stack");
+                            ret.add(Localization.translate("iu.tooltip.fluid.invalid"));
                         }
                     } else {
                         ret.add(Localization.translate("iu.generic.text.empty"));
@@ -195,7 +195,7 @@ public class ScreenBlastFurnace<T extends ContainerMenuBlastFurnace> extends Scr
 
                     Fluid fluid = fs.getFluid();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
-                    TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+                    TextureAtlasSprite sprite = getSafeFluidSprite(fs);
                     int color = extensions.getTintColor();
                     double renderHeight = (double) fluidHeight * ModUtils.limit(
                             (double) fs.getAmount() / (double) this.tank.getCapacity(),

@@ -1,0 +1,17 @@
+{
+  "entries": [
+    "industrialupgrade:inject_stronghold_crossing",
+    "industrialupgrade:inject_jungle_temple",
+    "industrialupgrade:inject_stronghold_corridor",
+    "industrialupgrade:inject_desert_pyramid",
+    "industrialupgrade:inject_abandoned_mineshaft",
+    "industrialupgrade:inject_end_city_treasure",
+    "industrialupgrade:inject_nether_bridge",
+    "industrialupgrade:inject_village_toolsmith",
+    "industrialupgrade:inject_igloo_chest",
+    "industrialupgrade:inject_simple_dungeon",
+    "industrialupgrade:inject_stronghold_library",
+    "industrialupgrade:inject_spawn_bonus_chest"
+  ],
+  "replace": false
+}

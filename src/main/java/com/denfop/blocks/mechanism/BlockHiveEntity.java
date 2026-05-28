@@ -122,7 +122,7 @@ public enum BlockHiveEntity implements MultiBlockEntity {
 
     @Override
     public boolean hasActive() {
-        return false;
+        return true;
     }
 
     @Override

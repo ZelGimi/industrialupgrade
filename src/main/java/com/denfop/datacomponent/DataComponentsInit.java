@@ -67,6 +67,7 @@ public class DataComponentsInit {
     public static DeferredHolder<DataComponentType<?>, DataComponentType<Byte>> DIRECTION;
     public static DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> EXPERIENCE;
     public static DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> SWARM;
+    public static DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> ORE;
     public static DeferredHolder<DataComponentType<?>, DataComponentType<Double>> STORAGE;
     public static DeferredHolder<DataComponentType<?>, DataComponentType<SimpleFluidContent>> FLUID;
     public static DeferredHolder<DataComponentType<?>, DataComponentType<UpgradeItem>> UPGRADE_ITEM;
@@ -89,6 +90,11 @@ public class DataComponentsInit {
     public static DeferredHolder<DataComponentType<?>, DataComponentType<BeerInfo>> BEER;
     public static DeferredHolder<DataComponentType<?>, DataComponentType<ItemStack>> PATTERN;
     public static DeferredHolder<DataComponentType<?>, DataComponentType<List<Tuple<Integer, Integer>>>> BOOKMARK;
+    public static DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> TYPE_RECIPE;
+    public static DeferredHolder<DataComponentType<?>, DataComponentType<Double>> FOOD_RADIATION_DOSE;
+    public static DeferredHolder<DataComponentType<?>, DataComponentType<StorageCellData>> STORAGE_CELL;
+    public static DeferredHolder<DataComponentType<?>, DataComponentType<CompoundTag>> PATTERN_DATA;
+    public static DeferredHolder<DataComponentType<?>, DataComponentType<String>> UUID_STRING;
     public static StreamCodec<ByteBuf, List<Integer>> INT_ARRAY = new StreamCodec<>() {
         public List<Integer> decode(ByteBuf p_320167_) {
             CustomPacketBuffer packetBuffer = new CustomPacketBuffer(p_320167_, IUCore.registry);
@@ -112,6 +118,7 @@ public class DataComponentsInit {
     public static DeferredHolder<DataComponentType<?>, DataComponentType<Double>> SOLARIUM_ENERGY;
     public static DeferredHolder<DataComponentType<?>, DataComponentType<Double>> EXPERIENCE_ENERGY;
     public static DeferredHolder<DataComponentType<?>, DataComponentType<Double>> RADIATION_ENERGY;
+    public static DeferredHolder<DataComponentType<?>, DataComponentType<Float>> BOOK_ZOOM;
 
     public static void init(DeferredRegister<DataComponentType<?>> dataComponentType) {
 
@@ -133,6 +140,7 @@ public class DataComponentsInit {
         LEVEL_MICROCHIP = dataComponentType.register("level_microchip", () -> DataComponentType.<Integer>builder().persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT).build());
         EXPERIENCE = dataComponentType.register("experience", () -> DataComponentType.<Integer>builder().persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT).build());
         SWARM = dataComponentType.register("swarm", () -> DataComponentType.<Integer>builder().persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT).build());
+        ORE = dataComponentType.register("ore", () -> DataComponentType.<Integer>builder().persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT).build());
         STORAGE = dataComponentType.register("storage", () -> DataComponentType.<Double>builder().persistent(Codec.DOUBLE).networkSynchronized(ByteBufCodecs.DOUBLE).build());
         FLUID = dataComponentType.register("fluid", () -> DataComponentType.<SimpleFluidContent>builder().persistent(SimpleFluidContent.CODEC).networkSynchronized(SimpleFluidContent.STREAM_CODEC).build());
         SKIN = dataComponentType.register("skin", () -> DataComponentType.<String>builder().persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8).build());
@@ -164,6 +172,25 @@ public class DataComponentsInit {
         BEER = dataComponentType.register("beer", () -> DataComponentType.<BeerInfo>builder().persistent(BeerInfo.CODEC).networkSynchronized(BeerInfo.STREAM_CODEC).build());
         PATTERN = dataComponentType.register("pettern", () -> DataComponentType.<ItemStack>builder().persistent(ItemStack.CODEC).networkSynchronized(ItemStack.STREAM_CODEC).build());
         BOOKMARK = dataComponentType.register("bookmark", () -> DataComponentType.<List<Tuple<Integer, Integer>>>builder().persistent(INT_TUPLE_CODEC.listOf()).networkSynchronized(LIST_TUPLE_STREAM_CODEC).build());
+        BOOK_ZOOM = dataComponentType.register("book_zoom", () ->
+                DataComponentType.<Float>builder()
+                        .persistent(com.mojang.serialization.Codec.FLOAT)
+                        .networkSynchronized(net.minecraft.network.codec.ByteBufCodecs.FLOAT)
+                        .build());
+        TYPE_RECIPE = dataComponentType.register("type_recipe", () -> DataComponentType.<Boolean>builder().persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL).build());
+        FOOD_RADIATION_DOSE = dataComponentType.register("food_radiation_dose", () -> DataComponentType.<Double>builder().persistent(Codec.DOUBLE).networkSynchronized(ByteBufCodecs.DOUBLE).build());
+        STORAGE_CELL = dataComponentType.register("storage_cell", () ->
+                DataComponentType.<StorageCellData>builder()
+                        .persistent(StorageCellData.CODEC)
+                        .networkSynchronized(StorageCellData.STREAM_CODEC)
+                        .build());
+        PATTERN_DATA = dataComponentType.register("pattern_data", () ->
+                DataComponentType.<CompoundTag>builder()
+                        .persistent(CompoundTag.CODEC)
+                        .networkSynchronized(ByteBufCodecs.TRUSTED_COMPOUND_TAG)
+                        .cacheEncoding()
+                        .build());
+        UUID_STRING = dataComponentType.register("iu_space_translocator_uuid", () -> DataComponentType.<String>builder().persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8).build());
 
     }
 

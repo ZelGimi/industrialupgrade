@@ -47,6 +47,7 @@ public class BlockEntityRotorModifier extends BlockEntityInventory implements IW
         super(BlockBaseMachine3Entity.rotor_modifier, pos, state);
         slot = new InventoryUpgrade(this);
         rotor_slot = new InventoryRotor(slot);
+        slot.setStackSizeLimit(1);
     }
 
     @Override

@@ -1,9 +1,9 @@
 package com.denfop.items;
 
 import com.denfop.IUCore;
-import com.denfop.api.pollution.PollutionManager;
-import com.denfop.api.pollution.component.ChunkLevel;
 import com.denfop.api.pollution.component.LevelPollution;
+import com.denfop.client.pollution.PollutionAnalyzerClientHooks;
+import com.denfop.network.DistExecutor;
 import com.denfop.tabs.IItemTab;
 import com.denfop.utils.Localization;
 import net.minecraft.Util;
@@ -16,8 +16,8 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.neoforged.api.distmarker.Dist;
 
 import java.util.List;
 
@@ -41,23 +41,12 @@ public class ItemPollutionDevice extends Item implements IItemTab {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
-        if (!world.isClientSide) {
-            ChunkPos playerChunk = new ChunkPos(player.blockPosition());
-
-            ChunkLevel airChunkLevel = PollutionManager.pollutionManager.getChunkLevelAir(playerChunk);
-            ChunkLevel soilChunkLevel = PollutionManager.pollutionManager.getChunkLevelSoil(playerChunk);
-
-            if (airChunkLevel != null) {
-                sendPollutionMessage(player, airChunkLevel.getLevelPollution(), "message.pollution.air");
-            }
-
-            if (soilChunkLevel != null) {
-                sendPollutionMessage(player, soilChunkLevel.getLevelPollution(), "message.pollution.soil");
-            }
-
-            return InteractionResultHolder.sidedSuccess(player.getItemInHand(hand), world.isClientSide());
+        ItemStack stack = player.getItemInHand(hand);
+        if (world.isClientSide) {
+            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> PollutionAnalyzerClientHooks.open(stack.copy()));
         }
-        return super.use(world, player, hand);
+
+        return InteractionResultHolder.sidedSuccess(stack, world.isClientSide);
     }
 
     private void sendPollutionMessage(Player player, LevelPollution level, String messageKey) {

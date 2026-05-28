@@ -1,5 +1,7 @@
 package com.denfop.blockentity.base;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -38,10 +40,10 @@ public class BlockEntityObsidianGenerator extends BlockEntityBaseObsidianGenerat
     private final AirPollutionComponent pollutionAir;
 
     public BlockEntityObsidianGenerator(BlockPos pos, BlockState state) {
-        super(1, 300, 1, BlockBaseMachine2Entity.gen_obsidian, pos, state);
+        super(ModConfig.mechanismInt("obsidian_generator_energy_per_tick", 1), ModConfig.mechanismInt("obsidian_generator_operation_length", 300), 1, BlockBaseMachine2Entity.gen_obsidian, pos, state);
         Recipes.recipes.getRecipeFluid().addInitRecipes(this);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.25));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("obsidian_generator_soil_pollution_amount", 0.1D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("obsidian_generator_air_pollution_amount", 0.25D)));
     }
 
     public void init() {

@@ -12,9 +12,6 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
 import static com.denfop.api.space.SpaceInit.regStar;
 import static com.denfop.recipe.universalrecipe.PlanetSerializer.stringList;
 
@@ -29,12 +26,12 @@ public class StarSerializer implements RecipeSerializer<StarRecipe> {
     ).apply(instance, (name, systemStr, textureStr, angle, size) -> {
 
         ResourceLocation texture = ResourceLocation.parse(textureStr + ".png");
-        if (!stringList.contains("star_"+name)) {
+        if (!stringList.contains("star_" + name)) {
             regStar.add(() -> new Star(name, SpaceNet.instance.getSystem().stream()
                     .filter(s -> s.getName().equals(systemStr.toLowerCase()))
                     .findFirst()
                     .orElseThrow(() -> new IllegalArgumentException("System not found: " + systemStr)), texture, angle, size));
-            stringList.add("star_"+name);
+            stringList.add("star_" + name);
         }
         return new StarRecipe(name, systemStr, textureStr, angle, size);
     }));
@@ -42,7 +39,7 @@ public class StarSerializer implements RecipeSerializer<StarRecipe> {
             StreamCodec.composite(
                     ByteBufCodecs.STRING_UTF8, recipe -> recipe.name,
                     ByteBufCodecs.STRING_UTF8, recipe -> recipe.systemName,
-                    ByteBufCodecs.STRING_UTF8, recipe ->recipe.texturePath,
+                    ByteBufCodecs.STRING_UTF8, recipe -> recipe.texturePath,
                     ByteBufCodecs.VAR_INT, recipe -> recipe.angle,
                     ByteBufCodecs.DOUBLE, recipe -> recipe.size,
                     (name, systemStr, textureStr, angle, size) -> {
@@ -51,10 +48,10 @@ public class StarSerializer implements RecipeSerializer<StarRecipe> {
                                 .findFirst()
                                 .orElseThrow(() -> new IllegalArgumentException("System not found: " + systemStr));
 
-                        ResourceLocation texture = ResourceLocation.parse(textureStr+ ".png");
-                        if (!stringList.contains("star_"+name)) {
+                        ResourceLocation texture = ResourceLocation.parse(textureStr + ".png");
+                        if (!stringList.contains("star_" + name)) {
                             regStar.add(() -> new Star(name, system, texture, angle, size));
-                            stringList.add("star_"+name);
+                            stringList.add("star_" + name);
                         }
                         return new StarRecipe(name, systemStr, textureStr, angle, size);
                     }

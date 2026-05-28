@@ -142,10 +142,11 @@ public class BlockEntityPatternStorage extends BlockEntityInventory implements I
         for (int i = 0; i < patternList.size(); ++i) {
             CompoundTag contentTag = patternList.getCompound(i);
             ItemStack Item = ItemStack.parseOptional(access, contentTag);
-            this.addPattern(new RecipeInfo(Item, Recipes.recipes
-                    .getRecipeOutput("replicator", false, Item)
-                    .getOutput().metadata.getDouble(
-                            "matter")));
+            if (!Item.isEmpty())
+                this.addPattern(new RecipeInfo(Item, Recipes.recipes
+                        .getRecipeOutput("replicator", false, Item)
+                        .getOutput().metadata.getDouble(
+                                "matter")));
         }
 
         this.refreshInfo();
@@ -156,7 +157,7 @@ public class BlockEntityPatternStorage extends BlockEntityInventory implements I
 
         for (final RecipeInfo stack : this.patterns) {
             CompoundTag contentTag = new CompoundTag();
-            stack.getStack().save(provider, contentTag);
+            contentTag = (CompoundTag) stack.getStack().save(provider);
             list.add(contentTag);
         }
 

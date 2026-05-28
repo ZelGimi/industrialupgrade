@@ -1,0 +1,81 @@
+{
+  "carvers": {},
+  "downfall": 0.595,
+  "effects": {
+    "fog_color": 9194030,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000
+    },
+    "sky_color": 10707246,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "features": [
+    [
+      "industrialupgrade:venus_cavity",
+      "industrialupgrade:venus_shaft",
+      "industrialupgrade:venus_lava_tube",
+      "industrialupgrade:space/venus/stone_tunnels",
+      "industrialupgrade:space/venus/hall_system",
+      "industrialupgrade:space/venus/fractures",
+      "industrialupgrade:space/venus/porous",
+      "industrialupgrade:space/venus/liquid_chamber",
+      "industrialupgrade:space/venus/volcanic_chamber",
+      "industrialupgrade:space/venus/thermal_chamber",
+      "industrialupgrade:space/venus/tunnel_caves",
+      "industrialupgrade:space/venus/labyrinth_caves",
+      "industrialupgrade:space/venus/shaft_caves",
+      "industrialupgrade:space/venus/dome_caves",
+      "industrialupgrade:space/venus/multi_tier_caves",
+      "industrialupgrade:space/venus/branched_caves",
+      "industrialupgrade:space/venus/spiral_caves",
+      "industrialupgrade:space/venus/arch_caves",
+      "industrialupgrade:space/venus/chamber_caves",
+      "industrialupgrade:space/venus/canyon_caves",
+      "industrialupgrade:space/venus/pocket_caves",
+      "industrialupgrade:space/venus/crevice_caves",
+      "industrialupgrade:space/venus/amphitheater_caves",
+      "industrialupgrade:space/venus/cathedral_caves",
+      "industrialupgrade:space/venus/gallery_caves",
+      "industrialupgrade:space/venus/winding_caves",
+      "industrialupgrade:space/venus/cascade_caves",
+      "industrialupgrade:space/venus/collapse_caves",
+      "industrialupgrade:space/venus/vertical_collectors"
+    ],
+    [
+      "industrialupgrade:venus_lake_0",
+      "industrialupgrade:venus_lake_1",
+      "industrialupgrade:space/venus/lava_hydrology"
+    ],
+    [
+      "industrialupgrade:space/venus/addition_craters",
+      "industrialupgrade:venus_volcano"
+    ],
+    [],
+    [
+      "industrialupgrade:venus_geyser_0",
+      "industrialupgrade:venus_geyser_1"
+    ],
+    [],
+    [
+      "industrialupgrade:venus_ore_0",
+      "industrialupgrade:venus_ore_1"
+    ]
+  ],
+  "has_precipitation": true,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": 2.5
+}

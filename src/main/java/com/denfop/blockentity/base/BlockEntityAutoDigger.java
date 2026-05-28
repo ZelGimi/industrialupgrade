@@ -1,5 +1,7 @@
 package com.denfop.blockentity.base;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -44,18 +46,18 @@ public class BlockEntityAutoDigger extends BlockEntityInventory {
 
     public BlockEntityAutoDigger(BlockPos pos, BlockState state) {
         super(BlockBaseMachine3Entity.auto_digger, pos, state);
-        this.chance = 0;
+        this.chance = ModConfig.mechanismInt("excavator_chance", 0);
         this.col = 1;
         this.furnace = false;
         this.outputSlot = new InventoryOutput(this, 48);
         this.energy = this.addComponent(Energy.asBasicSink(this, 500000, 14));
         this.inputslot = new InventoryInput(this, 16);
 
-        this.energyconsume = 500;
+        this.energyconsume = ModConfig.mechanismInt("excavator_energy_use", 500);
         this.consume = 500;
         this.slot_upgrade = new InventoryDigger(this);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.5));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.5));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("excavator_soil_pollution_amount", 0.5D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("excavator_air_pollution_amount", 0.5D)));
 
     }
 

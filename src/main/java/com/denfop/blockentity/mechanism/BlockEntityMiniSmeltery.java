@@ -52,7 +52,7 @@ public class BlockEntityMiniSmeltery extends BlockEntityInventory implements IHa
         this.progress = 0;
 
         Fluids fluids = this.addComponent(new Fluids(this));
-        this.fluidTank1 = fluids.addTankInsert("fluidTank1", 2 * 8 * 144);
+        this.fluidTank1 = fluids.addTankInsert("fluidTank1", 2 * 8 * 90);
         outputSlot = new InventoryOutput(this, 1);
 
         this.fluid_handler = new FluidHandlerRecipe("mini_smeltery", fluids);
@@ -82,160 +82,160 @@ public class BlockEntityMiniSmeltery extends BlockEntityInventory implements IHa
     @Override
     public void init() {
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltenmikhail.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltenmikhail.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(0))) // mikhail
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltenaluminium.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltenaluminium.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(1))) // aluminium
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltenvanadium.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltenvanadium.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(2))) // vanadium
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltentungsten.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltentungsten.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(3))) // tungsten
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltencobalt.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltencobalt.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(4))) // cobalt
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltenmagnesium.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltenmagnesium.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(5))) // magnesium
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltennickel.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltennickel.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(6))) // nickel
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltenplatinum.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltenplatinum.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(7))) // platinum
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltentitanium.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltentitanium.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(8))) // titanium
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltenchromium.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltenchromium.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(9))) // chromium
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltenspinel.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltenspinel.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(10))) // spinel
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltensilver.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltensilver.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(11))) // silver
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltenzinc.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltenzinc.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(12))) // zinc
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltenmanganese.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltenmanganese.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(13))) // manganese
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmolteniridium.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmolteniridium.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(14))) // iridium
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltengermanium.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltengermanium.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(15))) // germanium
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltencopper.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltencopper.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(16))) // copper
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltengold.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltengold.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(17))) // gold
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmolteniron.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmolteniron.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(18))) // iron
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltenlead.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltenlead.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(19))) // lead
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltentin.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltentin.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(20))) // tin
         ));
 
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltenosmium.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltenosmium.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(22))) // osmium
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltentantalum.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltentantalum.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(23))) // tantalum
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltencadmium.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltencadmium.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(24))) // cadmium
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltenarsenic.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltenarsenic.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(25))) // arsenic
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltenbarium.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltenbarium.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(26))) // barium
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltenbismuth.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltenbismuth.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(27))) // bismuth
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltengadolinium.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltengadolinium.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(28))) // gadolinium
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltengallium.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltengallium.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(29))) // gallium
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltenhafnium.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltenhafnium.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(30))) // hafnium
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltenyttrium.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltenyttrium.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(31))) // yttrium
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltenmolybdenum.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltenmolybdenum.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(32))) // molybdenum
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltenneodymium.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltenneodymium.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(33))) // neodymium
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltenniobium.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltenniobium.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(34))) // niobium
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltenpalladium.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltenpalladium.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(35))) // palladium
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltenpolonium.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltenpolonium.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(36))) // polonium
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltenstrontium.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltenstrontium.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(37))) // strontium
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltenthallium.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltenthallium.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(38))) // thallium
         ));
         Recipes.recipes.getRecipeFluid().addRecipe("mini_smeltery", new BaseFluidMachineRecipe(
-                new InputFluid(new FluidStack(FluidName.fluidmoltenzirconium.getInstance().get(), 144)),
+                new InputFluid(new FluidStack(FluidName.fluidmoltenzirconium.getInstance().get(), 90)),
                 new RecipeOutput(null, new ItemStack(IUItem.rawIngot.getStack(39))) // zirconium
         ));
 

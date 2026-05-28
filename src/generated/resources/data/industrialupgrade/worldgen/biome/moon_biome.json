@@ -1,0 +1,72 @@
+{
+  "carvers": {},
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 197381,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000
+    },
+    "sky_color": 328968,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "features": [
+    [
+      "industrialupgrade:moon_cavity",
+      "industrialupgrade:moon_shaft",
+      "industrialupgrade:space/moon/stone_tunnels",
+      "industrialupgrade:space/moon/hall_system",
+      "industrialupgrade:space/moon/fractures",
+      "industrialupgrade:space/moon/porous",
+      "industrialupgrade:space/moon/crater_chamber",
+      "industrialupgrade:space/moon/tunnel_caves",
+      "industrialupgrade:space/moon/shaft_caves",
+      "industrialupgrade:space/moon/dome_caves",
+      "industrialupgrade:space/moon/well_caves",
+      "industrialupgrade:space/moon/multi_tier_caves",
+      "industrialupgrade:space/moon/branched_caves",
+      "industrialupgrade:space/moon/spiral_caves",
+      "industrialupgrade:space/moon/chamber_caves",
+      "industrialupgrade:space/moon/pocket_caves",
+      "industrialupgrade:space/moon/crevice_caves",
+      "industrialupgrade:space/moon/cathedral_caves",
+      "industrialupgrade:space/moon/gallery_caves",
+      "industrialupgrade:space/moon/winding_caves",
+      "industrialupgrade:space/moon/collapse_caves",
+      "industrialupgrade:space/moon/vertical_collectors"
+    ],
+    [
+      "industrialupgrade:moon_lake_0",
+      "industrialupgrade:moon_fluid_0"
+    ],
+    [
+      "industrialupgrade:moon_craters",
+      "industrialupgrade:space/moon/addition_craters"
+    ],
+    [],
+    [],
+    [],
+    [
+      "industrialupgrade:moon_ore_0",
+      "industrialupgrade:moon_ore_1",
+      "industrialupgrade:moon_ore_2",
+      "industrialupgrade:moon_ore_3"
+    ]
+  ],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": 0.6
+}

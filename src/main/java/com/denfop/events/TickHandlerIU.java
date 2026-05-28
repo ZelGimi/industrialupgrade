@@ -7,6 +7,7 @@ import com.denfop.network.WorldData;
 import com.denfop.world.IWorldTickCallback;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.NonNullList;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -21,15 +22,32 @@ public class TickHandlerIU {
 
 
     public static void requestSingleWorldTick(Level world, IWorldTickCallback callback) {
-        WorldData.get(world).singleUpdates.add(callback);
+        if (world == null || callback == null || WorldData.isStoppingOrUnloading(world)) {
+            return;
+        }
+        WorldData worldData = WorldData.get(world);
+        if (worldData != null) {
+            worldData.singleUpdates.add(callback);
+        }
 
     }
 
     private static void processUpdates(Level world, WorldData worldData) {
+        if (world == null || worldData == null) {
+            return;
+        }
+        if (WorldData.isStoppingOrUnloading(world)) {
+            worldData.singleUpdates.clear();
+            return;
+        }
 
-        IWorldTickCallback callback;
-        for (; (callback = worldData.singleUpdates.poll()) != null; callback.onTick(world)) {
-
+        int callbacksToProcess = worldData.singleUpdates.size();
+        for (int i = 0; i < callbacksToProcess; i++) {
+            IWorldTickCallback callback = worldData.singleUpdates.poll();
+            if (callback == null) {
+                return;
+            }
+            callback.onTick(world);
         }
 
 
@@ -38,14 +56,16 @@ public class TickHandlerIU {
     @SubscribeEvent
     public void hurt(LivingDamageEvent.Pre event) {
         if (event.getEntity() instanceof LivingEntity) {
-            NonNullList<ItemStack> armorList = NonNullList.withSize(4, ItemStack.EMPTY);
-            armorList.set(0, (event.getEntity().getItemBySlot(EquipmentSlot.FEET)));
-            armorList.set(1, (event.getEntity().getItemBySlot(EquipmentSlot.LEGS)));
-            armorList.set(2, (event.getEntity().getItemBySlot(EquipmentSlot.CHEST)));
-            armorList.set(3, (event.getEntity().getItemBySlot(EquipmentSlot.HEAD)));
-            float damageAmount = ISpecialArmor.ArmorProperties.applyArmor(event.getEntity(), armorList, event.getSource(), event.getOriginalDamage());
-            damageAmount = ISpecialArmor.ArmorProperties.applyArmor(event.getEntity(), armorList, event.getSource(), damageAmount);
-            event.setNewDamage(damageAmount);
+            if (!(event.getEntity().isBlocking() && !event.getSource().is(DamageTypeTags.BYPASSES_SHIELD))) {
+                NonNullList<ItemStack> armorList = NonNullList.withSize(4, ItemStack.EMPTY);
+                armorList.set(0, (event.getEntity().getItemBySlot(EquipmentSlot.FEET)));
+                armorList.set(1, (event.getEntity().getItemBySlot(EquipmentSlot.LEGS)));
+                armorList.set(2, (event.getEntity().getItemBySlot(EquipmentSlot.CHEST)));
+                armorList.set(3, (event.getEntity().getItemBySlot(EquipmentSlot.HEAD)));
+                float damageAmount = ISpecialArmor.ArmorProperties.applyArmor(event.getEntity(), armorList, event.getSource(), event.getNewDamage());
+                damageAmount = ISpecialArmor.ArmorProperties.applyArmor(event.getEntity(), armorList, event.getSource(), damageAmount);
+                event.setNewDamage(damageAmount);
+            }
         }
     }
 

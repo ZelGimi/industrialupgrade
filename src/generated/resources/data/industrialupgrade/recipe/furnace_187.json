@@ -2,12 +2,12 @@
   "type": "minecraft:smelting",
   "category": "misc",
   "cookingtime": 200,
-  "experience": 0.6,
+  "experience": 5.0,
   "ingredient": {
-    "item": "industrialupgrade:alloydust/gallium_arsenic"
+    "item": "industrialupgrade:blockspace2/io_emerald_ore"
   },
   "result": {
     "count": 1,
-    "id": "industrialupgrade:alloyingot/gallium_arsenic"
+    "id": "minecraft:emerald"
   }
 }

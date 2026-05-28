@@ -1,5 +1,7 @@
 package com.denfop.blockentity.base;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blockentity.mechanism.BlockEntityPump;
@@ -18,8 +20,8 @@ public class BlockEntityAdvPump extends BlockEntityPump {
 
     public BlockEntityAdvPump(BlockPos pos, BlockState state) {
         super(10, 15, BlockBaseMachine2Entity.adv_pump, pos, state);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.15));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("improved_pump_soil_pollution_amount", 0.05D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("improved_pump_air_pollution_amount", 0.15D)));
     }
 
     @Override

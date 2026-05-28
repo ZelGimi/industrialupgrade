@@ -34,6 +34,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -58,7 +59,9 @@ public class BlockEntitySqueezer extends BlockEntityInventory implements IUpdate
     public final FluidHandlerRecipe fluid_handler;
     public short progress;
     public Map<UUID, Double> data;
+    ItemStack prevInput = ItemStack.EMPTY;
     private MachineRecipe output;
+    private int prevAmount;
 
     public BlockEntitySqueezer(BlockPos pos, BlockState state) {
         super(BlockSqueezerEntity.squeezer, pos, state);
@@ -111,7 +114,6 @@ public class BlockEntitySqueezer extends BlockEntityInventory implements IUpdate
             return null;
         return super.getCapability(cap, side);
     }
-
 
     @Override
     public void init() {
@@ -238,6 +240,9 @@ public class BlockEntitySqueezer extends BlockEntityInventory implements IUpdate
                 throw new RuntimeException(e);
             }
         }
+        if (name.equals("fluidtank_empty")) {
+            this.fluidTank1.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.EXECUTE);
+        }
         if (name.equals("slot3")) {
             inputSlotA.set(0, ItemStack.EMPTY);
         }
@@ -331,7 +336,6 @@ public class BlockEntitySqueezer extends BlockEntityInventory implements IUpdate
         return false;
     }
 
-
     public void updateEntityServer() {
         super.updateEntityServer();
 
@@ -340,6 +344,26 @@ public class BlockEntitySqueezer extends BlockEntityInventory implements IUpdate
         } else {
             if (this.fluid_handler.output() != null && this.inputSlotA.isEmpty()) {
                 this.fluid_handler.setOutput(null);
+            }
+        }
+        if (prevInput.isEmpty() && !this.inputSlotA.get(0).isEmpty()) {
+            prevInput = this.inputSlotA.get(0);
+            new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
+        }
+        if (!prevInput.isEmpty() && this.inputSlotA.isEmpty()) {
+            prevInput = ItemStack.EMPTY;
+            new PacketUpdateFieldTile(this, "slot3", false);
+        }
+        if (!prevInput.isEmpty() && !this.inputSlotA.isEmpty() && prevInput.getCount() != this.inputSlotA.get(0).getCount()) {
+            prevInput = this.inputSlotA.get(0);
+            new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
+        }
+        if (this.prevAmount != this.fluidTank1.getFluidAmount()) {
+            this.prevAmount = this.fluidTank1.getFluidAmount();
+            if (prevAmount != 0) {
+                new PacketUpdateFieldTile(this, "fluidtank", this.fluidTank1);
+            } else {
+                new PacketUpdateFieldTile(this, "fluidtank_empty", true);
             }
         }
     }

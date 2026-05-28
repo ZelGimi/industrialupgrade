@@ -7,7 +7,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
@@ -68,6 +67,14 @@ public interface ISpecialArmor {
         //Left it in because I figured it'd be useful for modders developing custom armor.
 
 
+        public ArmorProperties(int priority, double ratio, int max, ArmorItem item) {
+            Priority = priority;
+            AbsorbRatio = ratio;
+            Armor = item.getDefense();
+            Toughness = item.getToughness();
+            AbsorbMax = max;
+        }
+
         public ArmorProperties(int priority, double ratio, int max) {
             Priority = priority;
             AbsorbRatio = ratio;
@@ -76,19 +83,12 @@ public interface ISpecialArmor {
             AbsorbMax = max;
         }
 
-
         public static float applyArmor(LivingEntity entity, NonNullList<ItemStack> inventory, DamageSource source, double damage) {
-            if (DEBUG) {
-                System.out.println("Start: " + damage);
-            }
 
-            double totalArmor = entity.getArmorValue();
-            double totalToughness = entity.getAttributeValue(Attributes.ARMOR_TOUGHNESS);
 
-            if (source.is(DamageTypeTags.BYPASSES_ARMOR)) {
-                totalArmor = 0;
-                totalToughness = 0;
-            }
+            double totalArmor = 0;
+            double totalToughness = 0;
+
 
             ArrayList<ArmorProperties> dmgVals = new ArrayList<ArmorProperties>();
             for (int slot = 0; slot < inventory.size(); slot++) {

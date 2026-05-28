@@ -1,5 +1,7 @@
 package com.denfop.blockentity.base;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -58,7 +60,7 @@ public abstract class BlockEntityBaseHandlerHeavyOre extends BlockEntityElectric
     public BlockEntityBaseHandlerHeavyOre(
             EnumTypeStyle enumTypeSlot, MultiBlockEntity block, BlockPos pos, BlockState state
     ) {
-        super(300, 1, 1, block, pos, state);
+        super(ModConfig.mechanismDouble("base_handler_heavy_ore_energy_storage", 300.0D), 1, 1, block, pos, state);
         this.enumTypeSlot = enumTypeSlot;
         this.outputSlot = new InventoryOutput(this, 3 + 2 * Math.min(3, enumTypeSlot.ordinal()));
         this.upgradeSlot = new InventoryUpgrade(this, 4);
@@ -76,7 +78,7 @@ public abstract class BlockEntityBaseHandlerHeavyOre extends BlockEntityElectric
             }
         });
         this.componentProgress = this.addComponent(new ComponentProgress(this, 1,
-                (short) 300
+                (short) ((short) 300 / this.getSpeed())
         ));
         this.componentProcess = this.addComponent(new ComponentProcess(this, (int) (300 / this.getSpeed()), 1) {
             @Override
@@ -177,7 +179,7 @@ public abstract class BlockEntityBaseHandlerHeavyOre extends BlockEntityElectric
             tooltip.add(Localization.translate("iu.heatmachine.info"));
             tooltip.add(Localization.translate("iu.machines_work_energy") + this.componentProcess.getEnergyConsume() + Localization.translate(
                     "iu.machines_work_energy_type_eu"));
-            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getOperationsPerTick());
+            tooltip.add(Localization.translate("iu.machines_work_length") + this.componentProcess.getDefaultOperationLength());
 
         }
         super.addInformation(stack, tooltip);

@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.smelteryfurnace;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.api.widget.EnumTypeComponent;
 import com.denfop.api.widget.ScreenWidget;
@@ -100,8 +101,8 @@ public class SmelteryFurnaceCategory extends ScreenMain implements IRecipeCatego
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, SmelteryFurnaceHandler recipe, IFocusGroup focuses) {
         builder.addSlot(RecipeIngredientRole.OUTPUT, 85, 44).setFluidRenderer(recipe.getOutputFluid().getAmount(), true, 16, 16).addFluidStack(recipe.getOutputFluid().getFluid(), recipe.getOutputFluid().getAmount());
-        builder.addSlot(RecipeIngredientRole.INPUT, 60 - 20, 44 - 0).addItemStack(recipe.getInput());
-        builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStacks(recipe.getContainer().input.getAllStackInputs());
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 60 - 20, 44 - 0, recipe, 0, recipe.getInput());
+
 
     }
 

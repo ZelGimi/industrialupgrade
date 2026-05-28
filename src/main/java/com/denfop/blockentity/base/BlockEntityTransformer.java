@@ -210,7 +210,7 @@ public abstract class BlockEntityTransformer extends BlockEntityInventory implem
 
     public void addInformation(ItemStack stack, List<String> tooltip) {
         super.addInformation(stack, tooltip);
-        tooltip.add(Localization.translate("iu.item.tooltip.High") + " " + +(int) EnergyNetGlobal.instance.getPowerFromTier(this.energy.getSinkTier()) + " "
+        tooltip.add(Localization.translate("iu.item.tooltip.High") + " " + +(int) EnergyNetGlobal.instance.getPowerFromTier(this.energy.getSinkTier() == this.energy.getSourceTier() ? this.energy.getSinkTier() + 1 : this.energy.getSinkTier()) + " "
                 + Localization.translate("iu.generic.text.EUt") + " " + Localization.translate("iu.item.tooltip.Low") + " " +
                 +(int) EnergyNetGlobal.instance.getPowerFromTier(this.energy.getSourceTier()) + " " + Localization.translate(
                 "iu" +

@@ -159,10 +159,10 @@ public class BaseRecipes {
 
                 ('A'), IUItem.module_schedule, ('B'),
                 ModUtils.getCellFromFluid(Fluids.WATER), ('C'),
-                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5), 'D', IUItem.quantumtool, 'E',
+                IUItem.advnanobox, 'D', IUItem.quantumtool, 'E',
                 "c:doubleplate/Iridium"
         );
-        Recipes.recipe.addRecipe(IUItem.module_separate.getItemStack(), "BBB", "CAC", "DED",
+        Recipes.recipe.addRecipe(IUItem.module_separate.getItemStack(), "BBB", " A ", "DED",
 
                 ('A'), IUItem.module_storage, ('B'),
                 "c:plates/Carbon", ('C'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5), 'D', "c:gears/Electrum", 'E',
@@ -332,7 +332,7 @@ public class BaseRecipes {
                 ('C'), IUItem.advancedAlloy
         );
 
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.medium_current_converter_to_low), "AAA", "BDB", "CEC",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.medium_current_converter_to_low), "AAA", "BDB", "C C",
 
                 ('A'), IUItem.graphene_plate,
 
@@ -344,7 +344,7 @@ public class BaseRecipes {
 
                 ('E'), IUItem.motors_with_improved_bearings_
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.high_current_converter_to_low), "AAA", "BDB", "CEC",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.high_current_converter_to_low), "AAA", "BDB", "C C",
 
                 ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 320),
 
@@ -356,7 +356,7 @@ public class BaseRecipes {
 
                 ('E'), IUItem.adv_motors_with_improved_bearings_
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.extreme_current_converter_to_low), "AAA", "BDB", "CEC",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.extreme_current_converter_to_low), "AAA", "BDB", "C C",
 
                 ('A'), IUItem.synthetic_plate,
 
@@ -477,22 +477,22 @@ public class BaseRecipes {
 
                 ('C'), ItemStackHelper.fromData(IUItem.advQuantumtool, 1)
         );
-        Recipes.recipe.addRecipe(IUItem.tranformerUpgrade, " A ", "DBD", " C ",
+        Recipes.recipe.addRecipe(IUItem.tranformerUpgrade, "A A", "DBD", "   ",
 
                 ('B'), IUItem.high_current_converter_to_low,
 
-                ('A'), ItemStackHelper.fromData(IUItem.tranformer, 1, 9),
+                ('A'), IUItem.transformerUpgrade,
 
                 ('D'), IUItem.insulatedGoldCableItem,
 
                 ('C'),
                 IUItem.upgrade_casing
         );
-        Recipes.recipe.addRecipe(IUItem.tranformerUpgrade1, " A ", "DBD", " C ",
+        Recipes.recipe.addRecipe(IUItem.tranformerUpgrade1, "A A", "DBD", "   ",
 
                 ('B'), IUItem.extreme_current_converter_to_low,
 
-                ('A'), ItemStackHelper.fromData(IUItem.tranformer, 1, 0),
+                ('A'), IUItem.tranformerUpgrade,
 
                 ('D'), IUItem.insulatedGoldCableItem,
 
@@ -500,21 +500,21 @@ public class BaseRecipes {
                 IUItem.upgrade_casing
         );
 
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.nanopickaxe), "ADB", "EFE", "CHC",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.nanopickaxe), "ADB", "CFC", "CHC",
                 ('F'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 524), ('B'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 523), 'C',
                 ("c:doubleplate/Ferromanganese"), ('D'), new ItemStack(Items.DIAMOND_PICKAXE), ('E'),
                 BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5),
                 ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 520), 'H', "c:rods/Molybdenum"
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.nanoaxe), "ADB", "EFE", "CHC",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.nanoaxe), "ADB", "CFC", "CHC",
                 ('F'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 524), ('B'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 522), 'C',
                 ("c:doubleplate/Ferromanganese"), ('D'), new ItemStack(Items.DIAMOND_AXE), ('E'),
                 BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5),
                 ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 519), 'H', "c:rods/Molybdenum"
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.nanoshovel), "ADB", "EFE", "CHC",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.nanoshovel), "ADB", "CFC", "CHC",
                 ('F'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 524), ('B'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 521), 'C',
                 ("c:doubleplate/Ferromanganese"), ('D'), new ItemStack(Items.DIAMOND_SHOVEL), ('E'),
@@ -522,21 +522,21 @@ public class BaseRecipes {
                 ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 518), 'H', "c:rods/Molybdenum"
         );
         //
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.quantumpickaxe), "BDA", "EFE", "CHC",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.quantumpickaxe), "BDA", "CFC", "CHC",
                 ('F'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 516), ('B'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 512), 'C',
                 ("c:doubleplate/Muntsa"), ('D'), ItemStackHelper.fromData(IUItem.nanopickaxe), ('E'),
                 BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
                 ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 515), 'H', "c:rods/Electrum"
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.quantumaxe), "ADB", "EFE", "CHC",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.quantumaxe), "ADB", "CFC", "CHC",
                 ('F'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 516), ('B'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 514), 'C',
                 ("c:doubleplate/Muntsa"), ('D'), ItemStackHelper.fromData(IUItem.nanoaxe), ('E'),
                 BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
                 ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 511), 'H', "c:rods/Electrum"
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.quantumshovel), "ADB", "EFE", "CHC",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.quantumshovel), "ADB", "CFC", "CHC",
                 ('F'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 516), ('B'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 513), 'C',
                 ("c:doubleplate/Muntsa"), ('D'), ItemStackHelper.fromData(IUItem.nanoshovel), ('E'),
@@ -544,21 +544,21 @@ public class BaseRecipes {
                 ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 510), 'H', "c:rods/Electrum"
         );
         //
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.spectralpickaxe), "ADB", "EFE", "CHC",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.spectralpickaxe), "ADB", "CFC", "CHC",
                 ('F'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 532), ('B'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 531), 'C',
                 IUItem.iridiumPlate, ('D'), ItemStackHelper.fromData(IUItem.quantumpickaxe), ('E'),
                 BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
                 ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 528), 'H', "c:rods/Iridium"
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.spectralaxe), "ADB", "EFE", "CHC",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.spectralaxe), "ADB", "CFC", "CHC",
                 ('F'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 532), ('B'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 530), 'C',
                 IUItem.iridiumPlate, ('D'), ItemStackHelper.fromData(IUItem.quantumaxe), ('E'),
                 BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
                 ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 527), 'H', "c:rods/Iridium"
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.spectralshovel), "ADB", "EFE", "CHC",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.spectralshovel), "ADB", "CFC", "CHC",
                 ('F'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 532), ('B'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 529), 'C',
                 IUItem.iridiumPlate, ('D'), ItemStackHelper.fromData(IUItem.quantumshovel), ('E'),
@@ -569,13 +569,13 @@ public class BaseRecipes {
 
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.impBatChargeCrystal), "BCB", "BAB", "BCB",
 
-                ('B'), ItemStackHelper.fromData(IUItem.AdvlapotronCrystal, 1),
+                ('B'), ItemStackHelper.fromData(IUItem.lapotron_crystal, 1),
 
                 ('A'), ItemStackHelper.fromData(IUItem.charging_lapotron_crystal, 1),
 
                 ('C'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.perBatChargeCrystal), "DCD", "BAB", "ECE",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.perBatChargeCrystal), "DCD", "BAB", "EBE",
 
                 ('E'),
                 ("c:doubleplate/Vitalium"),
@@ -592,7 +592,7 @@ public class BaseRecipes {
 
                 ('E'), ItemStackHelper.fromData(IUItem.adv_spectral_box),
 
-                ('F'), IUItem.overclockerUpgrade1,
+                ('F'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 625),
 
                 ('A'), ItemStackHelper.fromData(IUItem.spectralaxe, 1),
 
@@ -607,18 +607,18 @@ public class BaseRecipes {
                 ItemStackHelper.fromData(IUItem.perfect_drill), 'C', "c:plates/Nimonic", 'D', "c:plates/SuperalloyRene"
         );
 
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.vajra), "ACB", "FDF", "ECE",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.vajra), "ADB", "F F", "E E",
 
                 ('E'), ItemStackHelper.fromData(IUItem.advQuantumtool),
 
                 ('F'), IUItem.overclockerUpgrade1,
 
-                ('A'), ItemStackHelper.fromData(IUItem.spectralaxe, 1),
+                ('A'), ItemStackHelper.fromData(IUItem.quantumaxe, 1),
 
                 ('B'),
-                ItemStackHelper.fromData(IUItem.spectralshovel, 1),
+                ItemStackHelper.fromData(IUItem.quantumshovel, 1),
 
-                ('D'), ItemStackHelper.fromData(IUItem.spectralpickaxe, 1),
+                ('D'), ItemStackHelper.fromData(IUItem.quantumpickaxe, 1),
 
                 ('C'), BlockEntityGenerationMicrochip.getLevelCircuit(ItemStackHelper.fromData(IUItem.basecircuit, 1, 21), 12)
         );
@@ -626,7 +626,7 @@ public class BaseRecipes {
                 ('C'), ItemStackHelper.fromData(IUItem.nanosaber, 1), ('E'), ItemStackHelper.fromData(IUItem.lapotron_crystal, 1),
                 ('D'), new ItemStack(Blocks.GLOWSTONE),
                 ('B'),
-                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7), ('A'), ItemStackHelper.fromData(IUItem.compresscarbon)
+                "c:plates/adamantium", ('A'), ItemStackHelper.fromData(IUItem.compresscarbon)
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.spectralSaber), "AB ", "AC ", "DEB",
 
@@ -637,7 +637,7 @@ public class BaseRecipes {
                 ('D'), new ItemStack(Blocks.GLOWSTONE),
 
                 ('B'),
-                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
+                "c:plates/mithril",
 
                 ('A'), ItemStackHelper.fromData(IUItem.compressIridiumplate)
         );
@@ -645,7 +645,7 @@ public class BaseRecipes {
 
                 ('G'), ItemStackHelper.fromData(IUItem.purifier, 1),
 
-                ('F'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 6),
+                ('F'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 4),
 
                 ('D'), ItemStackHelper.fromData(IUItem.energy_crystal, 1),
 
@@ -660,7 +660,7 @@ public class BaseRecipes {
                 ("c:doubleplate/Muntsa")
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.purifier), "   ", " B ", "A  ",
-                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 11), ('B'), "wool"
+                ('A'), IUItem.powerunitsmall, ('B'), "wool"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.itemiu, 1, 3), "MDM", "M M", "MDM",
                 ('D'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 4), ('M'), ItemStackHelper.fromData(
@@ -671,7 +671,7 @@ public class BaseRecipes {
         );
         Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.nano_bow),
-                "C C",
+                "BCB",
                 "BAB",
                 "EDE",
                 ('E'),
@@ -679,7 +679,7 @@ public class BaseRecipes {
                 ('D'),
                 ItemStackHelper.fromData(IUItem.reBattery, 1),
                 ('C'),
-                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3),
 
                 ('B'),
                 IUItem.carbonPlate,
@@ -690,7 +690,7 @@ public class BaseRecipes {
 
                 ('E'),
                 ("c:doubleplate/Alcled"),
-                ('C'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
+                ('C'), "c:plates/adamantium",
 
                 ('D'), ItemStackHelper.fromData(IUItem.nano_bow, 1),
 
@@ -703,7 +703,7 @@ public class BaseRecipes {
 
                 ('E'),
                 ("c:doubleplate/Duralumin"),
-                ('C'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
+                ('C'), "c:plates/mithril",
 
                 ('D'), ItemStackHelper.fromData(IUItem.quantum_bow, 1),
 
@@ -714,12 +714,97 @@ public class BaseRecipes {
         );
         int[] meta = {3, 4, 0, 1, 6, 7, 8, 9, 10};
         int j;
-        for (j = 0; j < 9; j++) {
-            Recipes.recipe.addShapelessRecipe(
-                    ItemStackHelper.fromData(IUItem.UpgradeKit, 1, j),
-                    IUItem.wrench, ItemStackHelper.fromData(IUItem.electricblock, 1, meta[j])
-            );
-        }
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.UpgradeKit, 1, 0), "ACA", "CBC", "ACA",
+
+                ('A'),
+                ("c:doubleplate/Aluminumbronze"),
+                ('C'), ItemStackHelper.fromData(IUItem.energy_crystal, 1),
+
+                ('B'), IUItem.wrench
+        );
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.UpgradeKit, 1, 1), "CDC", "CAC", "CBC",
+
+                ('D'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 6),
+
+                ('A'), IUItem.wrench,
+
+                ('C'), ItemStackHelper.fromData(IUItem.lapotron_crystal, 1),
+
+                ('B'),
+                IUItem.advancedMachine
+        );
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.UpgradeKit, 1, 2), "CDC", "DAD", "CDC",
+
+                ('D'), ItemStackHelper.fromData(IUItem.photoniy_ingot),
+
+                ('A'), IUItem.wrench,
+
+                ('C'), ItemStackHelper.fromData(IUItem.lapotron_crystal, 1),
+
+                ('B'),
+                IUItem.advancedMachine
+        );
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.UpgradeKit, 1, 3), "CDC", "DAD", "CDC",
+
+                ('D'), ItemStackHelper.fromData(IUItem.photoniy_ingot),
+
+                ('A'), IUItem.wrench,
+
+                ('C'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7)
+        );
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.UpgradeKit, 1, 4), "CDC", "DAD", "CDC",
+
+                ('D'), ItemStackHelper.fromData(IUItem.core, 1, 4),
+
+                ('A'), IUItem.wrench,
+
+                ('C'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9)
+        );
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.UpgradeKit, 1, 5), "CDC", "DAD", "CDC",
+
+                ('D'), ItemStackHelper.fromData(IUItem.core, 1, 8),
+
+                ('A'), IUItem.wrench,
+
+                ('C'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 10)
+        );
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.UpgradeKit, 1, 6), "CBC", "DAD", "CBC",
+
+                ('D'), ItemStackHelper.fromData(IUItem.core, 1, 9),
+
+                ('A'), IUItem.wrench,
+
+                ('C'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 8),
+
+                ('B'),
+                ItemStackHelper.fromData(IUItem.AdvlapotronCrystal, 1)
+        );
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.UpgradeKit, 1, 7), "EBE", "DAD", "CBC",
+
+                ('D'), ItemStackHelper.fromData(IUItem.core, 1, 11),
+
+                ('E'), ItemStackHelper.fromData(IUItem.compressIridiumplate),
+
+                ('A'), IUItem.wrench,
+
+                ('C'),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 10),
+
+                ('B'), ItemStackHelper.fromData(IUItem.AdvlapotronCrystal, 1)
+        );
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.UpgradeKit, 1, 8), "EBE", "DAD", "CBC",
+
+                ('D'), ItemStackHelper.fromData(IUItem.core, 1, 12),
+
+                ('E'), ItemStackHelper.fromData(IUItem.doublecompressIridiumplate),
+
+                ('A'), IUItem.wrench,
+
+                ('C'),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 10),
+
+                ('B'), ItemStackHelper.fromData(IUItem.AdvlapotronCrystal, 1)
+        );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.solidmatter, 1, 0), "ABA", "CDC", "EBE",
 
                 ('E'), ItemStackHelper.fromData(IUItem.core, 1, 5),
@@ -843,29 +928,29 @@ public class BaseRecipes {
                 ('B'), Items.GLOWSTONE_DUST, ('C'), ItemStackHelper.fromData(IUItem.electricblock, 1, 2), ('D'),
                 BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module7, 1, 1), "ABA", "BCB", "DDD",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module7, 1, 1), "ACA", " B ", "   ",
 
                 ('D'), ItemStackHelper.fromData(IUItem.doublecompressIridiumplate),
 
                 ('C'), ItemStackHelper.fromData(IUItem.advQuantumtool),
 
-                ('B'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
+                ('B'), ItemStackHelper.fromData(IUItem.module_schedule),
 
                 ('A'),
-                ItemStackHelper.fromData(IUItem.core, 1, 5)
+                ItemStackHelper.fromData(IUItem.core, 1, 3)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module7, 1, 2), "ABA", "BCB", "DDD",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module7, 1, 2), "ACA", " B ", "   ",
 
                 ('D'), ItemStackHelper.fromData(IUItem.doublecompressIridiumplate),
 
                 ('C'), ItemStackHelper.fromData(IUItem.advnanobox),
 
-                ('B'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
+                ('B'), ItemStackHelper.fromData(IUItem.module_schedule),
 
                 ('A'),
-                ItemStackHelper.fromData(IUItem.core, 1, 5)
+                ItemStackHelper.fromData(IUItem.core, 1, 3)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module7, 1, 3), "AAA", "BCB", "EFE",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module7, 1, 3), "AAA", "BCB", " F ",
 
                 ('F'),
                 ("c:doubleplate/Alcled"),
@@ -901,7 +986,7 @@ public class BaseRecipes {
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module7, 1, 8), "ABA",
                 ('B'), ItemStackHelper.fromData(IUItem.module7, 1, 4), ('A'), ItemStackHelper.fromData(IUItem.module7, 1, 6)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module9), "BCA", "DED", "BCA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module9), "BCA", "DED", "BHA",
 
                 ('E'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
 
@@ -912,9 +997,9 @@ public class BaseRecipes {
                 ('B'),
                 ("c:doubleplate/Redbrass"),
                 ('A'),
-                ("c:doubleplate/Alcled")
+                ("c:doubleplate/Alcled"), 'H', ItemStackHelper.fromData(IUItem.module_schedule, 1)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module9, 1, 1), "ABA", "DED", "ABA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module9, 1, 1), "ABA", "DED", "ACA",
 
                 ('E'), IUItem.overclockerUpgrade1,
 
@@ -923,9 +1008,9 @@ public class BaseRecipes {
                 ('B'),
                 ("c:doubleplate/Vanadoalumite"),
                 ('A'),
-                ("c:doubleplate/Alcled")
+                ("c:doubleplate/Alcled"), 'C', ItemStackHelper.fromData(IUItem.module_schedule, 1)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module9, 1, 2), "ABA", "CEC", "ABA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module9, 1, 2), "A A", "BEB", "ACA",
 
                 ('E'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5),
 
@@ -936,7 +1021,7 @@ public class BaseRecipes {
                 ('A'),
                 ItemStackHelper.fromData(IUItem.core, 1, 2)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module9, 1, 3), "ABA", "CEC", "ABA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module9, 1, 3), "A A", "BEB", "ACA",
 
                 ('E'), ItemStackHelper.fromData(IUItem.quantumtool, 1),
 
@@ -947,7 +1032,7 @@ public class BaseRecipes {
                 ('A'),
                 ItemStackHelper.fromData(IUItem.core, 1, 4)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module9, 1, 4), "ABA", "CEC", "ABA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module9, 1, 4), "A A", "BEB", "ACA",
 
                 ('E'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 10),
 
@@ -956,40 +1041,35 @@ public class BaseRecipes {
                 ('B'), ItemStackHelper.fromData(IUItem.advQuantumtool, 1),
 
                 ('A'),
-                ItemStackHelper.fromData(IUItem.core, 1, 6)
+                ItemStackHelper.fromData(IUItem.core, 1, 5)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module9, 1, 5), "ABA", "BCB", "ABA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module9, 1, 5), "A A", "BEB", "ACA",
 
-                ('C'), ItemStackHelper.fromData(IUItem.doublecompressIridiumplate),
+                ('B'), ItemStackHelper.fromData(IUItem.doublecompressIridiumplate),
 
-                ('B'), ItemStackHelper.fromData(IUItem.module9, 1, 4),
+                ('C'), ItemStackHelper.fromData(IUItem.module9, 1, 4),
 
-                ('A'), ItemStackHelper.fromData(IUItem.core, 1, 7)
+                ('A'), ItemStackHelper.fromData(IUItem.core, 1, 6), ('E'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 10)
         );
-        Recipes.recipe.addRecipe(IUItem.module8, "AAA", "BCB", "DED",
+        Recipes.recipe.addRecipe(IUItem.module8, "   ", " A ", " B ",
 
-                ('E'), ItemStackHelper.fromData(IUItem.compressIridiumplate),
-
-                ('D'),
-                ("c:doubleplate/Platinum"),
-                ('C'), ItemStackHelper.fromData(IUItem.block, 1, 2),
 
                 ('B'),
-                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 6),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 90),
 
                 ('A'),
-                ("c:plates/Zinc")
+                ItemStackHelper.fromData(IUItem.module_schedule)
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module7, 1, 9),
-                "DBD",
-                "BCB",
-                "ABA",
+                "   ",
+                " C ",
+                " B ",
 
                 ('C'),
                 ItemStackHelper.fromData(IUItem.purifier, 1),
 
                 ('B'),
-                ItemStackHelper.fromData(IUItem.nanoBox),
+                ItemStackHelper.fromData(IUItem.module_schedule),
 
                 ('A'),
                 BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 4),
@@ -1006,7 +1086,7 @@ public class BaseRecipes {
 
                 ('A'), ItemStackHelper.fromData(IUItem.core, 1, 3)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module9, 1, 10), "ABA", "BCB", "ABA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module9, 1, 10), " B ", "BCB", "ABA",
 
                 ('C'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 10),
 
@@ -1014,7 +1094,7 @@ public class BaseRecipes {
 
                 ('A'), ItemStackHelper.fromData(IUItem.module9, 1, 9)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module9, 1, 11), "ABA", "BCB", "ABA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module9, 1, 11), " B ", "BCB", "ABA",
 
                 ('C'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 10),
 
@@ -1023,20 +1103,20 @@ public class BaseRecipes {
                 ('A'), ItemStackHelper.fromData(IUItem.module9, 1, 10)
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module9, 1, 12), "ABA", "BCB", "ABA",
-                ('C'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9), ('B'), new ItemStack(
+                ('C'), ItemStackHelper.fromData(IUItem.module_schedule, 1), ('B'), new ItemStack(
                         Blocks.REDSTONE_BLOCK,
                         1
                 ), ('A'), new ItemStack(Items.PAPER, 1)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module9, 1, 6), "ABA", "BCB", "ABA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module9, 1, 6), "ABA", "BCB", "ADA",
 
                 ('C'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
 
                 ('B'), ItemStackHelper.fromData(IUItem.photoniy, 1),
 
-                ('A'), ItemStackHelper.fromData(IUItem.core, 1, 4)
+                ('A'), ItemStackHelper.fromData(IUItem.core, 1, 2), 'D', ItemStackHelper.fromData(IUItem.module_schedule, 1)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module9, 1, 7), "ABA", "DCD", "ABA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module9, 1, 7), "A A", "BCB", "ADA",
 
                 ('D'), ItemStackHelper.fromData(IUItem.module9, 1, 6),
 
@@ -1047,7 +1127,7 @@ public class BaseRecipes {
                 ('A'),
                 ItemStackHelper.fromData(IUItem.core, 1, 4)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module9, 1, 8), "ABA", "DCD", "ABA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module9, 1, 8), "A A", "BCB", "ADA",
 
                 ('D'), ItemStackHelper.fromData(IUItem.module9, 1, 7),
 
@@ -1059,7 +1139,7 @@ public class BaseRecipes {
                 ItemStackHelper.fromData(IUItem.core, 1, 5)
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module9, 1, 13), "A A", " C ", "A A",
-                ('C'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9), ('A'), new ItemStack(Items.PAPER, 1)
+                ('C'), ItemStackHelper.fromData(IUItem.module_schedule, 1), ('A'), new ItemStack(Items.PAPER, 1)
         );
         Recipes.recipe.addRecipe(IUItem.module1, "AAA", "BCB", "EDE",
 
@@ -1067,12 +1147,12 @@ public class BaseRecipes {
 
                 ('D'),
                 ("c:doubleplate/Vitalium"),
-                ('C'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 8),
+                ('C'), ItemStackHelper.fromData(IUItem.module_schedule),
 
                 ('B'),
                 ("c:plates/Cobalt"),
                 ('A'),
-                ("c:plates/Electrum")
+                IUItem.iridiumPlate
         );
         Recipes.recipe.addShapelessRecipe(ItemStackHelper.fromData(IUItem.fertilizer, 16),
                 ItemStackHelper.fromData(IUItem.iudust, 1, 69), ItemStackHelper.fromData(IUItem.iudust, 1, 70), ItemStackHelper.fromData(IUItem.iudust, 1, 66)
@@ -1083,12 +1163,12 @@ public class BaseRecipes {
 
                 ('D'),
                 ("c:doubleplate/Vitalium"),
-                ('C'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 8),
+                ('C'), ItemStackHelper.fromData(IUItem.module_schedule),
 
                 ('B'),
                 ("c:doubleplate/Redbrass"),
                 ('A'),
-                ("c:doubleplate/Ferromanganese")
+                IUItem.iridiumPlate
         );
         Recipes.recipe.addRecipe(IUItem.module3, "AAA", "BCB", "EDE",
 
@@ -1096,12 +1176,12 @@ public class BaseRecipes {
 
                 ('D'),
                 ("c:doubleplate/Vitalium"),
-                ('C'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 8),
+                ('C'), ItemStackHelper.fromData(IUItem.module_schedule),
 
                 ('B'),
                 ("c:doubleplate/Alumel"),
                 ('A'),
-                ("c:plates/Ferromanganese")
+                IUItem.iridiumPlate
         );
         Recipes.recipe.addRecipe(IUItem.module4, "AAA", "BCB", "EDE",
 
@@ -1109,11 +1189,11 @@ public class BaseRecipes {
 
                 ('D'),
                 ("c:doubleplate/Vitalium"),
-                ('C'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 8),
+                ('C'), ItemStackHelper.fromData(IUItem.module_schedule),
 
                 ('B'),
                 ("c:doubleplate/Muntsa"),
-                ('A'), ItemStackHelper.fromData(IUItem.doublecompressIridiumplate, 1)
+                ('A'), IUItem.iridiumPlate
         );
         for (j = 0; j < 7; j++) {
             Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module5, 1, j), "BBB", "ACA", "ADA",
@@ -1122,7 +1202,7 @@ public class BaseRecipes {
 
                     ('B'), ItemStackHelper.fromData(IUItem.doublecompressIridiumplate),
 
-                    ('C'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
+                    ('C'), ItemStackHelper.fromData(IUItem.module_schedule),
 
                     ('D'),
                     ItemStackHelper.fromData(IUItem.advQuantumtool)
@@ -1382,18 +1462,18 @@ public class BaseRecipes {
                 ('A'),
                 ("c:plates/Alcled")
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.imp_lappack), "ABA", "CEC", "ABA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.imp_lappack), "ACA", "BEB", "ABA",
 
                 ('E'), ItemStackHelper.fromData(IUItem.adv_lappack, 1),
 
                 ('C'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 6),
 
-                ('B'), ItemStackHelper.fromData(IUItem.AdvlapotronCrystal, 1),
+                ('B'), ItemStackHelper.fromData(IUItem.lapotron_crystal, 1),
 
                 ('A'),
                 ("c:doubleplate/Ferromanganese")
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.per_lappack), "ABA", "CEC", "ABA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.per_lappack), "ACA", "BEB", "ADA",
 
                 ('E'), ItemStackHelper.fromData(IUItem.imp_lappack, 1),
 
@@ -1402,9 +1482,9 @@ public class BaseRecipes {
                 ('B'), ItemStackHelper.fromData(IUItem.compressIridiumplate, 1),
 
                 ('A'),
-                ("c:doubleplate/Vitalium")
+                ("c:doubleplate/Vitalium"), 'D', ItemStackHelper.fromData(IUItem.AdvlapotronCrystal, 1)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.advancedSolarHelmet), " A ", "BCB", "DED",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.advancedSolarHelmet), " A ", "BCB", " E ",
 
                 ('D'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5),
 
@@ -1417,7 +1497,7 @@ public class BaseRecipes {
 
                 ('A'), ItemStackHelper.fromData(IUItem.blockpanel)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.hybridSolarHelmet), " A ", "BCB", "DED",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.hybridSolarHelmet), " A ", "BCB", " E ",
 
                 ('D'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
 
@@ -1430,7 +1510,7 @@ public class BaseRecipes {
 
                 ('A'), ItemStackHelper.fromData(IUItem.blockpanel, 1, 1)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.ultimateSolarHelmet), " A ", "DCD", "BEB",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.ultimateSolarHelmet), " A ", " C ", "BEB",
 
                 ('D'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 8),
 
@@ -1565,20 +1645,20 @@ public class BaseRecipes {
                 ItemStackHelper.fromData(IUItem.adronrotor
                         .getItem(), 1, 32767)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.spectralSolarHelmet), " A ", "DCD", "BEB",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.spectralSolarHelmet), " A ", " C ", "BEB",
 
                 ('D'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
 
                 ('E'), ItemStackHelper.fromData(IUItem.compressAlloy),
 
-                ('C'), ItemStackHelper.fromData(IUItem.ultimateSolarHelmet, 1),
+                ('C'), ItemStackHelper.fromData(IUItem.spectral_helmet, 1),
 
                 ('B'),
                 ItemStackHelper.fromData(IUItem.doublecompressIridiumplate, 1),
 
                 ('A'), ItemStackHelper.fromData(IUItem.blockpanel, 1, 4)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.singularSolarHelmet), " A ", "DCD", "BDB",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.singularSolarHelmet), " A ", "ECE", "B B",
 
                 ('D'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 10),
 
@@ -1604,15 +1684,15 @@ public class BaseRecipes {
         );
         BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines, 1, 1),
-                "DED",
-                "BCB",
-                "AAA",
+                "AEA",
+                " C ",
+                "ADA",
 
                 ('E'),
-                ItemStackHelper.fromData(IUItem.core, 1, 5),
+                ItemStackHelper.fromData(IUItem.core, 1, 3),
 
                 ('D'),
-                ("c:doubleplate/Alumel"),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 234),
                 ('B'),
                 BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
 
@@ -1620,19 +1700,19 @@ public class BaseRecipes {
                 ItemStackHelper.fromData(IUItem.simplemachine, 1, 6),
 
                 ('A'),
-                ItemStackHelper.fromData(IUItem.quantumtool)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 138)
         ), 0);
         BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines, 1, 2),
-                "DED",
-                "BCB",
-                "AAA",
+                "AEA",
+                " C ",
+                "ADA",
 
                 ('E'),
-                ItemStackHelper.fromData(IUItem.core, 1, 7),
+                ItemStackHelper.fromData(IUItem.core, 1, 4),
 
                 ('D'),
-                ("c:doubleplate/Vitalium"),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 232),
                 ('B'),
                 BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
 
@@ -1640,22 +1720,22 @@ public class BaseRecipes {
                 ItemStackHelper.fromData(IUItem.machines, 1, 1),
 
                 ('A'),
-                ItemStackHelper.fromData(IUItem.advQuantumtool)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 139)
         ), 1);
         BlockEntityUpgradeMachineFactory.addRecipe(Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.machines, 1, 3),
-                "DED",
-                "BCB",
-                "AFA",
+                "AEA",
+                " C ",
+                "ADA",
 
                 ('F'),
                 ItemStackHelper.fromData(IUItem.doublecompressIridiumplate),
 
                 ('E'),
-                ItemStackHelper.fromData(IUItem.core, 1, 8),
+                ItemStackHelper.fromData(IUItem.core, 1, 5),
 
                 ('D'),
-                ("c:doubleplate/Duralumin"),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 233),
                 ('B'),
                 BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
 
@@ -1663,30 +1743,30 @@ public class BaseRecipes {
                 ItemStackHelper.fromData(IUItem.machines, 1, 2),
 
                 ('A'),
-                ItemStackHelper.fromData(IUItem.advQuantumtool)
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 140)
         ), 2);
         Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.pho_machine, 1, 12),
-                "DED",
-                "BCB",
-                "AFA",
+                "AEA",
+                " C ",
+                "ADA",
 
                 ('F'),
                 ItemStackHelper.fromData(IUItem.doublecompressIridiumplate),
 
                 ('E'),
-                ItemStackHelper.fromData(IUItem.core, 1, 10),
+                ItemStackHelper.fromData(IUItem.core, 1, 6),
 
-                ('D'),
-                ("c:doubleplate/Duralumin"),
+                ('A'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 623),
                 ('B'),
                 BlockEntityGenerationMicrochip.getLevelCircuit(ItemStackHelper.fromData(IUItem.basecircuit, 1, 21), 11),
 
                 ('C'),
                 ItemStackHelper.fromData(IUItem.machines, 1, 3),
 
-                ('A'),
-                ItemStackHelper.fromData(IUItem.adv_spectral_box)
+                ('D'),
+                ItemStackHelper.fromData(IUItem.crafting_elements, 1, 629)
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.blocksintezator), "ABA", "BCB", "ABA",
 
@@ -2001,33 +2081,62 @@ public class BaseRecipes {
                 ItemStackHelper.fromData(
                         IUItem.crafting_elements,
                         1,
-                        30
+                        42
                 ),
                 BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1),
-                ItemStackHelper.fromData(IUItem.excitednucleus, 1, 1),
-                ItemStackHelper.fromData(IUItem.excitednucleus, 1, 2),
                 BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 3),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 4),
                 ItemStackHelper.fromData(IUItem.excitednucleus, 1, 4),
                 ItemStackHelper.fromData(IUItem.excitednucleus, 1, 5),
-                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 4),
+                ItemStackHelper.fromData(IUItem.excitednucleus, 1, 6),
                 ItemStackHelper.fromData(IUItem.excitednucleus, 1, 7),
-                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5),
+                ItemStackHelper.fromData(IUItem.excitednucleus, 1, 8),
                 ItemStackHelper.fromData(IUItem.excitednucleus, 1, 9),
-                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 6),
+                ItemStackHelper.fromData(IUItem.excitednucleus, 1, 10),
                 ItemStackHelper.fromData(IUItem.excitednucleus, 1, 11),
-                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
                 ItemStackHelper.fromData(IUItem.excitednucleus, 1, 12),
-                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 8)};
+                ItemStackHelper.fromData(IUItem.excitednucleus, 1, 13)};
+        ItemStack[] circuit1 = {
+                ItemStackHelper.fromData(
+                        IUItem.crafting_elements,
+                        1,
+                        568
+                ),
+                ItemStackHelper.fromData(
+                        IUItem.crafting_elements,
+                        1,
+                        565
+                ),
+                ItemStackHelper.fromData(
+                        IUItem.crafting_elements,
+                        1,
+                        563
+                ),
+                ItemStackHelper.fromData(
+                        IUItem.crafting_elements,
+                        1,
+                        585
+                ),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 6),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 8),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 10),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitPhotonic, 11),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitPhotonic, 11),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitPhotonic, 12),
+                BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitPhotonic, 12)};
         ItemStack[] iridium = {
-                ItemStackHelper.fromData(IUItem.sunnarium, 1, 1), IUItem.iridiumOre, IUItem.iridiumPlate, IUItem.iridiumPlate, ItemStackHelper.fromData(
-                IUItem.compressIridiumplate), ItemStackHelper.fromData(IUItem.compressIridiumplate), ItemStackHelper.fromData(IUItem.compressIridiumplate), ItemStackHelper.fromData(
+                ItemStackHelper.fromData(IUItem.sunnarium, 1, 1), IUItem.iridiumOre, IUItem.iridiumPlate, ItemStackHelper.fromData(IUItem.compressIridiumplate), ItemStackHelper.fromData(
+                IUItem.compressIridiumplate), ItemStackHelper.fromData(IUItem.compressIridiumplate), ItemStackHelper.fromData(IUItem.doublecompressIridiumplate), ItemStackHelper.fromData(
                 IUItem.doublecompressIridiumplate), ItemStackHelper.fromData(IUItem.doublecompressIridiumplate), ItemStackHelper.fromData(IUItem.doublecompressIridiumplate),
                 ItemStackHelper.fromData(IUItem.doublecompressIridiumplate), ItemStackHelper.fromData(IUItem.doublecompressIridiumplate), ItemStackHelper.fromData(
                 IUItem.doublecompressIridiumplate), ItemStackHelper.fromData(IUItem.doublecompressIridiumplate)};
         int m;
         for (m = 0; m < 14; m++) {
-            if (m != 0) {
-                Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.blockpanel, 1, m), "ABA", "CDC", "DED",
+            if (m >= 1) {
+                Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.blockpanel, 1, m), "ABA", "CDC", "HEH",
 
                         ('A'), ItemStackHelper.fromData(IUItem.solar_night_day_glass, 1, m),
 
@@ -2038,9 +2147,9 @@ public class BaseRecipes {
                         ('D'),
                         ItemStackHelper.fromData(IUItem.blockpanel, 1, m - 1),
 
-                        ('E'), circuit[m]
+                        ('E'), circuit[m], 'H', circuit1[m]
                 );
-                Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.upgradepanelkit, 1, m), "ABA", "C C", "DED",
+                Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.upgradepanelkit, 1, m), "ABA", "CJC", "HEH",
 
                         ('A'), ItemStackHelper.fromData(IUItem.solar_night_day_glass, 1, m),
 
@@ -2051,33 +2160,35 @@ public class BaseRecipes {
                         ('D'),
                         ItemStackHelper.fromData(IUItem.blockpanel, 1, m - 1),
 
-                        ('E'), circuit[m]
+                        ('E'), circuit[m], 'J', ItemStackHelper.fromData(IUItem.wrench), 'H', circuit1[m]
                 );
             } else {
-                Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.blockpanel, 1, m), "ABA", "CDC", "DED",
+                if (m == 0) {
+                    Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.blockpanel, 1, m), "ABA", "CDC", "HEH",
 
-                        ('A'), ItemStackHelper.fromData(IUItem.solar_night_day_glass, 1, m),
+                            ('A'), ItemStackHelper.fromData(IUItem.solar_night_day_glass, 1, m),
 
-                        ('B'), ItemStackHelper.fromData(IUItem.excitednucleus, 1, m),
+                            ('B'), ItemStackHelper.fromData(IUItem.excitednucleus, 1, m),
 
-                        ('C'), iridium[m],
+                            ('C'), iridium[m],
 
-                        ('D'),
-                        getBlockStack(BlockBaseMachine3Entity.solar_iu),
-                        ('E'), circuit[m]
-                );
-                Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.upgradepanelkit, 1, m), "ABA", "C C", "DED",
+                            ('D'),
+                            getBlockStack(BlockBaseMachine3Entity.solar_iu),
+                            ('E'), circuit[m], 'H', circuit1[m]
+                    );
+                    Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.upgradepanelkit, 1, m), "ABA", "CJC", "HEH",
 
-                        ('A'), ItemStackHelper.fromData(IUItem.solar_night_day_glass, 1, m),
+                            ('A'), ItemStackHelper.fromData(IUItem.solar_night_day_glass, 1, m),
 
-                        ('B'), ItemStackHelper.fromData(IUItem.excitednucleus, 1, m),
+                            ('B'), ItemStackHelper.fromData(IUItem.excitednucleus, 1, m),
 
-                        ('C'), iridium[m],
+                            ('C'), iridium[m],
 
-                        ('D'),
-                        getBlockStack(BlockBaseMachine3Entity.solar_iu),
-                        ('E'), circuit[m]
-                );
+                            ('D'),
+                            getBlockStack(BlockBaseMachine3Entity.solar_iu),
+                            ('E'), circuit[m], 'H', circuit1[m], 'J', ItemStackHelper.fromData(IUItem.wrench)
+                    );
+                }
             }
         }
         for (m = 0; m < 3; m++) {
@@ -2173,7 +2284,7 @@ public class BaseRecipes {
                 ("c:ingots/Germanium"),
                 ('C'), ItemStackHelper.fromData(IUItem.module_schedule),
 
-                ('B'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 8),
+                ('B'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5),
 
                 ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 158)
         );
@@ -2187,33 +2298,29 @@ public class BaseRecipes {
 
                 ('A'), ItemStackHelper.fromData(IUItem.basemachine1, 1, 2)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.machinekit, 1, 0), "ABA", "D D", "EEE",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.machinekit, 1, 0), "ABA", " E ", "   ",
 
                 ('E'), ItemStackHelper.fromData(IUItem.nanoBox),
-
-                ('D'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 5),
 
                 ('B'),
                 ("c:doubleplate/Aluminium"),
                 ('A'),
                 ("c:doubleplate/Alumel")
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.machinekit, 1, 1), "ABA", "D D", "EEE",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.machinekit, 1, 1), "ABA", " E ", "   ",
 
-                ('E'), ItemStackHelper.fromData(IUItem.quantumtool),
+                ('E'), ItemStackHelper.fromData(IUItem.machinekit, 1, 0),
 
-                ('D'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7),
 
                 ('B'),
                 ("c:doubleplate/Platinum"),
                 ('A'),
                 ("c:doubleplate/Vitalium")
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.machinekit, 1, 2), "ABA", "D D", "EEE",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.machinekit, 1, 2), "ABA", " E ", "   ",
 
-                ('E'), ItemStackHelper.fromData(IUItem.advQuantumtool),
+                ('E'), ItemStackHelper.fromData(IUItem.machinekit, 1, 1),
 
-                ('D'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
 
                 ('B'),
                 ("c:doubleplate/Spinel"),
@@ -2264,7 +2371,7 @@ public class BaseRecipes {
                 ('C'),
                 ItemStackHelper.fromData(IUItem.rubber_boots, 1)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.entitymodules), "ABA", "DCD", "EBE",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.entitymodules), " B ", "DCD", "EBE",
 
                 ('A'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.advancedCircuit, 4),
 
@@ -2278,7 +2385,7 @@ public class BaseRecipes {
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.entitymodules, 1, 1), "ABA", "DCD", "EBE",
 
-                ('A'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9),
+                ('A'), "c:plates/bloodstone",
 
                 ('B'), ItemStackHelper.fromData(IUItem.adv_spectral_box),
 
@@ -2288,12 +2395,13 @@ public class BaseRecipes {
                 ("c:doubleplate/Germanium"),
                 ('E'), ItemStackHelper.fromData(IUItem.alloyscasing, 1, 9)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.spawnermodules, 1, 0), "ABA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.spawnermodules, 1, 0), "CBC", "BAB", "CBC",
 
                 ('A'), ItemStackHelper.fromData(IUItem.module9, 1, 6),
 
                 ('B'),
-                ("c:doubleplate/Nichrome")
+                ("c:doubleplate/tantalum"), ('C'),
+                ("c:doubleplate/thallium")
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.spawnermodules, 1, 1), "ABA", "DCD", "EEE",
 
@@ -2326,19 +2434,20 @@ public class BaseRecipes {
                 ("c:doubleplate/Vitalium"),
                 ('C'), ItemStackHelper.fromData(IUItem.spawnermodules, 1, 1)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.spawnermodules, 1, 3), "ABA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.spawnermodules, 1, 3), "CBC", "BAB", "CBC",
 
-                ('B'), ItemStackHelper.fromData(IUItem.module9, 1, 3),
+                ('A'), ItemStackHelper.fromData(IUItem.module9, 1, 1),
 
-                ('A'),
-                ("c:doubleplate/Nichrome")
+                ('B'),
+                ("c:doubleplate/tantalum"), ('C'),
+                ("c:doubleplate/thallium")
         );
         Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.spawnermodules, 1, 4),
                 " C ", "ABA", " C ", ('B'), ItemStackHelper.fromData(IUItem.module_schedule, 1),
                 ('A'), ("c:doubleplate/Nichrome"), ('C'), new ItemStack(Items.EXPERIENCE_BOTTLE)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.spawnermodules, 1, 5), "ABA", "DCD", "EEE",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.spawnermodules, 1, 5), "ABA", "ECE", " D ",
 
                 ('E'), ItemStackHelper.fromData(IUItem.nanoBox),
 
@@ -2414,7 +2523,7 @@ public class BaseRecipes {
                 ('B'),
                 ("c:plates/Steel")
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.ironHammer), "CBC", "BAB", " A ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.ironHammer), "BBB", "BAB", " A ",
 
                 ('A'), Items.STICK,
 
@@ -2430,27 +2539,27 @@ public class BaseRecipes {
         );
         Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.expmodule),
-                "   ", "ABA", "   ", ('A'), ItemStackHelper.fromData(IUItem.module_schedule),
+                " A ", " B ", "   ", ('A'), ItemStackHelper.fromData(IUItem.module_schedule),
                 ('B'), new ItemStack(Items.EXPERIENCE_BOTTLE)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module_stack), "DCD", "BAB", " C ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module_stack), "DCD", "BAB", "DCD",
 
                 ('D'),
-                ("c:plates/Alumel"),
+                ("c:plates/bloodstone"),
                 ('A'), ItemStackHelper.fromData(IUItem.module_schedule),
 
-                ('B'), IUItem.overclockerUpgrade,
+                ('B'), IUItem.overclockerUpgrade1,
 
                 ('C'),
                 IUItem.tranformerUpgrade
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module_quickly), "   ", "ABA", "   ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module_quickly), "CCC", "ABA", "   ",
 
                 ('A'), IUItem.overclockerUpgrade1,
 
-                ('B'), ItemStackHelper.fromData(IUItem.module_schedule)
+                ('B'), ItemStackHelper.fromData(IUItem.module_schedule), 'C', "c:plates/draconid"
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.nanodrill), "EHE", "ABC", " D ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.nanodrill), "EHE", "ADC", "   ",
 
                 ('E'), ItemStackHelper.fromData(IUItem.nanoBox),
 
@@ -2467,7 +2576,7 @@ public class BaseRecipes {
                 ItemStackHelper.fromData(IUItem.quantumdrill),
                 "EHE",
                 "ABC",
-                " D ",
+                "   ",
 
                 ('E'),
                 ItemStackHelper.fromData(IUItem.quantumtool),
@@ -2489,8 +2598,8 @@ public class BaseRecipes {
         Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.spectraldrill),
                 "EHE",
-                "ABC",
-                " D ",
+                "AEC",
+                "   ",
 
                 ('E'),
                 ItemStackHelper.fromData(IUItem.spectral_box),
@@ -2509,7 +2618,7 @@ public class BaseRecipes {
                 ('C'),
                 ItemStackHelper.fromData(IUItem.spectralshovel, 1)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.quantumdrill), "THT", "CDC", "BFB",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.quantumdrill), "THT", "TDT", "BFB",
 
                 ('T'),
                 ("c:doubleplate/Muntsa"),
@@ -2522,7 +2631,7 @@ public class BaseRecipes {
 
                 ('C'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.spectraldrill), "THT", "CDC", "BFB",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.spectraldrill), "THT", "TDT", "BFB",
 
                 ('T'), IUItem.iridiumPlate,
 
@@ -2541,7 +2650,7 @@ public class BaseRecipes {
 
                 ('B'), new ItemStack(Items.LEATHER),
 
-                ('A'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 1)
+                ('A'), Blocks.CHEST
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.adv_bags, 1), "BCB", "BAB", "B B",
 
@@ -2719,13 +2828,13 @@ public class BaseRecipes {
 
                 ('A'),
                 ModUtils.getCellFromFluid(FluidName.fluidnitrogen.getInstance().get()),
-                ('B'), ItemStackHelper.fromData(IUItem.module_schedule), 'C', "c:plates/Adamantium", 'D', "c:plates/Stellite"
+                ('B'), ItemStackHelper.fromData(IUItem.module_schedule), 'C', "c:plates/Adamantium", 'D', "c:plates/nitenol"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.coolupgrade, 1, 1), "ACA", "DBD", "ACA",
 
                 ('A'),
                 ModUtils.getCellFromFluid(FluidName.fluidhydrogen.getInstance().get()),
-                ('B'), ItemStackHelper.fromData(IUItem.module_schedule), 'C', "c:plates/Adamantium", 'D', "c:plates/Stellite"
+                ('B'), ItemStackHelper.fromData(IUItem.module_schedule), 'C', "c:plates/Adamantium", 'D', "c:plates/berylliumbronze"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.coolupgrade, 1, 2), "ACA", "DBD", "ACA",
 
@@ -2772,27 +2881,29 @@ public class BaseRecipes {
 
                 ('B'), ItemStackHelper.fromData(IUItem.module_schedule),
 
-                ('D'), ItemStackHelper.fromData(IUItem.machines_base, 1, 2),
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 69),
 
                 ('C'),
                 ("c:doubleplate/Muntsa")
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module9, 1, 15), " D ", "ABA", " C ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.module9, 1, 15), " D ", " B ", " C ",
 
                 ('A'), ItemStackHelper.fromData(IUItem.core, 1, 5),
 
-                ('B'), ItemStackHelper.fromData(IUItem.module_schedule),
+                ('B'), ItemStackHelper.fromData(IUItem.module9, 1, 14),
 
-                ('D'), ItemStackHelper.fromData(IUItem.machines_base1, 1, 9),
+                ('D'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 124),
 
                 ('C'),
                 ("c:doubleplate/Vanadoalumite")
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.upgrade_speed_creation), "   ", "ABA", "   ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.upgrade_speed_creation), "CDC", "ABA", "EHE",
 
-                ('A'), IUItem.overclockerUpgrade_1,
+                ('A'), IUItem.overclockerUpgrade,
 
-                ('B'), ItemStackHelper.fromData(IUItem.module_schedule)
+                ('B'), ItemStackHelper.fromData(IUItem.module_schedule),
+                'C', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 479),
+                'D', IUItem.advnanobox, 'E', ItemStackHelper.fromData(IUItem.cable, 1, 13), 'H', IUItem.charged_quartz
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.blastfurnace, 1, 5), "AA ", "AA ", "   ",
 
@@ -2858,7 +2969,7 @@ public class BaseRecipes {
 
                 ('B'), IUItem.medium_current_converter_to_low,
 
-                ('A'), ItemStackHelper.fromData(IUItem.tranformer, 1, 8),
+                ('A'), ItemStackHelper.fromData(IUItem.crafting_elements, 1, 207),
 
                 ('D'), IUItem.insulatedGoldCableItem,
 
@@ -2877,57 +2988,57 @@ public class BaseRecipes {
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 0), "A A", "CBC", "A A",
 
-                ('A'), ItemStackHelper.fromData(IUItem.advnanobox),
+                ('A'), ItemStackHelper.fromData(IUItem.nanoBox),
                 ('B'), ItemStackHelper.fromData(IUItem.rotorupgrade_schemes), ('C'), "c:casings/Nichrome"
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 1), "ADA", "CBC", "ADA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 1), "   ", "DBD", "ACA",
 
-                ('A'), ItemStackHelper.fromData(IUItem.advQuantumtool), ('B'), ItemStackHelper.fromData(IUItem.core, 1, 3),
+                ('A'), ItemStackHelper.fromData(IUItem.quantumtool), ('B'), ItemStackHelper.fromData(IUItem.core, 1, 2),
                 ('C'), ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 0), ('D'),
                 "c:casings/Redbrass"
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 2), "ADA", "CBC", "ADA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 2), "   ", "DBD", "ACA",
 
-                ('A'), ItemStackHelper.fromData(IUItem.adv_spectral_box), ('B'), ItemStackHelper.fromData(IUItem.core, 1, 5),
+                ('A'), ItemStackHelper.fromData(IUItem.spectral_box), ('B'), ItemStackHelper.fromData(IUItem.core, 1, 4),
                 ('C'), ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 1), ('D'),
                 "c:casings/Muntsa"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 3), "A A", "CBC", "A A",
 
-                ('A'), ItemStackHelper.fromData(IUItem.advnanobox),
+                ('A'), ItemStackHelper.fromData(IUItem.nanoBox),
                 ('B'), ItemStackHelper.fromData(IUItem.rotorupgrade_schemes), ('C'), IUItem.iridiumPlate
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 4), "ADA", "CBC", "ADA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 4), "   ", "DBD", "ACA",
 
-                ('A'), ItemStackHelper.fromData(IUItem.advQuantumtool), ('B'), ItemStackHelper.fromData(IUItem.core, 1, 4),
+                ('A'), ItemStackHelper.fromData(IUItem.quantumtool), ('B'), ItemStackHelper.fromData(IUItem.core, 1, 3),
                 ('C'), ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 3), ('D'),
                 IUItem.compressIridiumplate
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 5), "ADA", "CBC", "ADA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 5), "   ", "DBD", "ACA",
 
-                ('A'), ItemStackHelper.fromData(IUItem.adv_spectral_box), ('B'), ItemStackHelper.fromData(IUItem.core, 1, 6),
+                ('A'), ItemStackHelper.fromData(IUItem.spectral_box), ('B'), ItemStackHelper.fromData(IUItem.core, 1, 5),
                 ('C'), ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 4), ('D'),
                 IUItem.doublecompressIridiumplate
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 6), "ADA", "CBC", "ADA",
 
-                ('A'), ItemStackHelper.fromData(IUItem.advnanobox),
+                ('A'), ItemStackHelper.fromData(IUItem.nanoBox),
                 ('B'), ItemStackHelper.fromData(IUItem.rotorupgrade_schemes), ('C'), IUItem.iridiumPlate, ('D'),
                 "c:casings/Duralumin"
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 7), "ADA", "CBC", "ADA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 7), "   ", "DBD", "ACA",
 
-                ('A'), ItemStackHelper.fromData(IUItem.advQuantumtool), ('B'), ItemStackHelper.fromData(IUItem.core, 1, 4),
+                ('A'), ItemStackHelper.fromData(IUItem.quantumtool), ('B'), ItemStackHelper.fromData(IUItem.core, 1, 4),
                 ('C'), ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 6), ('D'),
                 IUItem.compressIridiumplate
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 8), "ADA", "CBC", "ADA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 8), "   ", "DBD", "ACA",
 
-                ('A'), ItemStackHelper.fromData(IUItem.adv_spectral_box), ('B'), ItemStackHelper.fromData(IUItem.core, 1, 6),
+                ('A'), ItemStackHelper.fromData(IUItem.spectral_box), ('B'), ItemStackHelper.fromData(IUItem.core, 1, 5),
                 ('C'), ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 7), ('D'),
                 IUItem.doublecompressIridiumplate
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 9), "ADA", "CBC", "ADA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 9), " D ", "CBC", "ADA",
 
                 ('A'), ItemStackHelper.fromData(IUItem.adv_spectral_box),
                 ('B'), ItemStackHelper.fromData(IUItem.rotorupgrade_schemes), ('C'), IUItem.compressIridiumplate, ('D'),
@@ -2935,7 +3046,7 @@ public class BaseRecipes {
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 10), "ADA", "CBC", "ADA",
 
-                ('A'), ItemStackHelper.fromData(IUItem.core, 1, 5),
+                ('A'), ItemStackHelper.fromData(IUItem.core, 1, 3),
                 ('B'), ItemStackHelper.fromData(IUItem.rotorupgrade_schemes), ('C'), IUItem.compressIridiumplate, ('D'),
                 "c:doubleplate/Invar"
         );
@@ -2944,9 +3055,9 @@ public class BaseRecipes {
                 ('A'), "c:plates/Iron",
                 ('B'), IUItem.powerunitsmall
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.spawnermodules, 1, 8), "ECE", "BAB", "DCD",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.spawnermodules, 1, 8), "E E", "BAB", "CDC",
 
-                ('A'), ItemStackHelper.fromData(IUItem.module_schedule), ('E'), ItemStackHelper.fromData(IUItem.core, 1, 5),
+                ('A'), ItemStackHelper.fromData(IUItem.module_schedule), ('E'), ItemStackHelper.fromData(IUItem.core, 1, 4),
                 ('B'), ItemStackHelper.fromData(IUItem.quantumtool), ('C'),
                 IUItem.iridiumPlate, ('D'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 8)
         );
@@ -3005,43 +3116,43 @@ public class BaseRecipes {
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 11), "ADA", "CBC", "DED",
 
-                ('A'), ItemStackHelper.fromData(IUItem.advnanobox),
+                ('A'), ItemStackHelper.fromData(IUItem.nanoBox),
                 ('B'), ItemStackHelper.fromData(IUItem.rotorupgrade_schemes), ('C'), IUItem.iridiumPlate, ('D'),
                 "c:doubleplate/Platinum", ('E'), ItemStackHelper.fromData(IUItem.core, 1, 3)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 12), "ADA", "CBC", "ADA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 12), "   ", "DBD", "ACA",
 
-                ('A'), ItemStackHelper.fromData(IUItem.advQuantumtool), ('B'), ItemStackHelper.fromData(IUItem.core, 1, 4),
+                ('A'), ItemStackHelper.fromData(IUItem.advQuantumtool), ('B'), ItemStackHelper.fromData(IUItem.core, 1, 3),
                 ('C'), ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 11), ('D'),
                 IUItem.compressIridiumplate
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 13), "ADA", "CBC", "ADA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 13), "   ", "DBD", "ACA",
 
-                ('A'), ItemStackHelper.fromData(IUItem.adv_spectral_box), ('B'), ItemStackHelper.fromData(IUItem.core, 1, 6),
+                ('A'), ItemStackHelper.fromData(IUItem.adv_spectral_box), ('B'), ItemStackHelper.fromData(IUItem.core, 1, 4),
                 ('C'), ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 12), ('D'),
                 IUItem.doublecompressIridiumplate
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 14), "ADA", "CBC", "DED",
 
-                ('A'), ItemStackHelper.fromData(IUItem.advnanobox),
+                ('A'), ItemStackHelper.fromData(IUItem.nanoBox),
                 ('B'), ItemStackHelper.fromData(IUItem.rotorupgrade_schemes), ('C'), IUItem.iridiumPlate, ('D'),
-                "c:doubleplate/Vitalium", ('E'), ItemStackHelper.fromData(IUItem.core, 1, 4)
+                "c:doubleplate/Vitalium", ('E'), ItemStackHelper.fromData(IUItem.core, 1, 3)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 15), "ADA", "CBC", "ADA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 15), "   ", "DBD", "ACA",
 
-                ('A'), ItemStackHelper.fromData(IUItem.advQuantumtool), ('B'), ItemStackHelper.fromData(IUItem.core, 1, 5),
+                ('A'), ItemStackHelper.fromData(IUItem.quantumtool), ('B'), ItemStackHelper.fromData(IUItem.core, 1, 4),
                 ('C'), ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 14), ('D'),
                 IUItem.compressIridiumplate
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 16), "ADA", "CBC", "ADA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 16), "   ", "DBD", "ACA",
 
-                ('A'), ItemStackHelper.fromData(IUItem.adv_spectral_box), ('B'), ItemStackHelper.fromData(IUItem.core, 1, 6),
+                ('A'), ItemStackHelper.fromData(IUItem.spectral_box), ('B'), ItemStackHelper.fromData(IUItem.core, 1, 5),
                 ('C'), ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 15), ('D'),
                 IUItem.doublecompressIridiumplate
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 17), "ADA", "CBC", "DED",
 
-                ('A'), ItemStackHelper.fromData(IUItem.advnanobox),
+                ('A'), ItemStackHelper.fromData(IUItem.nanoBox),
 
                 ('B'), ItemStackHelper.fromData(IUItem.rotorupgrade_schemes),
 
@@ -3050,17 +3161,17 @@ public class BaseRecipes {
                 ('D'),
                 "c:doubleplate/Redbrass",
 
-                ('E'), ItemStackHelper.fromData(IUItem.core, 1, 4)
+                ('E'), ItemStackHelper.fromData(IUItem.core, 1, 3)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 18), "ADA", "CBC", "ADA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 18), "   ", "DBD", "ACA",
 
-                ('A'), ItemStackHelper.fromData(IUItem.advQuantumtool), ('B'), ItemStackHelper.fromData(IUItem.core, 1, 5),
+                ('A'), ItemStackHelper.fromData(IUItem.advQuantumtool), ('B'), ItemStackHelper.fromData(IUItem.core, 1, 4),
                 ('C'), ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 17), ('D'),
                 IUItem.compressIridiumplate
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 19), "ADA", "CBC", "ADA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 19), "   ", "DBD", "ACA",
 
-                ('A'), ItemStackHelper.fromData(IUItem.adv_spectral_box), ('B'), ItemStackHelper.fromData(IUItem.core, 1, 6),
+                ('A'), ItemStackHelper.fromData(IUItem.adv_spectral_box), ('B'), ItemStackHelper.fromData(IUItem.core, 1, 5),
                 ('C'), ItemStackHelper.fromData(IUItem.rotors_upgrade, 1, 18), ('D'),
                 IUItem.doublecompressIridiumplate
         );
@@ -3141,21 +3252,21 @@ public class BaseRecipes {
                 ('D'),
                 BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.electronicCircuit, 2)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 25), "CCC", "DAD", "EBE",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 2, 25), "ACA", "DBD", "ECE",
                 ('B'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 6), ('A'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 21), ('C'), ItemStackHelper.fromData(
                         IUItem.nanoBox),
                 ('D'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 16), 'E', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 651)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 23), "CCC", "DAD", "EBE",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 2, 23), "ACA", "DBD", "ECE",
                 ('B'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 8), ('A'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 25), ('C'), ItemStackHelper.fromData(
                         IUItem.quantumtool),
                 ('D'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 92), 'E', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 652)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 24), "CCC", "DAD", "EBE",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 2, 24), "ACA", "DBD", "ECE",
                 ('B'), BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 10), ('A'),
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 23), ('C'), ItemStackHelper.fromData(
                         IUItem.spectral_box),
@@ -3749,27 +3860,27 @@ public class BaseRecipes {
                 ('D'), "c:plates/Vitalium"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 68), "CCC", "BAB", " B ",
-                ('A'), DEFAULT_SENSOR, ('B'), ItemStackHelper.fromData(IUItem.core, 1, 4),
+                ('A'), DEFAULT_SENSOR, ('B'), ItemStackHelper.fromData(IUItem.core, 1, 2),
 
                 ('C'), "c:doubleplate/Muntsa"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 179), "CCC", "BAB", " B ",
-                ('A'), ADV_SENSOR, ('B'), ItemStackHelper.fromData(IUItem.core, 1, 5),
+                ('A'), ADV_SENSOR, ('B'), ItemStackHelper.fromData(IUItem.core, 1, 3),
 
                 ('C'), "c:doubleplate/Muntsa"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 177), "CCC", "BAB", " B ",
-                ('A'), IMP_SENSOR, ('B'), ItemStackHelper.fromData(IUItem.core, 1, 6),
+                ('A'), IMP_SENSOR, ('B'), ItemStackHelper.fromData(IUItem.core, 1, 4),
 
                 ('C'), "c:doubleplate/Muntsa"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 178), "CCC", "BAB", " B ",
-                ('A'), PER_SENSOR, ('B'), ItemStackHelper.fromData(IUItem.core, 1, 7),
+                ('A'), PER_SENSOR, ('B'), ItemStackHelper.fromData(IUItem.core, 1, 5),
 
                 ('C'), "c:doubleplate/Muntsa"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 626), "CCC", "BAB", " B ",
-                ('A'), PHOTON_SENSOR, ('B'), ItemStackHelper.fromData(IUItem.core, 1, 7),
+                ('A'), PHOTON_SENSOR, ('B'), ItemStackHelper.fromData(IUItem.core, 1, 6),
 
                 ('C'), "c:doubleplate/Muntsa"
         );
@@ -4409,7 +4520,7 @@ public class BaseRecipes {
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 226)
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 91),
-                " ", " A ", " B ", 'A', IUItem.blockpanel, 'B', IUItem.module_schedule
+                " ", " A ", " B ", 'A', ItemStackHelper.fromData(IUItem.basemachine2, 1, 78), 'B', IUItem.module_schedule
         );
         Recipes.recipe.addRecipe(
                 ItemStackHelper.fromData(IUItem.basemachine2, 1, 94),
@@ -5259,10 +5370,10 @@ public class BaseRecipes {
                 'E',
                 ItemStackHelper.fromData(IUItem.cutter, 1)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 620),
-                "AAA",
-                "BDB",
-                "ECE",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 2, 620),
+                "ADA",
+                "BCB",
+                "EDE",
                 'A',
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 625),
                 'F', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 44),
@@ -5689,21 +5800,21 @@ public class BaseRecipes {
         );
 
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.anvil),
-                "AAA", " A ", "BBB", 'A', "c:storage_blocks/Iron", 'B', "c:storage_blocks/Titanium"
+                "AAA", "ABA", "   ", 'A', "c:ingots/Titanium", 'B', Blocks.ANVIL
         );
 
 
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 2, 364),
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 4, 364),
                 "AB ", "BA ", "   ", 'A', "c:plates/Lead", 'B', "c:plates/Titanium"
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 2, 363),
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 4, 363),
                 "AB ", "BA ", "CC ", 'A', "c:plates/Lead", 'B', "c:plates/Tungsten", 'C', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 479)
         );
 
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 2, 365),
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 4, 365),
                 "AB ", "BA ", "   ", 'A', "c:plates/Lead", 'B', "c:plates/Lithium"
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 2, 366),
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 4, 366),
                 "AB ", "BC ", "   ", 'A', "c:plates/Lead", 'B', "c:plates/Platinum", 'C', "c:plates/Tantalum"
         );
         Recipes.recipe.addRecipe(
@@ -6105,7 +6216,7 @@ public class BaseRecipes {
 
                 ('A'), DEFAULT_SENSOR,
 
-                ('B'), IUItem.photoniy_ingot,
+                ('B'), IUItem.photoniy,
 
                 ('C'), "c:gears/Zinc"
         );
@@ -6533,7 +6644,7 @@ public class BaseRecipes {
                 ('A'), ItemStackHelper.fromData(IUItem.cokeoven, 1, 5),
                 'C', "c:gears/Electrum"
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.recipe_schedule), "AB ", "BAB", "BBA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.recipe_schedule, 2), "AB ", "BAB", "BBA",
 
                 ('B'), "c:plates/AluminiumSilicon",
                 ('A'), "c:plates/Invar"
@@ -6572,14 +6683,14 @@ public class BaseRecipes {
                 'C', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 441),
                 'D', ItemStackHelper.fromData(IUItem.motors_with_improved_bearings_)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.antiairpollution), "CCC", "ABA", " D ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.antiairpollution), "CCC", "ABA", "   ",
 
                 'A', IUItem.polonium_palladium_composite,
                 'B', ItemStackHelper.fromData(IUItem.module_schedule),
                 'C', ItemStackHelper.fromData(IUItem.alloysplate, 1, 5),
                 'D', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 20)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.antisoilpollution), "CCC", "ABA", " D ",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.antisoilpollution), "CCC", "ABA", "   ",
 
                 'A', IUItem.polonium_palladium_composite,
                 'B', ItemStackHelper.fromData(IUItem.module_schedule),
@@ -6587,14 +6698,14 @@ public class BaseRecipes {
                 'D', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 20)
         );
 
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.antiairpollution1), "CCC", "ABA", "ADA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.antiairpollution1), "CCC", "ABA", "A A",
 
                 'A', IUItem.polonium_palladium_composite,
                 'B', ItemStackHelper.fromData(IUItem.module_schedule),
                 'C', ItemStackHelper.fromData(IUItem.alloysdoubleplate, 1, 5),
                 'D', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 96)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.antisoilpollution1), "CCC", "ABA", "ADA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.antisoilpollution1), "CCC", "ABA", "A A",
 
                 'A', IUItem.polonium_palladium_composite,
                 'B', ItemStackHelper.fromData(IUItem.module_schedule),
@@ -6867,13 +6978,13 @@ public class BaseRecipes {
                 BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitSpectral, 9)
         );
 
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 460), "AAA", "AAA", "AAA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 460), "AA ", "AA ", "   ",
                 'A', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 463)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 454), "AAA", "AAA", "AAA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 454), "AA ", "AA ", "   ",
                 'A', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 461)
         );
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 456), "AAA", "AAA", "AAA",
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.crafting_elements, 1, 456), "AA ", "AA ", "   ",
                 'A', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 462)
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.nuclear_res, 1, 10), "AAA", "AAA", "AAA",
@@ -7060,7 +7171,7 @@ public class BaseRecipes {
                 "c:plates/NiobiumTitanium"
         );
         Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.reactorData), "DCD", "BAB", "  ",
-                'A', BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.cirsuitQuantum, 7), 'B', "c:plates/Nimonic", 'C', "c:plates/Woods",
+                'A', BlockEntityGenerationMicrochip.getLevelCircuit(IUItem.circuitNano, 4), 'B', "c:plates/Nimonic", 'C', "c:plates/Woods",
                 'D', "c:plates/Zeliber"
         );
 
@@ -7080,7 +7191,7 @@ public class BaseRecipes {
 
         );
 
-        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 164), " A ", "DBC", "   ", 'A',
+        Recipes.recipe.addRecipe(ItemStackHelper.fromData(IUItem.basemachine2, 1, 164), "   ", "DBC", "   ", 'A',
                 ItemStackHelper.fromData(IUItem.crafting_elements, 1, 32),
                 'B', ItemStackHelper.fromData(IUItem.basemachine2, 1, 163), 'C', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 63)
                 , 'D', ItemStackHelper.fromData(IUItem.crafting_elements, 1, 123)

@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/permalloy"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_786_element"
+    },
+    "C": {
+      "tag": "c:plates/molybdenumsteel"
+    },
+    "D": {
+      "tag": "c:plates/draconid"
+    }
+  },
+  "pattern": [
+    "ACA",
+    "DDD",
+    "ABA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_787_element"
+  },
+  "show_notification": false
+}

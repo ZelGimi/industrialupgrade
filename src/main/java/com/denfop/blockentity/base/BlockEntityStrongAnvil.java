@@ -32,10 +32,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.capabilities.BlockCapability;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -56,16 +52,17 @@ public class BlockEntityStrongAnvil extends BlockEntityInventory implements IUpd
     public int progress;
     public MachineRecipe output;
     public Map<UUID, Double> data;
+    ItemStack prevInput = ItemStack.EMPTY;
+    ItemStack prevOutput = ItemStack.EMPTY;
 
     public BlockEntityStrongAnvil(BlockPos pos, BlockState state) {
         super(BlockStrongAnvilEntity.block_strong_anvil, pos, state);
         this.inputSlotA = new InventoryRecipes(this, "strong_anvil", this) {
             @Override
             public boolean canPlaceItem(final int index, final ItemStack itemStack) {
-                if (index == 4) {
-                    return super.canPlaceItem(0, itemStack);
-                }
-                return false;
+
+                return super.canPlaceItem(0, itemStack);
+
             }
         };
         this.progress = 0;
@@ -91,12 +88,33 @@ public class BlockEntityStrongAnvil extends BlockEntityInventory implements IUpd
     }
 
     @Override
-    public <T> T getCapability(@NotNull BlockCapability<T, Direction> cap, @Nullable Direction side) {
-        if (cap == Capabilities.ItemHandler.BLOCK)
-            return null;
-        return super.getCapability(cap, side);
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (prevInput.isEmpty() && !this.inputSlotA.isEmpty()) {
+            prevInput = this.inputSlotA.get(0);
+            new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
+        }
+        if (!prevInput.isEmpty() && !this.inputSlotA.isEmpty() && prevInput.getCount() != this.inputSlotA.get(0).getCount()) {
+            prevInput = this.inputSlotA.get(0);
+            new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
+        }
+        if (!prevInput.isEmpty() && this.inputSlotA.isEmpty()) {
+            prevInput = ItemStack.EMPTY;
+            new PacketUpdateFieldTile(this, "slot3", false);
+        }
+        if (prevOutput.isEmpty() && !this.outputSlot.isEmpty()) {
+            prevOutput = this.outputSlot.get(0);
+            new PacketUpdateFieldTile(this, "slot1", this.outputSlot);
+        }
+        if (prevOutput.isEmpty() && !this.outputSlot.isEmpty() && prevOutput.getCount() != this.outputSlot.get(0).getCount()) {
+            prevOutput = this.outputSlot.get(0);
+            new PacketUpdateFieldTile(this, "slot1", this.outputSlot);
+        }
+        if (!prevOutput.isEmpty() && this.outputSlot.isEmpty()) {
+            prevOutput = ItemStack.EMPTY;
+            new PacketUpdateFieldTile(this, "slot2", false);
+        }
     }
-
 
     public List<AABB> getAabbs(boolean forCollision) {
         if (!(facing == 4 || facing == 5)) {

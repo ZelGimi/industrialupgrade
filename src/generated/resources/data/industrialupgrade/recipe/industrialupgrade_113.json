@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:itemcore/sincore"
+      "item": "industrialupgrade:itemcore/procore"
     },
     "B": {
       "item": "industrialupgrade:quantumitems3"
@@ -30,9 +30,9 @@
     }
   },
   "pattern": [
-    "ABA",
-    "CEC",
-    "ABA"
+    "A A",
+    "BEB",
+    "ACA"
   ],
   "result": {
     "count": 1,

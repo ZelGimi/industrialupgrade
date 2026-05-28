@@ -25,6 +25,7 @@ public class ModPlacedFeatures {
     public static final ResourceKey<PlacedFeature> CALCIUM_PLACED = registerKey("calcium_placed");
     public static final ResourceKey<PlacedFeature> SALTPETER_PLACED = registerKey("saltpeter_placed");
     public static final ResourceKey<PlacedFeature> PEAT_PLACED = registerKey("peat_placed");
+    public static final ResourceKey<PlacedFeature> GLOBAL_ORE_PLACED = registerKey("global_ores");
 
     private static ResourceKey<PlacedFeature> registerKey(String name) {
         return ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.tryBuild(Constants.MOD_ID, name));
@@ -34,6 +35,7 @@ public class ModPlacedFeatures {
         HolderGetter<ConfiguredFeature<?, ?>> configuredFeatures = context.lookup(Registries.CONFIGURED_FEATURE);
 
         registerPlaced(context, RUB_TREE_PLACED, configuredFeatures.getOrThrow(ConfiguredFeaturesGen.RUB_TREE));
+        registerPlaced(context, GLOBAL_ORE_PLACED, configuredFeatures.getOrThrow(ConfiguredFeaturesGen.GLOBAL_ORE));
         registerPlaced(context, VEIN_PLACED, configuredFeatures.getOrThrow(ConfiguredFeaturesGen.VEIN));
         registerPlaced(context, GEN_GAS_PLACED, configuredFeatures.getOrThrow(ConfiguredFeaturesGen.GEN_GAS));
         registerPlaced(context, GEN_HIVE_PLACED, configuredFeatures.getOrThrow(ConfiguredFeaturesGen.GEN_HIVE));

@@ -3,36 +3,19 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:itemcore/procore"
+      "item": "industrialupgrade:itemcore/quacore"
     },
     "B": {
-      "type": "neoforge:components",
-      "components": {
-        "industrialupgrade:level_microchip": 9,
-        "minecraft:attribute_modifiers": {
-          "modifiers": []
-        },
-        "minecraft:enchantments": {
-          "levels": {}
-        },
-        "minecraft:lore": [],
-        "minecraft:max_stack_size": 64,
-        "minecraft:rarity": "common",
-        "minecraft:repair_cost": 0
-      },
-      "items": "industrialupgrade:circuit/spectralcircuit"
+      "item": "industrialupgrade:module_schedule"
     },
     "C": {
       "item": "industrialupgrade:quantumitems7"
-    },
-    "D": {
-      "item": "industrialupgrade:quantumitems4"
     }
   },
   "pattern": [
-    "ABA",
-    "BCB",
-    "DDD"
+    "ACA",
+    " B ",
+    "   "
   ],
   "result": {
     "count": 1,

@@ -78,7 +78,7 @@ public enum EncodedType {
             }
         }
 
-        if (types.length > 255) {
+        if (types.length > 127) {
             throw new RuntimeException("too many types");
         }
     }

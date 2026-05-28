@@ -15,36 +15,20 @@
       "model": "industrialupgrade:block/advanced_solar_panel",
       "y": 90
     },
-    "facing=down,type=advanced_solar_paneliu": {
-      "model": "industrialupgrade:block/advanced_solar_panel",
-      "x": 90
-    },
-    "facing=up,type=advanced_solar_paneliu": {
-      "model": "industrialupgrade:block/advanced_solar_panel",
-      "x": 270
-    },
-    "facing=north,type=advanced_solar_paneliu_invalid": {
+    "facing=north,type=advanced_solar_paneliu_active": {
       "model": "industrialupgrade:block/advanced_solar_paneliu_rain"
     },
-    "facing=south,type=advanced_solar_paneliu_invalid": {
+    "facing=south,type=advanced_solar_paneliu_active": {
       "model": "industrialupgrade:block/advanced_solar_paneliu_rain",
       "y": 180
     },
-    "facing=west,type=advanced_solar_paneliu_invalid": {
+    "facing=west,type=advanced_solar_paneliu_active": {
       "model": "industrialupgrade:block/advanced_solar_paneliu_rain",
       "y": 270
     },
-    "facing=east,type=advanced_solar_paneliu_invalid": {
+    "facing=east,type=advanced_solar_paneliu_active": {
       "model": "industrialupgrade:block/advanced_solar_paneliu_rain",
       "y": 90
-    },
-    "facing=down,type=advanced_solar_paneliu_invalid": {
-      "model": "industrialupgrade:block/advanced_solar_paneliu_rain",
-      "x": 90
-    },
-    "facing=up,type=advanced_solar_paneliu_invalid": {
-      "model": "industrialupgrade:block/advanced_solar_paneliu_rain",
-      "x": 270
     },
     "facing=north,type=advanced_solar_paneliu_aer": {
       "model": "industrialupgrade:block/advanced_solar_paneliu_aer"
@@ -61,14 +45,6 @@
       "model": "industrialupgrade:block/advanced_solar_paneliu_aer",
       "y": 90
     },
-    "facing=down,type=advanced_solar_paneliu_aer": {
-      "model": "industrialupgrade:block/advanced_solar_paneliu_aer",
-      "x": 90
-    },
-    "facing=up,type=advanced_solar_paneliu_aer": {
-      "model": "industrialupgrade:block/advanced_solar_paneliu_aer",
-      "x": 270
-    },
     "facing=north,type=advanced_solar_paneliu_earth": {
       "model": "industrialupgrade:block/advanced_solar_paneliu_earth"
     },
@@ -83,14 +59,6 @@
     "facing=east,type=advanced_solar_paneliu_earth": {
       "model": "industrialupgrade:block/advanced_solar_paneliu_earth",
       "y": 90
-    },
-    "facing=down,type=advanced_solar_paneliu_earth": {
-      "model": "industrialupgrade:block/advanced_solar_paneliu_earth",
-      "x": 90
-    },
-    "facing=up,type=advanced_solar_paneliu_earth": {
-      "model": "industrialupgrade:block/advanced_solar_paneliu_earth",
-      "x": 270
     },
     "facing=north,type=advanced_solar_paneliu_end": {
       "model": "industrialupgrade:block/advanced_solar_paneliu_end"
@@ -107,14 +75,6 @@
       "model": "industrialupgrade:block/advanced_solar_paneliu_end",
       "y": 90
     },
-    "facing=down,type=advanced_solar_paneliu_end": {
-      "model": "industrialupgrade:block/advanced_solar_paneliu_end",
-      "x": 90
-    },
-    "facing=up,type=advanced_solar_paneliu_end": {
-      "model": "industrialupgrade:block/advanced_solar_paneliu_end",
-      "x": 270
-    },
     "facing=north,type=advanced_solar_paneliu_nether": {
       "model": "industrialupgrade:block/advanced_solar_paneliu_nether"
     },
@@ -129,14 +89,6 @@
     "facing=east,type=advanced_solar_paneliu_nether": {
       "model": "industrialupgrade:block/advanced_solar_paneliu_nether",
       "y": 90
-    },
-    "facing=down,type=advanced_solar_paneliu_nether": {
-      "model": "industrialupgrade:block/advanced_solar_paneliu_nether",
-      "x": 90
-    },
-    "facing=up,type=advanced_solar_paneliu_nether": {
-      "model": "industrialupgrade:block/advanced_solar_paneliu_nether",
-      "x": 270
     },
     "facing=north,type=advanced_solar_paneliu_sun": {
       "model": "industrialupgrade:block/advanced_solar_paneliu_sun"
@@ -153,14 +105,6 @@
       "model": "industrialupgrade:block/advanced_solar_paneliu_sun",
       "y": 90
     },
-    "facing=down,type=advanced_solar_paneliu_sun": {
-      "model": "industrialupgrade:block/advanced_solar_paneliu_sun",
-      "x": 90
-    },
-    "facing=up,type=advanced_solar_paneliu_sun": {
-      "model": "industrialupgrade:block/advanced_solar_paneliu_sun",
-      "x": 270
-    },
     "facing=north,type=advanced_solar_paneliu_night": {
       "model": "industrialupgrade:block/advanced_solar_paneliu_night"
     },
@@ -176,14 +120,6 @@
       "model": "industrialupgrade:block/advanced_solar_paneliu_night",
       "y": 90
     },
-    "facing=down,type=advanced_solar_paneliu_night": {
-      "model": "industrialupgrade:block/advanced_solar_paneliu_night",
-      "x": 90
-    },
-    "facing=up,type=advanced_solar_paneliu_night": {
-      "model": "industrialupgrade:block/advanced_solar_paneliu_night",
-      "x": 270
-    },
     "facing=north,type=advanced_solar_paneliu_rain": {
       "model": "industrialupgrade:block/advanced_solar_paneliu_rain"
     },
@@ -198,14 +134,6 @@
     "facing=east,type=advanced_solar_paneliu_rain": {
       "model": "industrialupgrade:block/advanced_solar_paneliu_rain",
       "y": 90
-    },
-    "facing=down,type=advanced_solar_paneliu_rain": {
-      "model": "industrialupgrade:block/advanced_solar_paneliu_rain",
-      "x": 90
-    },
-    "facing=up,type=advanced_solar_paneliu_rain": {
-      "model": "industrialupgrade:block/advanced_solar_paneliu_rain",
-      "x": 270
     }
   }
 }

@@ -29,13 +29,13 @@
       "items": "industrialupgrade:circuit/quantumcircuit"
     },
     "E": {
-      "item": "industrialupgrade:itemcore/procore"
+      "item": "industrialupgrade:itemcore/specore"
     }
   },
   "pattern": [
-    "ECE",
+    "E E",
     "BAB",
-    "DCD"
+    "CDC"
   ],
   "result": {
     "count": 1,

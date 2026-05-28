@@ -3,6 +3,8 @@ package com.denfop.blockentity.base;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
+import com.denfop.api.collision.IMultiCellCollisionProvider;
+import com.denfop.api.collision.MultiCellCollisionManager;
 import com.denfop.api.energy.event.load.EnergyTileLoadEvent;
 import com.denfop.api.energy.event.unload.EnergyTileUnLoadEvent;
 import com.denfop.api.energy.forgeenergy.EnergyForge;
@@ -32,6 +34,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -63,7 +67,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class BlockEntityBase extends BlockEntity {
+public abstract class BlockEntityBase extends BlockEntity implements IMultiCellCollisionProvider {
     public static final List<AABB> defaultAabbs = Collections.singletonList(new AABB(
             0.0,
             0.0,
@@ -74,6 +78,8 @@ public abstract class BlockEntityBase extends BlockEntity {
     ));
     public static int ticker = 1;
     public static Map<ResourceKey<Level>, List<ChunkPos>> updates = new ConcurrentHashMap<>();
+    private static final Set<ResourceKey<Level>> UNLOADING_LEVELS = ConcurrentHashMap.newKeySet();
+    private static volatile boolean serverStopping = false;
     public final MultiBlockEntity teBlock;
     public final BlockTileEntity block;
     public BlockPos pos;
@@ -92,6 +98,46 @@ public abstract class BlockEntityBase extends BlockEntity {
     boolean hasHashCode = false;
     CooldownTracker cooldownTracker = new CooldownTracker();
     boolean loaded = false;
+
+    public static void setServerStopping(boolean stopping) {
+        serverStopping = stopping;
+        if (!stopping) {
+            UNLOADING_LEVELS.clear();
+        }
+    }
+
+    public static void markLevelUnloading(Level level) {
+        if (level != null) {
+            UNLOADING_LEVELS.add(level.dimension());
+        }
+    }
+
+    public static void clearLifecycleUnloadState() {
+        serverStopping = false;
+        UNLOADING_LEVELS.clear();
+    }
+
+    public static boolean isLifecycleUnloading(Level level) {
+        if (serverStopping) {
+            return true;
+        }
+        if (level == null) {
+            return true;
+        }
+        if (UNLOADING_LEVELS.contains(level.dimension())) {
+            return true;
+        }
+        if (!level.isClientSide && level instanceof ServerLevel serverLevel) {
+            MinecraftServer server = serverLevel.getServer();
+            return server == null || !server.isRunning();
+        }
+        return false;
+    }
+
+    private boolean shouldSkipPerTileUnload() {
+        return isLifecycleUnloading(this.getLevel());
+    }
+
     private boolean isClientLoaded;
     private int hashCode;
 
@@ -179,6 +225,7 @@ public abstract class BlockEntityBase extends BlockEntity {
 
     @Override
     public void setChanged() {
+        IUCore.proxy.setLevelIfNull(this);
         if (!this.getLevel().isClientSide()) {
             for (final AbstractComponent abstractComponent : this.componentList) {
                 abstractComponent.markDirty();
@@ -195,19 +242,15 @@ public abstract class BlockEntityBase extends BlockEntity {
 
     public void addInformation(ItemStack stack, List<String> tooltip) {
 
-
-        if (level == null) {
-            AirPollutionComponent air = this.getComp(AirPollutionComponent.class);
-            SoilPollutionComponent soil = this.getComp(SoilPollutionComponent.class);
-            if (air != null || soil != null) {
-                if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-                    tooltip.add(Localization.translate("iu.pollution.info1"));
-                    tooltip.add(Localization.translate("iu.pollution.info2"));
-                    tooltip.add(Localization.translate("iu.pollution.info3"));
-                }
-                tooltip.add(Localization.translate("iu.pollution.info"));
-
+        AirPollutionComponent air = this.getComp(AirPollutionComponent.class);
+        SoilPollutionComponent soil = this.getComp(SoilPollutionComponent.class);
+        if (air != null || soil != null) {
+            if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+                tooltip.add(Localization.translate("iu.pollution.info1"));
+                tooltip.add(Localization.translate("iu.pollution.info2"));
+                tooltip.add(Localization.translate("iu.pollution.info3"));
             }
+            tooltip.add(Localization.translate("iu.pollution.info"));
 
         }
         for (AbstractComponent component : this.componentList) {
@@ -248,10 +291,15 @@ public abstract class BlockEntityBase extends BlockEntity {
         if (!this.getLevel().isClientSide && this.needUpdate()) {
             IUCore.network.getServer().addTileToOvertimeUpdate(this);
         }
-
+        if (!this.getLevel().isClientSide && needCollision()) {
+            MultiCellCollisionManager.refresh(this.getWorld(), this.getBlockPos());
+        }
         this.hashCode();
     }
-
+    public boolean needCollision(){
+        AABB aabb = this.getAabb(true);
+        return aabb.maxZ > 1 ||  aabb.maxX > 1 ||  aabb.maxY > 1 ||  aabb.minZ < 0 ||  aabb.minX < 0 ||  aabb.minY < 0;
+    }
     public CompoundTag writeToNBT(HolderLookup.Provider provider, CompoundTag nbt) {
         this.provider = provider;
         return writeToNBT(nbt);
@@ -353,8 +401,14 @@ public abstract class BlockEntityBase extends BlockEntity {
 
     @Override
     public void setRemoved() {
-        if (loaded)
-            this.onUnloaded();
+        if (loaded) {
+            if (shouldSkipPerTileUnload()) {
+                loaded = false;
+            } else {
+                this.onUnloaded();
+                loaded = false;
+            }
+        }
         super.setRemoved();
     }
 
@@ -450,9 +504,6 @@ public abstract class BlockEntityBase extends BlockEntity {
                 BlockEntity blockEntity = getLevel().getBlockEntity(neighborPos);
                 if (storage != null && !blockEntity.isRemoved()) {
                     EnergyTile energyTile = EnergyNetGlobal.instance.getTile(level, neighborPos);
-                    if (energyTile != EnergyNetGlobal.EMPTY) {
-                        NeoForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), energyTile));
-                    }
                     EnergyForge energyForge = null;
                     if (storage.canExtract() && storage.canReceive()) {
                         energyForge = new EnergyForgeSinkSource(blockEntity);
@@ -462,7 +513,37 @@ public abstract class BlockEntityBase extends BlockEntity {
                         energyForge = new EnergyForgeSource(blockEntity);
                     }
                     if (energyForge != null) {
-                        NeoForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), energyForge));
+                        boolean changed = true;
+                        if (energyTile != EnergyNetGlobal.EMPTY) {
+                            changed = false;
+                            Map<Direction, IEnergyStorage> newStorages = energyForge.getStorages();
+                            Map<Direction, IEnergyStorage> oldStorages = ((EnergyForge) energyTile).getStorages();
+                            if (oldStorages == null) {
+                                changed = true;
+                            } else {
+                                for (Direction dir : Direction.values()) {
+                                    IEnergyStorage oldS = oldStorages.get(dir);
+                                    IEnergyStorage newS = newStorages.get(dir);
+
+                                    if ((oldS == null) != (newS == null)) {
+                                        changed = true;
+                                        break;
+                                    }
+
+                                    if (oldS != null && newS != null) {
+                                        if (oldS.canReceive() != newS.canReceive() ||
+                                                oldS.canExtract() != newS.canExtract()) {
+                                            changed = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            if (changed)
+                                NeoForge.EVENT_BUS.post(new EnergyTileUnLoadEvent(this.getWorld(), energyTile));
+                        }
+                        if (changed)
+                            NeoForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), energyForge));
                     }
                 }
             } else if (this instanceof EnergyTile || this.getComp(Energy.class) != null) {
@@ -557,8 +638,18 @@ public abstract class BlockEntityBase extends BlockEntity {
         return false;
     }
 
+    protected RegistryAccess getSerializationLookup(RegistryAccess fallback) {
+        if (this.level instanceof ServerLevel serverLevel) {
+            return serverLevel.getServer().registryAccess();
+        }
+        if (this.level != null) {
+            return this.level.registryAccess();
+        }
+        return fallback;
+    }
+
     public CustomPacketBuffer writeContainerPacket() {
-        return new CustomPacketBuffer(this.getWorld().registryAccess());
+        return new CustomPacketBuffer(getSerializationLookup(this.getWorld().registryAccess()));
     }
 
     public void readContainerPacket(CustomPacketBuffer customPacketBuffer) {
@@ -851,22 +942,38 @@ public abstract class BlockEntityBase extends BlockEntity {
 
     @Override
     public void onChunkUnloaded() {
-        if (loaded)
-            this.onUnloaded();
+        if (loaded) {
+            if (shouldSkipPerTileUnload()) {
+                loaded = false;
+            } else {
+                this.onUnloaded();
+                loaded = false;
+            }
+        }
         super.onChunkUnloaded();
     }
 
     public void onUnloaded() {
-        if (this.needUpdate())
-            IUCore.network.getServer().removeTileToOvertimeUpdate(this);
-        this.componentList.forEach(AbstractComponent::onUnloaded);
-        try {
+        Level level = this.getLevel();
+        boolean lifecycleUnloading = isLifecycleUnloading(level);
 
-            new PacketStopSound(getWorld(), this.getBlockPos());
-        } catch (Exception ignored) {
+        if (this.needUpdate() && IUCore.network != null && IUCore.network.getServer() != null && !lifecycleUnloading) {
+            IUCore.network.getServer().removeTileToOvertimeUpdate(this);
         }
-        if (!this.getLevel().isClientSide) {
-            //    new PacketRemoveUpdateTile(this);
+
+        if (!lifecycleUnloading) {
+            this.componentList.forEach(AbstractComponent::onUnloaded);
+        }
+
+        if (!lifecycleUnloading) {
+            try {
+                new PacketStopSound(level, this.getBlockPos());
+            } catch (Exception ignored) {
+            }
+        }
+
+        if (!lifecycleUnloading && level != null && !level.isClientSide && this.needCollision()) {
+            MultiCellCollisionManager.removeAll(level, this.getBlockPos());
         }
     }
 

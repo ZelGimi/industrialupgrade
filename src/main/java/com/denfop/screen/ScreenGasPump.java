@@ -3,6 +3,7 @@ package com.denfop.screen;
 import com.denfop.Constants;
 import com.denfop.api.vein.common.Type;
 import com.denfop.api.widget.*;
+import com.denfop.blocks.FluidName;
 import com.denfop.componets.ComponentProgress;
 import com.denfop.containermenu.ContainerMenuGasPump;
 import com.denfop.utils.Localization;
@@ -39,7 +40,8 @@ public class ScreenGasPump<T extends ContainerMenuGasPump> extends ScreenMain<Co
 
 
                             return
-                                    Localization.translate("iu.fluidgas") + ": " + container.base
+                                    Localization.translate(FluidName.fluidgas.getInstance().get().getFluidType().getDescriptionId())
+                                            + ": " + container.base
                                             .count + "/" + container.base.maxcount
                                             + Localization.translate(Constants.ABBREVIATION + ".generic.text.mb");
 

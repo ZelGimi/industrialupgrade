@@ -118,7 +118,7 @@ public abstract class BlockEntityMultiBlockBase extends BlockEntityInventory imp
             if (getMultiBlockStucture() != null) {
                 for (ItemStack stack1 : getMultiBlockStucture().itemStackList) {
                     if (!stack1.isEmpty()) {
-                        tooltip.add(ChatFormatting.GREEN + "" + stack1.getCount() + "x" + ChatFormatting.GRAY + stack1.getDisplayName().getString());
+                        tooltip.add(ChatFormatting.GREEN + "" + stack1.getCount() + "x" + ChatFormatting.GRAY + com.denfop.utils.ModUtils.cleanComponentString(stack1.getDisplayName().getString()));
                     }
                 }
             } else {
@@ -549,10 +549,10 @@ public abstract class BlockEntityMultiBlockBase extends BlockEntityInventory imp
                 if (!this.getWorld().isClientSide) {
                     IUCore.proxy.messagePlayer(
                             player,
-                            Localization.translate("iu.activate_multiblock") + " " + this
+                            Localization.translate("iu.activate_multiblock") + " " +   com.denfop.utils.ModUtils.cleanComponentString(this
                                     .getMultiBlockStucture()
-                                    .getActivateItem()
-                                    .getDisplayName().getString()
+                                  .getActivateItem()
+                                    .getDisplayName().getString())
                     );
                 }
             }

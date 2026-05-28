@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:space_tunnel_system",
+  "config": {
+    "flooded": true,
+    "fluid": {
+      "Name": "industrialupgrade:fluid/fluidcarbonmonoxide",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "kind": "vertical_shaft",
+    "max_length": 36,
+    "max_radius": 4,
+    "max_vertical": 12,
+    "min_length": 18,
+    "min_radius": 2,
+    "open_to_surface": true,
+    "primary": {
+      "Name": "industrialupgrade:spacestone/ganymede_stone"
+    },
+    "secondary": {
+      "Name": "industrialupgrade:spacecobblestone/ganymede_cobblestone"
+    },
+    "tertiary": {
+      "Name": "industrialupgrade:spacecobblestone/ganymede_cobblestone"
+    }
+  }
+}

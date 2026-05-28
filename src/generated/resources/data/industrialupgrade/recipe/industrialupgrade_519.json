@@ -30,12 +30,15 @@
         "minecraft:repair_cost": 0
       },
       "items": "industrialupgrade:crafting_elements/crafting_272_element"
+    },
+    "H": {
+      "item": "industrialupgrade:crafting_elements/crafting_565_element"
     }
   },
   "pattern": [
     "ABA",
     "CDC",
-    "DED"
+    "HEH"
   ],
   "result": {
     "count": 1,

@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
 import com.denfop.api.recipe.InventoryOutput;
@@ -53,7 +55,7 @@ public class BlockEntityPump extends BlockEntityElectricLiquidTankInventory impl
     public ComponentProgress componentProgress;
 
     public BlockEntityPump(int size, int operationLength, MultiBlockEntity block, BlockPos pos, BlockState state) {
-        super(20, 1, size, block, pos, state);
+        super(ModConfig.mechanismDouble("pump_energy_storage", 20.0D), 1, size, block, pos, state);
         this.containerSlot = new InventoryFluid(
                 this,
                 Inventory.TypeItemSlot.INPUT,
@@ -62,7 +64,7 @@ public class BlockEntityPump extends BlockEntityElectricLiquidTankInventory impl
         );
         this.outputSlot = new InventoryOutput(this, 1);
         this.upgradeSlot = new InventoryUpgrade(this, 4);
-        this.defaultEnergyConsume = this.energyConsume = 1;
+        this.defaultEnergyConsume = this.energyConsume = ModConfig.mechanismInt("pump_energy_use", 1);
         this.defaultOperationLength = this.operationLength = operationLength;
         this.defaultTier = 1;
         this.defaultEnergyStorage = this.operationLength;

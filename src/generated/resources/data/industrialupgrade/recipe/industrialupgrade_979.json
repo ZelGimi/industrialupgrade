@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:machines/advanced_solar_paneliu"
+      "item": "industrialupgrade:basemachine3/generator_iu"
     },
     "B": {
       "item": "industrialupgrade:module_schedule"

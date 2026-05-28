@@ -1,0 +1,18 @@
+{
+  "type": "industrialupgrade:space_generic_ore",
+  "config": {
+    "body_id": "mars",
+    "distribution_type": "vein",
+    "horizontal_radius": 10,
+    "max_y": 64,
+    "min_y": -32,
+    "ore_block_id": "industrialupgrade:blockspace3/mars_cobalt_ore",
+    "path_length": 20,
+    "replaceable_block_ids": [
+      "industrialupgrade:spacestone/mars_stone",
+      "industrialupgrade:spacecobblestone/mars_cobblestone"
+    ],
+    "size": 10,
+    "vertical_radius": 5
+  }
+}

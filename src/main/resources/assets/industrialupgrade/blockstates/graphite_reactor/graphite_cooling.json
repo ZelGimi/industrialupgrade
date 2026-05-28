@@ -15,36 +15,20 @@
       "model": "industrialupgrade:block/graphite_reactor/graphite_cooling",
       "y": 90
     },
-    "facing=down,type=graphite_cooling": {
-      "model": "industrialupgrade:block/graphite_reactor/graphite_cooling",
-      "x": 90
-    },
-    "facing=up,type=graphite_cooling": {
-      "model": "industrialupgrade:block/graphite_reactor/graphite_cooling",
-      "x": 270
-    },
-    "facing=north,type=graphite_cooling_invalid": {
+    "facing=north,type=graphite_cooling_active": {
       "model": "industrialupgrade:block/graphite_reactor/graphite_cooling"
     },
-    "facing=south,type=graphite_cooling_invalid": {
+    "facing=south,type=graphite_cooling_active": {
       "model": "industrialupgrade:block/graphite_reactor/graphite_cooling",
       "y": 180
     },
-    "facing=west,type=graphite_cooling_invalid": {
+    "facing=west,type=graphite_cooling_active": {
       "model": "industrialupgrade:block/graphite_reactor/graphite_cooling",
       "y": 270
     },
-    "facing=east,type=graphite_cooling_invalid": {
+    "facing=east,type=graphite_cooling_active": {
       "model": "industrialupgrade:block/graphite_reactor/graphite_cooling",
       "y": 90
-    },
-    "facing=down,type=graphite_cooling_invalid": {
-      "model": "industrialupgrade:block/graphite_reactor/graphite_cooling",
-      "x": 90
-    },
-    "facing=up,type=graphite_cooling_invalid": {
-      "model": "industrialupgrade:block/graphite_reactor/graphite_cooling",
-      "x": 270
     }
   }
 }

@@ -1,0 +1,26 @@
+{
+  "type": "industrialupgrade:space_rock_formation",
+  "config": {
+    "branches": 1,
+    "fluid": {
+      "Name": "minecraft:water",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "kind": "mountain_spire",
+    "max_height": 22,
+    "max_radius": 5,
+    "min_height": 8,
+    "min_radius": 2,
+    "primary": {
+      "Name": "industrialupgrade:spacestone1/phobos_stone"
+    },
+    "secondary": {
+      "Name": "industrialupgrade:spacecobblestone1/phobos_cobblestone"
+    },
+    "tertiary": {
+      "Name": "industrialupgrade:blockspace3/phobos_tantalum"
+    }
+  }
+}

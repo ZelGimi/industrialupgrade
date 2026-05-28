@@ -9,6 +9,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 
+import java.util.Objects;
+
 public class SpaceUpgradeItemInform {
 
     public static final Codec<SpaceUpgradeItemInform> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -30,6 +32,19 @@ public class SpaceUpgradeItemInform {
         this.upgrade = modules;
         this.number = number;
 
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SpaceUpgradeItemInform that = (SpaceUpgradeItemInform) o;
+        return number == that.number && upgrade == that.upgrade;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(upgrade, number);
     }
 
     public boolean matched(EnumTypeUpgrade modules) {

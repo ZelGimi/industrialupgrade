@@ -129,7 +129,7 @@ public class VeinBase implements Vein {
         if (oldMineral) {
             this.meta = meta;
         } else {
-            this.meta = meta - 16;
+            this.meta = meta;
         }
     }
 

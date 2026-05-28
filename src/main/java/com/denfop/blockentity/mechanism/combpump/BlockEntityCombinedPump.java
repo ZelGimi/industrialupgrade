@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.combpump;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
 import com.denfop.api.otherenergies.common.EnergyType;
@@ -64,7 +66,7 @@ public class BlockEntityCombinedPump extends BlockEntityElectricLiquidTankInvent
     boolean canWork = true;
 
     public BlockEntityCombinedPump(int size, int operationLength, EnumTypePump typePump, MultiBlockEntity block, BlockPos pos, BlockState state) {
-        super(0, 0, size, block, pos, state);
+        super(ModConfig.mechanismDouble("combined_pump_energy_storage", 0.0D), 0, size, block, pos, state);
         this.containerSlot = new InventoryFluid(
                 this,
                 Inventory.TypeItemSlot.INPUT,

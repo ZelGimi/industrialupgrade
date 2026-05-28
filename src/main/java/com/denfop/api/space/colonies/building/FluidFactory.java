@@ -80,10 +80,14 @@ public class FluidFactory extends Building implements IColonyMiningFactory {
                     }
                     FluidStack fluidStack = fluidStacks.get(WorldBaseGen.random.nextInt(fluidStacks.size())).getElement();
                     int amount = (int) ((WorldBaseGen.random.nextInt(type.getMaxValue() / 2) + (type.getMaxValue() / 2)) * this.getColony().getPercentEntertainment());
-                    fluidStack = new FluidStack(fluidStack.getFluid(), amount);
-                    if (storage.canAddFluidStack(fluidStack)) {
-                        this.getColony().useEnergy(this.getEnergy());
-                        return;
+                    amount = Math.min(amount, this.getColony().getAvailableFluid());
+                    if (amount != 0) {
+                        this.getColony().removeAvailableFluid(amount);
+                        fluidStack = new FluidStack(fluidStack.getFluid(), amount);
+                        if (storage.canAddFluidStack(fluidStack)) {
+                            this.getColony().useEnergy(this.getEnergy());
+                            return;
+                        }
                     }
                 }
             }

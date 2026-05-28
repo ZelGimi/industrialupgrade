@@ -15,36 +15,20 @@
       "model": "industrialupgrade:block/basemachine/automatic_mechanism",
       "y": 90
     },
-    "facing=down,type=automatic_mechanism": {
-      "model": "industrialupgrade:block/basemachine/automatic_mechanism",
-      "x": 90
-    },
-    "facing=up,type=automatic_mechanism": {
-      "model": "industrialupgrade:block/basemachine/automatic_mechanism",
-      "x": 270
-    },
-    "facing=north,type=automatic_mechanism_invalid": {
+    "facing=north,type=automatic_mechanism_active": {
       "model": "industrialupgrade:block/basemachine/automatic_mechanism"
     },
-    "facing=south,type=automatic_mechanism_invalid": {
+    "facing=south,type=automatic_mechanism_active": {
       "model": "industrialupgrade:block/basemachine/automatic_mechanism",
       "y": 180
     },
-    "facing=west,type=automatic_mechanism_invalid": {
+    "facing=west,type=automatic_mechanism_active": {
       "model": "industrialupgrade:block/basemachine/automatic_mechanism",
       "y": 270
     },
-    "facing=east,type=automatic_mechanism_invalid": {
+    "facing=east,type=automatic_mechanism_active": {
       "model": "industrialupgrade:block/basemachine/automatic_mechanism",
       "y": 90
-    },
-    "facing=down,type=automatic_mechanism_invalid": {
-      "model": "industrialupgrade:block/basemachine/automatic_mechanism",
-      "x": 90
-    },
-    "facing=up,type=automatic_mechanism_invalid": {
-      "model": "industrialupgrade:block/basemachine/automatic_mechanism",
-      "x": 270
     }
   }
 }

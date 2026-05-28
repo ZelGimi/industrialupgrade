@@ -19,6 +19,7 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.component.PatchedDataComponentMap;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -72,10 +73,10 @@ import java.util.*;
 
 public class ModUtils {
 
-    public static final Set<DataComponentType<?>> ignoredNbtKeys = new HashSet<>(Arrays.asList(DataComponents.DAMAGE,DataComponentsInit.RADIATION_ENERGY.get(),DataComponentsInit.EXPERIENCE_ENERGY.get(), DataComponentsInit.SOLARIUM_ENERGY.get(), DataComponentsInit.ENERGY.get(),DataComponentsInit.QUANTUM_ENERGY.get(), DataComponentsInit.ACTIVE.get(), DataComponentsInit.MODE.get(), DataComponentsInit.BLACK_LIST.get(), DataComponentsInit.EXPERIENCE.get(), DataComponentsInit.GENOME_CROP.get(), DataComponentsInit.GENOME_BEE.get(), DataComponentsInit.SAVE.get()
-            , DataComponents.MAX_DAMAGE, DataComponents.MAX_STACK_SIZE, DataComponents.CONTAINER, DataComponents.FOOD, DataComponents.ENCHANTMENTS, DataComponents.STORED_ENCHANTMENTS, DataComponents.CUSTOM_NAME, DataComponents.TOOL, DataComponents.UNBREAKABLE, DataComponents.RARITY, DataComponents.REPAIR_COST, DataComponentsInit.LEVEL.get(), DataComponentsInit.UPGRADE_ITEM.get(), DataComponentsInit.WIND_UPGRADE.get()
+    public static final Set<DataComponentType<?>> ignoredNbtKeys = new HashSet<>(Arrays.asList(DataComponents.DAMAGE, DataComponentsInit.RADIATION_ENERGY.get(), DataComponentsInit.EXPERIENCE_ENERGY.get(), DataComponentsInit.SOLARIUM_ENERGY.get(), DataComponentsInit.ENERGY.get(), DataComponentsInit.QUANTUM_ENERGY.get(), DataComponentsInit.ACTIVE.get(), DataComponentsInit.MODE.get(), DataComponentsInit.BLACK_LIST.get(), DataComponentsInit.EXPERIENCE.get(), DataComponentsInit.GENOME_CROP.get(), DataComponentsInit.GENOME_BEE.get(), DataComponentsInit.SAVE.get()
+            , DataComponents.MAX_DAMAGE, DataComponents.MAX_STACK_SIZE, DataComponents.CONTAINER, DataComponents.FOOD, DataComponents.ENCHANTMENTS, DataComponents.CUSTOM_NAME, DataComponents.TOOL, DataComponents.UNBREAKABLE, DataComponents.RARITY, DataComponents.REPAIR_COST, DataComponentsInit.LEVEL.get(), DataComponentsInit.UPGRADE_ITEM.get(), DataComponentsInit.WIND_UPGRADE.get()
             , DataComponentsInit.WATER_UPGRADE.get(), DataComponentsInit.SKIN.get(), DataComponentsInit.FLY.get(), DataComponentsInit.JETPACK.get(), DataComponentsInit.DIRECTION.get(), DataComponentsInit.CONTAINER.get(), DataComponentsInit.CONTAINER_ADDITIONAL.get(), DataComponentsInit.LIST_STRING.get(), DataComponentsInit.LIST_INTEGER.get(), DataComponentsInit.LIST_STACK.get(), DataComponentsInit.BEE_LIST.get(), DataComponentsInit.MOB.get()
-            , DataComponentsInit.NAME.get(), DataComponentsInit.WIRELESS.get(), DataComponentsInit.DESCRIPTIONS_CONTAINER.get(), DataComponentsInit.VEIN_INFO.get(), DataComponentsInit.UPGRADE_KIT.get(), DataComponentsInit.REACTOR_DATA.get(), DataComponentsInit.REACTOR_SCHEDULE.get(), DataComponentsInit.TELEPORT.get(), DataComponents.LORE, DataComponents.RARITY, DataComponents.REPAIR_COST, DataComponents.ATTRIBUTE_MODIFIERS));
+            , DataComponentsInit.NAME.get(), DataComponentsInit.WIRELESS.get(), DataComponentsInit.ORE.get(), DataComponentsInit.SWARM.get(), DataComponentsInit.DESCRIPTIONS_CONTAINER.get(), DataComponentsInit.VEIN_INFO.get(), DataComponentsInit.UPGRADE_KIT.get(), DataComponentsInit.REACTOR_DATA.get(), DataComponentsInit.REACTOR_SCHEDULE.get(), DataComponentsInit.TELEPORT.get(), DataComponents.LORE, DataComponents.RARITY, DataComponents.REPAIR_COST, DataComponents.ATTRIBUTE_MODIFIERS));
     private static final Direction[] BY_2D_DATA = Arrays.stream(Direction.values()).filter((p_235685_) -> p_235685_.getAxis().isHorizontal()).sorted(Comparator.comparingInt(Direction::get2DDataValue)).toArray(Direction[]::new);
     public static Logger log;
     public static Direction[] facings = Direction.values();
@@ -326,31 +327,7 @@ public class ModUtils {
         log.info(message);
     }
 
-    // TODO: нужно решить
- /*   public static ItemStack getCellFromFluid(String name) {
-        for (CellType cellType : CellType.values()) {
-            if (cellType.getFluid() == null) {
-                continue;
-            }
-            if (cellType.getFluid().getName().trim().equals(name.trim())) {
-                return new ItemStack(IUItem.cell_all, 1, cellType.ordinal());
-            }
-        }
-        return new ItemStack(IUItem.cell_all, 1, 0);
-    }
 
-    public static ItemStack getCellFromFluid(Fluid name) {
-        for (CellType cellType : CellType.values()) {
-            if (cellType.getFluid() == null) {
-                continue;
-            }
-            if (cellType.getFluid().equals(name)) {
-                return new ItemStack(IUItem.cell_all, 1, cellType.ordinal());
-            }
-        }
-        return new ItemStack(IUItem.cell_all, 1, 0);
-    }
-*/
     public static CompoundTag nbt() {
         return new CompoundTag();
     }
@@ -379,7 +356,7 @@ public class ModUtils {
         if (!stack.isEmpty()) {
             List<String> stringList = stack.getOrDefault(DataComponentsInit.LIST_STRING, Collections.emptyList());
             for (String temp : stringList) {
-                TagKey<Item> tag = new TagKey<>(Registries.ITEM, ResourceLocation.parse(temp));
+                TagKey<Item> tag = TagKey.create(Registries.ITEM, ResourceLocation.parse(temp));
                 List<ItemStack> list = new Ingredient.TagValue(tag).getItems().stream().toList();
                 stacks.addAll(list);
 
@@ -1013,7 +990,7 @@ public class ModUtils {
             if (recipe.getIngredients().size() > 1)
                 return ItemStack.EMPTY;
             else if (recipe.getIngredients().get(0).test(stack1))
-                return recipe.getResultItem(world.registryAccess());
+                return recipe.getResultItem(world.registryAccess()).copy();
         }
         return ItemStack.EMPTY;
     }
@@ -1551,5 +1528,90 @@ public class ModUtils {
         return stringList;
     }
 
+
+    public static boolean compareNbt(DataComponentMap a, DataComponentMap b, boolean c) {
+        if (a == b) {
+            return true;
+        } else {
+            Set<DataComponentType<?>> keysA = a != null ? a.keySet() : Collections.emptySet();
+            Set<DataComponentType<?>> keysB = b != null ? b.keySet() : Collections.emptySet();
+            if (keysA.isEmpty() && keysB.isEmpty()) {
+                return true;
+            }
+            Set<DataComponentType<?>> toCheck = new HashSet<>(Math.max(keysA.size(), keysB.size()));
+            Iterator<DataComponentType<?>> var5 = keysA.iterator();
+
+            DataComponentType<?> key;
+            while (var5.hasNext()) {
+                key = var5.next();
+                if (!keysB.contains(key)) {
+                    return false;
+                }
+
+                toCheck.add(key);
+            }
+
+            var5 = keysB.iterator();
+
+            while (var5.hasNext()) {
+                key = var5.next();
+                if (!keysA.contains(key)) {
+                    return false;
+                }
+
+                toCheck.add(key);
+            }
+
+            var5 = toCheck.iterator();
+
+            do {
+                if (!var5.hasNext()) {
+                    return true;
+                }
+
+                key = var5.next();
+                if (!Objects.equals(Objects.requireNonNull(a).get(key), Objects.requireNonNull(b).get(key))) {
+                    System.out.println(key);
+                    return false;
+                }
+            } while (true);
+
+
+        }
+    }
+
+    public static void setComponents(ItemStack toInsert, PatchedDataComponentMap components) {
+        Iterator<DataComponentType<?>> iter = toInsert.getComponents().keySet().stream().iterator();
+        while (iter.hasNext()) {
+            toInsert.remove(iter.next());
+        }
+        iter = components.keySet().stream().iterator();
+        while (iter.hasNext()) {
+            DataComponentType<Object> type = (DataComponentType<Object>) iter.next();
+            toInsert.set(type, components.get(type));
+
+        }
+    }
+
+    public static String cleanComponentString(String text) {
+        if (text == null) {
+            return "";
+        }
+        String result = text;
+        String trimmed = result.trim();
+        while (isSingleComponentListString(trimmed)) {
+            result = trimmed.substring(1, trimmed.length() - 1).trim();
+            trimmed = result.trim();
+        }
+        return result;
+    }
+
+    private static boolean isSingleComponentListString(String text) {
+        if (text.length() < 3 || text.charAt(0) != '[' || text.charAt(text.length() - 1) != ']') {
+            return false;
+        }
+        String inner = text.substring(1, text.length() - 1).trim();
+        return !inner.isEmpty() && inner.indexOf(',') < 0 && inner.indexOf(';') < 0;
+    }
 
 }

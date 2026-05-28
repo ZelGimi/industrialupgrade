@@ -4,11 +4,13 @@ import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.item.upgrade.UpgradeSystem;
 import com.denfop.api.space.SpaceInit;
+import com.denfop.blockentity.base.BlockEntityBase;
 import com.denfop.blockentity.panels.entity.BlockEntitySolarPanel;
 import com.denfop.blockentity.panels.entity.EnumSolarPanels;
 import com.denfop.blockentity.transport.tiles.BlockEntityMultiCable;
 import com.denfop.blocks.TileBlockCreator;
 import com.denfop.items.IProperties;
+import com.denfop.network.WorldData;
 import com.denfop.world.WorldBaseGen;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -45,6 +47,15 @@ public class CommonProxy {
         entity.removeEffect(potion);
     }
 
+    public void setLevelIfNull(BlockEntityBase blockEntityBase) {
+        if (blockEntityBase == null || blockEntityBase.getLevel() != null) {
+            return;
+        }
+        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+        if (server != null && server.isRunning() && server.overworld() != null && !WorldData.isStoppingOrUnloading(server.overworld())) {
+            blockEntityBase.setLevel(server.overworld());
+        }
+    }
 
     public Level getWorld(ResourceKey<Level> dim) {
         MinecraftServer server = ServerLifecycleHooks.getCurrentServer();

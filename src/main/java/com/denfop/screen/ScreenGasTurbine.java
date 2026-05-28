@@ -53,7 +53,7 @@ public class ScreenGasTurbine<T extends ContainerMenuGasTurbineController> exten
                     if (fluid != null) {
                         ret.add(fluid.getFluidType().getDescription().getString() + ": " + fs.getAmount() + " " + Localization.translate("iu.generic.text.mb"));
                     } else {
-                        ret.add("invalid fluid stack");
+                        ret.add(Localization.translate("iu.tooltip.fluid.invalid"));
                     }
                 } else {
                     ret.add(Localization.translate("iu.generic.text.empty"));
@@ -78,7 +78,7 @@ public class ScreenGasTurbine<T extends ContainerMenuGasTurbineController> exten
 
                     Fluid fluid = fs.getFluid();
                     IClientFluidTypeExtensions extensions = IClientFluidTypeExtensions.of(fluid);
-                    TextureAtlasSprite sprite = getBlockTextureMap().getSprite(extensions.getStillTexture(fs));
+                    TextureAtlasSprite sprite = getSafeFluidSprite(fs);
                     int color = extensions.getTintColor();
                     double renderHeight = (double) fluidHeight * ModUtils.limit(
                             (double) fs.getAmount() / (double) this.tank.getCapacity(),
@@ -159,7 +159,7 @@ public class ScreenGasTurbine<T extends ContainerMenuGasTurbineController> exten
     protected void drawBackgroundAndTitle(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         this.bindTexture();
         poseStack.blit(currentTexture, this.getGuiLeft(), this.getGuiTop(), 0, 0, this.getXSize(), this.getYSize());
-        String name = this.container.base.getDisplayName().getString();
+        String name = com.denfop.utils.ModUtils.cleanComponentString(this.container.base.getDisplayName().getString());
         int textWidth = this.getStringWidth(name);
         float scale = 1.0f;
 

@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -34,7 +36,7 @@ public class BlockEntityItemManipulator extends BlockEntityElectricMachine
     int type = 0;
 
     public BlockEntityItemManipulator(BlockPos pos, BlockState state) {
-        super(0, 0, 0, BlockBaseMachine3Entity.itemmanipulator, pos, state);
+        super(ModConfig.mechanismDouble("bag_unloader_energy_storage", 0.0D), 0, 0, BlockBaseMachine3Entity.itemmanipulator, pos, state);
 
 
         this.inputslot = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
@@ -142,24 +144,23 @@ public class BlockEntityItemManipulator extends BlockEntityElectricMachine
         }
         if (type == 2 && !this.inputslot1.get(0).isEmpty()) {
             type = 0;
-            ItemEnergyBags itemEnergyBags = (ItemEnergyBags) this.inputslot1.get(0).getItem();
+            ItemEnergyBags itemBags = (ItemEnergyBags) this.inputslot1.get(0).getItem();
             Player player = this.getWorld().getPlayerByUUID(this.getComponentPrivate().getPlayersUUID().get(0));
-            ItemStackBags box =
-                    (ItemStackBags) itemEnergyBags.getInventory(
-                            player,
-                            this.inputslot1.get(0)
-                    );
-
+            ItemStackBags box = (ItemStackBags) itemBags.getInventory(player, this.inputslot1.get(0));
             for (int i = 0; i < 27; i++) {
                 ItemStack stack = inputslot2.get(i);
                 if (stack.isEmpty()) {
+                    continue;
+                }
+                if ((stack.getItem() instanceof ItemEnergyBags)) {
                     continue;
                 }
                 if (box.canAdd(stack)) {
                     final ItemStack stack1 = stack.copy();
                     stack1.setCount(Math.min(stack1.getCount(), stack1.getMaxStackSize()));
                     box.addWithoutSave(stack1);
-                    inputslot2.set(i, stack1);
+
+                    inputslot2.set(i, ItemStack.EMPTY);
                 }
 
             }

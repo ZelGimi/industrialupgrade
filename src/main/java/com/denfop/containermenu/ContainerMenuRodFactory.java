@@ -13,11 +13,47 @@ public class ContainerMenuRodFactory extends ContainerMenuFullInv<BlockEntityRod
             this.addSlotToContainer(new SlotInvSlot(tileEntityRodFactory.inputSlotA, 2, 30, 36));
             this.addSlotToContainer(new SlotInvSlot(tileEntityRodFactory.inputSlotA, 3, 48, 36));
             this.addSlotToContainer(new SlotInvSlot(tileEntityRodFactory.inputSlotA, 4, 30, 54));
+            this.addSlotToContainer(new SlotInvSlot(tileEntityRodFactory.inputSlotA, 5, 30, 54) {
+                @Override
+                public boolean isActive() {
+                    return false;
+                }
+            });
+            this.addSlotToContainer(new SlotInvSlot(tileEntityRodFactory.inputSlotA, 6, 30, 54) {
+                @Override
+                public boolean isActive() {
+                    return false;
+                }
+            });
         }
         if (tileEntityRodFactory.type == 1) {
             this.addSlotToContainer(new SlotInvSlot(tileEntityRodFactory.inputSlotA, 0, 12, 36));
             this.addSlotToContainer(new SlotInvSlot(tileEntityRodFactory.inputSlotA, 1, 30, 36));
             this.addSlotToContainer(new SlotInvSlot(tileEntityRodFactory.inputSlotA, 2, 48, 36));
+            this.addSlotToContainer(new SlotInvSlot(tileEntityRodFactory.inputSlotA, 3, 48, 36) {
+                @Override
+                public boolean isActive() {
+                    return false;
+                }
+            });
+            this.addSlotToContainer(new SlotInvSlot(tileEntityRodFactory.inputSlotA, 4, 48, 36) {
+                @Override
+                public boolean isActive() {
+                    return false;
+                }
+            });
+            this.addSlotToContainer(new SlotInvSlot(tileEntityRodFactory.inputSlotA, 5, 48, 36) {
+                @Override
+                public boolean isActive() {
+                    return false;
+                }
+            });
+            this.addSlotToContainer(new SlotInvSlot(tileEntityRodFactory.inputSlotA, 6, 48, 36) {
+                @Override
+                public boolean isActive() {
+                    return false;
+                }
+            });
         }
         if (tileEntityRodFactory.type == 2) {
             this.addSlotToContainer(new SlotInvSlot(tileEntityRodFactory.inputSlotA, 0, 12, 18));

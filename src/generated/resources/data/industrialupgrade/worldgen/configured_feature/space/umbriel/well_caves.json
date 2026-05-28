@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:space_advanced_cave",
+  "config": {
+    "flooded": true,
+    "fluid": {
+      "Name": "industrialupgrade:fluid/fluidfluor",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "kind": "well_caves",
+    "max_length": 48,
+    "max_radius": 4,
+    "max_vertical": 14,
+    "min_length": 24,
+    "min_radius": 2,
+    "open_to_surface": true,
+    "primary": {
+      "Name": "industrialupgrade:spacestone1/umbriel_stone"
+    },
+    "secondary": {
+      "Name": "industrialupgrade:spacecobblestone1/umbriel_cobblestone"
+    },
+    "tertiary": {
+      "Name": "industrialupgrade:spacecobblestone1/umbriel_cobblestone"
+    }
+  }
+}

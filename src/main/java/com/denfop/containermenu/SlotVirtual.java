@@ -3,13 +3,11 @@ package com.denfop.containermenu;
 import com.denfop.api.container.CustomWorldContainer;
 import com.denfop.api.menu.VirtualSlot;
 import com.denfop.inventory.Inventory;
+import com.denfop.utils.FluidHandlerFix;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
@@ -75,7 +73,7 @@ public class SlotVirtual extends Slot {
                 itemstack12.setCount(1);
                 IFluidHandlerItem handler = null;
                 try {
-                    handler = itemstack12.getCapability(Capabilities.FluidHandler.ITEM, null);
+                    handler = FluidHandlerFix.getFluidHandler(itemstack12);
                 } catch (Exception e) {
                 }
                 ;
@@ -87,21 +85,22 @@ public class SlotVirtual extends Slot {
 
                         this.container.setItem(this.getSlotIndex(), itemstack12);
                         if (this.slotInfo.getFluidStackList() == null || this.slotInfo.getFluidStackList().isEmpty()) {
-                            this.slotInfo.setFluidList(new ArrayList<>(Collections.nCopies(this.slotInfo.size(), null)));
+                            this.slotInfo.setFluidList(new ArrayList<>(Collections.nCopies(this.slotInfo.size(), FluidStack.EMPTY)));
                         }
                         this.slotInfo.getFluidStackList().set(index, containerFluid);
+                        this.slotInfo.setFluidList(this.slotInfo.getFluidStackList());
+                    } else {
+                        this.slotInfo.getFluidStackList().set(index, FluidStack.EMPTY);
+                        this.slotInfo.setFluidList(this.slotInfo.getFluidStackList());
                     }
                 }
             }
         } else {
 
             if (this.slotInfo.isFluid()) {
-                Block block = Block.byItem(this.slotInfo.get(index).getItem());
-                if (block != Blocks.AIR) {
+                this.slotInfo.getFluidStackList().set(index, FluidStack.EMPTY);
+                this.slotInfo.setFluidList(this.slotInfo.getFluidStackList());
 
-                    this.slotInfo.getFluidStackList().set(index, null);
-
-                }
             }
             set(itemstack12);
         }

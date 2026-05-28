@@ -4,7 +4,6 @@ import com.denfop.Constants;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blockentity.base.BlockEntityBase;
 import com.denfop.blockentity.mechanism.BlockEntityVolcanoChest;
-import com.denfop.blockentity.mechanism.dual.BlockEntityUpgradeBlock;
 import com.denfop.blocks.state.DefaultDrop;
 import com.denfop.blocks.state.HarvestTool;
 import com.denfop.utils.ModUtils;
@@ -81,7 +80,7 @@ public enum BlockVolcanoChest implements MultiBlockEntity {
     }
 
     @Override
-    public void setType(DeferredHolder<BlockEntityType<?>, BlockEntityType<? extends BlockEntityBase>>  blockEntityType) {
+    public void setType(DeferredHolder<BlockEntityType<?>, BlockEntityType<? extends BlockEntityBase>> blockEntityType) {
         this.blockType = blockEntityType;
     }
 

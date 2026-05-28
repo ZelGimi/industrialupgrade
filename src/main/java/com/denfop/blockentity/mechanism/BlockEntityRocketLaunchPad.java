@@ -7,7 +7,6 @@ import com.denfop.api.container.CustomWorldContainer;
 import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.space.research.api.IRocketLaunchPad;
 import com.denfop.api.space.research.event.RocketPadLoadEvent;
-import com.denfop.api.space.research.event.RocketPadReLoadEvent;
 import com.denfop.api.space.research.event.RocketPadUnLoadEvent;
 import com.denfop.api.space.rovers.api.IRoversItem;
 import com.denfop.blockentity.base.BlockEntityInventory;
@@ -23,6 +22,7 @@ import com.denfop.inventory.Inventory;
 import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
+import com.denfop.network.packet.PacketUpdateFieldTile;
 import com.denfop.render.rocketpad.DataRocket;
 import com.denfop.render.rocketpad.RocketPadRender;
 import com.denfop.screen.ScreenIndustrialUpgrade;
@@ -122,7 +122,8 @@ public class BlockEntityRocketLaunchPad extends BlockEntityInventory implements 
     public void updateEntityServer() {
         super.updateEntityServer();
         if (this.getWorld().getGameTime() % 80 == 0) {
-            NeoForge.EVENT_BUS.post(new RocketPadReLoadEvent(this.getWorld(), this));
+            NeoForge.EVENT_BUS.post(new RocketPadLoadEvent(this.getWorld(), this));
+            new PacketUpdateFieldTile(this, "uuid", player);
         }
         if (!this.roverSlot.isEmpty()) {
             charge(roverSlot.get(0));
@@ -134,7 +135,7 @@ public class BlockEntityRocketLaunchPad extends BlockEntityInventory implements 
     public void onPlaced(final ItemStack stack, final LivingEntity placer, final Direction facing) {
         super.onPlaced(stack, placer, facing);
         if (placer instanceof Player) {
-            this.player = placer.getUUID();
+            this.player = ((Player) placer).getGameProfile().getId();
         }
     }
 
@@ -268,6 +269,13 @@ public class BlockEntityRocketLaunchPad extends BlockEntityInventory implements 
             }
             this.rocketList.add(new DataRocket((IRoversItem) stack.getItem(), this.pos.getY()));
             this.roverSlot.set(0, ItemStack.EMPTY);
+        }
+        if (name.equals("uuid")) {
+            try {
+                this.player = (UUID) DecoderHandler.decode(is);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

@@ -54,16 +54,6 @@ public class InputFluid implements IInputFluid {
         this.inputsfluid = inputs;
     }
 
-    @Override
-    public List<FluidStack> getInputs() {
-        return this.inputsfluid;
-    }
-
-    @Override
-    public IInputItemStack getStack() {
-        return stack;
-    }
-
     public static InputFluid readNBT(CompoundTag tag, RegistryAccess access) {
         List<FluidStack> fluids = new ArrayList<>();
         ListTag fluidsTag = tag.getList("Fluids", Tag.TAG_COMPOUND);
@@ -86,6 +76,16 @@ public class InputFluid implements IInputFluid {
         if (stack != null) inputFluid.setStack(stack);
 
         return inputFluid;
+    }
+
+    @Override
+    public List<FluidStack> getInputs() {
+        return this.inputsfluid;
+    }
+
+    @Override
+    public IInputItemStack getStack() {
+        return stack;
     }
 
     private void setStack(IInputItemStack stack) {

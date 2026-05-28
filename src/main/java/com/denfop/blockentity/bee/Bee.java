@@ -103,12 +103,16 @@ public class Bee {
         this.food = tagCompound.getShort("food") / 100D;
     }
 
+    public int getBirthTick() {
+        return birthTick;
+    }
+
     public long getId() {
         return id;
     }
 
-    public int getBirthTick() {
-        return birthTick;
+    public boolean isWasBirth() {
+        return wasBirth;
     }
 
     @Override
@@ -142,10 +146,6 @@ public class Bee {
         return tagCompound;
     }
 
-    public boolean isWasBirth() {
-        return wasBirth;
-    }
-
     public boolean isChild() {
         return this.tick < this.birthTick;
     }
@@ -153,7 +153,7 @@ public class Bee {
     public void addTick(int tick, double lifeGenome) {
         this.tick += tick;
         if (!this.isDead) {
-            this.isDead = this.tick > this.maxLife * lifeGenome;
+            setDead(this.tick > this.maxLife * lifeGenome);
         }
     }
 
@@ -169,7 +169,7 @@ public class Bee {
         this.food -= (0.25 + 0.25 * (isIll() ? 1 : 0));
         if (this.food <= 0) {
             this.food = 0;
-            this.isDead = true;
+            setDead(true);
         }
     }
 
@@ -177,7 +177,7 @@ public class Bee {
         this.jelly -= (0.1 + 0.1 * (isIll() ? 1 : 0));
         if (this.jelly <= 0) {
             this.jelly = 0;
-            this.isDead = true;
+            setDead(true);
         }
     }
 
@@ -194,6 +194,8 @@ public class Bee {
     }
 
     public void setDead(boolean b) {
+        if (!b)
+            return;
         this.isDead = b;
     }
 
@@ -227,6 +229,6 @@ public class Bee {
 
     public void setTypeBee(final EnumTypeBee typeBee) {
         this.typeBee = typeBee;
-    }
 
+    }
 }

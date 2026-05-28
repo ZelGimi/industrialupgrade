@@ -15,36 +15,20 @@
       "model": "industrialupgrade:block/basemachine/energy_remover",
       "y": 90
     },
-    "facing=down,type=energy_remover": {
-      "model": "industrialupgrade:block/basemachine/energy_remover",
-      "x": 90
-    },
-    "facing=up,type=energy_remover": {
-      "model": "industrialupgrade:block/basemachine/energy_remover",
-      "x": 270
-    },
-    "facing=north,type=energy_remover_invalid": {
+    "facing=north,type=energy_remover_active": {
       "model": "industrialupgrade:block/basemachine/energy_remover"
     },
-    "facing=south,type=energy_remover_invalid": {
+    "facing=south,type=energy_remover_active": {
       "model": "industrialupgrade:block/basemachine/energy_remover",
       "y": 180
     },
-    "facing=west,type=energy_remover_invalid": {
+    "facing=west,type=energy_remover_active": {
       "model": "industrialupgrade:block/basemachine/energy_remover",
       "y": 270
     },
-    "facing=east,type=energy_remover_invalid": {
+    "facing=east,type=energy_remover_active": {
       "model": "industrialupgrade:block/basemachine/energy_remover",
       "y": 90
-    },
-    "facing=down,type=energy_remover_invalid": {
-      "model": "industrialupgrade:block/basemachine/energy_remover",
-      "x": 90
-    },
-    "facing=up,type=energy_remover_invalid": {
-      "model": "industrialupgrade:block/basemachine/energy_remover",
-      "x": 270
     }
   }
 }

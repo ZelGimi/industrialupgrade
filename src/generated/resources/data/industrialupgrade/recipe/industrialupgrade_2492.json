@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/hafnium"
+    },
+    "B": {
+      "item": "industrialupgrade:storage/pattern"
+    },
+    "C": {
+      "item": "industrialupgrade:blockresource/machine"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_42_element"
+    },
+    "E": {
+      "tag": "c:gears/cobaltchrome"
+    }
+  },
+  "pattern": [
+    "ABA",
+    "ECE",
+    "ADA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:storagesystem/pattern_monitor"
+  },
+  "show_notification": false
+}

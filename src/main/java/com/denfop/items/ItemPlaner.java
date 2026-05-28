@@ -112,7 +112,6 @@ public class ItemPlaner extends Item implements IItemTab {
                                 if (tileEntity == null && canPlace(world.getBlockState(pos2))) {
                                     BlockPlaceContext placeContext = new BlockPlaceContext(context.getLevel(), context.getPlayer(), context.getHand(), stack1, new BlockHitResult(context.getClickLocation(), context.getClickedFace(), pos2, false));
                                     if (item1.place(placeContext) == InteractionResult.CONSUME) {
-                                        stack1.shrink(1);
                                         BlockEntityMultiBlockElement tileEntity2 = (BlockEntityMultiBlockElement) world.getBlockEntity(pos2);
                                         Direction facing = ((BlockEntityMultiBlockBase) mainMultiBlock).getFacing();
                                         rotation = adjustRotation(facing, rotation);

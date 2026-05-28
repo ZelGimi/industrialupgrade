@@ -1,0 +1,83 @@
+{
+  "carvers": {},
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 10926284,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000
+    },
+    "sky_color": 5862292,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "features": [
+    [
+      "industrialupgrade:europe_cavity",
+      "industrialupgrade:space/europe/stone_tunnels",
+      "industrialupgrade:space/europe/hall_system",
+      "industrialupgrade:space/europe/fractures",
+      "industrialupgrade:space/europe/porous",
+      "industrialupgrade:space/europe/liquid_chamber",
+      "industrialupgrade:space/europe/frozen_chamber",
+      "industrialupgrade:space/europe/crater_chamber",
+      "industrialupgrade:space/europe/tunnel_caves",
+      "industrialupgrade:space/europe/labyrinth_caves",
+      "industrialupgrade:space/europe/shaft_caves",
+      "industrialupgrade:space/europe/dome_caves",
+      "industrialupgrade:space/europe/well_caves",
+      "industrialupgrade:space/europe/multi_tier_caves",
+      "industrialupgrade:space/europe/branched_caves",
+      "industrialupgrade:space/europe/spiral_caves",
+      "industrialupgrade:space/europe/arch_caves",
+      "industrialupgrade:space/europe/chamber_caves",
+      "industrialupgrade:space/europe/canyon_caves",
+      "industrialupgrade:space/europe/pocket_caves",
+      "industrialupgrade:space/europe/crevice_caves",
+      "industrialupgrade:space/europe/amphitheater_caves",
+      "industrialupgrade:space/europe/cathedral_caves",
+      "industrialupgrade:space/europe/gallery_caves",
+      "industrialupgrade:space/europe/winding_caves",
+      "industrialupgrade:space/europe/cascade_caves",
+      "industrialupgrade:space/europe/collapse_caves",
+      "industrialupgrade:space/europe/vertical_collectors"
+    ],
+    [],
+    [
+      "industrialupgrade:europe_craters",
+      "industrialupgrade:space/europe/addition_craters"
+    ],
+    [],
+    [],
+    [],
+    [
+      "industrialupgrade:europe_ore_0",
+      "industrialupgrade:europe_ore_1",
+      "industrialupgrade:europe_ore_2",
+      "industrialupgrade:europe_ore_3",
+      "industrialupgrade:europe_ore_4",
+      "industrialupgrade:europe_ore_5"
+    ],
+    [],
+    [],
+    [],
+    [
+      "industrialupgrade:space/europe/ice_surface_cover"
+    ]
+  ],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": -0.3
+}

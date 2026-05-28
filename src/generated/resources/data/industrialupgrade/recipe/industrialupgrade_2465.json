@@ -1,0 +1,28 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/hafniumcarbide"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_782_element"
+    },
+    "C": {
+      "tag": "c:plates/orichalcum"
+    },
+    "D": {
+      "tag": "c:plates/cobaltchrome"
+    }
+  },
+  "pattern": [
+    "ACA",
+    "BDB",
+    "ABA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_783_element"
+  },
+  "show_notification": false
+}

@@ -30,10 +30,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.capabilities.BlockCapability;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -51,6 +47,10 @@ public class BlockEntityPrimalWireInsulator extends BlockEntityInventory impleme
     public int progress;
     public MachineRecipe output;
     public Map<UUID, Double> data = PrimitiveHandler.getPlayersData(EnumPrimitive.WIRE_INSULATOR);
+    ItemStack prevInput = ItemStack.EMPTY;
+    ItemStack prevInput1 = ItemStack.EMPTY;
+    ItemStack prevOutput = ItemStack.EMPTY;
+
 
     public BlockEntityPrimalWireInsulator(BlockPos pos, BlockState state) {
         super(BlockPrimalWireInsulatorEntity.primal_wire_insulator, pos, state);
@@ -62,6 +62,11 @@ public class BlockEntityPrimalWireInsulator extends BlockEntityInventory impleme
                 }
                 return output.getRecipe().input.getInputs().get(0).getAmount();
             }
+
+            @Override
+            public int getMaxStackSize(ItemStack p_335963_) {
+                return 1;
+            }
         };
         this.progress = 0;
         this.outputSlot = new InventoryOutput(this, 1) {
@@ -69,16 +74,13 @@ public class BlockEntityPrimalWireInsulator extends BlockEntityInventory impleme
             public int getStackSizeLimit() {
                 return 1;
             }
+
+            @Override
+            public int getMaxStackSize(ItemStack p_335963_) {
+                return 1;
+            }
         };
     }
-
-    @Override
-    public <T> T getCapability(@NotNull BlockCapability<T, Direction> cap, @Nullable Direction side) {
-        if (cap == Capabilities.ItemHandler.BLOCK)
-            return null;
-        return super.getCapability(cap, side);
-    }
-
 
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
@@ -94,7 +96,6 @@ public class BlockEntityPrimalWireInsulator extends BlockEntityInventory impleme
         return drop;
     }
 
-
     public List<AABB> getAabbs(boolean forCollision) {
         return aabbs;
     }
@@ -108,7 +109,6 @@ public class BlockEntityPrimalWireInsulator extends BlockEntityInventory impleme
     public MultiBlockEntity getTeBlock() {
         return BlockPrimalWireInsulatorEntity.primal_wire_insulator;
     }
-
 
     @Override
     public EnumTypeAudio getTypeAudio() {
@@ -153,6 +153,7 @@ public class BlockEntityPrimalWireInsulator extends BlockEntityInventory impleme
         if (name.equals("slot")) {
             try {
                 inputSlotA.readFromNbt(is.registryAccess(), ((Inventory) (DecoderHandler.decode(is))).writeToNbt(is.registryAccess(), new CompoundTag()));
+
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -160,6 +161,7 @@ public class BlockEntityPrimalWireInsulator extends BlockEntityInventory impleme
         if (name.equals("slot1")) {
             try {
                 outputSlot.readFromNbt(is.registryAccess(), ((Inventory) (DecoderHandler.decode(is))).writeToNbt(is.registryAccess(), new CompoundTag()));
+
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -225,6 +227,7 @@ public class BlockEntityPrimalWireInsulator extends BlockEntityInventory impleme
                         new PacketUpdateFieldTile(this, "slot3", this.inputSlotA);
                         new PacketUpdateFieldTile(this, "slot1", this.outputSlot);
                     }
+                    changeState();
                 }
 
                 return this.getWorld().isClientSide;
@@ -308,6 +311,56 @@ public class BlockEntityPrimalWireInsulator extends BlockEntityInventory impleme
         return this.level.isClientSide;
     }
 
+    @Override
+    public void updateEntityServer() {
+        super.updateEntityServer();
+        if (prevInput.isEmpty() && !this.inputSlotA.get(0).isEmpty()) {
+            prevInput = this.inputSlotA.get(0);
+            new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
+            changeState();
+        }
+        if (prevInput1.isEmpty() && !this.inputSlotA.get(1).isEmpty()) {
+            prevInput1 = this.inputSlotA.get(1);
+            new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
+            changeState();
+        }
+        if (!prevInput.isEmpty() && !this.inputSlotA.isEmpty() && prevInput.getCount() != this.inputSlotA.get(0).getCount()) {
+            prevInput = this.inputSlotA.get(0);
+            new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
+            changeState();
+        }
+        if (!prevInput1.isEmpty() && !this.inputSlotA.get(1).isEmpty() && prevInput1.getCount() != this.inputSlotA.get(1).getCount()) {
+            prevInput1 = this.inputSlotA.get(1);
+            new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
+            changeState();
+        }
+        if (!prevInput1.isEmpty() && !prevInput.isEmpty() && this.inputSlotA.isEmpty()) {
+            prevInput = ItemStack.EMPTY;
+            prevInput1 = ItemStack.EMPTY;
+            new PacketUpdateFieldTile(this, "slot3", false);
+            changeState();
+        }
+        if (!prevInput1.isEmpty() && !prevInput.isEmpty() && !this.inputSlotA.isEmpty() && output == null) {
+            output = inputSlotA.process();
+        }
+        if (prevOutput.isEmpty() && !this.outputSlot.isEmpty()) {
+            prevOutput = this.outputSlot.get(0);
+            new PacketUpdateFieldTile(this, "slot1", this.outputSlot);
+            changeState();
+        }
+        if (prevOutput.isEmpty() && !this.outputSlot.isEmpty() && prevOutput.getCount() != this.outputSlot.get(0).getCount()) {
+            prevOutput = this.outputSlot.get(0);
+            new PacketUpdateFieldTile(this, "slot1", this.outputSlot);
+            changeState();
+        }
+        if (!prevOutput.isEmpty() && this.outputSlot.isEmpty()) {
+            prevOutput = ItemStack.EMPTY;
+            new PacketUpdateFieldTile(this, "slot2", false);
+            changeState();
+        }
+
+
+    }
 
     private void changeState() {
         final ItemStack input = this.inputSlotA.get(0);

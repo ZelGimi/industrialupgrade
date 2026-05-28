@@ -1,0 +1,77 @@
+{
+  "carvers": {},
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 197381,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000
+    },
+    "sky_color": 328968,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "features": [
+    [
+      "industrialupgrade:ceres_cavity",
+      "industrialupgrade:ceres_shaft",
+      "industrialupgrade:space/ceres/stone_tunnels",
+      "industrialupgrade:space/ceres/hall_system",
+      "industrialupgrade:space/ceres/fractures",
+      "industrialupgrade:space/ceres/porous",
+      "industrialupgrade:space/ceres/liquid_chamber",
+      "industrialupgrade:space/ceres/crater_chamber",
+      "industrialupgrade:space/ceres/tunnel_caves",
+      "industrialupgrade:space/ceres/labyrinth_caves",
+      "industrialupgrade:space/ceres/shaft_caves",
+      "industrialupgrade:space/ceres/dome_caves",
+      "industrialupgrade:space/ceres/well_caves",
+      "industrialupgrade:space/ceres/multi_tier_caves",
+      "industrialupgrade:space/ceres/branched_caves",
+      "industrialupgrade:space/ceres/spiral_caves",
+      "industrialupgrade:space/ceres/arch_caves",
+      "industrialupgrade:space/ceres/chamber_caves",
+      "industrialupgrade:space/ceres/canyon_caves",
+      "industrialupgrade:space/ceres/pocket_caves",
+      "industrialupgrade:space/ceres/crevice_caves",
+      "industrialupgrade:space/ceres/amphitheater_caves",
+      "industrialupgrade:space/ceres/gallery_caves",
+      "industrialupgrade:space/ceres/winding_caves",
+      "industrialupgrade:space/ceres/cascade_caves",
+      "industrialupgrade:space/ceres/collapse_caves",
+      "industrialupgrade:space/ceres/vertical_collectors"
+    ],
+    [
+      "industrialupgrade:ceres_lake_0",
+      "industrialupgrade:ceres_fluid_0"
+    ],
+    [
+      "industrialupgrade:ceres_craters",
+      "industrialupgrade:space/ceres/addition_craters"
+    ],
+    [],
+    [],
+    [],
+    [
+      "industrialupgrade:ceres_ore_0",
+      "industrialupgrade:ceres_ore_1",
+      "industrialupgrade:ceres_ore_2",
+      "industrialupgrade:ceres_ore_3"
+    ]
+  ],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": 0.35000002
+}

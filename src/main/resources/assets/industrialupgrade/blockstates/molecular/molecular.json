@@ -15,37 +15,6 @@
       "model": "industrialupgrade:block/basemachine/molecular",
       "y": 90
     },
-    "facing=down,type=molecular": {
-      "model": "industrialupgrade:block/basemachine/molecular",
-      "x": 90
-    },
-    "facing=up,type=molecular": {
-      "model": "industrialupgrade:block/basemachine/molecular",
-      "x": 270
-    },
-    "facing=north,type=molecular_invalid": {
-      "model": "industrialupgrade:block/basemachine/molecular"
-    },
-    "facing=south,type=molecular_invalid": {
-      "model": "industrialupgrade:block/basemachine/molecular",
-      "y": 180
-    },
-    "facing=west,type=molecular_invalid": {
-      "model": "industrialupgrade:block/basemachine/molecular",
-      "y": 270
-    },
-    "facing=east,type=molecular_invalid": {
-      "model": "industrialupgrade:block/basemachine/molecular",
-      "y": 90
-    },
-    "facing=down,type=molecular_invalid": {
-      "model": "industrialupgrade:block/basemachine/molecular",
-      "x": 90
-    },
-    "facing=up,type=molecular_invalid": {
-      "model": "industrialupgrade:block/basemachine/molecular",
-      "x": 270
-    },
     "facing=north,type=molecular_active": {
       "model": "industrialupgrade:block/basemachine/molecular"
     },
@@ -60,14 +29,6 @@
     "facing=east,type=molecular_active": {
       "model": "industrialupgrade:block/basemachine/molecular",
       "y": 90
-    },
-    "facing=down,type=molecular_active": {
-      "model": "industrialupgrade:block/basemachine/molecular",
-      "x": 90
-    },
-    "facing=up,type=molecular_active": {
-      "model": "industrialupgrade:block/basemachine/molecular",
-      "x": 270
     }
   }
 }

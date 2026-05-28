@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -41,7 +43,7 @@ public class BlockEntitySunnariumPanelMaker extends BlockEntityDoubleElectricMac
     public final Inventory input_slot;
 
     public BlockEntitySunnariumPanelMaker(BlockPos pos, BlockState state) {
-        super(1, 300, 1, EnumDoubleElectricMachine.SUNNARIUM_PANEL, BlockSunnariumMakerEntity.gen_sunnarium_plate, pos, state);
+        super(ModConfig.mechanismInt("sunnarium_panel_maker_energy_per_tick", 1), ModConfig.mechanismInt("sunnarium_panel_maker_operation_length", 300), 1, EnumDoubleElectricMachine.SUNNARIUM_PANEL, BlockSunnariumMakerEntity.gen_sunnarium_plate, pos, state);
         this.sunenergy = this.addComponent(ComponentBaseEnergy
                 .asBasicSink(EnergyType.SOLARIUM, this, 10000, 1));
         this.componentProcess.setHasAudio(false);

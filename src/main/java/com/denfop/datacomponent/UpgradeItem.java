@@ -32,7 +32,7 @@ public record UpgradeItem(List<UpgradeItemInform> upgradeItemInforms, boolean is
                 buf.writeInt(value.amount());
                 buf.writeCollection(value.listUpgrades(), FriendlyByteBuf::writeInt);
                 buf.writeCollection(value.blackList(), FriendlyByteBuf::writeUtf);
-                buf.writeBoolean(value.isRegistry());
+                buf.writeBoolean(value.canupgrade());
             },
             buf -> {
                 UpgradeItem upgradeItem = new UpgradeItem(

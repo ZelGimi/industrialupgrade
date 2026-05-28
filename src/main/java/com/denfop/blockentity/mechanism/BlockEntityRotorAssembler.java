@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -55,7 +57,7 @@ public class BlockEntityRotorAssembler extends BlockEntityInventory implements I
         super(BlockBaseMachine3Entity.rotor_assembler, pos, state);
         this.inputSlotA = new InventoryRecipes(this, "rotor_assembler", this);
         inputSlotA.setStackSizeLimit(1);
-        this.defaultEnergyConsume = this.energyConsume = 2;
+        this.defaultEnergyConsume = this.energyConsume = ModConfig.mechanismInt("rotor_assembler_energy_use", 2);
         this.defaultOperationLength = this.operationLength = 100;
         this.defaultTier = 14;
         this.defaultEnergyStorage = 2 * 100;
@@ -63,8 +65,8 @@ public class BlockEntityRotorAssembler extends BlockEntityInventory implements I
         this.outputSlot = new InventoryOutput(this, 1);
         this.energy = this.addComponent(Energy.asBasicSink(this, defaultEnergyStorage, defaultTier));
         Recipes.recipes.addInitRecipes(this);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.05));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("rotor_assembler_soil_pollution_amount", 0.05D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("rotor_assembler_air_pollution_amount", 0.05D)));
     }
 
     public static void addRecipe(int meta, int meta1, ItemStack stack) {

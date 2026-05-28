@@ -11,17 +11,20 @@
     "C": {
       "item": "industrialupgrade:itemsunnarium/sunnarium_enriched_plate"
     },
-    "D": {
-      "item": "industrialupgrade:basemachine3/solar_iu"
-    },
     "E": {
-      "item": "industrialupgrade:crafting_elements/crafting_30_element"
+      "item": "industrialupgrade:crafting_elements/crafting_42_element"
+    },
+    "H": {
+      "item": "industrialupgrade:crafting_elements/crafting_568_element"
+    },
+    "J": {
+      "item": "industrialupgrade:energy/wrench"
     }
   },
   "pattern": [
     "ABA",
-    "C C",
-    "DED"
+    "CJC",
+    "HEH"
   ],
   "result": {
     "count": 1,

@@ -17,7 +17,9 @@ import com.denfop.network.DecoderHandler;
 import com.denfop.network.EncoderHandler;
 import com.denfop.network.packet.CustomPacketBuffer;
 import com.denfop.screen.ScreenCable1;
+import com.denfop.screen.ScreenCable2;
 import com.denfop.screen.ScreenIndustrialUpgrade;
+import com.denfop.utils.Localization;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -38,7 +40,6 @@ import net.neoforged.neoforge.items.ItemStackHandler;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class BlockEntityItemPipes extends BlockEntityMultiCable implements ITransportConductor {
 
@@ -48,6 +49,7 @@ public class BlockEntityItemPipes extends BlockEntityMultiCable implements ITran
     public boolean addedToEnergyNet = false;
     public ItemType cableType;
     public boolean redstoneSignal = false;
+    public Direction facingSide;
     Map<Direction, ITransportTile> energyConductorMap = new HashMap<>();
     boolean hasHashCode = false;
     int hashCodeSource;
@@ -65,7 +67,6 @@ public class BlockEntityItemPipes extends BlockEntityMultiCable implements ITran
     private long id;
     private boolean update;
     private boolean work = false;
-    private Direction facingSide;
     private byte tick;
     private int max;
     private int hashCode;
@@ -93,7 +94,7 @@ public class BlockEntityItemPipes extends BlockEntityMultiCable implements ITran
     @Override
     public void addInformation(ItemStack stack, List<String> info) {
         final ItemType type = cableType;
-        info.add("Maximum: " + type.getMax() + (type.isItem() ? " item/t" : " mb/t"));
+        info.add(Localization.translate("iu.tooltip.maximum") + type.getMax() + (type.isItem() ? Localization.translate("iu.unit.items_per_tick") : Localization.translate("iu.unit.millibuckets_per_tick")));
 
     }
 
@@ -266,13 +267,24 @@ public class BlockEntityItemPipes extends BlockEntityMultiCable implements ITran
         if (var1.getItemInHand(InteractionHand.MAIN_HAND).getItem() == IUItem.connect_item.getItem()) {
             return super.getGui(var1, var2);
         } else {
-            return new ScreenCable1(getGuiContainer(var1));
+            ContainerMenuCable containerMenuCable = (ContainerMenuCable) var2;
+            if (containerMenuCable.facing != null) {
+                return new ScreenCable1((ContainerMenuCable) var2);
+            }
+            return new ScreenCable2((ContainerMenuCable) var2);
         }
     }
 
     @Override
     public ContainerMenuCable getGuiContainer(final Player var1) {
-        return new ContainerMenuCable(var1, this, facingSide.getOpposite());
+        if (facingSide != null) {
+            Direction direction = facingSide;
+            ContainerMenuCable.inventorySlots = true;
+            return new ContainerMenuCable(var1, this, direction.getOpposite());
+        } else {
+            ContainerMenuCable.inventorySlots = false;
+            return new ContainerMenuCable(var1, this, false);
+        }
     }
 
     public void onLoaded() {
@@ -350,6 +362,13 @@ public class BlockEntityItemPipes extends BlockEntityMultiCable implements ITran
             if (var2 == 10) {
                 this.redstoneSignal = !this.redstoneSignal;
             }
+            if (var2 >= 100 && var2 != 150) {
+                int index = (int) (var2 - 100);
+                this.facingSide = Direction.values()[index];
+                this.onActivated(var1, var1.getUsedItemHand(), facingSide, new Vec3(0, 0, 0));
+            } else {
+                this.facingSide = null;
+            }
         }
     }
 
@@ -387,7 +406,7 @@ public class BlockEntityItemPipes extends BlockEntityMultiCable implements ITran
 
     @Override
     public boolean onActivated(Player player, InteractionHand hand, Direction side, Vec3 vec3) {
-        this.facingSide = side;
+
         return super.onActivated(player, hand, side, vec3);
     }
 
@@ -479,27 +498,20 @@ public class BlockEntityItemPipes extends BlockEntityMultiCable implements ITran
     @Override
     public List<FluidStack> getBlackListFluids(Direction facing) {
         list = getInfoSlotFromFacing(facing);
-        if (this.getWorld().getGameTime() % 20 == 0) {
-            blackList =
-                    this.list.getFluidStackList().subList(0, 9).stream().filter(Objects::nonNull).collect(Collectors.toList());
-        }
-        return blackList;
+        this.blackList = this.list
+                .getListFluidBlack();
+        return this.list
+                .getListFluidBlack();
 
     }
 
     @Override
     public List<FluidStack> getWhiteListFluids(Direction facing) {
         list = getInfoSlotFromFacing(facing);
-        if (this.getWorld().getGameTime() % 20 == 0) {
-            whiteList =
-                    this.list
-                            .getFluidStackList()
-                            .subList(9, this.list.size())
-                            .stream()
-                            .filter(Objects::nonNull)
-                            .collect(Collectors.toList());
-        }
-        return whiteList;
+
+        return whiteList =
+                this.list
+                        .getListFluidWhite();
 
     }
 

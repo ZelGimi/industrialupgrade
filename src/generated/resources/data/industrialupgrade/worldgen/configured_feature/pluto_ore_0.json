@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:ore",
+  "config": {
+    "discard_chance_on_air_exposure": 0.0,
+    "size": 9,
+    "targets": [
+      {
+        "state": {
+          "Name": "industrialupgrade:blockspace3/pluto_iridium"
+        },
+        "target": {
+          "block": "industrialupgrade:spacestone1/pluto_stone",
+          "predicate_type": "minecraft:block_match"
+        }
+      },
+      {
+        "state": {
+          "Name": "industrialupgrade:blockspace3/pluto_iridium"
+        },
+        "target": {
+          "block": "industrialupgrade:spacecobblestone1/pluto_cobblestone",
+          "predicate_type": "minecraft:block_match"
+        }
+      }
+    ]
+  }
+}

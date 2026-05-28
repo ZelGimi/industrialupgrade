@@ -31,6 +31,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProcessMultiComponent extends AbstractComponent implements IMultiUpdateTick {
@@ -309,7 +310,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
                     this.outputSlot.add(stack);
                 }
                 if (this.enumMultiMachine.type == EnumTypeMachines.ELECTRICFURNACE) {
-                    this.exp.addEnergy(this.getRecipeOutput(slotId).getRecipe().output.metadata.getFloat("experience"));
+                    this.exp.addEnergy(this.getRecipeOutput(slotId).getRecipe().output.metadata.getFloat("experience") * size);
                 }
             } else {
                 RandomSource rand = this.getParent().getLevel().random;
@@ -398,47 +399,118 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
 
         if (this.parent.getLevel().getGameTime() % 10 == 0) {
             if (this.modulestorage && !this.inputSlots.isEmpty()) {
-                final ItemStack stack = this.inputSlots.get(0);
-                int size = 0;
-                int col = 0;
-                for (int i = 0; i < sizeWorkingSlot; i++) {
-                    ItemStack stack1 = this.inputSlots.get(i);
 
-                    if (stack1.is(stack.getItem())) {
-                        size += stack1.getCount();
+                List<StackGroup> groups = new ArrayList<>();
+                int emptySlots = 0;
+
+
+                for (int i = 0; i < sizeWorkingSlot; i++) {
+                    ItemStack stack = this.inputSlots.get(i);
+
+                    if (stack.isEmpty()) {
+                        emptySlots++;
+                        continue;
                     }
 
-                    if (stack1.is(stack.getItem()) || stack1.isEmpty()) {
-                        col++;
+                    StackGroup found = null;
+                    for (StackGroup group : groups) {
+                        if (ItemStack.isSameItemSameComponents(group.template, stack)) {
+                            found = group;
+                            break;
+                        }
+                    }
+
+                    if (found == null) {
+                        found = new StackGroup(stack);
+                        groups.add(found);
+                    }
+
+                    found.totalCount += stack.getCount();
+                    found.usedSlots++;
+                }
+
+                if (groups.isEmpty()) {
+                    return;
+                }
+
+
+                for (int i = 0; i < sizeWorkingSlot; i++) {
+                    this.inputSlots.set(i, ItemStack.EMPTY);
+                }
+
+
+                int[] slotsForGroup = new int[groups.size()];
+                int remainingEmpty = emptySlots;
+
+                for (int i = 0; i < groups.size(); i++) {
+                    StackGroup group = groups.get(i);
+                    int maxStackSize = group.template.getMaxStackSize();
+
+                    int minSlotsNeeded = (group.totalCount + maxStackSize - 1) / maxStackSize;
+                    slotsForGroup[i] = Math.max(group.usedSlots, minSlotsNeeded);
+                }
+
+
+                boolean changed = true;
+                while (remainingEmpty > 0 && changed) {
+                    changed = false;
+
+                    for (int i = 0; i < groups.size() && remainingEmpty > 0; i++) {
+                        StackGroup group = groups.get(i);
+
+
+                        int maxUsefulSlots = Math.min(group.totalCount, sizeWorkingSlot);
+
+                        if (slotsForGroup[i] < maxUsefulSlots) {
+                            slotsForGroup[i]++;
+                            remainingEmpty--;
+                            changed = true;
+                        }
                     }
                 }
-                int count = size / col;
-                int count1 = size - (count * col);
-                for (int i = 0; i < sizeWorkingSlot; i++) {
-                    ItemStack stack1 = this.inputSlots.get(i);
-                    if ((stack1.is(stack.getItem())) || stack1.isEmpty()) {
-                        ItemStack stack2 = stack.copy();
-                        int dop = 0;
-                        int prom = 64 - count;
-                        if (prom > 0) {
-                            if (count1 > prom) {
-                                dop += prom;
-                                count1 -= prom;
-                            } else {
-                                dop += count1;
-                                count1 = 0;
-                            }
 
+
+                int slotIndex = 0;
+
+                for (int i = 0; i < groups.size(); i++) {
+                    StackGroup group = groups.get(i);
+                    int slotsToUse = slotsForGroup[i];
+                    int total = group.totalCount;
+                    int maxStackSize = group.template.getMaxStackSize();
+
+                    if (slotsToUse <= 0) {
+                        continue;
+                    }
+
+
+                    int minPossibleSlots = (total + maxStackSize - 1) / maxStackSize;
+                    if (slotsToUse < minPossibleSlots) {
+                        slotsToUse = minPossibleSlots;
+                    }
+
+                    int base = total / slotsToUse;
+                    int remainder = total % slotsToUse;
+
+                    for (int j = 0; j < slotsToUse && slotIndex < sizeWorkingSlot; j++) {
+                        int amount = base + (j < remainder ? 1 : 0);
+                        if (amount <= 0) {
+                            continue;
                         }
 
-                        stack2.setCount(count + dop);
-                        this.inputSlots.set(i, stack2);
+                        if (amount > maxStackSize) {
+                            amount = maxStackSize;
+                        }
 
+                        ItemStack newStack = group.template.copy();
+                        newStack.setCount(amount);
+                        this.inputSlots.set(slotIndex++, newStack);
                     }
-
                 }
 
 
+                while (slotIndex < sizeWorkingSlot) {
+                    this.inputSlots.set(slotIndex++, ItemStack.EMPTY);
+                }
             }
         }
         boolean active = false;
@@ -490,7 +562,8 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
 
             }
             size = this.multimachine.getSize(size);
-            if (output != null && this.inputSlots.continue_proccess(
+
+            if (!(this.cold != null && !this.cold.upgrade && this.cold.getEnergy() >= this.cold.getCapacity()) && output != null && this.inputSlots.continue_proccess(
                     this.outputSlot,
                     i
             ) && (this.energy.canUseEnergy(this.energyConsume * quickly * size)) && this.multimachine.canoperate(size)) {
@@ -528,7 +601,7 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
 
 
                         int exp = this.getParent().getLevel().random.nextInt(3) + 1;
-                        this.exp.addEnergy(exp);
+                        this.exp.addEnergy(exp * size);
                     }
 
                     operate(i, output, size);
@@ -826,6 +899,16 @@ public class ProcessMultiComponent extends AbstractComponent implements IMultiUp
             for (int i = 0; i < this.getSizeWorkingSlot(); i++) {
                 this.setRecipeOutput(this.inputSlots.process(i), i);
             }
+        }
+    }
+
+    private class StackGroup {
+        private final ItemStack template;
+        private int totalCount;
+        private int usedSlots;
+
+        private StackGroup(ItemStack stack) {
+            this.template = stack.copyWithCount(1);
         }
     }
 

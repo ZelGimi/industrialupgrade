@@ -27,13 +27,14 @@ public class IUDeleteRecipeSerializer implements RecipeSerializer<IURecipeDelete
                 ResourceLocation.CODEC.fieldOf("id").forGetter(i -> BuiltInRegistries.ITEM.getKey(i.getInputs().get(0).getItem())),
                 Codec.INT.fieldOf("amount").orElse(1).forGetter(i -> i.getInputs().get(0).getCount())
         ).apply(inst, (type, id, amt) -> {
-            if ("fluid".equals(type))
+            if ("fluid".equals(type)) {
                 return new InputFluidStack(new FluidStack(BuiltInRegistries.FLUID.get(id), amt));
-            else if ("tag".equals(type))
+            } else if ("tag".equals(type)) {
                 return new InputOreDict(id.getNamespace() + ":" + id.getPath(), amt);
-            else return new InputItemStack(new ItemStack(BuiltInRegistries.ITEM.get(id), amt));
+            } else {
+                return new InputItemStack(new ItemStack(BuiltInRegistries.ITEM.get(id), amt));
+            }
         }));
-
 
         return builder.group(
                 Codec.STRING.fieldOf("recipe_type").forGetter(IURecipeDelete::getRecipeType),
@@ -44,28 +45,47 @@ public class IUDeleteRecipeSerializer implements RecipeSerializer<IURecipeDelete
 
             List<ItemStack> outputs1 = new ArrayList<>();
             List<FluidStack> outputsFluid = new ArrayList<>();
-            for (IInputItemStack o : inputs1) {
-                if (o instanceof InputFluidStack) outputsFluid.add(((InputFluidStack) o).getFluid());
-                else outputs1.add(o.getInputs().get(0));
-            }
-            if (isFluidRecipe && !outputsFluid.isEmpty()) {
-                Recipes.recipes.addFluidRemoveRecipe(recipeType, outputsFluid.get(0), removeAll);
 
+            for (IInputItemStack output : inputs1) {
+                if (output instanceof InputFluidStack fluidOutput) {
+                    FluidStack fluidStack = fluidOutput.getFluid();
+                    if (fluidStack != null && !fluidStack.isEmpty()) {
+                        outputsFluid.add(fluidStack);
+                    }
+                } else if (output != null && output.getInputs() != null && !output.getInputs().isEmpty()) {
+                    ItemStack stack = output.getInputs().get(0);
+                    if (stack != null && !stack.isEmpty()) {
+                        outputs1.add(stack);
+                    }
+                }
             }
-            if (!outputs1.isEmpty()) {
-                Recipes.recipes.addRemoveRecipe(recipeType, outputs1.get(0), removeAll);
+
+            if (isFluidRecipe) {
+                if (!outputsFluid.isEmpty()) {
+                    Recipes.recipes.addFluidRemoveRecipe(recipeType, outputsFluid.get(0), removeAll);
+                } else if (!outputs1.isEmpty()) {
+                    Recipes.recipes.addFluidItemRemoveRecipe(recipeType, outputs1.get(0), removeAll);
+                }
+            } else {
+                if (!outputs1.isEmpty()) {
+                    Recipes.recipes.addRemoveRecipe(recipeType, outputs1.get(0), removeAll);
+                }
             }
+
             return new IURecipeDelete(recipeType, isFluidRecipe, inputs1, removeAll);
         });
     });
-    public static final StreamCodec<RegistryFriendlyByteBuf, IURecipeDelete> STREAM_CODEC = StreamCodec.of(IUDeleteRecipeSerializer::toNetwork, IUDeleteRecipeSerializer::fromNetwork);
 
-    private static IURecipeDelete fromNetwork(RegistryFriendlyByteBuf p_319998_) {
+    public static final StreamCodec<RegistryFriendlyByteBuf, IURecipeDelete> STREAM_CODEC = StreamCodec.of(
+            IUDeleteRecipeSerializer::toNetwork,
+            IUDeleteRecipeSerializer::fromNetwork
+    );
 
+    private static IURecipeDelete fromNetwork(RegistryFriendlyByteBuf buffer) {
         return new IURecipeDelete("", false, new ArrayList<>(), false);
     }
 
-    private static void toNetwork(RegistryFriendlyByteBuf p_320738_, IURecipeDelete p_320586_) {
+    private static void toNetwork(RegistryFriendlyByteBuf buffer, IURecipeDelete recipe) {
 
     }
 
@@ -74,8 +94,8 @@ public class IUDeleteRecipeSerializer implements RecipeSerializer<IURecipeDelete
         return MAP_CODEC;
     }
 
+    @Override
     public StreamCodec<RegistryFriendlyByteBuf, IURecipeDelete> streamCodec() {
         return STREAM_CODEC;
     }
-
 }

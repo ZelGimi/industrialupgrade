@@ -1,5 +1,7 @@
 package com.denfop.blockentity.tank;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -19,7 +21,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 public class BlockEntitySteelTank extends BlockEntityLiquedTank {
 
     public BlockEntitySteelTank(BlockPos pos, BlockState state) {
-        super(10, BlockBaseMachine3Entity.steel_tank, pos, state);
+        super(ModConfig.mechanismInt("steel_tank_tank_capacity", 10), BlockBaseMachine3Entity.steel_tank, pos, state);
         this.containerslot1.setTypeItemSlot(Inventory.TypeItemSlot.NONE);
     }
 

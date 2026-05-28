@@ -6,4 +6,5 @@ public interface IUpgradableBlock {
 
     Set<UpgradableProperty> getUpgradableProperties();
 
+    Set<UpgradableProperty> getAllPossibleUpgradableProperties();
 }

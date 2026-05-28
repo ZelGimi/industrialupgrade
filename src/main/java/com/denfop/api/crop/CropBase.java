@@ -5,11 +5,10 @@ import com.denfop.api.pollution.component.LevelPollution;
 import com.denfop.api.pollution.radiation.EnumLevelRadiation;
 import com.denfop.datacomponent.DataComponentsInit;
 import com.denfop.network.packet.CustomPacketBuffer;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 
 import java.util.ArrayList;
@@ -472,11 +471,10 @@ public class CropBase implements ICrop {
     }
 
     @Override
-    public boolean canGrowInBiome(Biome biomeName, Level level) {
-        ResourceKey<Biome> biomeKey = level.registryAccess()
-                .registryOrThrow(Registries.BIOME)
-                .getResourceKey(biomeName).get();
-        return biomes.contains(biomeKey);
+    public boolean canGrowInBiome(Holder<Biome> biomeHolder) {
+        return biomeHolder.unwrapKey()
+                .map(biomes::contains)
+                .orElse(false);
     }
 
     @Override

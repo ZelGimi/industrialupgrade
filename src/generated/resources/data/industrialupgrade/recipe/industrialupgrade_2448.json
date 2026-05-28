@@ -3,20 +3,20 @@
   "category": "misc",
   "key": {
     "A": {
-      "tag": "c:plates/muntsa"
+      "item": "quantumgenerators:qg/grasp_gen"
     },
     "B": {
-      "item": "wateringcan:simple_watering_can"
+      "item": "industrialupgrade:itemcore/kvrcore"
     }
   },
   "pattern": [
-    "  A",
-    "AB ",
-    "AAA"
+    " B ",
+    "BAB",
+    " B "
   ],
   "result": {
     "count": 1,
-    "id": "wateringcan:adv_watering_can"
+    "id": "quantumgenerators:qg/kvsp_gen"
   },
   "show_notification": false
 }

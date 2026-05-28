@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.combpump;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blocks.BlockTileEntity;
@@ -11,7 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class BlockEntityAdvCombPump extends BlockEntityCombinedPump {
 
     public BlockEntityAdvCombPump(BlockPos pos, BlockState state) {
-        super(80, 30, EnumTypePump.A, BlockBaseMachine3Entity.adv_comb_pump, pos, state);
+        super(ModConfig.mechanismInt("improved_combined_pump_radius_or_size", 80), ModConfig.mechanismInt("improved_combined_pump_operation_length", 30), EnumTypePump.A, BlockBaseMachine3Entity.adv_comb_pump, pos, state);
     }
 
     @Override

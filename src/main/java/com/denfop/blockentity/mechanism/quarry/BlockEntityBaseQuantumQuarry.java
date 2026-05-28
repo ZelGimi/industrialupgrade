@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.quarry;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -99,7 +101,7 @@ public class BlockEntityBaseQuantumQuarry extends BlockEntityInventory implement
         this.outputSlot = new InventoryOutput(this, 49);
         this.list = new ArrayList<>();
         this.analyzer = false;
-        this.chance = 0;
+        this.chance = ModConfig.mechanismInt("base_quantum_quarry_chance", 0);
         this.col = 1;
         this.furnace = false;
         this.list_modules = null;

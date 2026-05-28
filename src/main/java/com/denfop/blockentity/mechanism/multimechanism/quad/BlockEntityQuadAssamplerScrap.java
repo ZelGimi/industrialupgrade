@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.multimechanism.quad;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blockentity.base.BlockEntityMultiMachine;
@@ -22,8 +24,8 @@ public class BlockEntityQuadAssamplerScrap extends BlockEntityMultiMachine {
                 EnumMultiMachine.QUAD_AssamplerScrap.usagePerTick,
                 EnumMultiMachine.QUAD_AssamplerScrap.lenghtOperation, BlockMoreMachine3Entity.quad_assamplerscrap, pos, state
         );
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.025));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.05));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("quad_assampler_scrap_soil_pollution_amount", 0.025D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("quad_assampler_scrap_air_pollution_amount", 0.05D)));
     }
 
     public MultiBlockEntity getTeBlock() {

@@ -1,0 +1,86 @@
+{
+  "carvers": {},
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 10926284,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000
+    },
+    "sky_color": 5862292,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "features": [
+    [
+      "industrialupgrade:titania_cavity",
+      "industrialupgrade:space/titania/stone_tunnels",
+      "industrialupgrade:space/titania/hall_system",
+      "industrialupgrade:space/titania/fractures",
+      "industrialupgrade:space/titania/shafts",
+      "industrialupgrade:space/titania/liquid_chamber",
+      "industrialupgrade:space/titania/frozen_chamber",
+      "industrialupgrade:space/titania/crater_chamber",
+      "industrialupgrade:space/titania/tunnel_caves",
+      "industrialupgrade:space/titania/labyrinth_caves",
+      "industrialupgrade:space/titania/shaft_caves",
+      "industrialupgrade:space/titania/dome_caves",
+      "industrialupgrade:space/titania/well_caves",
+      "industrialupgrade:space/titania/multi_tier_caves",
+      "industrialupgrade:space/titania/branched_caves",
+      "industrialupgrade:space/titania/spiral_caves",
+      "industrialupgrade:space/titania/arch_caves",
+      "industrialupgrade:space/titania/chamber_caves",
+      "industrialupgrade:space/titania/canyon_caves",
+      "industrialupgrade:space/titania/pocket_caves",
+      "industrialupgrade:space/titania/crevice_caves",
+      "industrialupgrade:space/titania/amphitheater_caves",
+      "industrialupgrade:space/titania/cathedral_caves",
+      "industrialupgrade:space/titania/gallery_caves",
+      "industrialupgrade:space/titania/winding_caves",
+      "industrialupgrade:space/titania/cascade_caves",
+      "industrialupgrade:space/titania/collapse_caves",
+      "industrialupgrade:space/titania/vertical_collectors"
+    ],
+    [
+      "industrialupgrade:titania_lake_0",
+      "industrialupgrade:titania_fluid_0"
+    ],
+    [
+      "industrialupgrade:titania_craters",
+      "industrialupgrade:space/titania/addition_craters"
+    ],
+    [],
+    [
+      "industrialupgrade:titania_geyser_0"
+    ],
+    [],
+    [
+      "industrialupgrade:titania_ore_0",
+      "industrialupgrade:titania_ore_1",
+      "industrialupgrade:titania_ore_2",
+      "industrialupgrade:titania_ore_3"
+    ],
+    [],
+    [],
+    [],
+    [
+      "industrialupgrade:space/titania/ice_surface_cover"
+    ]
+  ],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": -0.7
+}

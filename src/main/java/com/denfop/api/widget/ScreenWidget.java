@@ -97,16 +97,6 @@ public class ScreenWidget extends AbstractWidget {
         this.widgetDefault = widgetDefault;
     }
 
-    @Override
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    @Override
-    public void setY(int y) {
-        this.y = y;
-    }
-
     public static void addLines(List<String> list, String str) {
         int startPos;
         int pos;
@@ -160,6 +150,16 @@ public class ScreenWidget extends AbstractWidget {
 
     public static void bindCommonTexture5() {
         ScreenIndustrialUpgrade.bindTexture(commonTexture5);
+    }
+
+    @Override
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    @Override
+    public void setY(int y) {
+        this.y = y;
     }
 
     public Supplier<String> getTooltipProvider() {

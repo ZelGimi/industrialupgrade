@@ -1,6 +1,8 @@
 package com.denfop.integration.jei.scrap;
 
 
+import com.denfop.integration.jei.IJeiVariantRecipe;
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.api.Recipes;
 import com.denfop.api.recipe.BaseMachineRecipe;
 import net.minecraft.world.item.ItemStack;
@@ -8,10 +10,12 @@ import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScrapHandler {
+public class ScrapHandler implements IJeiVariantRecipe {
 
     private static final List<ScrapHandler> recipes = new ArrayList<>();
-    private final ItemStack input, output;
+    
+    private List<List<ItemStack>> inputVariants = new ArrayList<>();
+private final ItemStack input, output;
 
     public ScrapHandler(ItemStack input, ItemStack output) {
         this.input = input;
@@ -48,10 +52,10 @@ public class ScrapHandler {
 
     public static void initRecipes() {
         for (BaseMachineRecipe container : Recipes.recipes.getRecipeList("scrap")) {
-            addRecipe(
+            JeiIngredientHelper.attachInputVariants(addRecipe(
                     container.input.getInputs().get(0).getInputs().get(0),
                     container.getOutput().items.get(0)
-            );
+            ), container);
 
 
         }
@@ -71,4 +75,15 @@ public class ScrapHandler {
         return is.getItem() == input.getItem();
     }
 
+
+
+    @Override
+    public void setInputVariants(final List<List<ItemStack>> inputVariants) {
+        this.inputVariants = inputVariants == null ? new ArrayList<>() : inputVariants;
+    }
+
+    @Override
+    public List<ItemStack> getInputVariants(final int slot, final ItemStack fallback) {
+        return JeiIngredientHelper.getInputVariants(this.inputVariants, slot, fallback);
+    }
 }

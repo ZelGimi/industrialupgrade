@@ -29,7 +29,7 @@ public class BlockResource<T extends Enum<T> & ISubEnum> extends BlockCore<T> im
 
 
     public BlockResource(T[] elements, T element, DataBlock<T, ? extends BlockCore<T>, ? extends ItemBlockCore<T>> dataBlock) {
-        super(element == Type.tempered_glass ? Properties.of().mapColor(MapColor.STONE).noOcclusion().destroyTime(3f).explosionResistance(5F).sound(SoundType.STONE).requiresCorrectToolForDrops() :  Properties.of().mapColor(MapColor.STONE).destroyTime(3f).explosionResistance(5F).sound(SoundType.STONE).requiresCorrectToolForDrops(), elements, element, dataBlock);
+        super(element == Type.tempered_glass ? Properties.of().mapColor(MapColor.STONE).noOcclusion().destroyTime(3f).explosionResistance(5F).sound(SoundType.STONE).requiresCorrectToolForDrops() : Properties.of().mapColor(MapColor.STONE).destroyTime(3f).explosionResistance(5F).sound(SoundType.STONE).requiresCorrectToolForDrops(), elements, element, dataBlock);
         BlockTagsProvider.list.add(this);
 
     }
@@ -157,5 +157,9 @@ public class BlockResource<T extends Enum<T> & ISubEnum> extends BlockCore<T> im
             return this != copper_block;
         }
 
+        @Override
+        public boolean register() {
+            return this != copper_block;
+        }
     }
 }

@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,type=autocraft_monitor": {
+      "model": "industrialupgrade:block/storagesystem/autocraft_monitor"
+    },
+    "facing=south,type=autocraft_monitor": {
+      "model": "industrialupgrade:block/storagesystem/autocraft_monitor",
+      "y": 180
+    },
+    "facing=west,type=autocraft_monitor": {
+      "model": "industrialupgrade:block/storagesystem/autocraft_monitor",
+      "y": 270
+    },
+    "facing=east,type=autocraft_monitor": {
+      "model": "industrialupgrade:block/storagesystem/autocraft_monitor",
+      "y": 90
+    },
+    "facing=north,type=autocraft_monitor_active": {
+      "model": "industrialupgrade:block/storagesystem/autocraft_monitor_active"
+    },
+    "facing=south,type=autocraft_monitor_active": {
+      "model": "industrialupgrade:block/storagesystem/autocraft_monitor_active",
+      "y": 180
+    },
+    "facing=west,type=autocraft_monitor_active": {
+      "model": "industrialupgrade:block/storagesystem/autocraft_monitor_active",
+      "y": 270
+    },
+    "facing=east,type=autocraft_monitor_active": {
+      "model": "industrialupgrade:block/storagesystem/autocraft_monitor_active",
+      "y": 90
+    }
+  }
+}

@@ -22,7 +22,7 @@ public class ScreenLegsBags<T extends ContainerMenuLegsBags> extends ScreenMain<
     public ScreenLegsBags(ContainerMenuLegsBags container, final ItemStack itemStack1) {
         super(container);
 
-        this.name = itemStack1.getDisplayName().getString();
+        this.name = com.denfop.utils.ModUtils.cleanComponentString(itemStack1.getDisplayName().getString());
         this.imageHeight = 232;
         this.componentList.clear();
         this.slots = new ScreenWidget(this, 0, 0, getComponent(),

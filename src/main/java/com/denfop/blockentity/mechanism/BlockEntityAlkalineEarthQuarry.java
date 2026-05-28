@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -55,9 +57,9 @@ public class BlockEntityAlkalineEarthQuarry extends BlockEntityElectricMachine i
     public int type_block;
 
     public BlockEntityAlkalineEarthQuarry(BlockPos pos, BlockState state) {
-        super(100, 14, 1, BlockBaseMachine3Entity.alkalineearthquarry, pos, state);
-        this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.addComponent(new AirPollutionComponent(this, 0.1));
+        super(ModConfig.mechanismDouble("alkaline_earth_quarry_energy_storage", 100.0D), 14, 1, BlockBaseMachine3Entity.alkalineearthquarry, pos, state);
+        this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("alkaline_earth_quarry_soil_pollution_amount", 0.1D)));
+        this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("alkaline_earth_quarry_air_pollution_amount", 0.1D)));
         inputSlotA = new Inventory(this, Inventory.TypeItemSlot.INPUT, 1) {
             @Override
             public boolean canPlaceItem(final int index, final ItemStack stack) {
@@ -109,10 +111,10 @@ public class BlockEntityAlkalineEarthQuarry extends BlockEntityElectricMachine i
                 return content;
             }
         };
-        this.timer = this.addComponent(new ComponentTimer(this, new Timer(0, 2, 0)) {
+        this.timer = this.addComponent(new ComponentTimer(this, new Timer(0, 0, 15)) {
             @Override
             public int getTickFromSecond() {
-                return (int) Math.max(1, 20 - ((BlockEntityAlkalineEarthQuarry) this.parent).getLevelMechanism() * 1.1);
+                return (int) Math.max(1, 20 - ((BlockEntityAlkalineEarthQuarry) this.parent).getLevelMechanism() * 1.9);
             }
         });
         this.upgradeSlot = new InventoryUpgrade(this, 2);
@@ -130,12 +132,14 @@ public class BlockEntityAlkalineEarthQuarry extends BlockEntityElectricMachine i
 
     @Override
     public void setLevelMech(final int level) {
-        this.levelBlock = level;
+        this.levelBlock = Math.max(0, Math.min(10, level));
+        this.setChanged();
     }
 
     @Override
     public void removeLevel(final int level) {
-        this.levelBlock -= level;
+        this.levelBlock = Math.max(0, this.levelBlock - level);
+        this.setChanged();
     }
 
     @Override
@@ -147,6 +151,7 @@ public class BlockEntityAlkalineEarthQuarry extends BlockEntityElectricMachine i
             } else {
                 stack.shrink(1);
                 this.levelBlock++;
+                this.setChanged();
                 return true;
             }
         } else {
@@ -167,7 +172,7 @@ public class BlockEntityAlkalineEarthQuarry extends BlockEntityElectricMachine i
     @Override
     public void readFromNBT(final CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        this.levelBlock = nbttagcompound.getInt("level");
+        this.levelBlock = Math.max(0, Math.min(10, nbttagcompound.contains("level") ? nbttagcompound.getInt("level") : nbttagcompound.getInt("levelMech")));
     }
 
     @Override
@@ -254,53 +259,53 @@ public class BlockEntityAlkalineEarthQuarry extends BlockEntityElectricMachine i
     private boolean getChance() {
         if (level_mesh == 1) {
             if (type_block == 3) {
-                return WorldBaseGen.random.nextInt(200) == 0;
+                return WorldBaseGen.random.nextInt(100) < 2;
             }
         }
         if (level_mesh == 2) {
             if (type_block == 3) {
-                return WorldBaseGen.random.nextInt(200) < 5;
+                return WorldBaseGen.random.nextInt(100) < 5;
             }
             if (type_block == 1) {
-                return WorldBaseGen.random.nextInt(200) == 0;
+                return WorldBaseGen.random.nextInt(100) < 2;
             }
             if (type_block == 2) {
-                return WorldBaseGen.random.nextInt(200) == 0;
+                return WorldBaseGen.random.nextInt(100) == 0;
             }
         }
         if (level_mesh == 3) {
             if (type_block == 3) {
-                return WorldBaseGen.random.nextInt(200) < 8;
+                return WorldBaseGen.random.nextInt(100) < 10;
             }
             if (type_block == 1) {
-                return WorldBaseGen.random.nextInt(200) < 4;
+                return WorldBaseGen.random.nextInt(100) < 5;
             }
             if (type_block == 2) {
-                return WorldBaseGen.random.nextInt(200) == 0;
+                return WorldBaseGen.random.nextInt(100) < 3;
             }
 
         }
         if (level_mesh == 4) {
             if (type_block == 3) {
-                return WorldBaseGen.random.nextInt(200) < 10;
+                return WorldBaseGen.random.nextInt(100) < 15;
             }
             if (type_block == 1) {
-                return WorldBaseGen.random.nextInt(200) < 6;
+                return WorldBaseGen.random.nextInt(100) < 10;
             }
             if (type_block == 2) {
-                return WorldBaseGen.random.nextInt(200) < 2;
+                return WorldBaseGen.random.nextInt(100) < 7;
             }
 
         }
         if (level_mesh == 5) {
             if (type_block == 3) {
-                return WorldBaseGen.random.nextInt(200) < 14;
+                return WorldBaseGen.random.nextInt(100) < 20;
             }
             if (type_block == 1) {
-                return WorldBaseGen.random.nextInt(200) < 8;
+                return WorldBaseGen.random.nextInt(100) < 15;
             }
             if (type_block == 2) {
-                return WorldBaseGen.random.nextInt(200) < 4;
+                return WorldBaseGen.random.nextInt(100) < 11;
             }
 
         }

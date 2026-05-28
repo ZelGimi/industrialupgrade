@@ -93,6 +93,22 @@ public class LocalNet implements ILocalNet {
         return paths;
     }
 
+    @Override
+    public List<Path> getPaths(ISource par1) {
+        if (par1 == null) {
+            return Collections.emptyList();
+        }
+
+        SystemTick<ISource, Path> paths = this.senderPath.get(par1);
+
+        if (paths == null) {
+            return Collections.emptyList();
+        }
+
+        List<Path> list = paths.getList();
+        return list != null ? list : Collections.emptyList();
+    }
+
     public List<SystemTick<ISource, Path>> getSources(final IAcceptor par1) {
         if (par1 instanceof ISink) {
             List<SystemTick<ISource, Path>> list = new LinkedList<>();
@@ -354,7 +370,7 @@ public class LocalNet implements ILocalNet {
                     validReceiver.tileEntity.setId(id);
                     if (validReceiver.tileEntity instanceof ISink) {
                         energyPaths.add(new Path((ISink) validReceiver.tileEntity, validReceiver.direction));
-                        continue;
+
                     }
 
                     if (validReceiver.tileEntity instanceof IConductor) {

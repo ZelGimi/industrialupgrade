@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.mattery_factory;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.recipe.InventoryRecipes;
@@ -102,7 +103,8 @@ public class MatteryCategory extends ScreenMain implements IRecipeCategory<Matte
         final List<ItemStack> inputs = Collections.singletonList(recipe.getInput());
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
+            JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY(), recipe, i, inputs.get(i));
+
 
         }
         final SlotInvSlot outputSlot = container1.findClassSlot(InventoryOutput.class);

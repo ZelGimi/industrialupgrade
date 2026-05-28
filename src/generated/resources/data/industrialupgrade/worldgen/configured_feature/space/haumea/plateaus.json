@@ -1,0 +1,26 @@
+{
+  "type": "industrialupgrade:space_rock_formation",
+  "config": {
+    "branches": 1,
+    "fluid": {
+      "Name": "industrialupgrade:fluid/fluidxenon",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "kind": "plateau",
+    "max_height": 10,
+    "max_radius": 8,
+    "min_height": 4,
+    "min_radius": 4,
+    "primary": {
+      "Name": "industrialupgrade:spacestone/haumea_stone"
+    },
+    "secondary": {
+      "Name": "industrialupgrade:spacestone/haumea_stone"
+    },
+    "tertiary": {
+      "Name": "industrialupgrade:blockspace2/haumea_apatite"
+    }
+  }
+}

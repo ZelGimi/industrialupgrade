@@ -17,11 +17,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +35,6 @@ public class ItemCreativeTomeResearchSpace extends Item implements IItemTab {
         p_41423_.add(Component.literal(Localization.translate("iu.tome_research1")));
         p_41423_.add(Component.literal(Localization.translate("iu.tome_research2")));
     }
-
 
 
     @Override

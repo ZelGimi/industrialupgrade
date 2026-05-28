@@ -1,5 +1,7 @@
 package com.denfop.blockentity.base;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -24,6 +26,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
@@ -44,9 +47,9 @@ public class BlockEntityRadiationPurifier extends BlockEntityElectricMachine {
     private ItemStack stack;
 
     public BlockEntityRadiationPurifier(BlockPos pos, BlockState state) {
-        super(50000, 14, 1, BlockBaseMachine3Entity.radiation_purifier, pos, state);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.15));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.15));
+        super(ModConfig.mechanismDouble("radiation_purifier_energy_storage", 50000.0D), 14, 1, BlockBaseMachine3Entity.radiation_purifier, pos, state);
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("radiation_purifier_soil_pollution_amount", 0.15D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("radiation_purifier_air_pollution_amount", 0.15D)));
     }
 
     @Override
@@ -108,6 +111,7 @@ public class BlockEntityRadiationPurifier extends BlockEntityElectricMachine {
 
         super.updateEntityServer();
         if (this.getWorld().getGameTime() % 20 == 0) {
+            this.radiation = RadiationSystem.rad_system.getMap().get(new ChunkPos(this.pos));
             if (this.radiation != null && this.energy.canUseEnergy(100) && !booleanMap.isEmpty()) {
                 boolean canWork = false;
                 for (Map.Entry<BlockPos, BlockEntitySoilAnalyzer> entry : booleanMap.entrySet()) {
@@ -117,7 +121,7 @@ public class BlockEntityRadiationPurifier extends BlockEntityElectricMachine {
                     }
                 }
                 if (canWork && this.outputSlot.canAdd(stack)) {
-                    if (this.radiation.removeRadiationWithType(1000, this.getLevel())) {
+                    if (this.radiation.removeRadiationWithType(500, this.getLevel())) {
                         this.energy.useEnergy(100);
                         this.outputSlot.add(stack);
                         this.setActive(true);

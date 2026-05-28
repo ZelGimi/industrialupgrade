@@ -76,8 +76,8 @@ public class ScreenSoilAnalyzer<T extends ContainerMenuSoilAnalyzer> extends Scr
                                 "radiation.info5")) : "")
                         + ("\n" + Localization.translate(
                         "radiation.info4") + "\n" +
-                        getBlockStack(BlockBaseMachine3Entity.radiation_purifier)
-                                .getDisplayName().getString())
+                        com.denfop.utils.ModUtils.cleanComponentString(getBlockStack(BlockBaseMachine3Entity.radiation_purifier)
+                                .getDisplayName().getString()))
 
                 ).drawForeground(poseStack, par1
                         , par2);
@@ -132,8 +132,6 @@ public class ScreenSoilAnalyzer<T extends ContainerMenuSoilAnalyzer> extends Scr
     protected void drawBackgroundAndTitle(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         this.bindTexture();
         this.drawTexturedModalRect(poseStack, this.guiLeft, this.guiTop, 0, 0, this.imageWidth, this.imageHeight);
-        String name = Localization.translate(this.container.base.getName());
-        this.drawXCenteredString(poseStack, this.imageWidth / 2, 13, net.minecraft.network.chat.Component.nullToEmpty(name), 4210752, false);
     }
 
     @Override

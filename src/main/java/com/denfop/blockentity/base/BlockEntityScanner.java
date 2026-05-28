@@ -1,5 +1,7 @@
 package com.denfop.blockentity.base;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -51,7 +53,7 @@ public abstract class BlockEntityScanner extends BlockEntityElectricMachine impl
     private ItemStack currentStack;
 
     public BlockEntityScanner(int maxprogress, MultiBlockEntity block, BlockPos pos, BlockState state) {
-        super(512000, 14, 0, block, pos, state);
+        super(ModConfig.mechanismDouble("scanner_energy_storage", 512000.0D), 14, 0, block, pos, state);
         this.currentStack = ModUtils.emptyStack;
         this.pattern = ModUtils.emptyStack;
         this.progress = 0;

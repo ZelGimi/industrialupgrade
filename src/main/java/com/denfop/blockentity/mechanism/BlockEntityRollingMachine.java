@@ -37,6 +37,8 @@ public class BlockEntityRollingMachine extends BlockEntityInventory implements I
     public MachineRecipe output;
     public int tick = 0;
     public Map<UUID, Double> data = PrimitiveHandler.getPlayersData(EnumPrimitive.ROLLING);
+    ItemStack prevInput = ItemStack.EMPTY;
+    ItemStack prevOutput = ItemStack.EMPTY;
 
     public BlockEntityRollingMachine(BlockPos pos, BlockState state) {
         super(BlockBaseMachine3Entity.rolling_machine, pos, state);
@@ -61,7 +63,6 @@ public class BlockEntityRollingMachine extends BlockEntityInventory implements I
     public MultiBlockEntity getTeBlock() {
         return BlockBaseMachine3Entity.rolling_machine;
     }
-
 
     @Override
     public void onLoaded() {
@@ -121,6 +122,30 @@ public class BlockEntityRollingMachine extends BlockEntityInventory implements I
             this.progress = 0;
         }
         this.setActive(tick >= 5);
+        if (prevInput.isEmpty() && !this.inputSlotA.isEmpty()) {
+            prevInput = this.inputSlotA.get(0);
+            new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
+        }
+        if (!prevInput.isEmpty() && !this.inputSlotA.isEmpty() && prevInput.getCount() != this.inputSlotA.get(0).getCount()) {
+            prevInput = this.inputSlotA.get(0);
+            new PacketUpdateFieldTile(this, "slot", this.inputSlotA);
+        }
+        if (!prevInput.isEmpty() && this.inputSlotA.isEmpty()) {
+            prevInput = ItemStack.EMPTY;
+            new PacketUpdateFieldTile(this, "slot3", false);
+        }
+        if (prevOutput.isEmpty() && !this.outputSlot.isEmpty()) {
+            prevOutput = this.outputSlot.get(0);
+            new PacketUpdateFieldTile(this, "slot1", this.outputSlot);
+        }
+        if (prevOutput.isEmpty() && !this.outputSlot.isEmpty() && prevOutput.getCount() != this.outputSlot.get(0).getCount()) {
+            prevOutput = this.outputSlot.get(0);
+            new PacketUpdateFieldTile(this, "slot1", this.outputSlot);
+        }
+        if (!prevOutput.isEmpty() && this.outputSlot.isEmpty()) {
+            prevOutput = ItemStack.EMPTY;
+            new PacketUpdateFieldTile(this, "slot2", false);
+        }
     }
 
     @Override

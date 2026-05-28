@@ -185,142 +185,177 @@ public class BlockEntitySmelteryCasting extends BlockEntityMultiBlockElement imp
     @Override
     public void init() {
         Recipes.recipes.getRecipeFluid().addRecipe("ingot_casting", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidiron.getInstance().get(), 144)), new RecipeOutput(
+                new FluidStack(FluidName.fluidiron.getInstance().get(), 90)), new RecipeOutput(
                 null,
                 new ItemStack(Items.IRON_INGOT)
         )));
         Recipes.recipes.getRecipeFluid().addRecipe("ingot_casting", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidgold.getInstance().get(), 144)), new RecipeOutput(
+                new FluidStack(FluidName.fluidgold.getInstance().get(), 90)), new RecipeOutput(
                 null,
                 new ItemStack(Items.GOLD_INGOT)
         )));
         Recipes.recipes.getRecipeFluid().addRecipe("ingot_casting", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidaluminium.getInstance().get(), 144)), new RecipeOutput(
+                new FluidStack(FluidName.fluidaluminium.getInstance().get(), 90)), new RecipeOutput(
                 null,
                 new ItemStack(IUItem.iuingot.getStack(1))
         )));
         Recipes.recipes.getRecipeFluid().addRecipe("ingot_casting", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidtin.getInstance().get(), 144)), new RecipeOutput(
+                new FluidStack(FluidName.fluidtin.getInstance().get(), 90)), new RecipeOutput(
                 null,
                 new ItemStack(IUItem.iuingot.getStack(24))
         )));
         Recipes.recipes.getRecipeFluid().addRecipe("ingot_casting", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidcopper.getInstance().get(), 144)), new RecipeOutput(
+                new FluidStack(FluidName.fluidcopper.getInstance().get(), 90)), new RecipeOutput(
                 null,
                 new ItemStack(Items.COPPER_INGOT)
         )));
         Recipes.recipes.getRecipeFluid().addRecipe("ingot_casting", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidnichrome.getInstance().get(), 144)), new RecipeOutput(
+                new FluidStack(FluidName.fluidnichrome.getInstance().get(), 90)), new RecipeOutput(
                 null,
                 new ItemStack(IUItem.alloysingot.getStack(4))
         )));
         Recipes.recipes.getRecipeFluid().addRecipe("ingot_casting", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidtemperedglass.getInstance().get(), 144)), new RecipeOutput(
+                new FluidStack(FluidName.fluidtemperedglass.getInstance().get(), 90)), new RecipeOutput(
                 null,
                 new ItemStack(IUItem.blockResource.getItemStack(13))
         )));
         Recipes.recipes.getRecipeFluid().addRecipe("ingot_casting", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidbronze.getInstance().get(), 144)), new RecipeOutput(
+                new FluidStack(FluidName.fluidbronze.getInstance().get(), 90)), new RecipeOutput(
                 null,
                 new ItemStack(IUItem.iuingot.getStack(20))
         )));
         Recipes.recipes.getRecipeFluid().addRecipe("ingot_casting", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidsteel.getInstance().get(), 144)), new RecipeOutput(
+                new FluidStack(FluidName.fluidsteel.getInstance().get(), 90)), new RecipeOutput(
                 null,
                 new ItemStack(IUItem.crafting_elements.getStack(502))
         )));
         Recipes.recipes.getRecipeFluid().addRecipe("ingot_casting", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidobsidian.getInstance().get(), 144 * 9)), new RecipeOutput(
+                new FluidStack(FluidName.fluidobsidian.getInstance().get(), 90 * 9)), new RecipeOutput(
                 null,
                 new ItemStack(Blocks.OBSIDIAN)
         )));
         Recipes.recipes.getRecipeFluid().addRecipe("ingot_casting", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidarsenicum.getInstance().get(), 144)), new RecipeOutput(
+                new FluidStack(FluidName.fluidarsenicum.getInstance().get(), 90)), new RecipeOutput(
                 null,
                 new ItemStack(IUItem.iuingot.getStack(28))
         )));
         Recipes.recipes.getRecipeFluid().addRecipe("ingot_casting", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidtitanium.getInstance().get(), 144)), new RecipeOutput(
+                new FluidStack(FluidName.fluidtitanium.getInstance().get(), 90)), new RecipeOutput(
                 null,
                 new ItemStack(IUItem.iuingot.getStack(10))
         )));
         Recipes.recipes.getRecipeFluid().addRecipe("ingot_casting", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidinvar.getInstance().get(), 144)), new RecipeOutput(
+                new FluidStack(FluidName.fluidinvar.getInstance().get(), 90)), new RecipeOutput(
                 null,
                 new ItemStack(IUItem.iuingot.getStack(4))
         )));
         Recipes.recipes.getRecipeFluid().addRecipe("ingot_casting", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidelectrum.getInstance().get(), 144)), new RecipeOutput(
+                new FluidStack(FluidName.fluidelectrum.getInstance().get(), 90)), new RecipeOutput(
                 null,
                 new ItemStack(IUItem.iuingot.getStack(13))
         )));
         Recipes.recipes.getRecipeFluid().addRecipe("ingot_casting", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidsilver.getInstance().get(), 144)), new RecipeOutput(
+                new FluidStack(FluidName.fluidsilver.getInstance().get(), 90)), new RecipeOutput(
                 null,
                 new ItemStack(IUItem.iuingot.getStack(14))
         )));
         Recipes.recipes.getRecipeFluid().addRecipe("ingot_casting", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidaluminiumbronze.getInstance().get(), 144)), new RecipeOutput(
+                new FluidStack(FluidName.fluidaluminiumbronze.getInstance().get(), 90)), new RecipeOutput(
                 null,
                 new ItemStack(IUItem.alloysingot.getStack(0))
         )));
 
         Recipes.recipes.getRecipeFluid().addRecipe("ingot_casting", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidferromanganese.getInstance().get(), 144)), new RecipeOutput(
+                new FluidStack(FluidName.fluidferromanganese.getInstance().get(), 90)), new RecipeOutput(
                 null,
                 new ItemStack(IUItem.alloysingot.getStack(9))
         )));
         Recipes.recipes.getRecipeFluid().addRecipe("ingot_casting", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidduralumin.getInstance().get(), 144)), new RecipeOutput(
+                new FluidStack(FluidName.fluidduralumin.getInstance().get(), 90)), new RecipeOutput(
                 null,
                 new ItemStack(IUItem.alloysingot.getStack(8))
         )));
         Recipes.recipes.getRecipeFluid().addRecipe("ingot_casting", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidarsenicum_gallium.getInstance().get(), 144)), new RecipeOutput(
+                new FluidStack(FluidName.fluidarsenicum_gallium.getInstance().get(), 90)), new RecipeOutput(
                 null,
                 new ItemStack(IUItem.alloysingot.getStack(31))
         )));
         Recipes.recipes.getRecipeFluid().addRecipe("ingot_casting", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidtitaniumsteel.getInstance().get(), 144)), new RecipeOutput(
+                new FluidStack(FluidName.fluidtitaniumsteel.getInstance().get(), 90)), new RecipeOutput(
                 null,
                 new ItemStack(IUItem.crafting_elements.getStack(503))
         )));
 
 
         Recipes.recipes.getRecipeFluid().addRecipe("gear_casting", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidinvar.getInstance().get(), 144 * 4)), new RecipeOutput(
+                new FluidStack(FluidName.fluidinvar.getInstance().get(), 90 * 4)), new RecipeOutput(
                 null,
                 new ItemStack(IUItem.gear.getStack(4))
         )));
         Recipes.recipes.getRecipeFluid().addRecipe("gear_casting", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidmagnesium.getInstance().get(), 144 * 4)), new RecipeOutput(
+                new FluidStack(FluidName.fluidmagnesium.getInstance().get(), 90 * 4)), new RecipeOutput(
                 null,
                 new ItemStack(IUItem.gear.getStack(7))
         )));
         Recipes.recipes.getRecipeFluid().addRecipe("gear_casting", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidelectrum.getInstance().get(), 144 * 4)), new RecipeOutput(
+                new FluidStack(FluidName.fluidelectrum.getInstance().get(), 90 * 4)), new RecipeOutput(
                 null,
                 new ItemStack(IUItem.gear.getStack(13))
         )));
         Recipes.recipes.getRecipeFluid().addRecipe("gear_casting", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidtitanium.getInstance().get(), 144 * 4)), new RecipeOutput(
+                new FluidStack(FluidName.fluidtitanium.getInstance().get(), 90 * 4)), new RecipeOutput(
                 null,
                 new ItemStack(IUItem.gear.getStack(10))
         )));
         Recipes.recipes.getRecipeFluid().addRecipe("gear_casting", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidferromanganese.getInstance().get(), 144 * 4)), new RecipeOutput(
+                new FluidStack(FluidName.fluidferromanganese.getInstance().get(), 90 * 4)), new RecipeOutput(
                 null,
                 new ItemStack(IUItem.alloygear.getStack(9))
         )));
         Recipes.recipes.getRecipeFluid().addRecipe("gear_casting", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidaluminiumbronze.getInstance().get(), 144 * 4)), new RecipeOutput(
+                new FluidStack(FluidName.fluidaluminiumbronze.getInstance().get(), 90 * 4)), new RecipeOutput(
                 null,
                 new ItemStack(IUItem.alloygear.getStack(0))
         )));
         Recipes.recipes.getRecipeFluid().addRecipe("gear_casting", new BaseFluidMachineRecipe(new InputFluid(
-                new FluidStack(FluidName.fluidduralumin.getInstance().get(), 144 * 4)), new RecipeOutput(
+                new FluidStack(FluidName.fluidduralumin.getInstance().get(), 90 * 4)), new RecipeOutput(
                 null,
                 new ItemStack(IUItem.alloygear.getStack(8))
+        )));
+        Recipes.recipes.getRecipeFluid().addRecipe("ingot_casting", new BaseFluidMachineRecipe(new InputFluid(
+                new FluidStack(FluidName.fluidmanganese.getInstance().get(), 90)), new RecipeOutput(
+                null,
+                new ItemStack(IUItem.iuingot.getStack(16))
+        )));
+
+        Recipes.recipes.getRecipeFluid().addRecipe("ingot_casting", new BaseFluidMachineRecipe(new InputFluid(
+                new FluidStack(FluidName.fluidmagnesium.getInstance().get(), 90)), new RecipeOutput(
+                null,
+                new ItemStack(IUItem.iuingot.getStack(7))
+        )));
+
+        Recipes.recipes.getRecipeFluid().addRecipe("ingot_casting", new BaseFluidMachineRecipe(new InputFluid(
+                new FluidStack(FluidName.fluidgallium.getInstance().get(), 90)), new RecipeOutput(
+                null,
+                new ItemStack(IUItem.iuingot.getStack(32))
+        )));
+
+        Recipes.recipes.getRecipeFluid().addRecipe("ingot_casting", new BaseFluidMachineRecipe(new InputFluid(
+                new FluidStack(FluidName.fluidnickel.getInstance().get(), 90)), new RecipeOutput(
+                null,
+                new ItemStack(IUItem.iuingot.getStack(8))
+        )));
+
+        Recipes.recipes.getRecipeFluid().addRecipe("ingot_casting", new BaseFluidMachineRecipe(new InputFluid(
+                new FluidStack(FluidName.fluidtungsten.getInstance().get(), 90)), new RecipeOutput(
+                null,
+                new ItemStack(IUItem.iuingot.getStack(3))
+        )));
+
+        Recipes.recipes.getRecipeFluid().addRecipe("ingot_casting", new BaseFluidMachineRecipe(new InputFluid(
+                new FluidStack(FluidName.fluidchromium.getInstance().get(), 90)), new RecipeOutput(
+                null,
+                new ItemStack(IUItem.iuingot.getStack(11))
         )));
     }
 

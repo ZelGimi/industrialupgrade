@@ -1,0 +1,57 @@
+{
+  "carvers": {},
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 328968,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000
+    },
+    "sky_color": 328968,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "features": [
+    [
+      "industrialupgrade:space/jupiter/stone_tunnels",
+      "industrialupgrade:space/jupiter/hall_system",
+      "industrialupgrade:space/jupiter/fractures",
+      "industrialupgrade:space/jupiter/porous",
+      "industrialupgrade:space/jupiter/tunnel_caves",
+      "industrialupgrade:space/jupiter/labyrinth_caves",
+      "industrialupgrade:space/jupiter/shaft_caves",
+      "industrialupgrade:space/jupiter/dome_caves",
+      "industrialupgrade:space/jupiter/multi_tier_caves",
+      "industrialupgrade:space/jupiter/branched_caves",
+      "industrialupgrade:space/jupiter/spiral_caves",
+      "industrialupgrade:space/jupiter/arch_caves",
+      "industrialupgrade:space/jupiter/chamber_caves",
+      "industrialupgrade:space/jupiter/pocket_caves",
+      "industrialupgrade:space/jupiter/crevice_caves",
+      "industrialupgrade:space/jupiter/amphitheater_caves",
+      "industrialupgrade:space/jupiter/cathedral_caves",
+      "industrialupgrade:space/jupiter/gallery_caves",
+      "industrialupgrade:space/jupiter/winding_caves",
+      "industrialupgrade:space/jupiter/collapse_caves"
+    ],
+    [],
+    [
+      "industrialupgrade:space/jupiter/addition_craters"
+    ]
+  ],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": -0.3
+}

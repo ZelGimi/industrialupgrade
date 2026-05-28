@@ -6,19 +6,19 @@
       "item": "industrialupgrade:module_schedule"
     },
     "B": {
-      "item": "industrialupgrade:upgrades/overclocker"
+      "item": "industrialupgrade:upgrades/overclockerupgrade2"
     },
     "C": {
       "item": "industrialupgrade:upgrades/transformerupgrade1"
     },
     "D": {
-      "tag": "c:plates/alumel"
+      "tag": "c:plates/bloodstone"
     }
   },
   "pattern": [
     "DCD",
     "BAB",
-    " C "
+    "DCD"
   ],
   "result": {
     "count": 1,

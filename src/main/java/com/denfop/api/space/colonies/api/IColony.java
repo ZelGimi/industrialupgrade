@@ -34,6 +34,18 @@ public interface IColony {
 
     int getAvailableBuilding();
 
+    short getMaxAvailableFluid();
+
+    short getMaxAvailableItem();
+
+    short getAvailableFluid();
+
+    short getAvailableItem();
+
+    void removeAvailableFluid(int amount);
+
+    void removeAvailableItem(int amount);
+
     int getMaxBuilding();
 
     int getMaxExperience();

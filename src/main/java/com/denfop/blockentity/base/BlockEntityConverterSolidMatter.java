@@ -1,5 +1,7 @@
 package com.denfop.blockentity.base;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -57,14 +59,14 @@ public class BlockEntityConverterSolidMatter extends BlockEntityElectricMachine
     public double[] outputmatter = new double[9];
 
     public BlockEntityConverterSolidMatter(BlockPos pos, BlockState state) {
-        super(50000, 14, 1, BlockConverterMatterEntity.converter_matter, pos, state);
+        super(ModConfig.mechanismDouble("solid_matter_transformer_energy_storage", 50000.0D), 14, 1, BlockConverterMatterEntity.converter_matter, pos, state);
         this.MatterSlot = new InventoryConverterSolidMatter(this);
         this.upgradeSlot = new InventoryUpgrade(this, 3);
         this.inputSlot = new InventoryRecipes(this, "converter", this);
         this.progress = 0;
         this.defaultOperationLength = this.operationLength = 100;
         this.defaultEnergyStorage = 50000;
-        this.defaultEnergyConsume = this.energyConsume = 2;
+        this.defaultEnergyConsume = this.energyConsume = ModConfig.mechanismInt("converter_solid_matter_energy_use", 2);
         Recipes.recipes.addInitRecipes(this);
     }
 
@@ -294,7 +296,10 @@ public class BlockEntityConverterSolidMatter extends BlockEntityElectricMachine
         this.operationsPerTick = this.upgradeSlot.getOperationsPerTick(this.defaultOperationLength);
         this.operationLength = this.upgradeSlot.getOperationLength(this.defaultOperationLength);
         this.energyConsume = (int) this.upgradeSlot.getEnergyDemand(2);
-
+        this.energy.setSinkTier(tier);
+        this.energy.setCapacity(this.upgradeSlot.getEnergyStorage(
+                this.defaultEnergyStorage
+        ));
 
     }
 

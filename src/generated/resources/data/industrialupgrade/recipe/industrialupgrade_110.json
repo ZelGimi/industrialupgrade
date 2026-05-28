@@ -8,6 +8,9 @@
     "B": {
       "tag": "c:doubleplate/vanadoalumite"
     },
+    "C": {
+      "item": "industrialupgrade:module_schedule"
+    },
     "D": {
       "item": "industrialupgrade:itemcore/hybcore"
     },
@@ -18,7 +21,7 @@
   "pattern": [
     "ABA",
     "DED",
-    "ABA"
+    "ACA"
   ],
   "result": {
     "count": 1,

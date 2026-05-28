@@ -13,15 +13,12 @@
     },
     "D": {
       "item": "industrialupgrade:high_current_converter_to_low"
-    },
-    "E": {
-      "item": "industrialupgrade:imp_motors_with_improved_bearings_"
     }
   },
   "pattern": [
     "AAA",
     "BDB",
-    "CEC"
+    "C C"
   ],
   "result": {
     "count": 1,

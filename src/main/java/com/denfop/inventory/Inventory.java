@@ -27,7 +27,7 @@ public class Inventory extends AbstractList<ItemStack> implements ITypeSlot, Con
     public Inventory(CustomWorldContainer base, TypeItemSlot typeItemSlot, int count) {
 
         this.contents = NonNullList.withSize(count, ItemStack.EMPTY);
-        this.base = (CustomWorldContainer) base;
+        this.base = base;
         this.typeItemSlot = typeItemSlot;
         this.stackSizeLimit = 64;
         base.addInventorySlot(this);
@@ -55,6 +55,11 @@ public class Inventory extends AbstractList<ItemStack> implements ITypeSlot, Con
 
     public void setTypeItemSlot(final TypeItemSlot typeItemSlot) {
         this.typeItemSlot = typeItemSlot;
+    }
+
+    @Override
+    public int getMaxStackSize(ItemStack p_335963_) {
+        return this.stackSizeLimit;
     }
 
     @Override

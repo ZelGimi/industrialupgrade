@@ -90,7 +90,7 @@ public class Steam {
 
     public double getGeneration() {
         EnumSteamPhase type = this.steam.getSteamPhase();
-        return this.coef * this.steam.getPhase() * (type.ordinal() + 1) * 0.98;
+        return this.coef * this.steam.getPhase() * (type.ordinal() + 1) * 1.5;
     }
 
     public void updateData() {

@@ -15,36 +15,20 @@
       "model": "industrialupgrade:block/chemical_plant/chemical_plant_waste",
       "y": 90
     },
-    "facing=down,type=chemical_plant_waste": {
-      "model": "industrialupgrade:block/chemical_plant/chemical_plant_waste",
-      "x": 90
-    },
-    "facing=up,type=chemical_plant_waste": {
-      "model": "industrialupgrade:block/chemical_plant/chemical_plant_waste",
-      "x": 270
-    },
-    "facing=north,type=chemical_plant_waste_invalid": {
+    "facing=north,type=chemical_plant_waste_active": {
       "model": "industrialupgrade:block/chemical_plant/chemical_plant_waste"
     },
-    "facing=south,type=chemical_plant_waste_invalid": {
+    "facing=south,type=chemical_plant_waste_active": {
       "model": "industrialupgrade:block/chemical_plant/chemical_plant_waste",
       "y": 180
     },
-    "facing=west,type=chemical_plant_waste_invalid": {
+    "facing=west,type=chemical_plant_waste_active": {
       "model": "industrialupgrade:block/chemical_plant/chemical_plant_waste",
       "y": 270
     },
-    "facing=east,type=chemical_plant_waste_invalid": {
+    "facing=east,type=chemical_plant_waste_active": {
       "model": "industrialupgrade:block/chemical_plant/chemical_plant_waste",
       "y": 90
-    },
-    "facing=down,type=chemical_plant_waste_invalid": {
-      "model": "industrialupgrade:block/chemical_plant/chemical_plant_waste",
-      "x": 90
-    },
-    "facing=up,type=chemical_plant_waste_invalid": {
-      "model": "industrialupgrade:block/chemical_plant/chemical_plant_waste",
-      "x": 270
     }
   }
 }

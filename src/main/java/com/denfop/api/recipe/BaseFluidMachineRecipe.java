@@ -34,14 +34,14 @@ public class BaseFluidMachineRecipe {
         this.output = output;
     }
 
-    public static BaseFluidMachineRecipe readNBT(CompoundTag tag,RegistryAccess access) {
+    public static BaseFluidMachineRecipe readNBT(CompoundTag tag, RegistryAccess access) {
         IInputFluid input = InputFluid.readNBT(tag.getCompound("Input"), access);
 
         List<FluidStack> fluids = new ArrayList<>();
         ListTag fluidsTag = tag.getList("OutputFluids", Tag.TAG_COMPOUND);
         for (Tag fluidTag : fluidsTag) {
             if (fluidTag instanceof CompoundTag fluidCompound) {
-                fluids.add(FluidStack.parseOptional(access,fluidCompound));
+                fluids.add(FluidStack.parseOptional(access, fluidCompound));
             }
         }
 
@@ -49,7 +49,7 @@ public class BaseFluidMachineRecipe {
         ListTag itemsTag = tag.getList("OutputItems", Tag.TAG_COMPOUND);
         for (Tag itemTag : itemsTag) {
             if (itemTag instanceof CompoundTag itemCompound) {
-                items.add(ItemStack.parseOptional(access,itemCompound));
+                items.add(ItemStack.parseOptional(access, itemCompound));
             }
         }
 
@@ -91,7 +91,7 @@ public class BaseFluidMachineRecipe {
         ListTag fluidsTag = new ListTag();
         for (FluidStack fluid : output_fluid) {
             CompoundTag fluidTag = new CompoundTag();
-            fluid.save(registryAccess,fluidTag);
+            fluid.save(registryAccess, fluidTag);
             fluidsTag.add(fluidTag);
         }
         tag.put("OutputFluids", fluidsTag);
@@ -99,7 +99,7 @@ public class BaseFluidMachineRecipe {
         ListTag itemsTag = new ListTag();
         if (output != null)
             for (ItemStack stack : output.items) {
-                itemsTag.add(stack.save(registryAccess,new CompoundTag()));
+                itemsTag.add(stack.save(registryAccess, new CompoundTag()));
             }
         tag.put("OutputItems", itemsTag);
         if (output != null)

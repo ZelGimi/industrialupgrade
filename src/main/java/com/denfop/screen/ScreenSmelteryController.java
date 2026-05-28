@@ -31,6 +31,7 @@ public class ScreenSmelteryController<T extends ContainerMenuSmelteryController>
 
     public ScreenSmelteryController(ContainerMenuSmelteryController guiContainer) {
         super(guiContainer);
+        this.imageHeight = 192;
         this.componentList.clear();
         int i = 0;
         for (ITank tank : guiContainer.base.listTank) {
@@ -58,6 +59,27 @@ public class ScreenSmelteryController<T extends ContainerMenuSmelteryController>
                 }
             }
 
+        });
+        this.addWidget(new ButtonWidget(this, 139, 81, 161 - 139, 79 - 57, container.base, -4, "") {
+            @Override
+            public String getText() {
+                return Localization.translate("iu.clear_fluid");
+            }
+
+            @Override
+            public boolean visible() {
+                return container.base.list.size() >= 1;
+            }
+
+            public void drawBackground(GuiGraphics poseStack, int mouseX, int mouseY) {
+                this.getGui().bindTexture();
+                if (highlighted) {
+                    this.gui.drawTexturedModalRect(poseStack, this.gui.guiLeft + x, guiTop + y, 177,
+                            72, 161 - 139, 55 - 33
+                    );
+                }
+
+            }
         });
         this.addWidget(new ButtonWidget(this, 139, 9, 161 - 139, 31 - 9, container.base, -3, "") {
             @Override
@@ -150,17 +172,17 @@ public class ScreenSmelteryController<T extends ContainerMenuSmelteryController>
                         Fluid fluid = fs.getFluid();
                         if (fluid != null) {
                             ret.add(Localization.translate(fluid.getFluidType().getDescriptionId()));
-                            ret.add("Amount: " + fs.getAmount() + " " + Localization.translate("iu.generic.text.mb"));
-                            String state = "Liquid";
-                            ret.add("Type: " + state);
-                            ret.add("Ingots: " + fs.getAmount() / 144);
+                            ret.add(Localization.translate("iu.tooltip.fluid.amount") + fs.getAmount() + " " + Localization.translate("iu.generic.text.mb"));
+                            String state = Localization.translate("iu.tooltip.fluid.type.liquid");
+                            ret.add(Localization.translate("iu.tooltip.fluid.type") + state);
+                            ret.add(Localization.translate("iu.tooltip.fluid.ingots") + fs.getAmount() / 144);
                         } else {
-                            ret.add("Invalid FluidStack instance.");
+                            ret.add(Localization.translate("iu.tooltip.fluid.invalid"));
                         }
                     } else {
-                        ret.add("No Fluid");
-                        ret.add("Amount: 0 " + Localization.translate("iu.generic.text.mb"));
-                        ret.add("Type: Not Available");
+                        ret.add(Localization.translate("iu.tooltip.fluid.empty"));
+                        ret.add(Localization.translate("iu.tooltip.fluid.amount") + "0 " + Localization.translate("iu.generic.text.mb"));
+                        ret.add(Localization.translate("iu.tooltip.fluid.type") + Localization.translate("iu.tooltip.fluid.type.not_available"));
                     }
 
                     return ret;

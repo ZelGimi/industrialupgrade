@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.genetic_transposer;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.api.recipe.InventoryOutput;
 import com.denfop.api.recipe.InventoryRecipes;
@@ -114,7 +115,8 @@ public class GeneticTransposerCategory extends ScreenMain implements IRecipeCate
         final List<ItemStack> inputs = recipes.getInputs();
         int i = 0;
         for (; i < inputs.size(); i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(inputs.get(i));
+            JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY(), recipes, i, inputs.get(i));
+
 
 
         }

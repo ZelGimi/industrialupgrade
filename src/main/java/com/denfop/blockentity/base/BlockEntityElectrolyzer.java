@@ -1,5 +1,7 @@
 package com.denfop.blockentity.base;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -67,7 +69,7 @@ public class BlockEntityElectrolyzer extends BlockEntityElectricMachine implemen
     private int levelMech;
 
     public BlockEntityElectrolyzer(BlockPos pos, BlockState state) {
-        super(24000, 1, 2, BlockBaseMachine2Entity.electrolyzer_iu, pos, state);
+        super(ModConfig.mechanismDouble("electrolyzer_energy_storage", 24000.0D), 1, 2, BlockBaseMachine2Entity.electrolyzer_iu, pos, state);
         this.fluids = this.addComponent(new Fluids(this));
         this.fluidTank1 = fluids.addTank("fluidTank1", 12 * 1000, Inventory.TypeItemSlot.INPUT);
 
@@ -89,8 +91,8 @@ public class BlockEntityElectrolyzer extends BlockEntityElectricMachine implemen
         this.anodeslot = new InventoryElectrolyzer(this, 0);
         this.upgradeSlot = new InventoryUpgrade(this, 4);
         Recipes.recipes.getRecipeFluid().addInitRecipes(this);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.05));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("electrolyzer_soil_pollution_amount", 0.05D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("electrolyzer_air_pollution_amount", 0.1D)));
     }
 
     public static int applyModifier(int base, int extra, double multiplier) {
@@ -108,7 +110,7 @@ public class BlockEntityElectrolyzer extends BlockEntityElectricMachine implemen
     @Override
     public void readFromNBT(CompoundTag nbttagcompound) {
         super.readFromNBT(nbttagcompound);
-        levelMech = nbttagcompound.getInt("levelMech");
+        levelMech = Math.max(0, Math.min(10, nbttagcompound.contains("levelMech") ? nbttagcompound.getInt("levelMech") : nbttagcompound.getInt("level")));
     }
 
     @Override
@@ -353,6 +355,7 @@ public class BlockEntityElectrolyzer extends BlockEntityElectricMachine implemen
             } else {
                 stack.shrink(1);
                 this.levelMech++;
+                this.setChanged();
                 return true;
             }
         } else {
@@ -367,12 +370,14 @@ public class BlockEntityElectrolyzer extends BlockEntityElectricMachine implemen
 
     @Override
     public void setLevelMech(final int levelMech) {
-        this.levelMech = levelMech;
+        this.levelMech = Math.max(0, Math.min(10, levelMech));
+        this.setChanged();
     }
 
     @Override
     public void removeLevel(final int level) {
-        this.levelMech -= level;
+        this.levelMech = Math.max(0, this.levelMech - level);
+        this.setChanged();
     }
 
     public Set<UpgradableProperty> getUpgradableProperties() {

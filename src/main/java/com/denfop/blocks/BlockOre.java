@@ -4,7 +4,6 @@ import com.denfop.IUItem;
 import com.denfop.datagen.blocktags.BlockTagsProvider;
 import com.denfop.datagen.blocktags.IBlockTag;
 import com.denfop.dataregistry.DataBlock;
-import com.denfop.world.WorldBaseGen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.CreativeModeTab;
@@ -48,11 +47,11 @@ public class BlockOre<T extends Enum<T> & ISubEnum> extends BlockCore<T> impleme
             case 0:
                 return 0;
             case 1:
-                return WorldBaseGen.random.nextInt(100) < 50 ? 1 : 0;
+                return 1;
             case 2:
-                return WorldBaseGen.random.nextInt(100) < 100 ? 1 : 1;
+                return 2;
             default:
-                return WorldBaseGen.random.nextInt(100) < 50 ? 2 : 1;
+                return 3;
         }
     }
 

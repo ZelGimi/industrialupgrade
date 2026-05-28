@@ -2,6 +2,7 @@ package com.denfop.network.packet;
 
 import com.denfop.IUCore;
 import com.denfop.network.NetworkManager;
+import com.denfop.network.WorldData;
 import com.denfop.sound.SoundHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -20,6 +21,9 @@ public class PacketStopSound implements IPacket {
     }
 
     public PacketStopSound(Level world, BlockPos pos) {
+        if (world == null || pos == null || world.isClientSide() || WorldData.isStoppingOrUnloading(world) || world.getServer() == null || !world.getServer().isRunning()) {
+            return;
+        }
         List<ServerPlayer> playersInRange = NetworkManager.getPlayersInRange(
                 world,
                 pos,

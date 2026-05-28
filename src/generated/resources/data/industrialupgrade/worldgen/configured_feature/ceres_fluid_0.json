@@ -1,0 +1,14 @@
+{
+  "type": "industrialupgrade:space_generic_fluid",
+  "config": {
+    "base_chance": 0.9375,
+    "body_id": "ceres",
+    "cave_only": true,
+    "distribution_type": "pocket",
+    "fluid_id": "industrialupgrade:iufluidacetylene",
+    "max_y": 20,
+    "min_y": -28,
+    "radius_max": 24,
+    "radius_min": 4
+  }
+}

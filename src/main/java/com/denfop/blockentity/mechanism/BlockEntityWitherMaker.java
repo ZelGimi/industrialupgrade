@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -37,7 +39,7 @@ public class BlockEntityWitherMaker extends BlockEntityBaseWitherMaker implement
     public static SoundEvent[] soundEvents = new SoundEvent[]{EnumSound.WitherIdle1.getSoundEvent(), EnumSound.WitherHurt3.getSoundEvent()};
 
     public BlockEntityWitherMaker(BlockPos pos, BlockState state) {
-        super(1, 1500, 1, BlockBaseMachine1Entity.gen_wither, pos, state);
+        super(ModConfig.mechanismInt("wither_manufacturer_energy_per_tick", 1), ModConfig.mechanismInt("wither_manufacturer_operation_length", 1500), 1, BlockBaseMachine1Entity.gen_wither, pos, state);
         this.inputSlotA = new InventoryRecipes(this, "wither", this);
         Recipes.recipes.addInitRecipes(this);
         this.componentProcess.setInvSlotRecipes(inputSlotA);

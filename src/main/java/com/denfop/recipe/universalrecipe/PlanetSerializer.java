@@ -38,13 +38,13 @@ public class PlanetSerializer implements RecipeSerializer<PlanetRecipe> {
     ).apply(instance, (name, systemStr, textureStr, levelStr, starStr, temp, pressure, distance, typeStr, oxygen, colonies, angle, time, size, rotation) -> {
 
         ResourceLocation texture = ResourceLocation.parse(textureStr + ".png");
-        if (!stringList.contains("planet_"+name)) {
+        if (!stringList.contains("planet_" + name)) {
             regPlanet.add(() -> new Planet(name, SpaceNet.instance.getSystem().stream()
                     .filter(s -> s.getName().equals(systemStr.toLowerCase()))
                     .findFirst()
                     .orElseThrow(() -> new IllegalArgumentException("System not found: " + systemStr)), texture, levelStr, (IStar) SpaceNet.instance.getBodyFromName(starStr), temp, pressure, distance, typeStr,
                     oxygen, colonies, angle, time, size, rotation));
-            stringList.add("planet_"+name);
+            stringList.add("planet_" + name);
         }
         return new PlanetRecipe(name, systemStr, textureStr, levelStr, starStr, temp, pressure, distance, typeStr, oxygen, colonies, angle, time, size, rotation);
     }));
@@ -83,14 +83,14 @@ public class PlanetSerializer implements RecipeSerializer<PlanetRecipe> {
                         double time = ByteBufCodecs.DOUBLE.decode(buf);
                         double size = ByteBufCodecs.DOUBLE.decode(buf);
                         double rotation = ByteBufCodecs.DOUBLE.decode(buf);
-                        ResourceLocation texture = ResourceLocation.parse(textureStr+ ".png");
-                        if (!stringList.contains("planet_"+name)) {
+                        ResourceLocation texture = ResourceLocation.parse(textureStr + ".png");
+                        if (!stringList.contains("planet_" + name)) {
                             regPlanet.add(() -> new Planet(name, SpaceNet.instance.getSystem().stream()
                                     .filter(s -> s.getName().equals(systemStr.toLowerCase()))
                                     .findFirst()
                                     .orElseThrow(() -> new IllegalArgumentException("System not found: " + systemStr)), texture, level, (IStar) SpaceNet.instance.getBodyFromName(starStr), temp, pressure, distance, typeStr,
                                     oxygen, colonies, angle, time, size, rotation));
-                            stringList.add("planet_"+name);
+                            stringList.add("planet_" + name);
                         }
                         return new PlanetRecipe(
                                 name, systemStr, textureStr, level, starStr,

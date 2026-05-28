@@ -1,0 +1,31 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/hafnium"
+    },
+    "B": {
+      "item": "industrialupgrade:plastic_plate"
+    },
+    "C": {
+      "item": "industrialupgrade:blockresource/machine"
+    },
+    "D": {
+      "item": "industrialupgrade:crafting_elements/crafting_42_element"
+    },
+    "E": {
+      "tag": "c:gears/alumel"
+    }
+  },
+  "pattern": [
+    "ABA",
+    "ECE",
+    "ADA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:storagesystem/autocraft_monitor"
+  },
+  "show_notification": false
+}

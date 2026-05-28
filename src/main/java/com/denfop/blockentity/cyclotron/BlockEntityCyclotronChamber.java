@@ -1,5 +1,7 @@
 package com.denfop.blockentity.cyclotron;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -63,7 +65,7 @@ public class BlockEntityCyclotronChamber extends BlockEntityMultiBlockElement im
     public MachineRecipe getOutput() {
 
         this.output = this.inputSlotA.process();
-        this.chance = 100;
+        this.chance = ModConfig.mechanismInt("cyclotron_chamber_chance", 100);
         this.cryogen = 1;
         this.positrons = 1;
         if (this.output != null) {
@@ -116,7 +118,7 @@ public class BlockEntityCyclotronChamber extends BlockEntityMultiBlockElement im
     @Override
     public void setRecipeOutput(final MachineRecipe output) {
         this.output = output;
-        this.chance = 100;
+        this.chance = ModConfig.mechanismInt("cyclotron_chamber_chance", 100);
         this.cryogen = 1;
         this.positrons = 1;
         if (this.output != null) {

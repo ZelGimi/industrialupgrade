@@ -44,7 +44,6 @@ public class SoilPollutionComponent extends AbstractComponent {
         double y = pos.getY() + 0.1;
         double z = pos.getZ() + 0.5;
 
-
         if (random.nextFloat() < 0.3f) {
             Vector3f dirtyColor = new Vector3f(0.2f, 0.4f, 0.1f);
             server.sendParticles(new DustParticleOptions(dirtyColor, 0.8f),
@@ -55,12 +54,11 @@ public class SoilPollutionComponent extends AbstractComponent {
     @Override
     public void addInformation(final ItemStack stack, final List<String> tooltip) {
         super.addInformation(stack, tooltip);
-        if (this.parent != null && this.parent.getWorld() == null) {
+        if (this.parent != null ) {
             tooltip.add(Localization.translate("iu.pollution.soil.info") + " " + String.format(
                     "%.2f",
                     default_pollution
-            ) + Localization.translate("iu" +
-                    ".pollution.soil.info1"));
+            ) + Localization.translate("iu.pollution.soil.info1"));
         }
     }
 
@@ -136,7 +134,6 @@ public class SoilPollutionComponent extends AbstractComponent {
 
     @Override
     public void updateEntityServer() {
-
         super.updateEntityServer();
         if (this.parent.getWorld().getGameTime() % 20 == 0 && this.parent.getActive()) {
             spawnSoilPollution(parent.getWorld(), parent.getPos(), parent.getWorld().random);
@@ -149,15 +146,9 @@ public class SoilPollutionComponent extends AbstractComponent {
     }
 
     public void onLoaded() {
-
-
         if (!this.parent.getLevel().isClientSide && this.parent.getLevel().dimension() == Level.OVERWORLD) {
-
             NeoForge.EVENT_BUS.post(new PollutionSoilLoadEvent(this.parent.getLevel(), pollution));
-
-
         }
-
     }
 
     public void onContainerUpdate(ServerPlayer player) {
@@ -178,24 +169,31 @@ public class SoilPollutionComponent extends AbstractComponent {
     }
 
     public void onNetworkUpdate(CustomPacketBuffer is) throws IOException {
-
         this.pollution.pollution = is.readDouble();
         this.default_pollution = is.readDouble();
         this.percent = is.readDouble();
-
     }
 
     public double getDefault_pollution() {
         return default_pollution;
     }
 
+    public double getPercent() {
+        return percent;
+    }
+
+    public double getCurrentContribution() {
+        return this.pollution.pollution;
+    }
+
+    public boolean isEffectivelyActive() {
+        return this.parent != null && this.parent.getActive() && this.getCurrentContribution() > 0;
+    }
+
     @Override
     public void onUnloaded() {
         if (!this.parent.getLevel().isClientSide && this.parent.getLevel().dimension() == Level.OVERWORLD) {
-
             NeoForge.EVENT_BUS.post(new PollutionSoilUnLoadEvent(this.parent.getLevel(), pollution));
-
-
         }
     }
 
@@ -204,16 +202,13 @@ public class SoilPollutionComponent extends AbstractComponent {
         return true;
     }
 
-
     public void setPollution(double pollution) {
         if (this.pollution.pollution != pollution) {
             if (!this.parent.getLevel().isClientSide && this.parent.getLevel().dimension() == Level.OVERWORLD) {
                 NeoForge.EVENT_BUS.post(new PollutionSoilUnLoadEvent(this.parent.getLevel(), this.pollution));
                 this.pollution.pollution = pollution * percent;
                 NeoForge.EVENT_BUS.post(new PollutionSoilLoadEvent(this.parent.getLevel(), this.pollution));
-
             }
         }
     }
-
 }

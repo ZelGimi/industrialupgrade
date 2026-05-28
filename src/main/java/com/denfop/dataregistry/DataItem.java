@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 import static com.denfop.register.Register.ITEMS;
 
 public class DataItem<T extends Enum<T> & ISubEnum, E extends Item> {
-    public static List<DeferredHolder<Item, Item>> objects = new ArrayList<>();
+    public static List<DeferredHolder<Item, Item>> objects =  Collections.synchronizedList(new ArrayList<>());
     List<DeferredHolder<Item, E>> registryObjectList;
 
     public DataItem(Class<T> typeClass, Class<E> itemClass) {
@@ -87,9 +87,10 @@ public class DataItem<T extends Enum<T> & ISubEnum, E extends Item> {
     public int getMeta(E item) {
         int i = 0;
         for (DeferredHolder<Item, E> registryObject : registryObjectList) {
-            if (registryObject.get() == item) {
-                return i;
-            }
+            if (registryObject != null)
+                if (registryObject.get() == item) {
+                    return i;
+                }
             i++;
         }
         return 0;
@@ -99,9 +100,10 @@ public class DataItem<T extends Enum<T> & ISubEnum, E extends Item> {
         int i = 0;
         E item = (E) itemStack.getItem();
         for (DeferredHolder<Item, E> registryObject : registryObjectList) {
-            if (registryObject.get() == item) {
-                return i;
-            }
+            if (registryObject != null)
+                if (registryObject.get() == item) {
+                    return i;
+                }
             i++;
         }
         return 0;

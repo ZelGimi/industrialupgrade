@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blockentity.base.BlockEntityScanner;
@@ -17,9 +19,9 @@ public class BlockEntityAdvScanner extends BlockEntityScanner {
     private final AirPollutionComponent pollutionAir;
 
     public BlockEntityAdvScanner(BlockPos pos, BlockState state) {
-        super(2500, BlockBaseMachine3Entity.adv_scanner, pos, state);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.075));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.2));
+        super(ModConfig.mechanismInt("improved_scanner_operation_length", 2500), BlockBaseMachine3Entity.adv_scanner, pos, state);
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("improved_scanner_soil_pollution_amount", 0.075D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("improved_scanner_air_pollution_amount", 0.2D)));
     }
 
     @Override

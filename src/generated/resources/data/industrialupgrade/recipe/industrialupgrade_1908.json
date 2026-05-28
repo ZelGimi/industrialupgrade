@@ -6,7 +6,7 @@
       "item": "industrialupgrade:quantumitems3"
     },
     "B": {
-      "item": "industrialupgrade:itemcore/specore"
+      "item": "industrialupgrade:itemcore/quacore"
     },
     "C": {
       "item": "industrialupgrade:water_rotors_upgrade/water_rotorupgrade10"
@@ -16,9 +16,9 @@
     }
   },
   "pattern": [
-    "ADA",
-    "CBC",
-    "ADA"
+    "DBD",
+    "ACA",
+    "   "
   ],
   "result": {
     "count": 1,

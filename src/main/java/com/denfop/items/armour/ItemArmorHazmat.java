@@ -114,13 +114,13 @@ public class ItemArmorHazmat extends ItemArmorUtility implements HazmatLike, ISp
                 player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 60, 1));
             }
 
-            return new ISpecialArmor.ArmorProperties(10, 1.0, Integer.MAX_VALUE);
+            return new ISpecialArmor.ArmorProperties(10, 1.0, Integer.MAX_VALUE, this);
         } else {
             return this.getEquipmentSlot() == EquipmentSlot.FEET && source.is(DamageTypeTags.IS_FALL) ? new ISpecialArmor.ArmorProperties(
                     10,
                     damage < 8.0 ? 1.0 : 0.875,
-                    (armor.getMaxDamage() - armor.getDamageValue() + 2) * 2 * 25
-            ) : new ISpecialArmor.ArmorProperties(0, 0.05, (armor.getMaxDamage() - armor.getDamageValue() + 2) / 2 * 25);
+                    (armor.getMaxDamage() - armor.getDamageValue() + 2) * 2 * 25, this
+            ) : new ISpecialArmor.ArmorProperties(0, 0.05, (armor.getMaxDamage() - armor.getDamageValue() + 2) / 2 * 25, this);
         }
     }
 

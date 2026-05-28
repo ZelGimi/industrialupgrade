@@ -771,8 +771,8 @@
   "block.industrialupgrade.fluid.fluidcoppersulfate": "Copper Sulfate",
 
   "_comment": "Fluids and Gases (in containers)",
-  "fluid.iufluidNeutron": "Neutron",
-  "fluid.iufluidHelium": "Helium",
+  "fluid.iufluidneutron": "Neutron",
+  "fluid.iufluidhelium": "Helium",
   "fluid.iufluidgasoline": "Gasoline",
   "fluid.iufluiddiesel": "Diesel",
   "fluid.iufluidpetroleum": "Oil",

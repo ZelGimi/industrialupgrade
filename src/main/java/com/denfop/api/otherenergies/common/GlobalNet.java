@@ -54,7 +54,12 @@ public class GlobalNet implements IGlobalNet {
 
     @Override
     public ILocalNet getLocalSystem(final Level world) {
-        return worldILocalNetMap.get(world.dimension());
+        ILocalNet localNet = worldILocalNetMap.get(world.dimension());
+        if (localNet == null) {
+            localNet = new LocalNet(this.type);
+            worldILocalNetMap.put(world.dimension(), localNet);
+        }
+        return localNet;
     }
 
     @Override
@@ -64,7 +69,7 @@ public class GlobalNet implements IGlobalNet {
 
     @Override
     public void onUnload(ResourceKey<Level> id) {
-        ILocalNet localNet = worldILocalNetMap.get(id);
+        ILocalNet localNet = worldILocalNetMap.remove(id);
         if (localNet != null) {
             localNet.onUnload();
         }

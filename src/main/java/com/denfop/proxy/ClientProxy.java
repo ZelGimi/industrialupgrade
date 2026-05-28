@@ -4,7 +4,13 @@ import com.denfop.Constants;
 import com.denfop.IUCore;
 import com.denfop.IUItem;
 import com.denfop.api.container.CustomWorldContainer;
+import com.denfop.api.pollution.client.PollutionEnvironmentBlockColors;
+import com.denfop.api.pollution.client.PollutionScreenOverlay;
+import com.denfop.api.space.dimension.worldgen.SpaceWorldgenContent;
+import com.denfop.api.space.dimension.worldgen.block.SpaceGeyserBlockEntityRenderer;
+import com.denfop.api.space.dimension.worldgen.block.SpaceGeyserClientBlockExtensions;
 import com.denfop.blockentity.base.*;
+import com.denfop.blockentity.bee.BlockEntityApiary;
 import com.denfop.blockentity.creative.BlockEntityCreativeSteamStorage;
 import com.denfop.blockentity.mechanism.*;
 import com.denfop.blockentity.mechanism.steam.BlockEntitySteamStorage;
@@ -16,6 +22,7 @@ import com.denfop.blockentity.mechanism.worlcollector.BlockEntityCrystallize;
 import com.denfop.blockentity.panels.entity.BlockEntityMiniPanels;
 import com.denfop.blockentity.panels.entity.BlockEntitySolarPanel;
 import com.denfop.blockentity.transport.tiles.BlockEntityMultiCable;
+import com.denfop.blocks.mechanism.BlockApiaryEntity;
 import com.denfop.blocks.mechanism.BlockBaseMachine3Entity;
 import com.denfop.blocks.mechanism.BlockCreativeBlocksEntity;
 import com.denfop.containermenu.ContainerMenuBase;
@@ -27,11 +34,15 @@ import com.denfop.events.TickHandler;
 import com.denfop.events.client.EventAutoQuests;
 import com.denfop.events.client.GlobalRenderManager;
 import com.denfop.items.IProperties;
+import com.denfop.items.storage.ClientItemGridTooltipComponent;
+import com.denfop.items.storage.ItemGridTooltipComponent;
 import com.denfop.items.upgradekit.ItemUpgradeMachinesKit;
 import com.denfop.mixin.access.RenderChunkRegionAccessor;
+import com.denfop.render.PatternItemRenderer;
 import com.denfop.render.TileEntityRenderGasChamber;
 import com.denfop.render.advoilrefiner.TileEntityAdvOilRefinerRender;
 import com.denfop.render.anvil.RenderItemAnvil;
+import com.denfop.render.apiary.TileEntityRenderApiary;
 import com.denfop.render.autocollector.TileEntityRenderAutoLatexCollector;
 import com.denfop.render.base.DynamicFluidContainerModel;
 import com.denfop.render.base.NuclearBombRenderer;
@@ -89,6 +100,8 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.*;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
@@ -116,6 +129,10 @@ public class ClientProxy extends CommonProxy {
         modEventBus.addListener(this::registerMenu);
 
         modEventBus.addListener(this::onRegisterGeometryLoaders);
+        modEventBus.addListener(this::onRegisterGuiOverlays);
+        modEventBus.addListener(this::onRegisterBlockColors);
+        modEventBus.addListener(this::registerClientExtensions);
+        modEventBus.addListener(this::registerTooltipFactories);
         NeoForge.EVENT_BUS.register(this);
         NeoForge.EVENT_BUS.register(new EventAutoQuests());
 
@@ -123,9 +140,39 @@ public class ClientProxy extends CommonProxy {
     }
 
     @OnlyIn(Dist.CLIENT)
+    public void registerTooltipFactories(RegisterClientTooltipComponentFactoriesEvent event) {
+        event.register(ItemGridTooltipComponent.class, ClientItemGridTooltipComponent::new);
+    }
+
+    public void registerClientExtensions(RegisterClientExtensionsEvent event) {
+        event.registerItem(new IClientItemExtensions() {
+            @Override
+            public net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                return PatternItemRenderer.INSTANCE;
+            }
+        }, IUItem.patternStack.getItem());
+        event.registerBlock(new SpaceGeyserClientBlockExtensions(), SpaceWorldgenContent.SPACE_GEYSER.get());
+
+    }
+
+    public void onRegisterGuiOverlays(RegisterGuiLayersEvent event) {
+        event.registerBelowAll(ResourceLocation.parse(Constants.MOD_ID + "pollution_visual_overlay"), PollutionScreenOverlay.INSTANCE);
+    }
+
+
+    public void onRegisterBlockColors(RegisterColorHandlersEvent.Block event) {
+        PollutionEnvironmentBlockColors.register(event);
+    }
+
+    @OnlyIn(Dist.CLIENT)
     public void onRegisterGeometryLoaders(ModelEvent.RegisterGeometryLoaders event) {
 
         event.register(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "fluid_container"), DynamicFluidContainerModel.Loader.INSTANCE);
+    }
+
+    public void setLevelIfNull(BlockEntityBase blockEntityBase) {
+        if (blockEntityBase.getLevel() == null)
+            blockEntityBase.setLevel(Minecraft.getInstance().level);
     }
 
     public void registerParticleFactories(RegisterParticleProvidersEvent event) {
@@ -138,6 +185,10 @@ public class ClientProxy extends CommonProxy {
     public void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(IUItem.entity_nuclear_bomb.get(), NuclearBombRenderer::new);
         event.registerEntityRenderer(IUItem.entity_bee.get(), SmallBeeRenderer::new);
+        event.registerBlockEntityRenderer(
+                SpaceWorldgenContent.SPACE_GEYSER_BE.get(),
+                SpaceGeyserBlockEntityRenderer::new
+        );
     }
 
     @SubscribeEvent
@@ -202,23 +253,48 @@ public class ClientProxy extends CommonProxy {
     }
 
     public void registerMenu(RegisterMenuScreensEvent event) {
-        event.register(
-                containerBase.get(),
-                (MenuScreens.ScreenConstructor<ContainerMenuBase<? extends CustomWorldContainer>, ScreenIndustrialUpgrade<ContainerMenuBase<? extends CustomWorldContainer>>>) (menu, inventory, p_96217_) -> {
-                    return ((CustomWorldContainer) menu.base).getGui(inventory.player, menu);
-                }
-        );
-        event.register(
-                inventory_container.get(),
-                (MenuScreens.ScreenConstructor<ContainerMenuBase<? extends CustomWorldContainer>, ScreenIndustrialUpgrade<ContainerMenuBase<? extends CustomWorldContainer>>>) (menu, inventory, p_96217_) -> {
-                    if (menu == null)
-                        return null;
-                    CustomWorldContainer stackInventory = ((CustomWorldContainer) menu.base);
-                    return stackInventory.getGui(inventory.player, menu);
-                }
-        );
+        MenuScreens.ScreenConstructor<
+                ContainerMenuBase<? extends CustomWorldContainer>,
+                ScreenIndustrialUpgrade<ContainerMenuBase<? extends CustomWorldContainer>>
+                > safeFactory = ClientProxy::createSafeScreen;
+
+        event.register(containerBase.get(), safeFactory);
+        event.register(inventory_container.get(), safeFactory);
+    }
+    @OnlyIn(Dist.CLIENT)
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private static ScreenIndustrialUpgrade<ContainerMenuBase<? extends CustomWorldContainer>> createSafeScreen(
+            ContainerMenuBase<? extends CustomWorldContainer> menu,
+            net.minecraft.world.entity.player.Inventory inventory,
+            Component title
+    ) {
+        if (menu == null || menu.base == null) {
+            closeBrokenMenuClient();
+            return null;
+        }
+
+        ScreenIndustrialUpgrade screen = menu.base.getGui(inventory.player, menu);
+
+        if (screen == null) {
+            closeBrokenMenuClient();
+            return null;
+        }
+
+        return (ScreenIndustrialUpgrade<ContainerMenuBase<? extends CustomWorldContainer>>) screen;
     }
 
+    @OnlyIn(Dist.CLIENT)
+    private static void closeBrokenMenuClient() {
+        Minecraft minecraft = Minecraft.getInstance();
+
+        minecraft.execute(() -> {
+            if (minecraft.player != null) {
+                minecraft.player.closeContainer();
+            }
+
+            minecraft.setScreen(null);
+        });
+    }
     public Level getWorld(ResourceKey<Level> dim) {
         MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
         return server != null && dim != null ? server.getLevel(dim) : (Minecraft.getInstance() == null ? null : Minecraft.getInstance().level);
@@ -298,6 +374,7 @@ public class ClientProxy extends CommonProxy {
         BlockEntityRenderers.register((BlockEntityType<? extends BlockEntityCreativeSteamStorage>) IUItem.creativeBlock.getBlock(BlockCreativeBlocksEntity.creative_steam_storage).getValue().getBlockType(), TileEntityRenderCreativeSteamStorage::new);
         BlockEntityRenderers.register((BlockEntityType<? extends BlockEntityLiquedTank>) IUItem.creativeBlock.getBlock(BlockCreativeBlocksEntity.creative_tank_storage).getValue().getBlockType(), TileEntityTankRender::new);
         BlockEntityRenderers.register((BlockEntityType<? extends BlockEntityAutoLatexCollector>) IUItem.basemachine2.getBlock(BlockBaseMachine3Entity.auto_latex_collector).getValue().getBlockType(), TileEntityRenderAutoLatexCollector::new);
+        BlockEntityRenderers.register((BlockEntityType<? extends BlockEntityApiary>) IUItem.apiary.getBlock(BlockApiaryEntity.apiary).getValue().getBlockType(), TileEntityRenderApiary::new);
 
 
         NeoForge.EVENT_BUS.register(new EventSpectralSuitEffect());

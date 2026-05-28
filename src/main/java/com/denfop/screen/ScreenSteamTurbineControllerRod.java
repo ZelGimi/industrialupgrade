@@ -56,7 +56,7 @@ public class ScreenSteamTurbineControllerRod<T extends ContainerMenuSteamTurbine
         super.drawForegroundLayer(poseStack, par1, par2);
         for (int i = 0; i < this.container.base.getRods().size(); i++) {
             BlockPos pos = container.base.getRods().get(i).getPos();
-            new TooltipWidget(this, 6 + (i) * 21, 34, 18, 18).withTooltip(stack.getDisplayName().getString() + "\n" + "x" +
+            new TooltipWidget(this, 6 + (i) * 21, 34, 18, 18).withTooltip(com.denfop.utils.ModUtils.cleanComponentString(stack.getDisplayName().getString()) + "\n" + "x" +
                     ": " + pos.getX() + " y: " + pos.getY() + " z: " + pos.getZ()).drawForeground(poseStack, par1, par2);
 
         }

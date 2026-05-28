@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.generator.energy.fluid;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blockentity.mechanism.generator.energy.BlockEntityGeoGenerator;
@@ -18,8 +20,8 @@ public class BlockEntityImpGeoGenerator extends BlockEntityGeoGenerator {
 
     public BlockEntityImpGeoGenerator(BlockPos pos, BlockState state) {
         super(20, 3.4, 3, BlockBaseMachine1Entity.imp_geo, pos, state);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.15));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.35));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("advanced_geo_generator_soil_pollution_amount", 0.15D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("advanced_geo_generator_air_pollution_amount", 0.35D)));
     }
 
     @Override

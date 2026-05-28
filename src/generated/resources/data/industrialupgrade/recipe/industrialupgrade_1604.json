@@ -26,16 +26,13 @@
       "items": "industrialupgrade:circuit/photoncircuit"
     },
     "E": {
-      "item": "industrialupgrade:quantumitems3"
-    },
-    "F": {
-      "item": "industrialupgrade:upgrades/overclockerupgrade2"
+      "item": "industrialupgrade:adv_spectral_box"
     }
   },
   "pattern": [
     "ACB",
-    "F F",
-    "ECE"
+    "E E",
+    "   "
   ],
   "result": {
     "count": 1,

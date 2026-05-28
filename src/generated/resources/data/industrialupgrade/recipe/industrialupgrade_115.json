@@ -3,39 +3,16 @@
   "category": "misc",
   "key": {
     "A": {
-      "tag": "c:plates/zinc"
+      "item": "industrialupgrade:module_schedule"
     },
     "B": {
-      "type": "neoforge:components",
-      "components": {
-        "industrialupgrade:level_microchip": 6,
-        "minecraft:attribute_modifiers": {
-          "modifiers": []
-        },
-        "minecraft:enchantments": {
-          "levels": {}
-        },
-        "minecraft:lore": [],
-        "minecraft:max_stack_size": 64,
-        "minecraft:rarity": "common",
-        "minecraft:repair_cost": 0
-      },
-      "items": "industrialupgrade:circuit/nanocircuit"
-    },
-    "C": {
-      "item": "industrialupgrade:baseblockingot/vanadium"
-    },
-    "D": {
-      "tag": "c:doubleplate/platinum"
-    },
-    "E": {
-      "item": "industrialupgrade:quantumitems2"
+      "item": "industrialupgrade:crafting_elements/crafting_90_element"
     }
   },
   "pattern": [
-    "AAA",
-    "BCB",
-    "DED"
+    "   ",
+    " A ",
+    " B "
   ],
   "result": {
     "count": 1,

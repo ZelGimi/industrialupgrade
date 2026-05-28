@@ -58,12 +58,12 @@ public class ScreenExpeditionTableSpace extends ScreenDefaultResearchTable {
 
             if (fakeBody.getTimerTo().canWork()) {
                 new TooltipWidget(this.tile, (int) (guiLeft + (width / 2 - (159 * 0.75) / 2)), guiTop + 25, (int) (159 * 0.75), (int) (16 * 0.75))
-                        .withTooltip("Летит" + "\n" + "Время: " + fakeBody.getTimerTo().getDisplay() + "\n" + "Жидкость: " + fluid + "mb \n" + "Энергия: " + ModUtils.getString(energy) + "EF")
+                        .withTooltip(Localization.translate("iu.space.expedition.status.flight") + "\n" + Localization.translate("iu.space.expedition.time") + fakeBody.getTimerTo().getDisplay() + "\n" + Localization.translate("iu.space.expedition.fluid") + fluid + "mb \n" + Localization.translate("iu.space.expedition.energy") + ModUtils.getString(energy) + "EF")
                         .drawForeground(poseStack, par1, par2);
             }
             if (fakeBody.getTimerFrom().canWork()) {
                 new TooltipWidget(this.tile, (int) (guiLeft + (width / 2 - (159 * 0.75) / 2)), guiTop + 25, (int) (159 * 0.75), (int) (16 * 0.75))
-                        .withTooltip("Возвращается" + "\n" + "Время: " + fakeBody.getTimerFrom().getDisplay() + "\n" + "Жидкость: " + fluid + "mb \n" + "Энергия: " + ModUtils.getString(energy) + "EF")
+                        .withTooltip(Localization.translate("iu.space.expedition.status.returning") + "\n" + Localization.translate("iu.space.expedition.time") + fakeBody.getTimerFrom().getDisplay() + "\n" + Localization.translate("iu.space.expedition.fluid") + fluid + "mb \n" + Localization.translate("iu.space.expedition.energy") + ModUtils.getString(energy) + "EF")
                         .drawForeground(poseStack, par1, par2);
             }
 

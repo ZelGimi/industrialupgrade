@@ -115,7 +115,7 @@ public enum BlockRefinerEntity implements MultiBlockEntity, MultiBlockItem {
     @Override
     public boolean hasActive() {
         // TODO Auto-generated method stub
-        return false;
+        return true;
     }
 
     @Override

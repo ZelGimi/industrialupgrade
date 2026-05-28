@@ -408,6 +408,7 @@ public class BlockEntityBaseWaterGenerator extends BlockEntityInventory implemen
 
             if (this.level.getGameTime() % getDamageTimeFromWind() == 0) {
                 this.slot.damage(this.getDamageRotor(), this.addition_strength);
+                new PacketUpdateFieldTile(this, "slot", this.slot);
             }
         } else {
             generation = 0;

@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.blockentity.base.BlockEntityBaseHandlerHeavyOre;
@@ -18,8 +20,8 @@ public class BlockEntityAdvHandlerHeavyOre extends BlockEntityBaseHandlerHeavyOr
 
     public BlockEntityAdvHandlerHeavyOre(BlockPos pos, BlockState state) {
         super(EnumTypeStyle.ADVANCED, BlockBaseMachine3Entity.double_handlerho, pos, state);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.35));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.8));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("improved_handler_heavy_ore_soil_pollution_amount", 0.35D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("improved_handler_heavy_ore_air_pollution_amount", 0.8D)));
     }
 
     public MultiBlockEntity getTeBlock() {

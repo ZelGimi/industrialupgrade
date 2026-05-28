@@ -3,43 +3,26 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:crafting_elements/crafting_274_element"
+      "item": "industrialupgrade:wiring/copper"
     },
     "B": {
-      "type": "neoforge:components",
-      "components": {
-        "industrialupgrade:level_microchip": 2,
-        "minecraft:attribute_modifiers": {
-          "modifiers": []
-        },
-        "minecraft:enchantments": {
-          "levels": {}
-        },
-        "minecraft:lore": [],
-        "minecraft:max_stack_size": 64,
-        "minecraft:rarity": "common",
-        "minecraft:repair_cost": 0
-      },
-      "items": "industrialupgrade:crafting_elements/crafting_272_element"
+      "item": "industrialupgrade:transformer_iu/mv"
     },
     "C": {
-      "item": "powerutils:module_ic"
+      "item": "industrialupgrade:circuit/nanocircuit_part2"
     },
     "D": {
-      "item": "industrialupgrade:blockresource/machine"
-    },
-    "E": {
-      "item": "powerutils:module_fe"
+      "item": "industrialupgrade:wiring_storage/cesu_iu"
     }
   },
   "pattern": [
     "ABA",
-    "CDE",
+    "CDC",
     "ABA"
   ],
   "result": {
     "count": 1,
-    "id": "powerutils:converter/power_utilities_fe"
+    "id": "powerutils:module_ic"
   },
   "show_notification": false
 }

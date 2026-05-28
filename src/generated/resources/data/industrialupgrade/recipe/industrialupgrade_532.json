@@ -11,13 +11,13 @@
     "C": {
       "item": "industrialupgrade:quantumitems4"
     },
-    "D": {
-      "item": "industrialupgrade:machines/singular_solar_panel"
-    },
     "E": {
+      "item": "industrialupgrade:excitednucleus/admcore"
+    },
+    "H": {
       "type": "neoforge:components",
       "components": {
-        "industrialupgrade:level_microchip": 4,
+        "industrialupgrade:level_microchip": 8,
         "minecraft:attribute_modifiers": {
           "modifiers": []
         },
@@ -29,13 +29,16 @@
         "minecraft:rarity": "common",
         "minecraft:repair_cost": 0
       },
-      "items": "industrialupgrade:crafting_elements/crafting_273_element"
+      "items": "industrialupgrade:circuit/quantumcircuit"
+    },
+    "J": {
+      "item": "industrialupgrade:energy/wrench"
     }
   },
   "pattern": [
     "ABA",
-    "C C",
-    "DED"
+    "CJC",
+    "HEH"
   ],
   "result": {
     "count": 1,

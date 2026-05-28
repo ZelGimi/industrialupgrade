@@ -72,14 +72,14 @@ public class ScreenQuantumTransformer<T extends ContainerMenuQuantumMolecular> e
                 drawTexturedModalRect(poseStack, this.guiLeft + 30, this.guiTop + 75, 43, 237, 14, (int) chargeLevel);
                 bindTexture(getTexture());
 
-                draw(poseStack, input + this.container.base.inputSlot.get(0).getDisplayName().getString(),
+                draw(poseStack, input + com.denfop.utils.ModUtils.cleanComponentString(this.container.base.inputSlot.get(0).getDisplayName().getString()),
                         this.guiLeft + 73, this.guiTop + 55, ModUtils.convertRGBcolorToInt(255, 255, 255)
                 );
-                draw(poseStack, input + this.container.base.inputSlot.get(1).getDisplayName().getString(),
+                draw(poseStack, input + com.denfop.utils.ModUtils.cleanComponentString(this.container.base.inputSlot.get(1).getDisplayName().getString()),
                         this.guiLeft + 73, this.guiTop + 65, ModUtils.convertRGBcolorToInt(255, 255, 255)
                 );
 
-                draw(poseStack, output + output3.getRecipe().output.items.get(0).getDisplayName().getString(), this.guiLeft + 73,
+                draw(poseStack, output + com.denfop.utils.ModUtils.cleanComponentString(output3.getRecipe().output.items.get(0).getDisplayName().getString()), this.guiLeft + 73,
                         this.guiTop + 75, ModUtils.convertRGBcolorToInt(255, 255, 255)
                 );
                 draw(poseStack, energyPerOperation + ModUtils.getString(output3.getRecipe().output.metadata.getDouble(
@@ -121,19 +121,19 @@ public class ScreenQuantumTransformer<T extends ContainerMenuQuantumMolecular> e
                     bindTexture(getTexture());
                     drawTexturedModalRect(poseStack, this.guiLeft + 30, this.guiTop + 75, 43, 237, 14, (int) chargeLevel);
                     bindTexture(getTexture());
-                    draw(poseStack, input + col * size + "x" + this.container.base.inputSlot.get(0).getDisplayName().getString(),
+                    draw(poseStack, input + col * size + "x" + com.denfop.utils.ModUtils.cleanComponentString(this.container.base.inputSlot.get(0).getDisplayName().getString()),
                             this.guiLeft + 73, this.guiTop + 55, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
 
-                    draw(poseStack, input + col1 * size + "x" + this.container.base.inputSlot
+                    draw(poseStack, input + col1 * size + "x" +   com.denfop.utils.ModUtils.cleanComponentString(this.container.base.inputSlot
                                     .get(1)
-                                    .getDisplayName().getString(),
+                                    .getDisplayName().getString()),
                             this.guiLeft + 73, this.guiTop + 65, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );
 
-                    draw(poseStack, output + output2.getCount() * size + "x" + output3.getRecipe().output.items
-                                    .get(0)
-                                    .getDisplayName().getString()
+                    draw(poseStack, output + output2.getCount() * size + "x" +   com.denfop.utils.ModUtils.cleanComponentString(output3.getRecipe().output.items
+                                   .get(0)
+                                    .getDisplayName().getString())
                             , this.guiLeft + 73,
                             this.guiTop + 75, ModUtils.convertRGBcolorToInt(255, 255, 255)
                     );

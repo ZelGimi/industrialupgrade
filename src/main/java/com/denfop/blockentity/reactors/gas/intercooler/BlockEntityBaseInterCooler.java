@@ -54,7 +54,7 @@ public class BlockEntityBaseInterCooler extends BlockEntityMultiBlockElement imp
     public void updateEntityServer() {
         super.updateEntityServer();
         if (this.getWorld().getGameTime() % 20 == 0) {
-            if (!this.getSlot().get(0).isEmpty() && ((ItemsFan) this.getSlot().get(0).getItem()).getBarWidth(this
+            if (!this.getSlot().get(0).isEmpty() && this.getSlot().get(0).getItem().getBarWidth(this
                     .getSlot()
                     .get(0)) == 0) {
                 this.getSlot().set(0, ItemStack.EMPTY);

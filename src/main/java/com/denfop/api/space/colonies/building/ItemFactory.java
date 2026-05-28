@@ -78,10 +78,15 @@ public class ItemFactory extends Building implements IColonyMiningFactory {
                     if (itemStacks.isEmpty())
                         return;
                     ItemStack itemStack = itemStacks.get(WorldBaseGen.random.nextInt(itemStacks.size())).getElement().copy();
-                    itemStack.setCount((int) ((WorldBaseGen.random.nextInt(this.type.getMaxItemValue()) + 1) * this.getColony().getPercentEntertainment()));
-                    if (storage.canAddItemStack(itemStack)) {
-                        this.getColony().useEnergy(this.getEnergy());
-                        return;
+                    int amount = (int) ((WorldBaseGen.random.nextInt(this.type.getMaxItemValue()) + 1) * this.getColony().getPercentEntertainment());
+                    amount = Math.min(amount, this.getColony().getAvailableItem());
+                    if (amount != 0) {
+                        this.getColony().removeAvailableItem(amount);
+                        itemStack.setCount(amount);
+                        if (storage.canAddItemStack(itemStack)) {
+                            this.getColony().useEnergy(this.getEnergy());
+                            return;
+                        }
                     }
                 }
             }

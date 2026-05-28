@@ -42,16 +42,16 @@ public class ScreenVending<T extends ContainerMenuVending> extends ScreenMain<Co
                 if (!this.container.base.inventoryBuyPrivate
                         .get(i).isEmpty()) {
                     final int finalI = i;
-                    new TooltipWidget(this, xDisplayPosition2, 16, 18, 18).withTooltip(() -> this.container.base.inventoryBuyPrivate
-                            .get(finalI)
-                            .getDisplayName().getString()).drawForeground(poseStack, par1, par2);
+                    new TooltipWidget(this, xDisplayPosition2, 16, 18, 18).withTooltip(() ->   com.denfop.utils.ModUtils.cleanComponentString(this.container.base.inventoryBuyPrivate
+                      .get(finalI)
+                            .getDisplayName().getString())).drawForeground(poseStack, par1, par2);
                 }
                 if (!this.container.base.inventorySellPrivate
                         .get(i).isEmpty()) {
                     final int finalI = i;
-                    new TooltipWidget(this, xDisplayPosition2, 60, 18, 18).withTooltip(() -> this.container.base.inventorySellPrivate
-                            .get(finalI)
-                            .getDisplayName().getString()).drawForeground(poseStack, par1, par2);
+                    new TooltipWidget(this, xDisplayPosition2, 60, 18, 18).withTooltip(() ->   com.denfop.utils.ModUtils.cleanComponentString(this.container.base.inventorySellPrivate
+                           .get(finalI)
+                            .getDisplayName().getString())).drawForeground(poseStack, par1, par2);
 
                 }
             }

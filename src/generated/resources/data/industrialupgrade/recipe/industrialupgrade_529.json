@@ -9,19 +9,36 @@
       "item": "industrialupgrade:excitednucleus/sincore"
     },
     "C": {
-      "item": "industrialupgrade:quantumitems2"
+      "item": "industrialupgrade:quantumitems4"
     },
     "D": {
       "item": "industrialupgrade:machines/proton_solar_panel"
     },
     "E": {
-      "item": "industrialupgrade:excitednucleus/procore"
+      "item": "industrialupgrade:excitednucleus/sincore"
+    },
+    "H": {
+      "type": "neoforge:components",
+      "components": {
+        "industrialupgrade:level_microchip": 7,
+        "minecraft:attribute_modifiers": {
+          "modifiers": []
+        },
+        "minecraft:enchantments": {
+          "levels": {}
+        },
+        "minecraft:lore": [],
+        "minecraft:max_stack_size": 64,
+        "minecraft:rarity": "common",
+        "minecraft:repair_cost": 0
+      },
+      "items": "industrialupgrade:circuit/quantumcircuit"
     }
   },
   "pattern": [
     "ABA",
     "CDC",
-    "DED"
+    "HEH"
   ],
   "result": {
     "count": 1,

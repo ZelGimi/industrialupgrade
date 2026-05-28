@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism.generator.things.fluid;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.blockentity.MultiBlockEntity;
 import com.denfop.api.container.CustomWorldContainer;
@@ -49,7 +51,7 @@ public class BlockEntityLavaGenerator extends BlockEntityElectricMachine impleme
     private double lastEnergy;
 
     public BlockEntityLavaGenerator(BlockPos pos, BlockState state) {
-        super(20000, 1, 1, BlockBaseMachine2Entity.lava_gen, pos, state);
+        super(ModConfig.mechanismDouble("lava_generator_energy_storage", 20000.0D), 1, 1, BlockBaseMachine2Entity.lava_gen, pos, state);
 
         this.energycost = 80;
         this.outputSlot = new InventoryOutput(this, 1);
@@ -66,8 +68,8 @@ public class BlockEntityLavaGenerator extends BlockEntityElectricMachine impleme
         );
 
         this.upgradeSlot = new InventoryUpgrade(this, 4);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.15));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.3));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("lava_generator_soil_pollution_amount", 0.15D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("lava_generator_air_pollution_amount", 0.3D)));
     }
 
     private static int applyModifier(int extra) {

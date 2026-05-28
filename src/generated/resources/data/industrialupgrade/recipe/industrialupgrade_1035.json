@@ -19,12 +19,12 @@
     }
   },
   "pattern": [
-    "AAA",
-    "BDB",
-    "ECE"
+    "ADA",
+    "BCB",
+    "EDE"
   ],
   "result": {
-    "count": 1,
+    "count": 2,
     "id": "industrialupgrade:crafting_elements/crafting_620_element"
   },
   "show_notification": false

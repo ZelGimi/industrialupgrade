@@ -1,0 +1,25 @@
+{
+  "type": "industrialupgrade:shaped_recipe",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:casings/strontium"
+    },
+    "B": {
+      "item": "industrialupgrade:crafting_elements/crafting_778_element"
+    },
+    "D": {
+      "tag": "c:plates/gadolinium"
+    }
+  },
+  "pattern": [
+    "A A",
+    "BDB",
+    "ABA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "industrialupgrade:crafting_elements/crafting_779_element"
+  },
+  "show_notification": false
+}

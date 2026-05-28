@@ -1,0 +1,11 @@
+{
+  "type": "industrialupgrade:moon_type",
+  "generator": {
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "industrialupgrade:moon_biome"
+    },
+    "settings": "industrialupgrade:moon_noise"
+  }
+}

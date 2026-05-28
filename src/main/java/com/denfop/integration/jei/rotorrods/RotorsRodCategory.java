@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.rotorrods;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.api.recipe.InventoryOutput;
@@ -96,7 +97,8 @@ public class RotorsRodCategory extends ScreenMain implements IRecipeCategory<Rot
         final List<SlotInvSlot> slots1 = container1.findClassSlots(InventoryRecipes.class);
         int i = 0;
         for (; i < recipe.getInputs().length; i++) {
-            builder.addSlot(RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY()).addItemStack(recipe.getInputs()[i]);
+            JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, slots1.get(i).getJeiX(), slots1.get(i).getJeiY(), recipe, i, recipe.getInputs()[i]);
+
 
 
         }

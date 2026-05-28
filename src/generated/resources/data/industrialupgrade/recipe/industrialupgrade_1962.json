@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "industrialupgrade:quantumitems3"
+      "item": "industrialupgrade:quantumitems6"
     },
     "B": {
       "item": "industrialupgrade:itemcore/quacore"
@@ -16,9 +16,9 @@
     }
   },
   "pattern": [
-    "ADA",
-    "CBC",
-    "ADA"
+    "DBD",
+    "ACA",
+    "   "
   ],
   "result": {
     "count": 1,

@@ -1,5 +1,7 @@
 package com.denfop.blockentity.mechanism;
 
+
+import com.denfop.config.ModConfig;
 import com.denfop.IUItem;
 import com.denfop.api.Recipes;
 import com.denfop.api.blockentity.MultiBlockEntity;
@@ -33,12 +35,12 @@ public class BlockEntityMatterFactory extends BlockEntityElectricMachine impleme
     public MachineRecipe output;
 
     public BlockEntityMatterFactory(BlockPos pos, BlockState state) {
-        super(2000, 14, 1, BlockBaseMachine3Entity.matter_factory, pos, state);
+        super(ModConfig.mechanismDouble("active_matter_factory_energy_storage", 2000.0D), 14, 1, BlockBaseMachine3Entity.matter_factory, pos, state);
         this.inputSlotA = new InventoryRecipes(this, "active_matter_factory", this);
-        this.timer = this.addComponent(new ComponentTimer(this, new Timer(0, 30, 0)));
+        this.timer = this.addComponent(new ComponentTimer(this, new Timer(0, 1, 0)));
         Recipes.recipes.addInitRecipes(this);
-        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, 0.1));
-        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, 0.1));
+        this.pollutionSoil = this.addComponent(new SoilPollutionComponent(this, ModConfig.mechanismDouble("active_matter_factory_soil_pollution_amount", 0.1D)));
+        this.pollutionAir = this.addComponent(new AirPollutionComponent(this, ModConfig.mechanismDouble("active_matter_factory_air_pollution_amount", 0.1D)));
     }
 
     public static void addRecipe(ItemStack container, int output) {

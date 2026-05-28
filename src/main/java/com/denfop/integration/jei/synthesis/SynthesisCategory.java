@@ -1,5 +1,6 @@
 package com.denfop.integration.jei.synthesis;
 
+import com.denfop.integration.jei.JeiIngredientHelper;
 import com.denfop.Constants;
 import com.denfop.IUItem;
 import com.denfop.blockentity.mechanism.BlockEntityStampMechanism;
@@ -91,10 +92,11 @@ public class SynthesisCategory extends ScreenMain implements IRecipeCategory<Syn
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, SynthesisHandler recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 20, 31).addItemStack(recipe.getInput());
-        builder.addSlot(RecipeIngredientRole.INPUT, 56, 31).addItemStack(recipe.getInput1());
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 20, 31, recipe, 0, recipe.getInput());
+
+        JeiIngredientHelper.addInputSlot(builder, RecipeIngredientRole.INPUT, 56, 31, recipe, 1, recipe.getInput1());
+
         builder.addSlot(RecipeIngredientRole.OUTPUT, 108, 31).addItemStack(recipe.getOutput());
-        builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStacks(recipe.getContainer().input.getAllStackInputs());
 
     }
 
