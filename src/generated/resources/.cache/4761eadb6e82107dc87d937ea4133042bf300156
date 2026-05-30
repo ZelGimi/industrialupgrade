@@ -1,4 +1,4 @@
-// 1.20.1	2026-05-22T17:44:30.7270392	Tags for minecraft:block mod id industrialupgrade
+// 1.20.1	2026-05-30T20:28:03.4891391	Tags for minecraft:block mod id industrialupgrade
 a93bea601367478d3c3facfdba1b082f6bdc1530 data/forge/tags/blocks/logs/rubber.json
 73b45880f59041929e6381c695e8cb8c42ed9e98 data/forge/tags/blocks/ores.json
 4910980f39faa457b0c95b03c9e133a2ab04dc63 data/forge/tags/blocks/ores/adamantium.json
@@ -6,7 +6,6 @@ d1ab6568f1b5e5c5d3ace3eaa93815b156c684c5 data/forge/tags/blocks/ores/alfildit.js
 878fc7dc84af7a6f6dde8d75b4ae171f90fd05cf data/forge/tags/blocks/ores/aluminium.json
 d5752f82e208e59971c0de46318fe324de70a822 data/forge/tags/blocks/ores/americium.json
 f7f829abc45a1bb13b1b1999113e614959b9da1e data/forge/tags/blocks/ores/apatite.json
-18fa62d1e984cf67ba5b75d41f42961a971d069d data/forge/tags/blocks/ores/ariel_draconium.json
 924d1c2c7ebc1ca04d2ef6030a4a5d04e264f938 data/forge/tags/blocks/ores/arsenic.json
 d7d7117d2bb2262fc69969c11736e4a1d07a4cd0 data/forge/tags/blocks/ores/arsenopyrite.json
 7fa5be30cea60558587b693a37cdcfacf33de4d9 data/forge/tags/blocks/ores/azurite.json
@@ -19,8 +18,8 @@ c53e073debd39c9484c3d83e540c65ba59f628af data/forge/tags/blocks/ores/bor.json
 7153464d6d13bde6b126f4508f5102723408c17a data/forge/tags/blocks/ores/braggite.json
 4b9e1aa726231eb9b443ad1cb0d6d6484f87923f data/forge/tags/blocks/ores/cadmium.json
 80a4106896ed6a2bde18ed62bb98a185c10dd04e data/forge/tags/blocks/ores/calaverite.json
-c57c16c83b50b4cdf0e847be3e2d57b3e243a1fc data/forge/tags/blocks/ores/calcium.json
-d00f581a6ea35bbb6c4638f48b8ed8303a4395ac data/forge/tags/blocks/ores/calciumphosphate.json
+d2b0bc9c6a32659bf043cfe3f631539942053dd0 data/forge/tags/blocks/ores/calcium.json
+f018b132dfc102cbe4012cd04d12fedac7558116 data/forge/tags/blocks/ores/calciumphosphate.json
 96ee00136cd5233c72c1e268d11aed76b4d1c3fe data/forge/tags/blocks/ores/celestine.json
 f749dfd0626871217f6ee59446248c1e3702c573 data/forge/tags/blocks/ores/chromium.json
 80c7a6458fa46bf7e16d2ad00c642da817e4f6bf data/forge/tags/blocks/ores/cobalt.json
@@ -30,7 +29,7 @@ b84ae8b5b383357d89929bf3a9392758482b43a5 data/forge/tags/blocks/ores/copper.json
 b3ab6f3dc3a6a91222d97f6a864f43270af63c07 data/forge/tags/blocks/ores/crystal.json
 b8ca290b665b117e09b4da227e03b5310a5ff2e8 data/forge/tags/blocks/ores/curium.json
 a71ecece9f2cd3376fd5e54df8b80501f58b5114 data/forge/tags/blocks/ores/diamond.json
-cba7bf84313ca95d808e25a861d06e6f58ddd665 data/forge/tags/blocks/ores/draconium.json
+0e644f71cb28602d8a4cf1d6637cd05ea82892fa data/forge/tags/blocks/ores/draconium.json
 692a4bcee6fae0cbe3a944742c0a34e38dec037a data/forge/tags/blocks/ores/emerald.json
 d7c1824a54323188d91b1826261b366e9d1d3872 data/forge/tags/blocks/ores/euxenite.json
 36f47c06e5f7430ce2cba701fafa6b4383e03fda data/forge/tags/blocks/ores/fergusonite.json
@@ -68,8 +67,7 @@ c1f44b33aae0b0becfa994e8a7b76d66836871fa data/forge/tags/blocks/ores/orichalcum.
 cad4253e434197364065f7074f1e40771bc07882 data/forge/tags/blocks/ores/palladium.json
 f251c7299356ba5df2aabf39eefa175b0fbd55e9 data/forge/tags/blocks/ores/platinum.json
 986682e182a1df9aa5c02752083af8876bbea011 data/forge/tags/blocks/ores/polonium.json
-d52c4e8e78ed5536e2e6e6e397a54c3e64238871 data/forge/tags/blocks/ores/potassiumphosphate.json
-3e8310034f12797a01d7ab03d9ce66ae6d423c0b data/forge/tags/blocks/ores/potassium_phosphate.json
+50b3cbd0bcd3fdd882880165e9631ead7060bd02 data/forge/tags/blocks/ores/potassiumphosphate.json
 7fc29a55a9691d850fd98513e06026ea95447615 data/forge/tags/blocks/ores/pyrite.json
 7645b588851854c6d77de34e798098f91af458a4 data/forge/tags/blocks/ores/quartz.json
 14fc30d18d7ccf16e4b352f708f30f0cc610caf3 data/forge/tags/blocks/ores/quartzite.json
@@ -82,8 +80,7 @@ b46aace0322ca6058f47eae197037bc1743c988c data/forge/tags/blocks/ores/ruby.json
 c2acdfd4d2f326241f7372c3cf6a58929f1e8b95 data/forge/tags/blocks/ores/silver.json
 a988846c6c8fac6a23e02aa8bc96ec3723aec77d data/forge/tags/blocks/ores/silver_stone.json
 a193be0c3b07430eacb9026f7738a20ef9e1e290 data/forge/tags/blocks/ores/smithsonite.json
-7ab766c57b264a9ff0fea51cfb0c1f580f6e50f6 data/forge/tags/blocks/ores/sodiumphosphate.json
-df96793e495aa1c6fc040d5323f218efedbd3449 data/forge/tags/blocks/ores/sodium_phosphate.json
+544d206fa2a5baf14895b3a3f580fded8a88dc65 data/forge/tags/blocks/ores/sodiumphosphate.json
 64c169081adceccfdf9d0b1197624f2e850b10cb data/forge/tags/blocks/ores/spinel.json
 bd2098bdd4c6418122f9c8229a2ffcfa96b5c28d data/forge/tags/blocks/ores/strontium.json
 295c08b0dbcecd88e0792e93beab4a8c65c84b78 data/forge/tags/blocks/ores/sulfur.json

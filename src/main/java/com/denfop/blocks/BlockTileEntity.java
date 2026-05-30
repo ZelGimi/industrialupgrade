@@ -153,7 +153,7 @@ public class BlockTileEntity<T extends Enum<T> & MultiBlockEntity> extends Block
                     BlockEntityBase te = getTe(level, pos);
                     return te != null && te.canConnectRedstone();
                 })
-                .noOcclusion()
+                .noOcclusion().forceSolidOn()
                 .sound(value.getMaterial() == MapColor.WOOL ? SoundType.WOOL : SoundType.STONE);
 
         if (value.getMaterial() == MapColor.PLANT) {

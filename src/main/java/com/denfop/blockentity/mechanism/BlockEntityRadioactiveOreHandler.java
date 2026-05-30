@@ -155,7 +155,7 @@ public class BlockEntityRadioactiveOreHandler extends BlockEntityElectricMachine
 
     }
 
-    public static void addRecipe(ItemStack container, ItemStack output, int random, ItemStack itemStack) {
+    public static void addRecipe(Object container, ItemStack output, int random, ItemStack itemStack) {
         final IInputHandler input = com.denfop.api.Recipes.inputFactory;
         final CompoundTag nbt = ModUtils.nbt();
         nbt.putInt("random", random);
@@ -198,23 +198,23 @@ public class BlockEntityRadioactiveOreHandler extends BlockEntityElectricMachine
     public void init() {
 
 
-        addRecipe(new ItemStack(IUItem.classic_ore.getItem(3), 1), new ItemStack(IUItem.nuclear_res.getStack(21), 2), 5,
+        addRecipe("forge:ores/uranium", new ItemStack(IUItem.nuclear_res.getStack(21), 2), 5,
                 new ItemStack(IUItem.nuclear_res.getStack(16), 1)
         );
 
-        addRecipe(new ItemStack(IUItem.toriyore.getItem(), 1), new ItemStack(IUItem.nuclear_res.getStack(19), 1), 10,
+        addRecipe("forge:ores/thorium", new ItemStack(IUItem.nuclear_res.getStack(19), 1), 10,
                 new ItemStack(IUItem.nuclear_res.getStack(14), 4)
         );
 
-        addRecipe(new ItemStack(IUItem.radiationore.getItem(1), 1), new ItemStack(IUItem.nuclear_res.getStack(18), 1), 10,
+        addRecipe("forge:ores/neptunium", new ItemStack(IUItem.nuclear_res.getStack(18), 1), 10,
                 new ItemStack(IUItem.nuclear_res.getStack(13), 4)
         );
 
-        addRecipe(new ItemStack(IUItem.radiationore.getItem(), 1), new ItemStack(IUItem.nuclear_res.getStack(17), 1), 10,
+        addRecipe("forge:ores/americium", new ItemStack(IUItem.nuclear_res.getStack(17), 1), 10,
                 new ItemStack(IUItem.nuclear_res.getStack(15), 4)
         );
 
-        addRecipe(new ItemStack(IUItem.radiationore.getItem(2), 1), new ItemStack(IUItem.nuclear_res.getStack(20), 1), 20,
+        addRecipe("forge:ores/curium", new ItemStack(IUItem.nuclear_res.getStack(20), 1), 20,
                 new ItemStack(IUItem.nuclear_res.getStack(16), 4)
         );
     }

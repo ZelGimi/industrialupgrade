@@ -29,6 +29,9 @@ public class ItemBlockDeepOre1 extends ItemBlockCore<BlockDeepOre1.Type> impleme
         if (name.endsWith("_ore")) {
             name = name.substring(0, name.length() - "_ore".length());
         }
+        if (this.getElement() == BlockDeepOre1.Type.deep_calcium_ore){
+            name = "calciumphosphate";
+        }
         return new String[]{"forge:ores/" + name, "forge:ores"};
     }
 }

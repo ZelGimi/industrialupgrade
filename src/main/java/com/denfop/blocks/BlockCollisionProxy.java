@@ -4,18 +4,22 @@ import com.denfop.api.collision.MultiCellCollisionShapeHelper;
 import com.denfop.blockentity.base.BlockEntityBase;
 import com.denfop.blockentity.collision.BlockEntityCollisionProxy;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.AABB;
@@ -36,7 +40,7 @@ public class BlockCollisionProxy extends BaseEntityBlock implements EntityBlock 
         super(BlockBehaviour.Properties.of()
                 .mapColor(MapColor.NONE)
                 .strength(-1.0F, 3600000.0F)
-                .noOcclusion()
+                .noOcclusion().forceSolidOn()
                 .sound(SoundType.STONE)
                 .noLootTable());
     }
@@ -46,6 +50,10 @@ public class BlockCollisionProxy extends BaseEntityBlock implements EntityBlock 
         if (Math.abs(value) < eps) return 0.0D;
         if (Math.abs(value - 1.0D) < eps) return 1.0D;
         return value;
+    }
+    @Override
+    public boolean hasDynamicShape() {
+        return true;
     }
 
     private static VoxelShape simplifyWalkableShape(VoxelShape shape) {
@@ -64,7 +72,27 @@ public class BlockCollisionProxy extends BaseEntityBlock implements EntityBlock 
 
         return shape;
     }
+    @Override
+    public boolean canSurvive(@NotNull BlockState state, @NotNull LevelReader level, @NotNull BlockPos pos) {
+        return true;
+    }
 
+    @Override
+    public @NotNull FluidState getFluidState(@NotNull BlockState state) {
+        return Fluids.EMPTY.defaultFluidState();
+    }
+
+    @Override
+    public @NotNull BlockState updateShape(
+            @NotNull BlockState state,
+            @NotNull Direction direction,
+            @NotNull BlockState neighborState,
+            @NotNull LevelAccessor level,
+            @NotNull BlockPos pos,
+            @NotNull BlockPos neighborPos
+    ) {
+        return state;
+    }
     @Override
     public @NotNull RenderShape getRenderShape(@NotNull BlockState state) {
         return RenderShape.INVISIBLE;

@@ -189,7 +189,7 @@ public class BlockEntityPlasticCreator extends BlockEntityBasePlasticCreator imp
         Recipes.recipes.addRecipe("plastic", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidsulfuricacid.getInstance().get(), 100),
-                        input.getInput(new ItemStack(IUItem.classic_ore.getItem(3), 4)),
+                        input.getInput("forge:ores/uranium", 4),
                         input.getInput(IUItem.stoneDust, 2)
                 ),
                 new RecipeOutput(null, new ItemStack(IUItem.nuclear_res.getStack(21), 1))
@@ -197,7 +197,7 @@ public class BlockEntityPlasticCreator extends BlockEntityBasePlasticCreator imp
         Recipes.recipes.addRecipe("plastic", new BaseMachineRecipe(
                 new Input(
                         new FluidStack(FluidName.fluidnitricacid.getInstance().get(), 100),
-                        input.getInput(new ItemStack(IUItem.toriyore.getItem(0))),
+                        input.getInput("forge:ores/thorium"),
                         input.getInput(new ItemStack(IUItem.iudust.getStack(54), 2), 2)
                 ),
                 new RecipeOutput(null, new ItemStack(IUItem.nuclear_res.getStack(16), 9))

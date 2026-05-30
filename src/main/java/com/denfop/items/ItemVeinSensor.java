@@ -14,9 +14,14 @@ import com.denfop.world.WorldBaseGen;
 import com.denfop.world.vein.VeinType;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -119,250 +124,307 @@ public class ItemVeinSensor<T extends Enum<T> & SubEnum> extends ItemMain<T> imp
         return map;
     }
 
+    public static Map<BlockState, Integer> dataScreenColors = new HashMap<>();
+
     public static int getOreColor(BlockState state) {
-        Block block = state.getBlock();
+        Integer cached = dataScreenColors.get(state);
+        if (cached != null) {
+            return cached;
+        }
+
+        int color = computeOreColor(state);
+        dataScreenColors.put(state, color);
+        return color;
+    }
+    public static int computeOreColor(BlockState state) {
         if (dataColors.containsKey(state)) {
             return dataColors.get(state);
         }
-        if (block == Blocks.IRON_ORE) {
+        if (state.is(BlockTags.IRON_ORES) || hasOreTag(state, "iron")) {
             return ModUtils.convertRGBcolorToInt(156, 156, 156);
-        } else if (block == Blocks.GOLD_ORE) {
+        } else if (state.is(BlockTags.GOLD_ORES) || hasOreTag(state, "gold")) {
             return 0xFFFFD700;
-        } else if (block == Blocks.DIAMOND_ORE) {
+        } else if (state.is(BlockTags.DIAMOND_ORES) || hasOreTag(state, "diamond")) {
             return 0xFF00FFFF;
-        } else if (block == Blocks.COPPER_ORE) {
-            return ModUtils.convertRGBcolorToInt(255, 144, 0);
-        } else if (block == Blocks.LAPIS_ORE) {
+        } else if (state.is(BlockTags.LAPIS_ORES) || hasOreTag(state, "lapis")) {
             return ModUtils.convertRGBcolorToInt(30, 50, 173);
-        } else if (block == Blocks.REDSTONE_ORE) {
+        } else if (state.is(BlockTags.REDSTONE_ORES) || hasOreTag(state, "redstone")) {
             return ModUtils.convertRGBcolorToInt(173, 30, 30);
-        } else if (block == Blocks.COAL_ORE) {
+        } else if (state.is(BlockTags.COPPER_ORES) || hasOreTag(state, "copper")) {
+            return ModUtils.convertRGBcolorToInt(255, 144, 0);
+        } else if (state.is(BlockTags.COAL_ORES) || hasOreTag(state, "coal")) {
             return ModUtils.convertRGBcolorToInt(4, 4, 4);
-        } else if (block == Blocks.EMERALD_ORE) {
+        } else if (state.is(BlockTags.EMERALD_ORES) || hasOreTag(state, "emerald")) {
             return ModUtils.convertRGBcolorToInt(0, 232, 0);
-        } else if (block == Blocks.NETHER_QUARTZ_ORE) {
-            return ModUtils.convertRGBcolorToInt(223, 223, 223);
-        } else if (block == IUItem.toriyore.getBlock(0)) {
+        }
+        if (hasOreTag(state, "thorium")) {
             return ModUtils.convertRGBcolorToInt(134, 134, 139);
-        } else if (block instanceof BlockClassicOre) {
-            final int meta = ((SubEnum) ((BlockClassicOre) block).getElement()).getId();
-            switch (meta) {
-                case 0:
-                    return ModUtils.convertRGBcolorToInt(255, 144, 0);
-                case 1:
-                    return ModUtils.convertRGBcolorToInt(223, 223, 223);
-                case 2:
-                    return ModUtils.convertRGBcolorToInt(168, 176, 150);
-                case 3:
-                    return ModUtils.convertRGBcolorToInt(89, 158, 73);
-            }
-            return ModUtils.convertRGBcolorToInt(4, 4, 4);
-        } else if (block instanceof BlocksRadiationOre) {
-            final int meta = ((SubEnum) ((BlocksRadiationOre) block).getElement()).getId();
-            switch (meta) {
-                case 0:
-                    return ModUtils.convertRGBcolorToInt(120, 152, 183);
-                case 1:
-                    return ModUtils.convertRGBcolorToInt(97, 109, 88);
-                case 2:
-                    return ModUtils.convertRGBcolorToInt(150, 166, 148);
-            }
-            return ModUtils.convertRGBcolorToInt(4, 4, 4);
-        } else if (block instanceof BlockPreciousOre) {
-            final int meta = ((SubEnum) ((BlockPreciousOre) block).getElement()).getId();
-            switch (meta) {
-                case 0:
-                    return ModUtils.convertRGBcolorToInt(251, 140, 119);
-                case 1:
-                    return ModUtils.convertRGBcolorToInt(38, 60, 143);
-                case 2:
-                    return ModUtils.convertRGBcolorToInt(204, 180, 47);
-                case 3:
-                    return ModUtils.convertRGBcolorToInt(200, 205, 207);
-            }
-            return ModUtils.convertRGBcolorToInt(4, 4, 4);
-        } else if (block instanceof BlockOre) {
-            final int meta = ((SubEnum) ((BlockOre) block).getElement()).getId();
-            switch (meta) {
-                case 0:
-                    return ModUtils.convertRGBcolorToInt(119, 210, 202);
-                case 1:
-                    return ModUtils.convertRGBcolorToInt(108, 74, 108);
-                case 2:
-                    return ModUtils.convertRGBcolorToInt(142, 240, 216);
-                case 3:
-                    return ModUtils.convertRGBcolorToInt(199, 199, 199);
-                case 4:
-                    return ModUtils.convertRGBcolorToInt(0, 166, 226);
-                case 5:
-                    return ModUtils.convertRGBcolorToInt(170, 145, 160);
-                case 6:
-                    return ModUtils.convertRGBcolorToInt(145, 143, 88);
-                case 7:
-                    return ModUtils.convertRGBcolorToInt(104, 152, 237);
-                case 8:
-                    return ModUtils.convertRGBcolorToInt(71, 71, 71);
-                case 9:
-                    return ModUtils.convertRGBcolorToInt(83, 174, 85);
-                case 10:
-                    return ModUtils.convertRGBcolorToInt(184, 87, 145);
-                case 11:
-                    return ModUtils.convertRGBcolorToInt(211, 211, 211);
-                case 12:
-                    return ModUtils.convertRGBcolorToInt(186, 186, 186);
-                case 13:
-                    return ModUtils.convertRGBcolorToInt(235, 193, 207);
-                case 14:
-                    return ModUtils.convertRGBcolorToInt(234, 234, 234);
-                case 15:
-                    return ModUtils.convertRGBcolorToInt(138, 85, 34);
-            }
-            return ModUtils.convertRGBcolorToInt(4, 4, 4);
-        } else if (block instanceof BlockApatite) {
-            final int meta = ((SubEnum) ((BlockApatite) block).getElement()).getId();
-            switch (meta) {
-                case 0:
-                    return ModUtils.convertRGBcolorToInt(48, 86, 16);
-                case 1:
-                    return ModUtils.convertRGBcolorToInt(134, 95, 11);
-                case 2:
-                    return ModUtils.convertRGBcolorToInt(202, 202, 202);
-                case 3:
-                    return ModUtils.convertRGBcolorToInt(202, 202, 202);
-                case 4:
-                    return ModUtils.convertRGBcolorToInt(202, 202, 202);
-            }
-            return ModUtils.convertRGBcolorToInt(4, 4, 4);
-        } else if (block instanceof BlockHeavyOre) {
-            final int meta = ((SubEnum) ((BlockHeavyOre) block).getElement()).getId();
-            switch (meta) {
-                case 0:
-                    return ModUtils.convertRGBcolorToInt(137, 131, 149);
-                case 1:
-                    return ModUtils.convertRGBcolorToInt(249, 175, 44);
-                case 2:
-                    return ModUtils.convertRGBcolorToInt(150, 215, 206);
-                case 3:
-                    return ModUtils.convertRGBcolorToInt(211, 202, 110);
-                case 4:
-                    return ModUtils.convertRGBcolorToInt(212, 175, 55);
-                case 5:
-                    return ModUtils.convertRGBcolorToInt(250, 246, 241);
-                case 6:
-                    return ModUtils.convertRGBcolorToInt(70, 145, 15);
-                case 7:
-                    return ModUtils.convertRGBcolorToInt(230, 107, 0);
-                case 8:
-                    return ModUtils.convertRGBcolorToInt(139, 0, 0);
-                case 9:
-                    return ModUtils.convertRGBcolorToInt(55, 135, 135);
-                case 10:
-                    return ModUtils.convertRGBcolorToInt(170, 123, 44);
-                case 11:
-                    return ModUtils.convertRGBcolorToInt(109, 206, 167);
-                case 12:
-                    return ModUtils.convertRGBcolorToInt(76, 76, 76);
-                case 13:
-                    return ModUtils.convertRGBcolorToInt(198, 147, 64);
-                case 14:
-                    return ModUtils.convertRGBcolorToInt(100, 76, 136);
-                case 15:
-                    return ModUtils.convertRGBcolorToInt(135, 84, 64);
-            }
-            return ModUtils.convertRGBcolorToInt(4, 4, 4);
-        } else if (block instanceof BlockMineral) {
-            final int meta = ((SubEnum) ((BlockMineral) block).getElement()).getId();
-            switch (meta) {
-                case 0:
-                    return ModUtils.convertRGBcolorToInt(12, 166, 166);
-                case 1:
-                    return ModUtils.convertRGBcolorToInt(55, 117, 104);
-                case 2:
-                    return ModUtils.convertRGBcolorToInt(113, 97, 81);
-                case 3:
-                    return ModUtils.convertRGBcolorToInt(99, 51, 4);
-                case 4:
-                    return ModUtils.convertRGBcolorToInt(117, 88, 86);
-                case 5:
-                    return ModUtils.convertRGBcolorToInt(118, 28, 17);
-                case 6:
-                    return ModUtils.convertRGBcolorToInt(123, 76, 10);
-                case 7:
-                    return ModUtils.convertRGBcolorToInt(126, 101, 36);
-                case 8:
-                    return ModUtils.convertRGBcolorToInt(30, 126, 56);
-                case 9:
-                    return ModUtils.convertRGBcolorToInt(112, 129, 30);
-                case 10:
-                    return ModUtils.convertRGBcolorToInt(43, 43, 43);
-                case 11:
-                    return ModUtils.convertRGBcolorToInt(39, 64, 63);
-                case 12:
-                    return ModUtils.convertRGBcolorToInt(110, 25, 24);
-            }
-            return ModUtils.convertRGBcolorToInt(4, 4, 4);
-        } else if (block instanceof BlockOres3) {
-            final int meta = ((SubEnum) ((BlockOres3) block).getElement()).getId();
-            switch (meta) {
-                case 0:
-                    return ModUtils.convertRGBcolorToInt(191, 212, 65);
-                case 1:
-                    return ModUtils.convertRGBcolorToInt(253, 242, 80);
-                case 2:
-                    return ModUtils.convertRGBcolorToInt(37, 145, 133);
-                case 3:
-                    return ModUtils.convertRGBcolorToInt(255, 180, 0);
-                case 4:
-                    return ModUtils.convertRGBcolorToInt(252, 187, 89);
-                case 5:
-                    return ModUtils.convertRGBcolorToInt(212, 231, 255);
-                case 6:
-                    return ModUtils.convertRGBcolorToInt(222, 101, 98);
-                case 7:
-                    return ModUtils.convertRGBcolorToInt(118, 84, 192);
-                case 8:
-                    return ModUtils.convertRGBcolorToInt(125, 122, 160);
-                case 9:
-                    return ModUtils.convertRGBcolorToInt(61, 148, 224);
-                case 10:
-                    return ModUtils.convertRGBcolorToInt(230, 105, 17);
-                case 11:
-                    return ModUtils.convertRGBcolorToInt(84, 194, 246);
-                case 12:
-                    return ModUtils.convertRGBcolorToInt(168, 90, 41);
-                case 13:
-                    return ModUtils.convertRGBcolorToInt(121, 229, 71);
-                case 14:
-                    return ModUtils.convertRGBcolorToInt(255, 225, 136);
-                case 15:
-                    return ModUtils.convertRGBcolorToInt(217, 225, 94);
-            }
-            return ModUtils.convertRGBcolorToInt(4, 4, 4);
-        } else if (block instanceof BlockOres2) {
-            final int meta = ((SubEnum) ((BlockOres2) block).getElement()).getId();
-            switch (meta) {
-                case 0:
-                    return ModUtils.convertRGBcolorToInt(190, 207, 214);
-                case 1:
-                    return ModUtils.convertRGBcolorToInt(194, 194, 194);
-                case 2:
-                    return ModUtils.convertRGBcolorToInt(62, 69, 71);
-                case 3:
-                    return ModUtils.convertRGBcolorToInt(165, 236, 244);
-                case 4:
-                    return ModUtils.convertRGBcolorToInt(141, 174, 83);
-                case 5:
-                    return ModUtils.convertRGBcolorToInt(177, 100, 197);
-                case 6:
-                    return ModUtils.convertRGBcolorToInt(43, 43, 43);
-                case 7:
-                    return ModUtils.convertRGBcolorToInt(212, 212, 212);
-            }
+        }
+        if (hasOreTag(state, "tin")) {
+            return ModUtils.convertRGBcolorToInt(223, 223, 223);
+        }
+        if (hasOreTag(state, "lead")) {
+            return ModUtils.convertRGBcolorToInt(168, 176, 150);
+        }
+        if (hasOreTag(state, "uranium")) {
+            return ModUtils.convertRGBcolorToInt(89, 158, 73);
+        }
+        if (hasOreTag(state, "americium")) {
+            return ModUtils.convertRGBcolorToInt(120, 152, 183);
+        }
+        if (hasOreTag(state, "neptunium")) {
+            return ModUtils.convertRGBcolorToInt(97, 109, 88);
+        }
+        if (hasOreTag(state, "curium")) {
+            return ModUtils.convertRGBcolorToInt(150, 166, 148);
+        }
+        if (hasOreTag(state, "ruby")) {
+            return ModUtils.convertRGBcolorToInt(251, 140, 119);
+        }
+        if (hasOreTag(state, "sapphire")) {
+            return ModUtils.convertRGBcolorToInt(38, 60, 143);
+        }
+        if (hasOreTag(state, "topaz")) {
+            return ModUtils.convertRGBcolorToInt(204, 180, 47);
+        }
+        if (hasOreTag(state, "quartz")) {
+            return ModUtils.convertRGBcolorToInt(223, 223, 223);
+        }
+        if (hasOreTag(state, "mikhail")) {
+            return ModUtils.convertRGBcolorToInt(119, 210, 202);
+        }
+        if (hasOreTag(state, "aluminium")) {
+            return ModUtils.convertRGBcolorToInt(108, 74, 108);
+        }
+        if (hasOreTag(state, "vanadium")) {
+            return ModUtils.convertRGBcolorToInt(142, 240, 216);
+        }
+        if (hasOreTag(state, "tungsten")) {
+            return ModUtils.convertRGBcolorToInt(199, 199, 199);
+        }
+        if (hasOreTag(state, "cobalt")) {
+            return ModUtils.convertRGBcolorToInt(0, 166, 226);
+        }
+        if (hasOreTag(state, "magnesium")) {
+            return ModUtils.convertRGBcolorToInt(170, 145, 160);
+        }
+        if (hasOreTag(state, "nickel")) {
+            return ModUtils.convertRGBcolorToInt(145, 143, 88);
+        }
+        if (hasOreTag(state, "platinum")) {
+            return ModUtils.convertRGBcolorToInt(104, 152, 237);
+        }
+        if (hasOreTag(state, "titanium")) {
+            return ModUtils.convertRGBcolorToInt(71, 71, 71);
+        }
+        if (hasOreTag(state, "chromium")) {
+            return ModUtils.convertRGBcolorToInt(83, 174, 85);
+        }
+        if (hasOreTag(state, "spinel")) {
+            return ModUtils.convertRGBcolorToInt(184, 87, 145);
+        }
+        if (hasOreTag(state, "silver")) {
+            return ModUtils.convertRGBcolorToInt(211, 211, 211);
+        }
+        if (hasOreTag(state, "zinc")) {
+            return ModUtils.convertRGBcolorToInt(186, 186, 186);
+        }
+        if (hasOreTag(state, "manganese")) {
+            return ModUtils.convertRGBcolorToInt(235, 193, 207);
+        }
+        if (hasOreTag(state, "iridium")) {
+            return ModUtils.convertRGBcolorToInt(234, 234, 234);
+        }
+        if (hasOreTag(state, "germanium")) {
+            return ModUtils.convertRGBcolorToInt(138, 85, 34);
+        }
+        if (hasOreTag(state, "magnetite")) {
+            return ModUtils.convertRGBcolorToInt(137, 131, 149);
+        }
+        if (hasOreTag(state, "calaverite")) {
+            return ModUtils.convertRGBcolorToInt(249, 175, 44);
+        }
+        if (hasOreTag(state, "galena")) {
+            return ModUtils.convertRGBcolorToInt(150, 215, 206);
+        }
+        if (hasOreTag(state, "nickelite")) {
+            return ModUtils.convertRGBcolorToInt(211, 202, 110);
+        }
+        if (hasOreTag(state, "pyrite")) {
+            return ModUtils.convertRGBcolorToInt(212, 175, 55);
+        }
+        if (hasOreTag(state, "quartzite")) {
+            return ModUtils.convertRGBcolorToInt(250, 246, 241);
+        }
+        if (hasOreTag(state, "uranite")) {
+            return ModUtils.convertRGBcolorToInt(70, 145, 15);
+        }
+        if (hasOreTag(state, "azurite")) {
+            return ModUtils.convertRGBcolorToInt(230, 107, 0);
+        }
+        if (hasOreTag(state, "rhodonite")) {
+            return ModUtils.convertRGBcolorToInt(139, 0, 0);
+        }
+        if (hasOreTag(state, "alfildit")) {
+            return ModUtils.convertRGBcolorToInt(55, 135, 135);
+        }
+        if (hasOreTag(state, "euxenite")) {
+            return ModUtils.convertRGBcolorToInt(170, 123, 44);
+        }
+        if (hasOreTag(state, "smithsonite")) {
+            return ModUtils.convertRGBcolorToInt(109, 206, 167);
+        }
+        if (hasOreTag(state, "ilmenite")) {
+            return ModUtils.convertRGBcolorToInt(110, 110, 110);
+        }
+        if (hasOreTag(state, "todorokite")) {
+            return ModUtils.convertRGBcolorToInt(198, 147, 64);
+        }
+        if (hasOreTag(state, "ferroaugite")) {
+            return ModUtils.convertRGBcolorToInt(100, 76, 136);
+        }
+        if (hasOreTag(state, "sheelite")) {
+            return ModUtils.convertRGBcolorToInt(135, 84, 64);
+        }
+        if (hasOreTag(state, "arsenopyrite")) {
+            return ModUtils.convertRGBcolorToInt(12, 166, 166);
+        }
+        if (hasOreTag(state, "braggite")) {
+            return ModUtils.convertRGBcolorToInt(55, 117, 104);
+        }
+        if (hasOreTag(state, "wolframite")) {
+            return ModUtils.convertRGBcolorToInt(113, 97, 81);
+        }
+        if (hasOreTag(state, "germanite")) {
+            return ModUtils.convertRGBcolorToInt(99, 51, 4);
+        }
+        if (hasOreTag(state, "coltan")) {
+            return ModUtils.convertRGBcolorToInt(117, 88, 86);
+        }
+        if (hasOreTag(state, "crocoite")) {
+            return ModUtils.convertRGBcolorToInt(118, 28, 17);
+        }
+        if (hasOreTag(state, "xenotime")) {
+            return ModUtils.convertRGBcolorToInt(123, 76, 10);
+        }
+        if (hasOreTag(state, "iridosmine")) {
+            return ModUtils.convertRGBcolorToInt(126, 101, 36);
+        }
+        if (hasOreTag(state, "theophrastite")) {
+            return ModUtils.convertRGBcolorToInt(30, 126, 56);
+        }
+        if (hasOreTag(state, "tetrahedrite")) {
+            return ModUtils.convertRGBcolorToInt(112, 129, 30);
+        }
+        if (hasOreTag(state, "fergusonite")) {
+            return ModUtils.convertRGBcolorToInt(43, 43, 43);
+        }
+        if (hasOreTag(state, "celestine")) {
+            return ModUtils.convertRGBcolorToInt(39, 64, 63);
+        }
+        if (hasOreTag(state, "zircon")) {
+            return ModUtils.convertRGBcolorToInt(110, 25, 24);
+        }
+        if (hasOreTag(state, "crystal")) {
             return ModUtils.convertRGBcolorToInt(4, 4, 4);
         }
-
+        if (hasOreTag(state, "arsenic")) {
+            return ModUtils.convertRGBcolorToInt(191, 212, 65);
+        }
+        if (hasOreTag(state, "barium")) {
+            return ModUtils.convertRGBcolorToInt(253, 242, 80);
+        }
+        if (hasOreTag(state, "bismuth")) {
+            return ModUtils.convertRGBcolorToInt(37, 145, 133);
+        }
+        if (hasOreTag(state, "gadolinium")) {
+            return ModUtils.convertRGBcolorToInt(255, 180, 0);
+        }
+        if (hasOreTag(state, "gallium")) {
+            return ModUtils.convertRGBcolorToInt(252, 187, 89);
+        }
+        if (hasOreTag(state, "hafnium")) {
+            return ModUtils.convertRGBcolorToInt(212, 231, 255);
+        }
+        if (hasOreTag(state, "yttrium")) {
+            return ModUtils.convertRGBcolorToInt(222, 101, 98);
+        }
+        if (hasOreTag(state, "molybdenum")) {
+            return ModUtils.convertRGBcolorToInt(118, 84, 192);
+        }
+        if (hasOreTag(state, "neodymium")) {
+            return ModUtils.convertRGBcolorToInt(125, 122, 160);
+        }
+        if (hasOreTag(state, "niobium")) {
+            return ModUtils.convertRGBcolorToInt(61, 148, 224);
+        }
+        if (hasOreTag(state, "palladium")) {
+            return ModUtils.convertRGBcolorToInt(230, 105, 17);
+        }
+        if (hasOreTag(state, "polonium")) {
+            return ModUtils.convertRGBcolorToInt(84, 194, 246);
+        }
+        if (hasOreTag(state, "strontium")) {
+            return ModUtils.convertRGBcolorToInt(168, 90, 41);
+        }
+        if (hasOreTag(state, "thallium")) {
+            return ModUtils.convertRGBcolorToInt(121, 229, 71);
+        }
+        if (hasOreTag(state, "zirconium")) {
+            return ModUtils.convertRGBcolorToInt(255, 225, 136);
+        }
+        if (hasOreTag(state, "sulfur")) {
+            return ModUtils.convertRGBcolorToInt(4, 4, 4);
+        }
+        if (hasOreTag(state, "lithium")) {
+            return ModUtils.convertRGBcolorToInt(190, 207, 214);
+        }
+        if (hasOreTag(state, "beryllium")) {
+            return ModUtils.convertRGBcolorToInt(194, 194, 194);
+        }
+        if (hasOreTag(state, "bor")) {
+            return ModUtils.convertRGBcolorToInt(62, 69, 71);
+        }
+        if (hasOreTag(state, "osmium")) {
+            return ModUtils.convertRGBcolorToInt(165, 236, 244);
+        }
+        if (hasOreTag(state, "tantalum")) {
+            return ModUtils.convertRGBcolorToInt(141, 174, 83);
+        }
+        if (hasOreTag(state, "cadmium")) {
+            return ModUtils.convertRGBcolorToInt(177, 100, 197);
+        }
+        if (hasOreTag(state, "saltpeter")) {
+            return ModUtils.convertRGBcolorToInt(43, 43, 43);
+        }
+        if (hasOreTag(state, "calcium")) {
+            return ModUtils.convertRGBcolorToInt(212, 212, 212);
+        }
+        if (hasOreTag(state, "fluorapatite")) {
+            return ModUtils.convertRGBcolorToInt(48, 86, 16);
+        }
+        if (hasOreTag(state, "nepheline")) {
+            return ModUtils.convertRGBcolorToInt(134, 95, 11);
+        }
+        if (hasOreTag(state, "calciumphosphate")) {
+            return ModUtils.convertRGBcolorToInt(202, 202, 202);
+        }
+        if (hasOreTag(state, "sodiumphosphate")) {
+            return ModUtils.convertRGBcolorToInt(202, 202, 202);
+        }
+        if (hasOreTag(state, "potassiumphosphate")) {
+            return ModUtils.convertRGBcolorToInt(202, 202, 202);
+        }
         return 0xFFFFFFFF;
     }
+    private static TagKey<Block> oreTag(String name) {
+        return TagKey.create(BuiltInRegistries.BLOCK.key(), ResourceLocation.tryBuild("forge", "ores/" + name));
+    }
+
+    private static boolean hasOreTag(BlockState state, String name) {
+        return state.is(oreTag(name));
+    }
+
 
     @Override
     public CreativeModeTab getItemCategory() {

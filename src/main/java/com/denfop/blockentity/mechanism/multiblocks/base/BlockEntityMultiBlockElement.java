@@ -55,7 +55,7 @@ public class BlockEntityMultiBlockElement extends BlockEntityInventory implement
                 return true;
             }
         } else {
-            if (this.getMain() == null && !this.hasOwnInventory())
+            if (this.getMain() == null && !this.hasOwnInventory() || (this.getMain() != null && !this.getMain().isFull()))
                 return false;
             return super.onActivated(player, hand, side, vec3);
         }

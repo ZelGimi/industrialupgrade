@@ -26,6 +26,9 @@ public class ItemBlockAsteroidOre extends ItemBlockCore<BlockAsteroidOre.Type> i
         if (name.startsWith("asteroid_")) {
             name = name.substring("asteroid_".length());
         }
+        if (name.startsWith("ariel_")) {
+            name = name.substring("ariel_".length());
+        }
         if (name.endsWith("_ore")) {
             name = name.substring(0, name.length() - "_ore".length());
         }

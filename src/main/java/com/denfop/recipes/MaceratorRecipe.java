@@ -193,7 +193,12 @@ public class MaceratorRecipe {
         addmacerator(new ItemStack(IUItem.apatite.getItem(4), 1), new ItemStack(IUItem.iudust.getStack(70), 1));
 
 
-        addmacerator(new ItemStack(Items.COAL), "forge:dusts/Coal");
+        addmacerator("forge:ores/calciumphosphate", new ItemStack(IUItem.iudust.getStack(66), 1));
+        addmacerator("forge:ores/sodiumphosphate", new ItemStack(IUItem.iudust.getStack(69), 1));
+        addmacerator("forge:ores/potassiumphosphate", new ItemStack(IUItem.iudust.getStack(70), 1));
+
+
+        addmacerator("minecraft:coals", "forge:dusts/Coal");
         addmacerator("forge:crushed/Lead", "forge:dusts/Lead");
         addmacerator("forge:crushed/Tin", "forge:dusts/Tin");
         addmacerator("forge:crushed/Gold", "forge:dusts/Gold");

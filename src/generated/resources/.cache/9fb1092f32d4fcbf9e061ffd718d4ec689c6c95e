@@ -1,4 +1,4 @@
-// 1.20.1	2026-05-26T23:31:44.4237869	Recipes
+// 1.20.1	2026-05-30T17:44:30.8327691	Recipes
 2669ca4c87e604ab5e0450a55ebdc538a68668e8 data/industrialupgrade/advancements/recipes/misc/blasting_100.json
 a06b2c06698311fe373a1dd8f68612571c372619 data/industrialupgrade/advancements/recipes/misc/blasting_102.json
 46fe97744ca69cab490d99797d4c866c74fa34c9 data/industrialupgrade/advancements/recipes/misc/blasting_104.json
@@ -5336,7 +5336,7 @@ fd9f56dc6462d59193cc104d5a91d631a74bea33 data/industrialupgrade/recipes/industri
 79b5c209b4409b82941e9e93611e2f5c97def18c data/industrialupgrade/recipes/industrialupgrade_67.json
 f01e07d4f90f8d3e4443eee27d5a4fa90de8130e data/industrialupgrade/recipes/industrialupgrade_670.json
 ccd3c7db1821880eabea17e8bed50916752eaa22 data/industrialupgrade/recipes/industrialupgrade_671.json
-7567523d62c0efeb4755d7a2c2fc8cf4c5f4d1d1 data/industrialupgrade/recipes/industrialupgrade_672.json
+3a01e33ceae5a42073f9a1e3ef100c50ad0a70c1 data/industrialupgrade/recipes/industrialupgrade_672.json
 b168ee229176f6dc8b3722d4ba0530d2a8e8cafe data/industrialupgrade/recipes/industrialupgrade_673.json
 e04162a7cf525eab45e3f64cfaae1dd4af265ed4 data/industrialupgrade/recipes/industrialupgrade_674.json
 7c36a234b71776f13396d420465134c36ca743d8 data/industrialupgrade/recipes/industrialupgrade_675.json

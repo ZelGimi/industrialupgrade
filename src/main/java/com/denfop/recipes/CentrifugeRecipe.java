@@ -138,7 +138,7 @@ public class CentrifugeRecipe {
         addcentrifuge1("Gold", new ItemStack(IUItem.smalldust.getStack(14), 1));
         addcentrifuge("Gold", new ItemStack(IUItem.smalldust.getStack(14), 1));
 
-        addcentrifuge("Lead", null);
+        addcentrifuge("Lead", ItemStack.EMPTY);
         addcentrifuge1("Lead", IUItem.smallCopperDust);
         addcentrifuge("Tin", IUItem.smallIronDust);
         addcentrifuge("Copper", IUItem.smallTinDust);
@@ -192,9 +192,9 @@ public class CentrifugeRecipe {
         addcentrifuge(growCount(IUItem.UranFuel, 10), growCount(IUItem.Uran238, 56),
                 growCount(IUItem.Uran235, 3)
         );
-        addcentrifuge(new ItemStack(IUItem.apatite.getItem()), new ItemStack(IUItem.iudust.getStack(65), 1), new ItemStack(IUItem.iudust.getStack(66), 1));
+        addcentrifuge(   "forge:ores/fluorapatite", new ItemStack(IUItem.iudust.getStack(65), 1), new ItemStack(IUItem.iudust.getStack(66), 1));
         addcentrifuge(
-                new ItemStack(IUItem.apatite.getItem(1), 1),
+                "forge:ores/nepheline",
                 new ItemStack(IUItem.iudust.getStack(60), 1),
                 new ItemStack(IUItem.iudust.getStack(68), 1),
                 new ItemStack(IUItem.smalldust.getStack(1), 4)
@@ -207,7 +207,7 @@ public class CentrifugeRecipe {
         addcentrifuge(new ItemStack(IUItem.white_phosphorus.getItem()), new ItemStack(IUItem.red_phosphorus.getItem(), 4));
     }
 
-    public static void addcentrifuge(ItemStack stack, ItemStack... output) {
+    public static void addcentrifuge(Object stack, ItemStack... output) {
         CompoundTag nbt = new CompoundTag();
         nbt.putShort("minHeat", (short) 5000);
         final IInputHandler input = Recipes.inputFactory;
@@ -333,7 +333,7 @@ public class CentrifugeRecipe {
 
     public static void addcentrifuge(String meta, ItemStack output) {
         ItemStack[] stack;
-        if (output != null) {
+        if (!output.isEmpty()) {
             stack = new ItemStack[3];
         } else {
             stack = new ItemStack[2];
@@ -342,7 +342,7 @@ public class CentrifugeRecipe {
         final IInputHandler input = Recipes.inputFactory;
         stack[0] = input.getInput("forge:dusts/" + meta).getInputs().get(0).copy();
         stack[1] = IUItem.stoneDust;
-        if (output != null) {
+        if (!output.isEmpty()) {
             stack[2] = output;
         }
         CompoundTag nbt = new CompoundTag();

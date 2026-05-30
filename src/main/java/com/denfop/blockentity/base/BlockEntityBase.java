@@ -980,9 +980,7 @@ public abstract class BlockEntityBase extends BlockEntity implements IMultiCellC
             }
         }
 
-        if (!lifecycleUnloading && level != null && !level.isClientSide) {
-            MultiCellCollisionManager.removeAll(level, this.getBlockPos());
-        }
+
 
     }
 
@@ -999,7 +997,9 @@ public abstract class BlockEntityBase extends BlockEntity implements IMultiCellC
         for (AbstractComponent component : this.componentList) {
             component.blockBreak();
         }
-
+        if (level != null && !level.isClientSide) {
+            MultiCellCollisionManager.removeAll(level, this.getBlockPos());
+        }
     }
 
     public void wrenchBreak() {

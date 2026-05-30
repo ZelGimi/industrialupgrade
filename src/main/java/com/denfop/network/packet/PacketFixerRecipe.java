@@ -2,6 +2,8 @@ package com.denfop.network.packet;
 
 import com.denfop.IUCore;
 import com.denfop.api.space.SpaceInit;
+import com.denfop.blockentity.smeltery.BlockEntitySmelteryController;
+import com.denfop.blocks.mechanism.BlockSmelteryEntity;
 import com.denfop.recipes.ScrapboxRecipeManager;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -16,6 +18,9 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.denfop.blockentity.smeltery.BlockEntitySmelteryController.mapRecipes;
+import static com.denfop.blockentity.smeltery.BlockEntitySmelteryController.mapRecipes1;
 
 public class PacketFixerRecipe implements IPacket {
     public PacketFixerRecipe() {
@@ -40,6 +45,8 @@ public class PacketFixerRecipe implements IPacket {
             Iterable<Holder<Item>> tagOres = BuiltInRegistries.ITEM.getTagOrEmpty(ItemTags.create(new ResourceLocation("forge", "ores")));
             SpaceInit.jsonInit();
             new ScrapboxRecipeManager();
+            if (mapRecipes.isEmpty() || mapRecipes1.isEmpty())
+            ((BlockEntitySmelteryController)BlockSmelteryEntity.smeltery_controller.getDummyTe()).init();
             for (Holder<Item> holder : tagOres) {
                 IUCore.get_ore.add(new ItemStack(holder));
                 Item item = holder.value();

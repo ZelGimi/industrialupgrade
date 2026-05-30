@@ -1971,17 +1971,9 @@ public class StorageNetwork {
     }
 
     public void reBuild(List<Path> paths, Level level) {
-        this.storageDeviceCells.clear();
+
         this.consumeEnergy = 0;
-        this.interfaces.clear();
-        this.processors.clear();
-        this.imports.clear();
-        this.exports.clear();
-        this.preCrafts.clear();
-        this.indexProcessor = 0;
-        monitors.clear();
-        this.processorsIds.clear();
-        this.patternStackInterfaceMap.clear();
+        onUnload(level);
         if (paths != null) {
             List<BlockPos> poses = new ArrayList<>();
             paths.forEach(path -> {
@@ -1997,17 +1989,10 @@ public class StorageNetwork {
     }
 
     public void reBuild(Level level, List<BlockPos> paths) {
-        this.storageDeviceCells.clear();
+
         this.consumeEnergy = 0;
         this.indexProcessor = 0;
-        this.interfaces.clear();
-        this.processors.clear();
-        this.imports.clear();
-        this.processorsIds.clear();
-        this.exports.clear();
-        this.preCrafts.clear();
-        this.patternStackInterfaceMap.clear();
-        monitors.clear();
+        onUnload(level);
         paths.forEach(path -> {
             BlockEntity blockEntity = level.getBlockEntity(path);
             if (blockEntity instanceof ElectricStorage storage)

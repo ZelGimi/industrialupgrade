@@ -65,6 +65,12 @@ public final class MultiCellCollisionManager {
                 if (be instanceof BlockEntityCollisionProxy proxy) {
                     proxy.setMasterPos(masterPos);
                 }
+            }else if (state.canBeReplaced()){
+                level.setBlock(pos, COLLISION_PROXY.get().defaultBlockState(), 3);
+                BlockEntity be = level.getBlockEntity(pos);
+                if (be instanceof BlockEntityCollisionProxy proxy) {
+                    proxy.setMasterPos(masterPos);
+                }
             }
         }
     }

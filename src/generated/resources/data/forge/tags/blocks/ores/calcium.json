@@ -2,7 +2,6 @@
   "values": [
     "industrialupgrade:baseore1/calcium",
     "industrialupgrade:blockspace2/ganymede_calcium",
-    "industrialupgrade:asteroidore/asteroid_calcium_ore",
-    "industrialupgrade:deepore1/deep_calcium_ore"
+    "industrialupgrade:asteroidore/asteroid_calcium_ore"
   ]
 }

@@ -207,7 +207,7 @@ public class ScreenVeinSensor<T extends ContainerMenuVeinSensor> extends ScreenM
         int i = 0;
         int j = 0;
         boolean emptySearch = searchField.getValue().isEmpty();
-        String name = "[" + searchField.getValue().toLowerCase();
+        String name = searchField.getValue().toLowerCase();
         if (emptySearch) {
             for (Map.Entry<Integer, ItemStack> entry : ItemStackMap.entrySet()) {
 
@@ -264,7 +264,7 @@ public class ScreenVeinSensor<T extends ContainerMenuVeinSensor> extends ScreenM
             searchField.setFocused(false);
         }
         boolean emptySearch = searchField.getValue().isEmpty();
-        String name = "[" + searchField.getValue().toLowerCase();
+        String name = searchField.getValue().toLowerCase();
         if (emptySearch) {
             for (Map.Entry<Integer, ItemStack> entry : ItemStackMap.entrySet()) {
 
@@ -453,7 +453,7 @@ public class ScreenVeinSensor<T extends ContainerMenuVeinSensor> extends ScreenM
         int i = 0;
         int j = 0;
         boolean emptySearch = searchField.getValue().isEmpty();
-        String name = "[" + searchField.getValue().toLowerCase();
+        String name = searchField.getValue().toLowerCase();
         if (emptySearch) {
             for (Map.Entry<Integer, ItemStack> entry : ItemStackMap.entrySet()) {
 

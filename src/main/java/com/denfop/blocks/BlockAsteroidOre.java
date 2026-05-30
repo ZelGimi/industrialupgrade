@@ -43,6 +43,9 @@ public class BlockAsteroidOre<T extends Enum<T> & SubEnum> extends BlockCore<T> 
 
         switch (type.getDropType()) {
             case RAW:
+                if (type.getDropMeta() == 16){
+                    return Collections.singletonList(new ItemStack(Items.RAW_COPPER, count));
+                }
                 return Collections.singletonList(new ItemStack(IUItem.rawMetals.getStack(type.getDropMeta()), count));
             case RAW_IRON:
                 return Collections.singletonList(new ItemStack(Items.RAW_IRON, count));

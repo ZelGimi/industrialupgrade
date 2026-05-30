@@ -29,6 +29,12 @@ public class ItemBlockDeepOre3 extends ItemBlockCore<BlockDeepOre3.Type> impleme
         if (name.endsWith("_ore")) {
             name = name.substring(0, name.length() - "_ore".length());
         }
+        if (this.getElement() == BlockDeepOre3.Type.deep_potassium_phosphate_ore){
+            name = "potassiumphosphate";
+        }
+        if (this.getElement() == BlockDeepOre3.Type.deep_sodium_phosphate_ore){
+            name = "sodiumphosphate";
+        }
         return new String[]{"forge:ores/" + name, "forge:ores"};
     }
 }

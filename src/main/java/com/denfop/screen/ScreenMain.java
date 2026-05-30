@@ -166,7 +166,7 @@ public class ScreenMain<T extends ContainerMenuBase<? extends CustomWorldContain
     protected void drawGuiContainerBackgroundLayer(GuiGraphics poseStack, final float partialTicks, final int mouseX, final int mouseY) {
         if (this.container.base instanceof IUpgradableBlock){
             bindTexture(ResourceLocation.tryBuild(Constants.MOD_ID, "textures/gui/infobutton.png"));
-            this.drawTexturedModalRect(poseStack, this.guiLeft(), this.guiTop(), 0, 0, 10, 10);
+            this.drawTexturedModalRect(poseStack, this.guiLeft()+3, this.guiTop()+3, 0, 0, 10, 10);
             bindTexture(this.getTexture());
         }
     }
