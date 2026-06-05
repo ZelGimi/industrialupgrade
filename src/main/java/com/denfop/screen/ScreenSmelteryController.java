@@ -175,7 +175,7 @@ public class ScreenSmelteryController<T extends ContainerMenuSmelteryController>
                             ret.add(Localization.translate("iu.tooltip.fluid.amount") + fs.getAmount() + " " + Localization.translate("iu.generic.text.mb"));
                             String state = Localization.translate("iu.tooltip.fluid.type.liquid");
                             ret.add(Localization.translate("iu.tooltip.fluid.type") + state);
-                            ret.add(Localization.translate("iu.tooltip.fluid.ingots") + fs.getAmount() / 144);
+                            ret.add(Localization.translate("iu.tooltip.fluid.ingots") + fs.getAmount() / 90);
                         } else {
                             ret.add(Localization.translate("iu.tooltip.fluid.invalid"));
                         }
