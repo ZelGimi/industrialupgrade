@@ -822,7 +822,8 @@ public class ModConfig {
             new IntEntry("sprayer_capacity", 1, 1, Integer.MAX_VALUE, "Sprayer: capacity (old value 1)"),
             new IntEntry("tool_cutter_durability", 60, 1, Integer.MAX_VALUE, "Tool Cutter: durability (old value 60)"),
             new IntEntry("treetap_energy_energy_use", 50, 0, Integer.MAX_VALUE, "Treetap Energy: energy use (old value 50)"),
-            new IntEntry("water_rotor_radius", 4, 0, Integer.MAX_VALUE, "Water Rotor: radius (old value 4)")
+            new IntEntry("water_rotor_radius", 4, 0, Integer.MAX_VALUE, "Water Rotor: radius (old value 4)"),
+            new IntEntry("wrench_destroy_machine_chance", 2, 0, 100, "Wrench: chance (%) of destroying machine (old value 2)")
     };
 
     private static final DoubleEntry[] ITEM_DOUBLE_ENTRIES = new DoubleEntry[]{
