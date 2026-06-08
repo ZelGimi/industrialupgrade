@@ -17,6 +17,7 @@ import com.denfop.blocks.BlockResource;
 import com.denfop.blocks.BlockTileEntity;
 import com.denfop.blocks.state.HarvestTool;
 import com.denfop.componets.*;
+import com.denfop.config.ModConfig;
 import com.denfop.events.TickHandlerIU;
 import com.denfop.inventory.Inventory;
 import com.denfop.network.DecoderHandler;
@@ -84,6 +85,7 @@ public abstract class BlockEntityBase extends BlockEntity implements IMultiCellC
     public static Map<ResourceKey<Level>, List<ChunkPos>> updates = new ConcurrentHashMap<>();
     private static final Set<ResourceKey<Level>> UNLOADING_LEVELS = ConcurrentHashMap.newKeySet();
     private static volatile boolean serverStopping = false;
+    private static final int wrenchDestroyChance = ModConfig.itemInt("wrench_destroy_machine_chance", 2);
     public final MultiBlockEntity teBlock;
     public final BlockTileEntity block;
     public BlockPos pos;
@@ -1174,7 +1176,7 @@ public abstract class BlockEntityBase extends BlockEntity implements IMultiCellC
                     drop = getPickBlock(null, null);
                     break;
                 case Generator:
-                    if (fortune < 2) {
+                    if (fortune < wrenchDestroyChance) {
                         drop = new ItemStack(IUItem.basemachine2.getItem(78), 1);
                     }
                     break;
@@ -1182,11 +1184,11 @@ public abstract class BlockEntityBase extends BlockEntity implements IMultiCellC
                     drop = null;
                     break;
                 case Machine:
-                    if (fortune < 2) {
+                    if (fortune < wrenchDestroyChance) {
                         return IUItem.blockResource.getItemStack(BlockResource.Type.machine);
                     }
                 case AdvMachine:
-                    if (fortune < 2) {
+                    if (fortune < wrenchDestroyChance) {
                         return IUItem.blockResource.getItemStack(BlockResource.Type.advanced_machine);
                     }
             }
