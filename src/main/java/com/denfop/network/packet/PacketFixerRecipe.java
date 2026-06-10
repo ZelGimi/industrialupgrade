@@ -43,6 +43,7 @@ public class PacketFixerRecipe implements IPacket {
         if (!IUCore.register) {
             IUCore.register = true;
             Iterable<Holder<Item>> tagOres = BuiltInRegistries.ITEM.getTagOrEmpty(ItemTags.create(new ResourceLocation("forge", "ores")));
+            SpaceInit.init();
             SpaceInit.jsonInit();
             new ScrapboxRecipeManager();
             if (mapRecipes.isEmpty() || mapRecipes1.isEmpty())

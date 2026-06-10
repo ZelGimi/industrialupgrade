@@ -1208,7 +1208,7 @@ public class IUCore {
     }
 
     private static boolean shouldRunTagBootstrap(TagsUpdatedEvent event) {
-        if (event.getUpdateCause() != TagsUpdatedEvent.UpdateCause.SERVER_DATA_LOAD) {
+        if (!event.shouldUpdateStaticData()) {
             return false;
         }
 
