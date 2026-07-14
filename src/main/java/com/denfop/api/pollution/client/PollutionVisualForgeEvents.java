@@ -1,6 +1,7 @@
 package com.denfop.api.pollution.client;
 
 import com.denfop.Constants;
+import com.denfop.config.ModConfig;
 import com.mojang.blaze3d.shaders.FogShape;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
@@ -20,7 +21,9 @@ public final class PollutionVisualForgeEvents {
 
     @SubscribeEvent
     public static void onClientTick(ClientTickEvent.Post event) {
-
+        if (!ModConfig.COMMON_SPEC.isLoaded()) {
+            return;
+        }
 
         PollutionVisualController.tickClient(Minecraft.getInstance());
     }
