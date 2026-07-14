@@ -22,7 +22,7 @@ import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public class CMQuarryCategory extends ScreenMain implements IRecipeCategory<СMQuarryHandler> {
+public class CMQuarryCategory extends ScreenMain implements IRecipeCategory<CMQuarryHandler> {
 
     private final IDrawableStatic bg;
     JeiInform jeiInform;
@@ -41,7 +41,7 @@ public class CMQuarryCategory extends ScreenMain implements IRecipeCategory<СMQ
     }
 
     @Override
-    public RecipeType<СMQuarryHandler> getRecipeType() {
+    public RecipeType<CMQuarryHandler> getRecipeType() {
         return jeiInform.recipeType;
     }
 
@@ -60,7 +60,7 @@ public class CMQuarryCategory extends ScreenMain implements IRecipeCategory<СMQ
 
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, СMQuarryHandler recipe, IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, CMQuarryHandler recipe, IFocusGroup focuses) {
         builder.addSlot(RecipeIngredientRole.INPUT, 8, 21).addItemStack(new ItemStack(IUItem.analyzermodule.getItem()));
         builder.addSlot(RecipeIngredientRole.INPUT, 32, 12).addItemStack(recipe.getOutput());
         builder.addSlot(RecipeIngredientRole.INPUT, 8, 39).addItemStack(ItemStackHelper.fromData(IUItem.module9, 1, 15));
