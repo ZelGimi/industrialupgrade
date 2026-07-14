@@ -7,24 +7,24 @@ import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class СMQuarryHandler {
+public class CMQuarryHandler {
 
-    private static final List<СMQuarryHandler> recipes = new ArrayList<>();
+    private static final List<CMQuarryHandler> recipes = new ArrayList<>();
     private final ItemStack output;
 
-    public СMQuarryHandler(ItemStack output) {
+    public CMQuarryHandler(ItemStack output) {
         this.output = output;
     }
 
-    public static List<СMQuarryHandler> getRecipes() {
+    public static List<CMQuarryHandler> getRecipes() {
         if (recipes.isEmpty()) {
             initRecipes();
         }
         return recipes;
     }
 
-    public static СMQuarryHandler addRecipe(ItemStack output) {
-        СMQuarryHandler recipe = new СMQuarryHandler(output);
+    public static CMQuarryHandler addRecipe(ItemStack output) {
+        CMQuarryHandler recipe = new CMQuarryHandler(output);
         if (recipes.contains(recipe)) {
             return null;
         }
@@ -32,11 +32,11 @@ public class СMQuarryHandler {
         return recipe;
     }
 
-    public static СMQuarryHandler getRecipe(ItemStack is) {
+    public static CMQuarryHandler getRecipe(ItemStack is) {
         if (is == null || is.isEmpty()) {
             return null;
         }
-        for (СMQuarryHandler recipe : recipes) {
+        for (CMQuarryHandler recipe : recipes) {
             if (recipe.matchesInput(is)) {
                 return recipe;
             }

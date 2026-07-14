@@ -247,7 +247,7 @@ import com.denfop.integration.jei.quantummolecular.QuantumMolecularHandler;
 import com.denfop.integration.jei.quarry.QuarryCategory;
 import com.denfop.integration.jei.quarry.QuarryHandler;
 import com.denfop.integration.jei.quarry_comb.CMQuarryCategory;
-import com.denfop.integration.jei.quarry_comb.СMQuarryHandler;
+import com.denfop.integration.jei.quarry_comb.CMQuarryHandler;
 import com.denfop.integration.jei.quarry_mac.MQuarryCategory;
 import com.denfop.integration.jei.quarry_mac.MQuarryHandler;
 import com.denfop.integration.jei.radioactiveorehandler.RadioactiveOreHandlerCategory;
@@ -492,7 +492,7 @@ public class JEICompat implements IModPlugin {
     public static JeiInform quantum_molecular = new JeiInform("quantum_molecular", QuantumMolecularCategory.class, QuantumMolecularHandler.class);
     public static JeiInform quantum_miner = new JeiInform("quantum_miner", QuantumMinerCategory.class, QuantumMinerHandler.class);
     public static JeiInform quarry = new JeiInform("quarry", QuarryCategory.class, QuarryHandler.class);
-    public static JeiInform quarry_comb = new JeiInform("quarry_comb", CMQuarryCategory.class, СMQuarryHandler.class);
+    public static JeiInform quarry_comb = new JeiInform("quarry_comb", CMQuarryCategory.class, CMQuarryHandler.class);
     public static JeiInform quarry_macerator = new JeiInform("quarry_macerator", MQuarryCategory.class, MQuarryHandler.class);
     public static JeiInform radiation_ore_handler = new JeiInform("radiation_ore_handler", RadioactiveOreHandlerCategory.class, RadioactiveOreHandlerHandler.class);
     public static JeiInform recycler = new JeiInform("recycler", RecyclerCategory.class, RecyclerHandler.class);
