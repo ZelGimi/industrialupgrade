@@ -15,6 +15,7 @@ public class DamageTypeTags extends DamageTypeTagsProvider {
     }
 
     protected void addTags(HolderLookup.Provider pProvider) {
+        this.tag(net.minecraft.tags.DamageTypeTags.NO_KNOCKBACK).addOptionalTag(DamageTypes.radiationObject.location());
          this.tag(net.minecraft.tags.DamageTypeTags.IS_FIRE).addOptionalTag(DamageTypes.radiationObject.location());
         this.tag(net.minecraft.tags.DamageTypeTags.BYPASSES_ARMOR).addOptionalTag(DamageTypes.beeObject.location());
         this.tag(net.minecraft.tags.DamageTypeTags.BYPASSES_ARMOR).addOptionalTag(DamageTypes.currentObject.location());
