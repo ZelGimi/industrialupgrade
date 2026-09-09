@@ -1,7 +1,7 @@
 {
   "values": [
     {
-      "id": "#industrialupgrade:radiation",
+      "id": "industrialupgrade:radiation",
       "required": false
     }
   ]
