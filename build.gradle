@@ -97,9 +97,12 @@ dependencies {
     compileOnly "curse.maven:wireless-chargers-510656:5551798"
     compileOnly "curse.maven:flux-networks-248020:6089446"
     implementation "curse.maven:jei-238222:6577302"
+    compileOnly "curse.maven:tessellate-1660059:8757447"
     // runtime test
   //  runtimeOnly "curse.maven:jade-324717:5427817"
     runtimeOnly "curse.maven:crafttweaker-239197:6434161"
+    runtimeOnly "curse.maven:tessellate-1660059:8757447"
+    runtimeOnly "curse.maven:architectury-api-419699:8492726"
  //   runtimeOnly "mekanism:Mekanism:1.21.1-10.7.9.72"
    compileOnly fileTree('lib')
     runtimeOnly fileTree('lib')

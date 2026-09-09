@@ -56,12 +56,14 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.texboobcat.tessellate.api.TessellateApi;
 
 import java.io.IOException;
 import java.util.*;
@@ -429,34 +431,45 @@ public abstract class BlockEntityBase extends BlockEntity implements IMultiCellC
 
     public void loadBeforeFirstUpdate() {
         isLoaded = true;
-        try {
-            for (Direction direction : Direction.values())
-                if (!this.getLevel().isClientSide) {
-                    BlockPos neighborPos = pos.offset(direction.getNormal());
-                    BlockState neighbor = getLevel().getBlockState(neighborPos);
-                    if ((this instanceof EnergyTile || this.getComp(Energy.class) != null) && (neighbor.getBlock() instanceof EntityBlock && !(neighbor.getBlock() instanceof BlockTileEntity<?>))) {
-                        IEnergyStorage storage = level.getCapability(Capabilities.EnergyStorage.BLOCK, neighborPos, ModUtils.getFacingFromTwoPositions(this.pos, neighborPos));
-                        BlockEntity blockEntity = getLevel().getBlockEntity(neighborPos);
-                        if (storage != null && !blockEntity.isRemoved()) {
-                            EnergyTile energyTile = EnergyNetGlobal.instance.getTile(level, neighborPos);
-                            if (energyTile == EnergyNetGlobal.EMPTY) {
-                                EnergyForge energyForge = null;
-                                if (storage.canExtract() && storage.canReceive()) {
-                                    energyForge = new EnergyForgeSinkSource(blockEntity);
-                                } else if (storage.canReceive()) {
-                                    energyForge = new EnergyForgeSink(blockEntity);
-                                } else if (storage.canExtract()) {
-                                    energyForge = new EnergyForgeSource(blockEntity);
-                                }
-                                if (energyForge != null) {
-                                    NeoForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), energyForge));
+        Runnable logic = () -> {
+            try {
+                for (Direction direction : Direction.values())
+                    if (!this.getLevel().isClientSide) {
+                        BlockPos neighborPos = pos.offset(direction.getNormal());
+                        BlockState neighbor = getLevel().getBlockState(neighborPos);
+                        if ((this instanceof EnergyTile || this.getComp(Energy.class) != null) && (neighbor.getBlock() instanceof EntityBlock && !(neighbor.getBlock() instanceof BlockTileEntity<?>))) {
+                            IEnergyStorage storage = level.getCapability(
+                                    Capabilities.EnergyStorage.BLOCK,
+                                    neighborPos,
+                                    ModUtils.getFacingFromTwoPositions(this.pos, neighborPos)
+                            );
+                            BlockEntity blockEntity = getLevel().getBlockEntity(neighborPos);
+                            if (storage != null && !blockEntity.isRemoved()) {
+                                EnergyTile energyTile = EnergyNetGlobal.instance.getTile(level, neighborPos);
+                                if (energyTile == EnergyNetGlobal.EMPTY) {
+                                    EnergyForge energyForge = null;
+                                    if (storage.canExtract() && storage.canReceive()) {
+                                        energyForge = new EnergyForgeSinkSource(blockEntity);
+                                    } else if (storage.canReceive()) {
+                                        energyForge = new EnergyForgeSink(blockEntity);
+                                    } else if (storage.canExtract()) {
+                                        energyForge = new EnergyForgeSource(blockEntity);
+                                    }
+                                    if (energyForge != null) {
+                                        NeoForge.EVENT_BUS.post(new EnergyTileLoadEvent(this.getWorld(), energyForge));
+                                    }
                                 }
                             }
                         }
                     }
-                }
-            this.rerender();
-        } catch (Exception e) {
+                this.rerender();
+            } catch (Exception e) {
+            }
+        };
+        if (ModList.get().isLoaded("tessellate")) {
+            TessellateApi.executeOnMainThread(logic);
+        }else {
+            logic.run();
         }
     }
 

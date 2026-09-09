@@ -63,6 +63,14 @@ description='''${mod_description}'''
     # Side this dependency is applied on - BOTH, CLIENT, or SERVER
     side="BOTH"
 
+[[dependencies.${mod_id}]]
+    modId="tessellate"
+    type="optional"
+    versionRange="[0.0.0,)"
+    ordering="NONE"
+    side="BOTH"
+
+
 # Here's another dependency
 [[dependencies.${mod_id}]]
     modId="minecraft"
