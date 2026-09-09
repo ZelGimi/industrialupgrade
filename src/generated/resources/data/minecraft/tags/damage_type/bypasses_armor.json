@@ -1,19 +1,19 @@
 {
   "values": [
     {
-      "id": "#industrialupgrade:bee",
+      "id": "industrialupgrade:bee",
       "required": false
     },
     {
-      "id": "#industrialupgrade:current",
+      "id": "industrialupgrade:current",
       "required": false
     },
     {
-      "id": "#industrialupgrade:frostbite",
+      "id": "industrialupgrade:frostbite",
       "required": false
     },
     {
-      "id": "#industrialupgrade:poison_gas",
+      "id": "industrialupgrade:poison_gas",
       "required": false
     }
   ]
