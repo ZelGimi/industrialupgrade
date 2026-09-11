@@ -35,6 +35,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.TickTask;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -973,7 +974,10 @@ public abstract class BlockEntityBase extends BlockEntity implements IMultiCellC
         }
 
         if (!lifecycleUnloading && level != null && !level.isClientSide && this.needCollision()) {
-            MultiCellCollisionManager.removeAll(level, this.getBlockPos());
+            MinecraftServer server = level.getServer();
+            server.tell(new TickTask(server.getTickCount(), () -> {
+                MultiCellCollisionManager.removeAll(level, this.getBlockPos());
+            }));
         }
     }
 
