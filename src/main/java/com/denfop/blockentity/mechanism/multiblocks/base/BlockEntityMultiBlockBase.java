@@ -25,6 +25,8 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.TickTask;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -580,16 +582,25 @@ public abstract class BlockEntityMultiBlockBase extends BlockEntityInventory imp
             GlobalRenderManager.removeRender(this.getWorld(), pos);
         }
         if (this.isFull()) {
-            if (this.multiBlockStructure != null) {
-                List<BlockPos> blockPosList = this.multiBlockStructure.getPoses(this.getFacing(), this.getBlockPos());
-                for (BlockPos pos1 : blockPosList) {
-                    BlockEntity tileentity = this.getLevel().getBlockEntity(pos1);
-                    if (tileentity instanceof BlockEntityMultiBlockElement) {
-                        BlockEntityMultiBlockElement te = (BlockEntityMultiBlockElement) tileentity;
-                        te.setMainMultiElement(null);
+            Runnable logic = () -> {
+                if (this.multiBlockStructure != null) {
+                    List<BlockPos> blockPosList = this.multiBlockStructure.getPoses(this.getFacing(), this.getBlockPos());
+                    for (BlockPos pos1 : blockPosList) {
+                        BlockEntity tileentity = this.getLevel().getBlockEntity(pos1);
+                        if (tileentity instanceof BlockEntityMultiBlockElement) {
+                            BlockEntityMultiBlockElement te = (BlockEntityMultiBlockElement) tileentity;
+                            te.setMainMultiElement(null);
+                        }
                     }
                 }
+            };
+            if (level.getServer() != null) {
+                MinecraftServer server = level.getServer();
+                server.tell(new TickTask(server.getTickCount(), logic));
+            } else {
+                logic.run();
             }
+
         }
         super.onUnloaded();
     }
